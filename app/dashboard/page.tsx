@@ -1,5 +1,4 @@
 "use client";
-import FilterDropdown from "@/components/FilterDropdown";
 import ImportDataDropdown from "@/components/ImportDataDropdown";
 import Metrics from "@/components/Metrics";
 import RecentMetrics from "@/components/RecentMetrics";
@@ -20,7 +19,7 @@ const Dashboard = () => {
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
           <ImportDataDropdown openModal={openModal} />
-          <FilterDropdown />
+          {/* <FilterDropdown /> */}
         </div>
       </div>
       <Metrics />
