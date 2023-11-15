@@ -1,5 +1,19 @@
-import { Check, MoreHorizontal } from "lucide-react";
+import {
+  Archive,
+  Check,
+  Download,
+  Eye,
+  MoreHorizontal,
+  Pen,
+  Trash2,
+} from "lucide-react";
 import React from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const RecentInvoices = () => {
   return (
@@ -18,7 +32,33 @@ const RecentInvoices = () => {
             <Check className="-ml-1 mr-0.5 h-3 w-3 flex-shrink-0 self-center text-green-500" />
             Paid
           </div>
-          <MoreHorizontal className=" text-[#c4c4c4]" />
+          <DropdownMenu>
+            <DropdownMenuTrigger className=" focus:outline-none">
+              <MoreHorizontal className=" text-[#c4c4c4]" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                View Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Edit Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Download Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Archive Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Delete Invoice
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className=" border-b border-b-gray-100 min-h-[63px] flex justify-between text-sm items-center px-6">
           <p>#001</p>
@@ -27,7 +67,33 @@ const RecentInvoices = () => {
             <Check className="-ml-1 mr-0.5 h-3 w-3 flex-shrink-0 self-center text-green-500" />
             Paid
           </div>
-          <MoreHorizontal className=" text-[#c4c4c4]" />
+          <DropdownMenu>
+            <DropdownMenuTrigger className=" focus:outline-none">
+              <MoreHorizontal className=" text-[#c4c4c4]" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                View Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Edit Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Download Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Archive Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Delete Invoice
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className=" min-h-[63px] flex justify-between text-sm items-center px-6">
           <p>#001</p>
@@ -36,7 +102,33 @@ const RecentInvoices = () => {
             <Check className="-ml-1 mr-0.5 h-3 w-3 flex-shrink-0 self-center text-green-500" />
             Paid
           </div>
-          <MoreHorizontal className=" text-[#c4c4c4]" />
+          <DropdownMenu>
+            <DropdownMenuTrigger className=" focus:outline-none">
+              <MoreHorizontal className=" text-[#c4c4c4]" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                View Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Edit Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Download Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Archive Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                Delete Invoice
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

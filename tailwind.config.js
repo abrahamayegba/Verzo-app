@@ -27,6 +27,7 @@ module.exports = {
           mainGrey: "#C4C4C4",
           whiteTint: "#FBFBFB",
           borderGrey: "#F4F4F4",
+          red: "#FF3737",
         },
       },
       keyframes: {

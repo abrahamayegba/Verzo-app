@@ -86,14 +86,14 @@ const Topbar = () => {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md text-primary-greytext bg-white py-1 shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <Menu.Item>
                   {({ active }: any) => (
                     <a
                       href="#"
                       className={classNames(
                         active ? "bg-gray-100" : "",
-                        "flex flex-row items-center gap-x-3 px-4 py-2 text-sm text-gray-700"
+                        "flex flex-row items-center gap-x-3 px-4 py-2 text-sm "
                       )}
                     >
                       <span className=" h-4 w-4">
@@ -116,7 +116,7 @@ const Topbar = () => {
                       href="#"
                       className={classNames(
                         active ? "bg-gray-100" : "",
-                        "flex flex-row items-center gap-x-3 px-4 py-2 text-sm text-gray-700"
+                        "flex flex-row items-center gap-x-3 px-4 py-2 text-sm "
                       )}
                     >
                       <Settings className=" h-4 w-4" />
@@ -130,10 +130,10 @@ const Topbar = () => {
                       // onClick={() => handleLogout()}
                       className={classNames(
                         active ? "bg-gray-100" : "",
-                        " flex cursor-pointer flex-row items-center gap-x-3 px-4 py-2 text-sm text-gray-700"
+                        " flex cursor-pointer flex-row items-center gap-x-3 px-4 py-2 text-sm "
                       )}
                     >
-                      <LogOut className=" h-4 w-4" />
+                      <LogOut className=" h-4 w-4 rotate-180" />
                       Logout
                     </a>
                   )}

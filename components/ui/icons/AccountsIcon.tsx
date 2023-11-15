@@ -1,17 +1,17 @@
 import React from "react";
 
-const InvoiceIcon = () => {
+const AccountsIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
-      height="23"
+      height="24"
       viewBox="0 0 24 24"
       fill="none"
       style={{ opacity: 0.6 }} // Adjust the value as needed (0.0 to 1.0)
     >
       <path
-        d="M7.79922 7.8H16.1992M7.79922 12.6H16.1992M5.75922 3H18.2392C19.1008 3 19.7992 3.80589 19.7992 4.8V21L17.1992 19.2L14.5992 21L11.9992 19.2L9.39922 21L6.79922 19.2L4.19922 21V4.8C4.19922 3.80589 4.89765 3 5.75922 3Z"
+        d="M16.8004 16.8V10.8M12.0004 16.8V7.19999M7.20039 16.8V14.4M4.80039 21.6C3.47491 21.6 2.40039 20.5255 2.40039 19.2V4.79999C2.40039 3.47451 3.47491 2.39999 4.80039 2.39999H19.2004C20.5259 2.39999 21.6004 3.47451 21.6004 4.79999V19.2C21.6004 20.5255 20.5259 21.6 19.2004 21.6H4.80039Z"
         stroke="#757575"
         strokeWidth="2"
         strokeLinecap="round"
@@ -21,4 +21,4 @@ const InvoiceIcon = () => {
   );
 };
 
-export default InvoiceIcon;
+export default AccountsIcon;
