@@ -6,6 +6,7 @@ import InvoiceTabContentArchived from "./InvoiceTabContentArchived";
 import ArchiveInvoice from "./modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
 import DeleteInvoice from "./modals/invoice/DeleteInvoiceIcon";
+import Link from "next/link";
 
 const InvoiceList = () => {
   const allInvoices = "(15)";
@@ -60,7 +61,9 @@ const InvoiceList = () => {
               </button>
             </div>
           ) : (
-            <button className=" text-primary-blue ">See all invoices</button>
+            <Link href="/dashboard/invoices/allinvoices">
+              <button className=" text-primary-blue ">See all invoices</button>
+            </Link>
           )}
         </TabsList>
         <TabsContent value="all">
