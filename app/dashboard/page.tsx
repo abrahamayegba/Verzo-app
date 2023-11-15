@@ -1,10 +1,11 @@
 "use client";
+import React from "react";
 import ImportDataDropdown from "@/components/ImportDataDropdown";
 import Metrics from "@/components/Metrics";
 import RecentMetrics from "@/components/RecentMetrics";
-import React from "react";
 import useModal from "../hooks/useModal";
 import UploadInvoiceCSV from "@/components/modals/invoice/UploadInvoiceModal";
+import FilterDropdown from "@/components/FilterDropdown";
 
 const Dashboard = () => {
   const { isOpen, openModal, closeModal } = useModal();
@@ -19,7 +20,7 @@ const Dashboard = () => {
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
           <ImportDataDropdown openModal={openModal} />
-          {/* <FilterDropdown /> */}
+          <FilterDropdown />
         </div>
       </div>
       <Metrics />

@@ -1,9 +1,9 @@
 "use client";
-// import FilterDropdown from "@/components/FilterDropdown";
+import React from "react";
 import InvoiceList from "@/components/InvoiceList";
 import InvoiceMetrics from "@/components/InvoiceMetrics";
 import { PlusCircle } from "lucide-react";
-import React from "react";
+import FilterDropdown from "@/components/FilterDropdown";
 
 const Invoices = () => {
   return (
@@ -16,7 +16,7 @@ const Invoices = () => {
           </p>
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
-          {/* <FilterDropdown /> */}
+          <FilterDropdown />
           <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
             Create invoice
             <PlusCircle className=" w-5 h-5" />

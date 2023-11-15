@@ -69,19 +69,22 @@ const Sidebar = () => {
                     >
                       <div
                         className={`group flex flex-row items-center px-3 rounded-lg py-2 gap-x-[14px] text-primary-greytext ${
-                          pathname === item.path || item.path2
+                          pathname === item.path ||
+                          (item.path2 && pathname.startsWith(item.path2))
                             ? "bg-primary-bluetint"
                             : " hover:bg-gray-50"
                         }`}
                       >
                         <span className="py-[2px]">
-                          {pathname === item.path || item.path2
+                          {pathname === item.path ||
+                          (item.path2 && pathname.startsWith(item.path2))
                             ? item.activeicon
                             : item.icon}
                         </span>
                         <span
                           className={`hidden tracking-[-0.3px] group-hover:block text-[17px] w-[170px] ${
-                            pathname === item.path || item.path2
+                            pathname === item.path ||
+                            (item.path2 && pathname.startsWith(item.path2))
                               ? " text-primary-blue"
                               : ""
                           }`}
