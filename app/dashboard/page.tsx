@@ -6,6 +6,7 @@ import RecentMetrics from "@/components/RecentMetrics";
 import useModal from "../hooks/useModal";
 import UploadInvoiceCSV from "@/components/modals/invoice/UploadInvoiceModal";
 import FilterDropdown from "@/components/FilterDropdown";
+import { ListFilter } from "lucide-react";
 
 const Dashboard = () => {
   const { isOpen, openModal, closeModal } = useModal();
@@ -20,7 +21,11 @@ const Dashboard = () => {
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
           <ImportDataDropdown openModal={openModal} />
-          <FilterDropdown />
+          {/* <FilterDropdown /> */}
+          <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
+            Filter
+            <ListFilter className=" w-5 h-5" />
+          </button>
         </div>
       </div>
       <Metrics />
