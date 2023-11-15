@@ -3,7 +3,6 @@ import React from "react";
 import InvoiceList from "@/components/InvoiceList";
 import InvoiceMetrics from "@/components/InvoiceMetrics";
 import { ListFilter, PlusCircle } from "lucide-react";
-import FilterDropdown from "@/components/FilterDropdown";
 
 const Invoices = () => {
   return (

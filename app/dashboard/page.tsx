@@ -5,7 +5,6 @@ import Metrics from "@/components/Metrics";
 import RecentMetrics from "@/components/RecentMetrics";
 import useModal from "../hooks/useModal";
 import UploadInvoiceCSV from "@/components/modals/invoice/UploadInvoiceModal";
-import FilterDropdown from "@/components/FilterDropdown";
 import { ListFilter } from "lucide-react";
 
 const Dashboard = () => {

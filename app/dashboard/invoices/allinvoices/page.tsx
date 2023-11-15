@@ -1,7 +1,6 @@
 import React from "react";
 import AllInvoicesList from "@/components/Allinvoices";
 import { ArrowLeft, ListFilter, PlusCircle } from "lucide-react";
-import FilterDropdown from "@/components/FilterDropdown";
 
 const AllInvoices = () => {
   return (
