@@ -3,6 +3,7 @@ import React from "react";
 import InvoiceList from "@/components/InvoiceList";
 import InvoiceMetrics from "@/components/InvoiceMetrics";
 import { ListFilter, PlusCircle } from "lucide-react";
+import FilterDataDropdown from "@/components/FilterDataDropdown";
 
 const Invoices = () => {
   return (
@@ -15,7 +16,7 @@ const Invoices = () => {
           </p>
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
-          {/* <FilterDropdown /> */}
+          <FilterDataDropdown />
           <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
             Filter
             <ListFilter className=" w-5 h-5" />
