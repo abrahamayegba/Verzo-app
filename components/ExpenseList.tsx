@@ -1,33 +1,35 @@
 "use client";
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import InvoiceTabContentAll from "./InvoiceTabContentAll";
-import InvoiceTabContentArchived from "./InvoiceTabContentArchived";
 import ArchiveInvoice from "./modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
 import DeleteInvoice from "./modals/invoice/DeleteInvoiceModal";
-import CustomPagination from "./InvoiceListPagination";
+import Link from "next/link";
+import ExpenseTabContentAll from "./ExpenseTabContentAll";
+import ExpenseTabContentArchived from "./ExpenseTabContentArchived";
+import ArchiveExpense from "./modals/expense/ArchiveExpenseModal";
+import UnarchiveExpense from "./modals/expense/UnarchiveExpenseModal";
+import DeleteExpense from "./modals/expense/DeleteExpenseModal";
 
-const AllInvoicesList = () => {
-  const allInvoices = "(15)";
-  const archivedInvoices = "(0)";
+const ExpenseList = () => {
+  const allExpenses = "(12)";
+  const archivedExpenses = "(3)";
   const [isChecked, setIsChecked] = useState(false);
   const { isOpen, openModal, closeModal } = useModal();
   const {
-    isOpen: isDeleteModalOpen,
-    openModal: openDeleteModal,
-    closeModal: closeDeleteModal,
+    isOpen: isDeleteExpenseOpen,
+    openModal: openDeleteExpenseModal,
+    closeModal: closeDeleteExpenseModal,
+  } = useModal();
+
+  const {
+    isOpen: isUnarchiveOpen,
+    openModal: openUnarchiveModal,
+    closeModal: closeUnarchiveModal,
   } = useModal();
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
-  };
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const totalPages: number = 5;
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
   };
 
   return (
@@ -39,7 +41,7 @@ const AllInvoicesList = () => {
               className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
               value="all"
             >
-              All <span className=" text-primary-mainGrey">{allInvoices}</span>
+              All <span className=" text-primary-mainGrey">{allExpenses}</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -48,7 +50,7 @@ const AllInvoicesList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                {archivedInvoices}
+                {archivedExpenses}
               </span>
             </TabsTrigger>
           </div>
@@ -61,43 +63,50 @@ const AllInvoicesList = () => {
                 Archive
               </button>
               <button
-                onClick={openDeleteModal}
+                onClick={openDeleteExpenseModal}
                 className=" px-6 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-sm text-white"
               >
                 Delete
               </button>
             </div>
-          ) : null}
+          ) : (
+            <Link href="/dashboard/expenses/allexpenses">
+              <button className=" text-primary-blue ">See all expenses</button>
+            </Link>
+          )}
         </TabsList>
         <TabsContent value="all">
-          <InvoiceTabContentAll
+          <ExpenseTabContentAll
+            openDeleteModal={openDeleteExpenseModal}
             openArchiveModal={openModal}
-            openDeleteModal={openDeleteModal}
             onToggleSelectAll={handleToggleSelectAll}
-          />
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
           />
         </TabsContent>
         <TabsContent value="archived">
-          <InvoiceTabContentArchived />
+          <ExpenseTabContentArchived
+            openDeleteModal={openDeleteExpenseModal}
+            openUnarchiveModal={openUnarchiveModal}
+            onToggleSelectAll={handleToggleSelectAll}
+          />
         </TabsContent>
       </Tabs>
-
-      <ArchiveInvoice
+      <ArchiveExpense
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
       />
-      <DeleteInvoice
-        open={isDeleteModalOpen}
-        openModal={openDeleteModal}
-        onClose={closeDeleteModal}
+      <UnarchiveExpense
+        open={isUnarchiveOpen}
+        openModal={openUnarchiveModal}
+        onClose={closeUnarchiveModal}
+      />
+      <DeleteExpense
+        open={isDeleteExpenseOpen}
+        openModal={openDeleteExpenseModal}
+        onClose={closeDeleteExpenseModal}
       />
     </div>
   );
 };
 
-export default AllInvoicesList;
+export default ExpenseList;

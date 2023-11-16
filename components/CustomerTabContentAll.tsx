@@ -15,28 +15,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Archive, Download, Eye, Pen, Trash2 } from "lucide-react";
+import { Archive, Eye, Pen, Trash2 } from "lucide-react";
 
-interface InvoiceTabContentAllProps {
+interface CustomerTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
-  openDeleteModal: () => void;
   openArchiveModal: () => void;
+  openDeleteModal: () => void;
 }
 
-const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
+const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
   onToggleSelectAll,
-  openDeleteModal,
   openArchiveModal,
+  openDeleteModal,
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-  const data = Array.from({ length: 10 }, (_, index) => ({
+  const data = Array.from({ length: 12 }, (_, index) => ({
     id: index + 1,
-    invoice: `INV00${index + 1}`,
-    sentDate: new Date(2023, 0, index + 1),
-    status: index % 3 === 0 ? "Paid" : index % 3 === 1 ? "Unpaid" : "Pending",
-    customer: `Customer ${index + 1}`,
-    amount: `₦${((index + 1) * 2500).toLocaleString("en-NG")}.0`,
+    date: new Date(2023, 0, index + 1),
+    name: `Customer ${index + 1}`,
+    email: `user${index + 1}@example.com`,
+    phone: `080${Math.floor(Math.random() * 90000000) + 10000000}`,
   }));
 
   // Function to handle individual row selection
@@ -69,19 +68,16 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
               disabled={data.length === 0}
               onCheckedChange={handleSelectAll}
             />
-            Invoice
+            Name
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Sent date
+            Date added
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Status
+            Email address
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Customer
-          </TableHead>
-          <TableHead className="font-normal text-sm text-primary-greytext">
-            Amount
+            Phone number
           </TableHead>
           <TableHead className="text-right font-normal text-sm text-primary-greytext">
             Action
@@ -98,68 +94,40 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
                 onCheckedChange={() => handleRowSelect(row.id)}
               />
 
-              {row.invoice}
+              {row.name}
             </TableCell>
             <TableCell className=" text-primary-greytext">
-              {row.sentDate.toDateString()}
-            </TableCell>
-            <TableCell>
-              {row.status === "Paid" && (
-                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                  <span className="mr-2 text-green-500">✔</span>
-                  Paid
-                </span>
-              )}
-              {row.status === "Unpaid" && (
-                <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
-                  <span className="mr-2 text-red-500">✘</span>
-                  Canceled
-                </span>
-              )}
-              {row.status === "Pending" && (
-                <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
-                  <span className="mr-2 text-yellow-500">⌛</span>
-                  Pending
-                </span>
-              )}
+              {row.date.toDateString()}
             </TableCell>
             <TableCell className=" text-primary-greytext">
-              {row.customer}
+              {row.email}
             </TableCell>
             <TableCell className=" text-primary-greytext">
-              {row.amount}
+              {row.phone}
             </TableCell>
             <TableCell className="text-right text-primary-blue">
               <DropdownMenu>
                 <DropdownMenuTrigger className=" focus:outline-none">
                   More
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
-                  <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                    <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    View Invoice
-                  </DropdownMenuItem>
+                <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
                   <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                     <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    Edit Invoice
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                    <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    Download Invoice
+                    Edit Customer
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={openArchiveModal}
                     className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                   >
                     <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    Archive Invoice
+                    Archive Customer
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={openDeleteModal}
                     className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                   >
-                    <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    Delete Invoice
+                    <Trash2 className=" w-4 h-4 text-opacity-80" />
+                    Delete Customer
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -171,4 +139,4 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
   );
 };
 
-export default InvoiceTabContentAll;
+export default CustomerTabContentAll;

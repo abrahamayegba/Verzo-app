@@ -2,7 +2,7 @@
 import React from "react";
 import Verzologoblue from "./ui/icons/Verzologoblue";
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDown, LogOut, Search, Settings } from "lucide-react";
+import { ChevronDown, LogOut, Search, Settings, Users } from "lucide-react";
 import { useState, Fragment } from "react";
 
 function classNames(...classes: string[]) {
@@ -86,7 +86,7 @@ const Topbar = () => {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md text-primary-greytext bg-white py-1 shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute right-0 z-10 mt-2 w-[160px] origin-top-right rounded-md text-primary-greytext bg-white py-1 shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <Menu.Item>
                   {({ active }: any) => (
                     <a
@@ -107,6 +107,20 @@ const Topbar = () => {
                         </svg>
                       </span>
                       Your Profile
+                    </a>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }: any) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active ? "bg-gray-100" : "",
+                        "flex flex-row items-center gap-x-3 px-4 py-2 text-sm "
+                      )}
+                    >
+                      <Users className=" h-4 w-4" />
+                      Teams
                     </a>
                   )}
                 </Menu.Item>

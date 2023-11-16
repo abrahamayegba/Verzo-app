@@ -5,7 +5,7 @@ import InvoiceTabContentAll from "./InvoiceTabContentAll";
 import InvoiceTabContentArchived from "./InvoiceTabContentArchived";
 import ArchiveInvoice from "./modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
-import DeleteInvoice from "./modals/invoice/DeleteInvoiceIcon";
+import DeleteInvoice from "./modals/invoice/DeleteInvoiceModal";
 import Link from "next/link";
 
 const InvoiceList = () => {
@@ -14,9 +14,9 @@ const InvoiceList = () => {
   const [isChecked, setIsChecked] = useState(false);
   const { isOpen, openModal, closeModal } = useModal();
   const {
-    isOpen: isOpenModal1,
-    openModal: openModal1,
-    closeModal: closeModal1,
+    isOpen: isDeleteModalOpen,
+    openModal: openDeleteModal,
+    closeModal: closeDeleteModal,
   } = useModal();
 
   const handleToggleSelectAll = (isChecked: boolean) => {
@@ -54,7 +54,7 @@ const InvoiceList = () => {
                 Archive
               </button>
               <button
-                onClick={openModal1}
+                onClick={openDeleteModal}
                 className=" px-6 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-sm text-white"
               >
                 Delete
@@ -67,7 +67,11 @@ const InvoiceList = () => {
           )}
         </TabsList>
         <TabsContent value="all">
-          <InvoiceTabContentAll onToggleSelectAll={handleToggleSelectAll} />
+          <InvoiceTabContentAll
+            openArchiveModal={openModal}
+            openDeleteModal={openDeleteModal}
+            onToggleSelectAll={handleToggleSelectAll}
+          />
         </TabsContent>
         <TabsContent value="archived">
           <InvoiceTabContentArchived />
@@ -79,9 +83,9 @@ const InvoiceList = () => {
         onClose={closeModal}
       />
       <DeleteInvoice
-        open={isOpenModal1}
-        openModal={openModal1}
-        onClose={closeModal1}
+        open={isDeleteModalOpen}
+        openModal={openDeleteModal}
+        onClose={closeDeleteModal}
       />
     </div>
   );

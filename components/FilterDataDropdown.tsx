@@ -12,10 +12,10 @@ const FilterDataDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className=" focus:outline-none">
-        <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
+        <div className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
           Filter
           <ListFilter className=" w-5 h-5" />
-        </button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
         <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">

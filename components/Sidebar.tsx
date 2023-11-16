@@ -17,6 +17,8 @@ import AccountsIcon from "./ui/icons/AccountsIcon";
 import AddBusinessIcon from "./ui/icons/AddBusinessIcon";
 import ActiveInvoiceIcon from "./ui/icons/ActiveInvoiceIcon";
 import ActiveCustomerIcon from "./ui/icons/ActiveCustomerIcon";
+import ActiveExpenseIcon from "./ui/icons/ActiveExpenseIcon";
+import ActivePurchaseIcon from "./ui/icons/ActivePurchaseIcon";
 
 const sidebarItems = [
   {
@@ -39,14 +41,26 @@ const sidebarItems = [
     icon: <CustomerIcon />,
     activeicon: <ActiveCustomerIcon />,
     text: "Customers",
-    path: "/customers",
+    path: "/dashboard/customers",
   },
-  { id: 4, icon: <ExpenseIcon />, text: "Expenses", path: "/expenses" },
-  { id: 5, icon: <PurchaseIcon />, text: "Purchases", path: "/purchases" },
+  {
+    id: 4,
+    icon: <ExpenseIcon />,
+    activeicon: <ActiveExpenseIcon />,
+    text: "Expenses",
+    path: "/dashboard/expenses",
+    path2: "/dashboard/expenses/allexpenses",
+  },
+  {
+    id: 5,
+    icon: <PurchaseIcon />,
+    activeicon: <ActivePurchaseIcon />,
+    text: "Purchases",
+    path: "/dashboard/purchases",
+    path2: "/dashboard/purchases/allpurchases",
+  },
   { id: 6, icon: <ProductsIcon />, text: "Products", path: "/products" },
   { id: 7, icon: <ServiceIcon />, text: "Services", path: "/services" },
-  { id: 8, icon: <TeamIcon />, text: "Team", path: "/team" },
-  { id: 9, icon: <AccountsIcon />, text: "Accounts", path: "/accounts" },
 ];
 
 const Sidebar = () => {
@@ -55,7 +69,7 @@ const Sidebar = () => {
   return (
     <div className="hidden md:fixed md:inset-y-0 md:z-50 md:flex lg:flex-col">
       <div className="group mt-[80px] w-[100px] overflow-hidden border-r border-[#f4f4f4] bg-white transition-all duration-300 ease-in-out hover:w-[284px] hover:shadow-sm">
-        <div className="flex h-screen flex-col justify-between pb-[100px] pt-2">
+        <div className="flex h-screen flex-col justify-between pb-[150px] pt-2">
           <div className=" flex flex-col min-h-full justify-between">
             <p className=" text-[13px] mt-3.5 absolute text-primary-mainGrey group hidden group-hover:block px-7">
               FEATURES
@@ -97,7 +111,7 @@ const Sidebar = () => {
                 </li>
               ))}
             </ul>
-            <ul className=" relative">
+            {/* <ul className=" relative">
               <p className=" text-[13px] mt-[-3px] absolute text-primary-mainGrey group hidden group-hover:block px-7">
                 BUSINESS
               </p>
@@ -119,7 +133,7 @@ const Sidebar = () => {
                   </div>
                 </Link>
               </li>
-            </ul>
+            </ul> */}
             <ul className="">
               <li key={12} className="min-w-max">
                 <Link href={"/logout"}>

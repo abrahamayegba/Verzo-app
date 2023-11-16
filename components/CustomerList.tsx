@@ -1,33 +1,32 @@
 "use client";
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import InvoiceTabContentAll from "./InvoiceTabContentAll";
-import InvoiceTabContentArchived from "./InvoiceTabContentArchived";
-import ArchiveInvoice from "./modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
-import DeleteInvoice from "./modals/invoice/DeleteInvoiceModal";
-import CustomPagination from "./InvoiceListPagination";
+import DeleteCustomer from "./modals/customer/DeleteCustomerModal";
+import UnarchiveCustomer from "./modals/customer/UnarchiveCustomerModal";
+import ArchiveCustomer from "./modals/customer/ArchiveCustomerModal";
+import CustomerTabContentAll from "./CustomerTabContentAll";
+import CustomerTabContentArchived from "./CustomerTabContentArchived";
 
-const AllInvoicesList = () => {
-  const allInvoices = "(15)";
-  const archivedInvoices = "(0)";
+const CustomerList = () => {
+  const allCustomers = "(15)";
+  const archivedCustomers = "(0)";
   const [isChecked, setIsChecked] = useState(false);
   const { isOpen, openModal, closeModal } = useModal();
   const {
-    isOpen: isDeleteModalOpen,
-    openModal: openDeleteModal,
-    closeModal: closeDeleteModal,
+    isOpen: isDeleteCustomerOpen,
+    openModal: openDeleteCustomerModal,
+    closeModal: closeDeleteCustomerModal,
+  } = useModal();
+
+  const {
+    isOpen: isUnarchiveOpen,
+    openModal: openUnarchiveModal,
+    closeModal: closeUnarchiveModal,
   } = useModal();
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
-  };
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const totalPages: number = 5;
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
   };
 
   return (
@@ -39,7 +38,7 @@ const AllInvoicesList = () => {
               className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
               value="all"
             >
-              All <span className=" text-primary-mainGrey">{allInvoices}</span>
+              All <span className=" text-primary-mainGrey">{allCustomers}</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -48,7 +47,7 @@ const AllInvoicesList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                {archivedInvoices}
+                {archivedCustomers}
               </span>
             </TabsTrigger>
           </div>
@@ -61,7 +60,7 @@ const AllInvoicesList = () => {
                 Archive
               </button>
               <button
-                onClick={openDeleteModal}
+                onClick={openDeleteCustomerModal}
                 className=" px-6 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-sm text-white"
               >
                 Delete
@@ -70,34 +69,37 @@ const AllInvoicesList = () => {
           ) : null}
         </TabsList>
         <TabsContent value="all">
-          <InvoiceTabContentAll
+          <CustomerTabContentAll
+            openDeleteModal={openDeleteCustomerModal}
             openArchiveModal={openModal}
-            openDeleteModal={openDeleteModal}
             onToggleSelectAll={handleToggleSelectAll}
-          />
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
           />
         </TabsContent>
         <TabsContent value="archived">
-          <InvoiceTabContentArchived />
+          <CustomerTabContentArchived
+            openDeleteModal={openDeleteCustomerModal}
+            openUnarchiveModal={openUnarchiveModal}
+            onToggleSelectAll={handleToggleSelectAll}
+          />
         </TabsContent>
       </Tabs>
-
-      <ArchiveInvoice
+      <ArchiveCustomer
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
       />
-      <DeleteInvoice
-        open={isDeleteModalOpen}
-        openModal={openDeleteModal}
-        onClose={closeDeleteModal}
+      <UnarchiveCustomer
+        open={isUnarchiveOpen}
+        openModal={openUnarchiveModal}
+        onClose={closeUnarchiveModal}
+      />
+      <DeleteCustomer
+        open={isDeleteCustomerOpen}
+        openModal={openDeleteCustomerModal}
+        onClose={closeDeleteCustomerModal}
       />
     </div>
   );
 };
 
-export default AllInvoicesList;
+export default CustomerList;

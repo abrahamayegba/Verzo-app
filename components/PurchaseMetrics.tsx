@@ -1,9 +1,9 @@
 import React from "react";
-import Graphflat from "./ui/icons/Graphflat";
-import GraphUp from "./ui/icons/GraphUp";
 import ArrowUpIcon from "./ui/icons/ArrowUpIcon";
+import GraphUp from "./ui/icons/GraphUp";
+import Graphflat from "./ui/icons/Graphflat";
 
-const InvoiceMetrics = () => {
+const PurchaseMetrics = () => {
   return (
     <div className=" w-full flex min-h-[198px] rounded-[16px] bg-white border border-[#f4f4f4]">
       <div className=" w-1/3 border-r-[0.5px] px-5 py-3 flex flex-col justify-center gap-y-[36px]">
@@ -43,7 +43,6 @@ const InvoiceMetrics = () => {
               <span className="text-[#4BB543] mx-1">10%</span> since last month
             </div>
           </div>
-
           <Graphflat />
         </div>
       </div>
@@ -71,4 +70,4 @@ const InvoiceMetrics = () => {
   );
 };
 
-export default InvoiceMetrics;
+export default PurchaseMetrics;

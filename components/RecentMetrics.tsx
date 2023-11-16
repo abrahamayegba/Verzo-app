@@ -3,7 +3,7 @@ import RecentInvoices from "./RecentInvoices";
 import RecentExpenses from "./RecentExpenses";
 import RecentProducts from "./RecentProducts";
 import RecentMetricEmptyState from "./emptystates/RecentMetricEmptyState";
-import ActiveCustomerIcon from "./ui/icons/ActiveCustomerIcon";
+import RecentInvoiceEmptyIcon from "./ui/icons/RecentInvoiceEmptyIcon";
 
 const RecentMetrics = () => {
   return (
@@ -13,7 +13,7 @@ const RecentMetrics = () => {
       {/* <RecentCustomers /> */}
       <RecentMetricEmptyState
         name="Customers"
-        icon={<ActiveCustomerIcon />}
+        icon={<RecentInvoiceEmptyIcon />}
         emptytext="No customers added"
       />
       <RecentProducts />
