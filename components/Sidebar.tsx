@@ -19,6 +19,10 @@ import ActiveInvoiceIcon from "./ui/icons/ActiveInvoiceIcon";
 import ActiveCustomerIcon from "./ui/icons/ActiveCustomerIcon";
 import ActiveExpenseIcon from "./ui/icons/ActiveExpenseIcon";
 import ActivePurchaseIcon from "./ui/icons/ActivePurchaseIcon";
+import ActiveProductIcon from "./ui/icons/ActiveProductIcon";
+import ActiveServiceIcon from "./ui/icons/ActiveServiceIcon";
+import LogoutModal from "./modals/LogoutModal";
+import useModal from "@/app/hooks/useModal";
 
 const sidebarItems = [
   {
@@ -59,12 +63,30 @@ const sidebarItems = [
     path: "/dashboard/purchases",
     path2: "/dashboard/purchases/allpurchases",
   },
-  { id: 6, icon: <ProductsIcon />, text: "Products", path: "/products" },
-  { id: 7, icon: <ServiceIcon />, text: "Services", path: "/services" },
+  {
+    id: 6,
+    icon: <ProductsIcon />,
+    activeicon: <ActiveProductIcon />,
+    text: "Products",
+    path: "/dashboard/products",
+  },
+  {
+    id: 7,
+    icon: <ServiceIcon />,
+    activeicon: <ActiveServiceIcon />,
+    text: "Services",
+    path: "/dashboard/services",
+  },
 ];
 
 const Sidebar = () => {
   const pathname = usePathname();
+
+  const {
+    isOpen: isLogoutModalOpen,
+    openModal: openLogoutModal,
+    closeModal: closeLogoutModal,
+  } = useModal();
 
   return (
     <div className="hidden md:fixed md:inset-y-0 md:z-50 md:flex lg:flex-col">
@@ -136,39 +158,41 @@ const Sidebar = () => {
             </ul> */}
             <ul className="">
               <li key={12} className="min-w-max">
-                <Link href={"/logout"}>
+                <button
+                  onClick={openLogoutModal}
+                  className={`relative flex items-center px-6 text-white group-hover:w-[284px]`}
+                >
                   <div
-                    className={`relative flex items-center px-6 text-white group-hover:w-[284px]`}
+                    className={`group flex flex-row ml-[2.5px] items-center px-3 rounded-lg py-2 gap-x-[14px] text-primary-greytext ${
+                      pathname === "/logout"
+                        ? "bg-primary-bluetint"
+                        : " hover:bg-gray-50"
+                    }`}
                   >
-                    <div
-                      className={`group flex flex-row ml-[2.5px] items-center px-3 rounded-lg py-2 gap-x-[14px] text-primary-greytext ${
-                        pathname === "/logout"
-                          ? "bg-primary-bluetint"
-                          : " hover:bg-gray-50"
+                    <span className="py-[2px]">
+                      {pathname === "/logout" ? <Logout /> : <Logout />}
+                    </span>
+                    <span
+                      className={`hidden text-start tracking-[-0.3px] group-hover:block text-[17px] w-[170px] ${
+                        pathname === "logout" ? " text-primary-blue" : ""
                       }`}
                     >
-                      <span className="py-[2px]">
-                        {pathname === "/logout" ? <Logout /> : <Logout />}
-                      </span>
-                      <span
-                        className={`hidden tracking-[-0.3px] group-hover:block text-[17px] w-[170px] ${
-                          pathname === "logout" ? " text-primary-blue" : ""
-                        }`}
-                      >
-                        {"Logout"}
-                      </span>
-                    </div>
+                      {"Logout"}
+                    </span>
                   </div>
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
         </div>
       </div>
+      <LogoutModal
+        open={isLogoutModalOpen}
+        openModal={openLogoutModal}
+        onClose={closeLogoutModal}
+      />
     </div>
   );
 };
 
 export default Sidebar;
-
-// enw changes

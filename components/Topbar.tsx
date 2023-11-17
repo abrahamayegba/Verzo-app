@@ -3,7 +3,11 @@ import React from "react";
 import Verzologoblue from "./ui/icons/Verzologoblue";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDown, LogOut, Search, Settings, Users } from "lucide-react";
-import { useState, Fragment } from "react";
+import { Fragment } from "react";
+import Link from "next/link";
+import useModal from "@/app/hooks/useModal";
+import LogoutModal from "./modals/LogoutModal";
+import NotificationsDropdown from "./NotificationsDropdown";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -12,6 +16,11 @@ function classNames(...classes: string[]) {
 const Topbar = () => {
   const customerName = "John Doe";
   const companyName = "Doe Industries";
+  const {
+    isOpen: isLogoutModalOpen,
+    openModal: openLogoutModal,
+    closeModal: closeLogoutModal,
+  } = useModal();
 
   return (
     <header className=" bg-white text-blue-100 fixed flex items-center w-full top-0 z-[100] h-[80px] border border-[#f4f4f4]">
@@ -36,29 +45,7 @@ const Topbar = () => {
           </form>
         </div>
         <div className="ml-4 flex items-center md:ml-6 gap-x-[20px]">
-          <button
-            type="button"
-            className="relative rounded-full border p-[10px] text-gray-600 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-verzoblue focus:ring-offset-2"
-          >
-            <span className="absolute -inset-1.5" />
-            <span className="sr-only">View notifications</span>
-            <span>
-              <svg
-                width={16}
-                height={16}
-                fill="none"
-                viewBox="0 0 24 24"
-                role="none"
-              >
-                <path
-                  fill="currentColor"
-                  fillRule="evenodd"
-                  d="M14 3a2 2 0 1 0-4 0v.27a7.482 7.482 0 0 0-5.457 6.636L4.228 14H1v4a3 3 0 0 0 3 3h5.172a3 3 0 0 0 5.656 0H20a3 3 0 0 0 3-3v-4h-3.228l-.315-4.094A7.482 7.482 0 0 0 14 3.27V3Zm-2 2a5.48 5.48 0 0 0-5.463 5.059L6.08 16H3v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2h-3.08l-.457-5.941A5.48 5.48 0 0 0 12 5Z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </span>
-          </button>
+          <NotificationsDropdown />
           <Menu as="div" className="relative ">
             <div>
               <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none lg:rounded-md lg:p-2 lg:hover:bg-gray-50">
@@ -70,7 +57,6 @@ const Topbar = () => {
                     {companyName}
                   </span>
                 </div>
-
                 <ChevronDown
                   className="ml-2 hidden h-[18px] w-[18px] flex-shrink-0 text-primary-greytext lg:block"
                   aria-hidden="true"
@@ -89,8 +75,8 @@ const Topbar = () => {
               <Menu.Items className="absolute right-0 z-10 mt-2 w-[160px] origin-top-right rounded-md text-primary-greytext bg-white py-1 shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <Menu.Item>
                   {({ active }: any) => (
-                    <a
-                      href="#"
+                    <Link
+                      href="/dashboard/settings"
                       className={classNames(
                         active ? "bg-gray-100" : "",
                         "flex flex-row items-center gap-x-3 px-4 py-2 text-sm "
@@ -107,13 +93,13 @@ const Topbar = () => {
                         </svg>
                       </span>
                       Your Profile
-                    </a>
+                    </Link>
                   )}
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }: any) => (
-                    <a
-                      href="#"
+                    <Link
+                      href="/dashboard/team"
                       className={classNames(
                         active ? "bg-gray-100" : "",
                         "flex flex-row items-center gap-x-3 px-4 py-2 text-sm "
@@ -121,13 +107,13 @@ const Topbar = () => {
                     >
                       <Users className=" h-4 w-4" />
                       Teams
-                    </a>
+                    </Link>
                   )}
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }: any) => (
-                    <a
-                      href="#"
+                    <Link
+                      href="/dashboard/settings"
                       className={classNames(
                         active ? "bg-gray-100" : "",
                         "flex flex-row items-center gap-x-3 px-4 py-2 text-sm "
@@ -135,21 +121,21 @@ const Topbar = () => {
                     >
                       <Settings className=" h-4 w-4" />
                       Settings
-                    </a>
+                    </Link>
                   )}
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }: any) => (
-                    <a
-                      // onClick={() => handleLogout()}
+                    <button
+                      onClick={openLogoutModal}
                       className={classNames(
                         active ? "bg-gray-100" : "",
-                        " flex cursor-pointer flex-row items-center gap-x-3 px-4 py-2 text-sm "
+                        " flex cursor-pointer flex-row w-full items-center gap-x-3 px-4 py-2 text-sm "
                       )}
                     >
                       <LogOut className=" h-4 w-4 rotate-180" />
                       Logout
-                    </a>
+                    </button>
                   )}
                 </Menu.Item>
               </Menu.Items>
@@ -157,6 +143,11 @@ const Topbar = () => {
           </Menu>
         </div>
       </nav>
+      <LogoutModal
+        open={isLogoutModalOpen}
+        openModal={openLogoutModal}
+        onClose={closeLogoutModal}
+      />
     </header>
   );
 };
