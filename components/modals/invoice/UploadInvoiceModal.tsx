@@ -74,7 +74,11 @@ const UploadInvoiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
                   <p className=" text-lg text-[#121212]">Upload file</p>
                   <p className=" text-primary-greytext">
                     Upload a CSV file to help us import your invoices. Supported
-                    formats: CSV
+                    formats: CSV <br />
+                    <span className=" text-primary-blue underline underline-offset-2 cursor-pointer">
+                      Download
+                    </span>{" "}
+                    sample template
                   </p>
                   <div
                     className="h-[103px] cursor-pointer border-dashed items-center justify-center flex flex-col gap-y-3 border border-primary-mainGrey mt-5 rounded-lg text-sm"

@@ -12,6 +12,19 @@
   font-family: "SatoshiFont", sans-serif;
 }
 
+:root {
+  --custom-gradient: linear-gradient(
+    108deg,
+    rgba(2, 125, 255, 0.9) 30.91%,
+    rgba(140, 1, 232, 0.9) 49.51%,
+    #6275e9 95.51%
+  );
+}
+
+.purplegradient {
+  background: var(--custom-gradient);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

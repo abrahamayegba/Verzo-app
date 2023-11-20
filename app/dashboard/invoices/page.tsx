@@ -4,6 +4,7 @@ import InvoiceList from "@/components/InvoiceList";
 import InvoiceMetrics from "@/components/InvoiceMetrics";
 import { PlusCircle } from "lucide-react";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
+import Link from "next/link";
 
 const Invoices = () => {
   return (
@@ -17,10 +18,12 @@ const Invoices = () => {
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
           <FilterDataDropdown />
-          <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-            Create invoice
-            <PlusCircle className=" w-5 h-5" />
-          </button>
+          <Link href="/invoice/createinvoice">
+            <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
+              Create invoice
+              <PlusCircle className=" w-5 h-5" />
+            </button>
+          </Link>
         </div>
       </div>
       <InvoiceMetrics />
