@@ -1,0 +1,25 @@
+mutation UpdateExpense(
+  $expenseId: String!
+  $description: String
+  $expenseCategoryId: String
+  $expenseDate: Date
+  $merchantId: String
+  $expenseItem: [ExpenseDetail]
+) {
+  updateExpense(
+    expenseId: $expenseId
+    input: {
+      description: $description
+      expenseCategoryId: $expenseCategoryId
+      expenseDate: $expenseDate
+      merchantId: $merchantId
+      expenseItem: $expenseItem
+    }
+  ) {
+    id
+    description
+    amount
+    expenseDate
+    createdAt
+  }
+}

@@ -1,0 +1,23 @@
+mutation UpdateBusinessCOA(
+  $businessCoaId: String!
+  $code: String
+  $name: String
+  $description: String
+  $accountCategoryTypeId: String
+) {
+  updateBusinessCOA(
+    businessCoaId: $businessCoaId
+    input: {
+      code: $code
+      name: $name
+      description: $description
+      accountCategoryTypeId: $accountCategoryTypeId
+    }
+  ) {
+    id
+    code
+    name
+    createdAt
+    updatedAt
+  }
+}

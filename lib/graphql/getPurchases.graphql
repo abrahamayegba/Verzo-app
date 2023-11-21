@@ -1,0 +1,19 @@
+query GetPurchases {
+  getPurchases {
+    id
+    description
+    transactionDate
+    total
+    businessId
+    purchaseItems {
+      description
+      quantity
+      unitPrice
+      price
+      product {
+        productName
+        price
+      }
+    }
+  }
+}

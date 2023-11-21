@@ -1,0 +1,27 @@
+query GetSalesForQuarter(
+  $businessId: String!
+  $quarterly: Boolean
+  $cursor: String
+  $sets: Float
+) {
+  getSalesForQuarter(
+    businessId: $businessId
+    quarterly: $quarterly
+    cursor: $cursor
+    sets: $sets
+  ) {
+    salesThisQuarter {
+      id
+      paidAt
+      saleAmount
+      invoice {
+        customer {
+          name
+          email
+        }
+      }
+    }
+    numberOfSalesThisQuarter
+    cursorId
+  }
+}

@@ -1,0 +1,17 @@
+query TotalYearlyInvoicesAmount($businessId: String!, $yearly: Boolean) {
+  totalYearlyInvoicesAmount(businessId: $businessId, yearly: $yearly) {
+    monthlyTotalAmounts {
+      month
+      totalInvoicesAmount
+      totalPendingInvoicesAmount
+      totalPaidInvoicesAmount
+    }
+    totalInvoiceAmountForYear
+    percentageOfInvoicesPaidForYear
+    totalPendingInvoiceAmountThisYear
+    percentageIncreaseInPendingInvoiceThisYear
+    totalOverdueInvoiceAmountThisYear
+    percentageIncreaseInOverdueInvoicesThisYear
+    percentageIncreaseInInvoiceThisYear
+  }
+}

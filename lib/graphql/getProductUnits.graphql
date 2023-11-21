@@ -1,0 +1,7 @@
+query GetProductUnits {
+  getProductUnits {
+    id
+    unitName
+    createdAt
+  }
+}

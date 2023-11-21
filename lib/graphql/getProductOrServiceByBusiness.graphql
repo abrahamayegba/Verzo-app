@@ -1,0 +1,46 @@
+query GetProductOrServiceByBusiness(
+  $businessId: String!
+  $take: Float
+  $cursor: String
+  $type: String
+) {
+  getProductOrServiceByBusiness(
+    businessId: $businessId
+    cursor: $cursor
+    take: $take
+    type: $type
+  ) {
+    productOrServiceByBusiness {
+      id
+      title
+      type
+      price
+      isArchived
+      product {
+        productName
+        price
+        id
+        type
+        basicUnit
+        productUnit {
+          id
+          unitName
+        }
+      }
+      service {
+        name
+        price
+        serviceUnit {
+          id
+          unitName
+        }
+      }
+      business {
+        businessName
+      }
+      createdAt
+    }
+    cursorId
+    type
+  }
+}

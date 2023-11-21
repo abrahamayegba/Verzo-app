@@ -1,0 +1,3 @@
+mutation SendInvoiceB($invoiceId: String!, $copy: Boolean) {
+  sendInvoiceB(invoiceId: $invoiceId, copy: $copy)
+}

@@ -1,0 +1,24 @@
+mutation MakeExpensePayment(
+  $businessId: String!
+  $expenseId: String!
+  $transactionDate: Date!
+  $description: String!
+  $reference: String!
+  $total: Float!
+  $file: String
+) {
+  makeExpensePayment(
+    input: {
+      businessId: $businessId
+      expenseId: $expenseId
+      transactionDate: $transactionDate
+      description: $description
+      reference: $reference
+      total: $total
+      file: $file
+    }
+  ) {
+    paid
+    expenseStatus
+  }
+}

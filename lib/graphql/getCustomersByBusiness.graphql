@@ -1,0 +1,22 @@
+query GetCustomerByBusiness(
+  $businessId: String!
+  $cursor: String
+  $sets: Float
+) {
+  getCustomerByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
+    customerByBusiness {
+      id
+      name
+      email
+      mobile
+      createdAt
+      address
+      isArchived
+      invoices {
+        totalAmount
+        createdAt
+      }
+    }
+    cursorId
+  }
+}

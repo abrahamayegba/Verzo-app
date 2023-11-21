@@ -1,0 +1,29 @@
+mutation CreateCustomer(
+  $name: String!
+  $address: String
+  $mobile: String!
+  $email: String!
+  $businessId: String!
+) {
+  createCustomer(
+    input: {
+      name: $name
+      address: $address
+      mobile: $mobile
+      email: $email
+      businessId: $businessId
+    }
+  ) {
+    id
+    name
+    address
+    mobile
+    email
+    business {
+      businessName
+      businessEmail
+      businessMobile
+    }
+    createdAt
+  }
+}

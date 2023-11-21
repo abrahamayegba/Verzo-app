@@ -1,0 +1,20 @@
+mutation UploadMerchantInvoice(
+  $businessId: String!
+  $expenseId: String!
+  $invoiceDate: Date!
+  $match: Boolean!
+  $file: String
+) {
+  uploadMerchantInvoiceToExpense(
+    input: {
+      businessId: $businessId
+      expenseId: $expenseId
+      invoiceDate: $invoiceDate
+      match: $match
+      file: $file
+    }
+  ) {
+    uploaded
+    expenseStatus
+  }
+}

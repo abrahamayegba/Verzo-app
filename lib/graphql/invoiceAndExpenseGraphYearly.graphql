@@ -1,0 +1,8 @@
+query InvoiceAndExpenseGraphYearly($businessId: String!, $yearly: Boolean) {
+  invoiceAndExpenseGraphYearly(businessId: $businessId, yearly: $yearly) {
+    month
+    totalAmount
+    totalInvoicesAmount
+    totalExpenseAmount
+  }
+}

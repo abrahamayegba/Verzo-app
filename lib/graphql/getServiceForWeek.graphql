@@ -1,0 +1,6 @@
+query GetServiceForWeek($businessId: String!, $weekly: Boolean) {
+  getServiceForWeek(businessId: $businessId, weekly: $weekly) {
+    servicesThisWeek
+    totalServiceAmountThisWeek
+  }
+}

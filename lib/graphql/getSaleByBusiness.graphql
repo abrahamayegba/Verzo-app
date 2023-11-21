@@ -1,0 +1,65 @@
+query GetSaleByBusiness($businessId: String!, $cursor: String, $sets: Float) {
+  getSaleByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
+    salesByBusiness {
+      id
+      description
+      saleAmount
+      paid
+      business {
+        businessName
+      }
+      transactionDate
+      invoice {
+        id
+        totalAmount
+        createdAt
+        VAT
+        paidFully
+        discount
+        dateOfIssue
+        dueDate
+        customer {
+          id
+          name
+          email
+          address
+        }
+        business {
+          id
+          businessName
+          businessEmail
+        }
+        invoiceDetails {
+          id
+          index
+          productInvoiceDetail {
+            unitPrice
+            quantity
+            product {
+              type
+              productName
+              basicUnit
+              productUnit {
+                id
+                unitName
+              }
+            }
+          }
+          serviceInvoiceDetail {
+            unitPrice
+            quantity
+            service {
+              type
+              name
+              serviceUnit {
+                id
+                unitName
+              }
+            }
+          }
+        }
+      }
+    }
+    cursorId
+  }
+}

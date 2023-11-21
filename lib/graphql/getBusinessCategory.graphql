@@ -1,0 +1,7 @@
+query GetBusinessCategories {
+  getBusinessCategories {
+    id
+    categoryName
+    createdAt
+  }
+}

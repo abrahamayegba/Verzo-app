@@ -1,0 +1,15 @@
+mutation UpdateAddOnOption(
+  $addOnOptionId: String!
+  $addOnName: String
+  $addOnPrice: Float
+) {
+  updateAddOnOption(
+    addOnOptionId: $addOnOptionId
+    input: { addOnName: $addOnName, addOnPrice: $addOnPrice }
+  ) {
+    id
+    addOnName
+    addOnPrice
+    updatedAt
+  }
+}

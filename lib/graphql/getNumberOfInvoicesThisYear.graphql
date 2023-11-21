@@ -1,0 +1,6 @@
+query NumberOfInvoicesThisYear($businessId: String!, $yearly: Boolean) {
+  numberOfInvoicesThisYear(businessId: $businessId, yearly: $yearly) {
+    invoicesThisYear
+    totalInvoices
+  }
+}

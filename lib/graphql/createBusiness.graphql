@@ -1,0 +1,20 @@
+mutation CreateBusiness(
+  $businessName: String!
+  $businessEmail: String!
+  $businessMobile: String!
+  $businessCategoryId: String!
+) {
+  createBusiness(
+    input: {
+      businessName: $businessName
+      businessEmail: $businessEmail
+      businessMobile: $businessMobile
+      businessCategoryId: $businessCategoryId
+    }
+  ) {
+    id
+    businessName
+    businessEmail
+    businessMobile
+  }
+}

@@ -1,0 +1,27 @@
+query GetSalesForYear(
+  $businessId: String!
+  $yearly: Boolean
+  $cursor: String
+  $sets: Float
+) {
+  getSalesForYear(
+    businessId: $businessId
+    yearly: $yearly
+    cursor: $cursor
+    sets: $sets
+  ) {
+    salesThisYear {
+      id
+      paidAt
+      saleAmount
+      invoice {
+        customer {
+          name
+          email
+        }
+      }
+    }
+    numberOfSalesThisYear
+    cursorId
+  }
+}

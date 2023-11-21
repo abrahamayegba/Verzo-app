@@ -1,0 +1,14 @@
+query GetDailyExpensesForMonth(
+  $businessId: String!
+  $month: Float!
+  $year: Float!
+) {
+  getDailyExpensesForMonth(
+    businessId: $businessId
+    month: $month
+    year: $year
+  ) {
+    expenseDate
+    totalExpenses
+  }
+}

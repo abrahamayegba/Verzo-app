@@ -1,0 +1,3 @@
+mutation CreateCompleteExpenseWithCsv($businessId: String!, $csvFile: Any!) {
+  createCompletedExpenseWithCsv(businessId: $businessId, csvFile: $csvFile)
+}

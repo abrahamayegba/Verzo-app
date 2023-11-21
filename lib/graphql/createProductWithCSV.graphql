@@ -1,0 +1,3 @@
+mutation CreateProductWithCSV($businessId: String!, $csvFile: Any!) {
+  createProductsWithCsv(businessId: $businessId, csvFile: $csvFile)
+}

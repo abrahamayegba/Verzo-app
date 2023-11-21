@@ -1,0 +1,6 @@
+mutation SignUp($fullname: String!, $email: String!, $password: String!) {
+  signUp(input: { email: $email, password: $password, fullname: $fullname }) {
+    access_token
+    refresh_token
+  }
+}

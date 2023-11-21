@@ -1,0 +1,29 @@
+mutation CreateExpense(
+  $description: String!
+  $reference: String!
+  $expenseCategoryId: String
+  $businessId: String!
+  $expenseDate: Date!
+  $merchantId: String!
+  $recurring: Boolean
+  $expenseItem: [ExpenseDetail!]!
+) {
+  createExpense(
+    input: {
+      description: $description
+      expenseCategoryId: $expenseCategoryId
+      reference: $reference
+      businessId: $businessId
+      expenseDate: $expenseDate
+      merchantId: $merchantId
+      recurring: $recurring
+      expenseItem: $expenseItem
+    }
+  ) {
+    id
+    description
+    amount
+    expenseDate
+    createdAt
+  }
+}

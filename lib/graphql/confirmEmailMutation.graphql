@@ -1,0 +1,3 @@
+mutation Verification($code: Float!) {
+  verification(code: $code)
+}

@@ -1,0 +1,24 @@
+mutation MakePurchasePayment(
+  $businessId: String!
+  $purchaseId: String!
+  $transactionDate: Date!
+  $description: String!
+  $reference: String!
+  $total: Float!
+  $file: String
+) {
+  makePurchasePayment(
+    input: {
+      businessId: $businessId
+      purchaseId: $purchaseId
+      transactionDate: $transactionDate
+      description: $description
+      reference: $reference
+      total: $total
+      file: $file
+    }
+  ) {
+    paid
+    purchaseStatus
+  }
+}

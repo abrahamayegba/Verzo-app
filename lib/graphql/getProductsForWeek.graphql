@@ -1,0 +1,8 @@
+query GetProductForWeek($businessId: String!, $weekly: Boolean) {
+  getProductsForWeek(businessId: $businessId, weekly: $weekly) {
+    productsThisWeek
+    totalProductAmountThisWeek
+    productsInStock
+    productsOutOfStock
+  }
+}

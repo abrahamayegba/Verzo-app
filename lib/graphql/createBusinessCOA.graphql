@@ -1,0 +1,22 @@
+mutation CreateNewBusinessCOA(
+  $code: String!
+  $name: String!
+  $description: String
+  $accountCategoryTypeId: String!
+  $businessId: String!
+) {
+  createBusinessCOA(
+    input: {
+      code: $code
+      name: $name
+      description: $description
+      accountCategoryTypeId: $accountCategoryTypeId
+      businessId: $businessId
+    }
+  ) {
+    id
+    code
+    name
+    createdAt
+  }
+}

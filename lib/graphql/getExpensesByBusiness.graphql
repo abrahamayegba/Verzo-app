@@ -1,0 +1,28 @@
+query GetExpensesByBusiness(
+  $businessId: String!
+  $sets: Float
+  $cursor: String
+) {
+  getExpenseByBusiness(businessId: $businessId, sets: $sets, cursor: $cursor) {
+    expenseByBusiness {
+      id
+      description
+      amount
+      paid
+      expenseCategory {
+        name
+        id
+      }
+      expenseDate
+      business {
+        businessName
+      }
+      merchant {
+        name
+        id
+      }
+      recurring
+    }
+    cursorId
+  }
+}

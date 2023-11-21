@@ -1,0 +1,9 @@
+query InvoiceAndExpenseGraphWeekly($businessId: String!, $weekly: Boolean) {
+  invoiceAndExpenseGraphWeekly(businessId: $businessId, weekly: $weekly) {
+    date
+    dayOfWeek
+    total
+    totalExpenseAmount
+    totalInvoiceAmount
+  }
+}

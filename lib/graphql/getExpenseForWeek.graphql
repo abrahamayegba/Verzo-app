@@ -1,0 +1,7 @@
+query GetExpenseForWeek($businessId: String!, $weekly: Boolean) {
+  getExpensesForWeek(businessId: $businessId, weekly: $weekly) {
+    totalExpenseAmountThisWeek
+    percentageOfExpenseToInvoiceThisWeek
+    percentageIncreaseInExpenseThisWeek
+  }
+}

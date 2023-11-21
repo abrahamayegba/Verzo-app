@@ -1,0 +1,17 @@
+query TotalMonthlyInvoicesAmount($businessId: String!, $monthly: Boolean) {
+  totalMonthlyInvoicesAmount(businessId: $businessId, monthly: $monthly) {
+    dailyTotalAmountsForMonth {
+      date
+      totalAmount
+      totalPendingAmount
+      totalPaidAmount
+    }
+    totalInvoiceAmountForMonth
+    percentageOfPaidInvoicesForMonth
+    totalPendingInvoiceAmountThisMonth
+    percentageIncreaseInPendingInvoiceThisMonth
+    totalOverdueInvoiceAmountThisMonth
+    percentageIncreaseInOverdueInvoicesThisMonth
+    percentageIncreaseInInvoicesThisMonth
+  }
+}

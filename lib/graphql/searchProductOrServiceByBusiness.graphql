@@ -1,0 +1,22 @@
+query SearchProductOrServiceByBusiness($businessId: String!, $search: String!) {
+  searchProductOrServiceByBusiness(businessId: $businessId, search: $search) {
+    id
+    type
+    title
+    product {
+      id
+      productName
+      basicUnit
+      price
+      isArchived
+      createdAt
+    }
+    service {
+      id
+      name
+      price
+      isArchived
+      createdAt
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation DeleteAddOnOption($addOnOptionId: String!) {
+  deleteAddOnOption(addOnOptionId: $addOnOptionId)
+}

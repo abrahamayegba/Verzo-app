@@ -1,0 +1,6 @@
+query NumberOfCustomersThisMonth($businessId: String!, $monthly: Boolean) {
+  numberOfCustomersThisMonth(businessId: $businessId, monthly: $monthly) {
+    customersThisMonth
+    totalCustomers
+  }
+}

@@ -1,0 +1,69 @@
+query GetInvoicesByBusiness(
+  $businessId: String!
+  $cursor: String
+  $sets: Float
+) {
+  getInvoiceByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
+    invoicesByBusiness {
+      id
+      totalAmount
+      createdAt
+      subtotal
+      VAT
+      discount
+      dateOfIssue
+      dueDate
+      customer {
+        id
+        name
+        email
+        address
+      }
+      business {
+        id
+        businessName
+        businessEmail
+      }
+      invoiceDetails {
+        id
+        type
+        cost
+        index
+        productInvoiceDetail {
+          type
+          unitPrice
+          quantity
+          price
+          product {
+            id
+            type
+            productName
+            basicUnit
+            price
+            productUnit {
+              id
+              unitName
+            }
+          }
+        }
+        serviceInvoiceDetail {
+          type
+          unitPrice
+          quantity
+          price
+          service {
+            id
+            type
+            name
+            price
+            serviceUnit {
+              id
+              unitName
+            }
+          }
+        }
+      }
+    }
+    cursorId
+  }
+}

@@ -1,0 +1,39 @@
+query GetPurchaseByBusiness(
+  $businessId: String!
+  $cursor: String
+  $sets: Float
+) {
+  getPurchaseByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
+    purchaseByBusiness {
+      id
+      description
+      transactionDate
+      total
+      businessId
+      merchant {
+        name
+      }
+      paid
+      business {
+        businessName
+      }
+      purchasePayments {
+        total
+        file
+        transactionDate
+        description
+      }
+      purchaseItems {
+        description
+        quantity
+        unitPrice
+        price
+        product {
+          productName
+          price
+        }
+      }
+    }
+    cursorId
+  }
+}

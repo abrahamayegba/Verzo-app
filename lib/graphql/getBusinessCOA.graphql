@@ -1,0 +1,8 @@
+query GetBusinessCOAs {
+  getBusinessCOAs {
+    id
+    name
+    code
+    createdAt
+  }
+}

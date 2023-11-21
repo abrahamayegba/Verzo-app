@@ -1,0 +1,9 @@
+query SearchCustomerByBusiness($businessId: String!, $search: String!) {
+  searchCustomerByBusiness(businessId: $businessId, search: $search) {
+    id
+    name
+    mobile
+    email
+    address
+  }
+}

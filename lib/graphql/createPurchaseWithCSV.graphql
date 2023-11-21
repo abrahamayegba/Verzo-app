@@ -1,0 +1,3 @@
+mutation CreateCompletedPurchaseWithCsv($businessId: String!, $csvFile: Any!) {
+  createCompletedPurchaseWithCsv(businessId: $businessId, csvFile: $csvFile)
+}

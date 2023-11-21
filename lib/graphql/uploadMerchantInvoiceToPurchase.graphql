@@ -1,0 +1,20 @@
+mutation UploadMerchantInvoiceToPurchase(
+  $businessId: String!
+  $purchaseId: String!
+  $invoiceDate: Date!
+  $match: Boolean!
+  $file: String
+) {
+  uploadMerchantInvoiceToPurchase(
+    input: {
+      businessId: $businessId
+      purchaseId: $purchaseId
+      invoiceDate: $invoiceDate
+      match: $match
+      file: $file
+    }
+  ) {
+    uploaded
+    purchaseStatus
+  }
+}

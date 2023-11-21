@@ -1,0 +1,23 @@
+query GetProductsByBusiness(
+  $businessId: String!
+  $cursor: String
+  $sets: Float
+) {
+  getProductsByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
+    productByBusiness {
+      id
+      type
+      productName
+      price
+      productUnit {
+        unitName
+      }
+      productUnitId
+      basicUnit
+      isArchived
+      businessId
+      createdAt
+    }
+    cursorId
+  }
+}

@@ -1,0 +1,8 @@
+query GetChartOfAccounts {
+  getChartOfAccounts {
+    id
+    name
+    code
+    createdAt
+  }
+}

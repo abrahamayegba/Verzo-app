@@ -1,0 +1,19 @@
+query GetSaleByBusinessMobile(
+  $businessId: String!
+  $cursor: String
+  $take: Float
+) {
+  getSaleByBusinessMobile(
+    businessId: $businessId
+    cursor: $cursor
+    take: $take
+  ) {
+    salesByBusiness {
+      id
+      description
+      saleAmount
+      transactionDate
+    }
+    cursorId
+  }
+}

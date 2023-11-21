@@ -1,0 +1,27 @@
+query GetSalesForMonth(
+  $businessId: String!
+  $monthly: Boolean
+  $cursor: String
+  $sets: Float
+) {
+  getSalesForMonth(
+    businessId: $businessId
+    monthly: $monthly
+    cursor: $cursor
+    sets: $sets
+  ) {
+    salesThisMonth {
+      id
+      paidAt
+      saleAmount
+      invoice {
+        customer {
+          name
+          email
+        }
+      }
+    }
+    numberOfSalesThisMonth
+    cursorId
+  }
+}

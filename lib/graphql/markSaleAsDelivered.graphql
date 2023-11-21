@@ -1,0 +1,6 @@
+mutation MarkSaleAsDelivered($saleId: String!) {
+  markSaleAsDelivered(saleId: $saleId) {
+    delivered
+    saleStatus
+  }
+}

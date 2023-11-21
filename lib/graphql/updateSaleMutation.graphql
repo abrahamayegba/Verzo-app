@@ -1,0 +1,21 @@
+mutation UpdateSale(
+  $saleId: String!
+  $updateInvoiceInput: UpdateCompleteInvoiceB!
+  $description: String
+  $saleExpense: [SaleExpenseItem]
+  $saleServiceExpense: [SaleServiceExpenseEntry]
+) {
+  updateSaleEntry(
+    saleId: $saleId
+    input: {
+      updateInvoiceInput: $updateInvoiceInput
+      description: $description
+      saleExpense: $saleExpense
+      saleServiceExpense: $saleServiceExpense
+    }
+  ) {
+    id
+    description
+    saleAmount
+  }
+}

@@ -1,0 +1,17 @@
+mutation UpdateUser(
+  $fullname: String
+  $oldPassword: String
+  $newPassword: String
+) {
+  updateUser(
+    input: {
+      fullname: $fullname
+      oldPassword: $oldPassword
+      newPassword: $newPassword
+    }
+  ) {
+    id
+    fullname
+    email
+  }
+}

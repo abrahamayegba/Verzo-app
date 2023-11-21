@@ -1,0 +1,7 @@
+query GetBusinessCOAByBusiness($businessId: String!) {
+  getBusinessCOAByBusiness(businessId: $businessId) {
+    id
+    name
+    code
+  }
+}

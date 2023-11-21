@@ -1,0 +1,3 @@
+mutation ArchiveCustomerByBusiness($customerId: String!) {
+  archiveCustomerByBusiness(customerId: $customerId)
+}

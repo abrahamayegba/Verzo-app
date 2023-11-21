@@ -1,0 +1,28 @@
+mutation UpdateCustomer(
+  $customerId: String!
+  $name: String
+  $address: String
+  $mobile: String
+  $email: String
+  $isArchived: Boolean
+) {
+  updateCustomer(
+    customerId: $customerId
+    input: {
+      name: $name
+      address: $address
+      mobile: $mobile
+      email: $email
+      isArchived: $isArchived
+    }
+  ) {
+    id
+    name
+    address
+    mobile
+    email
+    businessId
+    createdAt
+    updatedAt
+  }
+}

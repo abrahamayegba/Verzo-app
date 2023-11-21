@@ -1,0 +1,18 @@
+mutation MarkPurchaseItemAsReceived(
+  $purchaseItemId: String!
+  $businessId: String!
+  $quantity: Float!
+  $transactionDate: Date!
+) {
+  markPurchaseItemAsReceived(
+    purchaseItemId: $purchaseItemId
+    input: {
+      businessId: $businessId
+      quantity: $quantity
+      transactionDate: $transactionDate
+    }
+  ) {
+    completed
+    purchaseStatus
+  }
+}

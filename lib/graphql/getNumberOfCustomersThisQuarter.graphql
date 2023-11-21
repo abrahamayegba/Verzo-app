@@ -1,0 +1,6 @@
+query NumberOfCustomersThisQuarter($businessId: String!, $quarterly: Boolean) {
+  numberOfCustomersThisQuarter(businessId: $businessId, quarterly: $quarterly) {
+    customersThisQuarter
+    totalCustomers
+  }
+}

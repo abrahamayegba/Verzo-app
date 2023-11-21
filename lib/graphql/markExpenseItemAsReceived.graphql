@@ -1,0 +1,18 @@
+mutation MarkExpenseItemAsReceived(
+  $expenseItemId: String!
+  $businessId: String!
+  $quantity: Float!
+  $transactionDate: Date!
+) {
+  markExpenseItemAsReceived(
+    expenseItemId: $expenseItemId
+    input: {
+      businessId: $businessId
+      quantity: $quantity
+      transactionDate: $transactionDate
+    }
+  ) {
+    completed
+    expenseStatus
+  }
+}

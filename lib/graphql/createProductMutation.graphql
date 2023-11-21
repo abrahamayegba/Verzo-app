@@ -1,0 +1,25 @@
+mutation CreateProduct(
+  $productName: String!
+  $businessId: String!
+  $price: Float!
+  $basicUnit: Float!
+  $productUnitId: String!
+) {
+  createProduct(
+    input: {
+      businessId: $businessId
+      productName: $productName
+      price: $price
+      basicUnit: $basicUnit
+      productUnitId: $productUnitId
+    }
+  ) {
+    id
+    productName
+    price
+    basicUnit
+    productUnitId
+    isArchived
+    createdAt
+  }
+}

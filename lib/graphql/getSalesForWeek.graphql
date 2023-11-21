@@ -1,0 +1,27 @@
+query GetSalesForWeek(
+  $businessId: String!
+  $weekly: Boolean
+  $cursor: String
+  $sets: Float
+) {
+  getSalesForWeek(
+    businessId: $businessId
+    weekly: $weekly
+    cursor: $cursor
+    sets: $sets
+  ) {
+    salesThisWeek {
+      id
+      paidAt
+      saleAmount
+      invoice {
+        customer {
+          name
+          email
+        }
+      }
+    }
+    numberOfSalesThisWeek
+    cursorId
+  }
+}

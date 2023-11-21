@@ -1,0 +1,23 @@
+mutation UpdateBusiness(
+  $businessId: String!
+  $businessName: String
+  $businessEmail: String
+  $businessMobile: String
+  $businessCategoryId: String
+) {
+  updateBusiness(
+    businessId: $businessId
+    input: {
+      businessName: $businessName
+      businessEmail: $businessEmail
+      businessMobile: $businessMobile
+      businessCategoryId: $businessCategoryId
+    }
+  ) {
+    id
+    businessName
+    businessEmail
+    businessMobile
+    businessCategoryId
+  }
+}

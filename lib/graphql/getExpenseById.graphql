@@ -1,0 +1,47 @@
+query GetExpenseById($expenseId: String!) {
+  getExpenseById(expenseId: $expenseId) {
+    id
+    description
+    amount
+    expenseDate
+    merchant {
+      name
+      email
+      id
+    }
+    paid
+    expenseCategory {
+      name
+      id
+    }
+    createdAt
+    expenseStatusId
+    merchant {
+      name
+      email
+      id
+    }
+    expenseItems {
+      chartOfAccount {
+        name
+        id
+      }
+      id
+      quantityReceived
+      received
+      description
+      quantity
+      unitPrice
+      index
+      price
+    }
+    expenseLines {
+      lineAmount
+      lineQuantity
+      id
+      chartOfAccount {
+        name
+      }
+    }
+  }
+}

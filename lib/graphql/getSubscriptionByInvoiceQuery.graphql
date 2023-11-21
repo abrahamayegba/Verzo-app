@@ -1,0 +1,13 @@
+query GetSubscriptionInvoiceByBusiness($businessId: String!) {
+  getSubscriptionInvoiceByBusiness(businessId: $businessId) {
+    id
+    subscription {
+      subscriptionPayment {
+        amount
+      }
+    }
+    tax
+    invoicePaid
+    invoiceTotal
+  }
+}

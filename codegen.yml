@@ -1,0 +1,17 @@
+overwrite: true
+schema: "https://api.verzo.app/graphql"
+documents: "./lib/graphql/*.graphql"
+
+generates:
+  src/generated/graphql.tsx:
+    config:
+      reactApolloVersion: 3
+      withHooks: true
+    plugins:
+      - add:
+          content: "// THIS IS A GENERATED FILE, use `npm run codegen` to regenerate"
+      - add:
+          content: "/* tslint:disable */"
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"

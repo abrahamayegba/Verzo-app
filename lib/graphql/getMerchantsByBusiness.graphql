@@ -1,0 +1,12 @@
+query GetMerchantsByBusiness($businessId: String!) {
+  getMerchantsByBusiness(businessId: $businessId) {
+    id
+    name
+    email
+    business {
+      id
+      businessName
+    }
+    createdAt
+  }
+}

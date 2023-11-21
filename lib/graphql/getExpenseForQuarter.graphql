@@ -1,0 +1,7 @@
+query GetExpenseForQuarter($businessId: String!, $quarterly: Boolean) {
+  getExpensesForQuarter(businessId: $businessId, quarterly: $quarterly) {
+    totalExpenseAmountThisQuarter
+    percentageOfExpenseToInvoiceThisQuarter
+    percentageIncreaseInExpensesThisQuarter
+  }
+}

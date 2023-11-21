@@ -1,0 +1,8 @@
+mutation CreateAddOnOption($addOnName: String!, $addOnPrice: Float!) {
+  createAddOnOption(input: { addOnName: $addOnName, addOnPrice: $addOnPrice }) {
+    id
+    addOnName
+    addOnPrice
+    createdAt
+  }
+}

@@ -1,0 +1,43 @@
+mutation CreateSubscription(
+  $businessId: String!
+  $currentPlanId: String!
+  $offerId: String
+  $addOnOptionId: String
+  $addOnQuantity: Float
+  $tax: Float!
+  $cardNumber: String!
+  $cardCVV: String!
+  $cardType: String
+  $cardExpiry: String!
+  $cardPin: String!
+  $billingAddress: String
+) {
+  createSubscription(
+    input: {
+      businessId: $businessId
+      currentPlanId: $currentPlanId
+      cardNumber: $cardNumber
+      cardCVV: $cardCVV
+      cardType: $cardType
+      cardExpiry: $cardExpiry
+      cardPin: $cardPin
+      billingAddress: $billingAddress
+      offerId: $offerId
+      addOnOptionId: $addOnOptionId
+      addOnQuantity: $addOnQuantity
+      tax: $tax
+    }
+  ) {
+    id
+    dateSubscribed
+    validTo
+    business {
+      businessName
+    }
+    subscriptionInvoice {
+      invoiceDescription
+      invoiceTotal
+      invoicePaid
+    }
+  }
+}

@@ -1,0 +1,6 @@
+query NumberOfCustomersThisYear($businessId: String!, $yearly: Boolean) {
+  numberOfCustomersThisYear(businessId: $businessId, yearly: $yearly) {
+    customersThisYear
+    totalCustomers
+  }
+}

@@ -1,0 +1,10 @@
+query GetPurchaseForWeek($businessId: String!, $weekly: Boolean) {
+  getPurchasesForWeek(businessId: $businessId, weekly: $weekly) {
+    purchasesThisWeek
+    totalPurchaseAmountThisWeek
+    pendingPurchasesThisWeek
+    totalPendingPurchaseAmountThisWeek
+    paidPurchasesThisWeek
+    totalPaidPurchaseAmountThisWeek
+  }
+}

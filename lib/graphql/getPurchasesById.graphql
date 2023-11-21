@@ -1,0 +1,54 @@
+query GetPurchaseById($purchaseId: String!) {
+  getPurchaseById(purchaseId: $purchaseId) {
+    id
+    description
+    reference
+    transactionDate
+    deliveryDate
+    total
+    paid
+    createdAt
+    purchaseStatusId
+    merchant {
+      name
+      email
+      id
+    }
+    businessId
+    purchaseItems {
+      id
+      quantityReceived
+      archived
+      received
+      productId
+      description
+      quantity
+      unitPrice
+      purchase {
+        createdAt
+        updatedAt
+      }
+      index
+      price
+      product {
+        productName
+        price
+        id
+        productUnit {
+          unitName
+        }
+      }
+    }
+    purchaseStatusId
+    purchaseStatus {
+      id
+      purchaseStatus
+    }
+    purchaseLines {
+      id
+      lineAmount
+      lineQuantity
+      transactionDate
+    }
+  }
+}

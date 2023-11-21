@@ -7,6 +7,11 @@ import FilterDataDropdown from "@/components/FilterDataDropdown";
 import Link from "next/link";
 
 const Invoices = () => {
+  // const typesenseHost = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
+  // const searchApiKey = process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY;
+
+  // console.log("Typesense Host:", typesenseHost);
+  // console.log("Search API Key:", searchApiKey);
   return (
     <div className=" px-[52px] bg-primary-whiteTint pt-[47px] pb-[20px] gap-y-[36px] flex flex-col">
       <div className=" flex flex-row justify-between items-center">

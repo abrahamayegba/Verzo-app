@@ -1,0 +1,23 @@
+mutation CreateService(
+  $name: String!
+  $price: Float!
+  $businessId: String!
+  $serviceUnitId: String!
+) {
+  createService(
+    input: {
+      name: $name
+      price: $price
+      businessId: $businessId
+      serviceUnitId: $serviceUnitId
+    }
+  ) {
+    id
+    name
+    price
+    businessId
+    serviceUnitId
+    isArchived
+    createdAt
+  }
+}

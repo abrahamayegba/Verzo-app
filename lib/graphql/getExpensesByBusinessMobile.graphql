@@ -1,0 +1,19 @@
+query GetExpenseByBusinessMobile(
+  $businessId: String!
+  $cursor: String
+  $take: Float
+) {
+  getExpenseByBusinessMobile(
+    businessId: $businessId
+    cursor: $cursor
+    take: $take
+  ) {
+    expenseByBusiness {
+      id
+      description
+      amount
+      expenseDate
+    }
+    cursorId
+  }
+}

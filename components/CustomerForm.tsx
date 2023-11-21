@@ -41,7 +41,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ openCustomerSheet }) => {
               Customer
             </label>
             <Select>
-              <SelectTrigger className=" w-full rounded-lg border border-primary-border">
+              <SelectTrigger className=" w-full rounded-lg border border-gray-200">
                 <SelectValue
                   className=" text-primary-greytext"
                   placeholder="Select a customer"
@@ -88,7 +88,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ openCustomerSheet }) => {
               Email address
             </label>
             <input
-              className="border border-primary-border rounded-lg h-10 text-sm focus:outline-none px-3 py-2"
+              className="border border-gray-200 rounded-lg h-10 text-sm focus:outline-none px-3 py-2"
               type="text"
               placeholder="email@gmail.com"
             />
@@ -101,7 +101,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ openCustomerSheet }) => {
             </label>
             <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
               <PopoverTrigger asChild>
-                <button className=" text-left text-sm font-normal flex items-center border border-primary-border h-[40px] px-3 rounded-[8px]">
+                <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                   {date ? (
                     format(date, "PPP")
                   ) : (
@@ -131,7 +131,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ openCustomerSheet }) => {
             </label>
             <Popover open={openDueDate} onOpenChange={setOpenDueDate}>
               <PopoverTrigger asChild>
-                <button className=" text-left text-sm font-normal flex items-center border border-primary-border h-[40px] px-3 rounded-[8px]">
+                <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                   {dueDate ? (
                     format(dueDate, "PPP")
                   ) : (

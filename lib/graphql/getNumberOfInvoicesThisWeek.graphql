@@ -1,0 +1,6 @@
+query NumberOfInvoicesThisWeek($businessId: String!, $weekly: Boolean) {
+  numberOfInvoicesThisWeek(businessId: $businessId, weekly: $weekly) {
+    invoicesThisweek
+    totalInvoices
+  }
+}

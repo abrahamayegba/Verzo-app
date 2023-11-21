@@ -1,0 +1,16 @@
+mutation UpdateService(
+  $serviceId: String!
+  $name: String
+  $price: Float
+  $serviceUnitId: String
+) {
+  updateService(
+    serviceId: $serviceId
+    input: { name: $name, price: $price, serviceUnitId: $serviceUnitId }
+  ) {
+    id
+    name
+    price
+    serviceUnitId
+  }
+}

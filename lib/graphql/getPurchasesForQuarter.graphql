@@ -1,0 +1,10 @@
+query GetPurchaseForQuarter($businessId: String!, $quarterly: Boolean) {
+  getPurchaseForQuarter(businessId: $businessId, quarterly: $quarterly) {
+    purchasesThisQuarter
+    totalPurchaseAmountThisQuarter
+    pendingpurchasesThisQuarter
+    totalPendingPurchaseAmountThisQuarter
+    paidPurchasesThisQuarter
+    totalPaidPurchaseAmountThisQuarter
+  }
+}

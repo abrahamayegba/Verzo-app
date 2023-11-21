@@ -1,0 +1,3 @@
+mutation SendPurchase($purchaseId: String!, $copy: Boolean) {
+  sendPurchase(purchaseId: $purchaseId, copy: $copy)
+}

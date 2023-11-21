@@ -1,0 +1,58 @@
+query GetInvoiceById($invoiceId: String!) {
+  getInvoiceById(invoiceId: $invoiceId) {
+    id
+    customer {
+      id
+      name
+      email
+      mobile
+      address
+    }
+    subtotal
+    totalAmount
+    discount
+    dueDate
+    dateOfIssue
+    paidFully
+    VAT
+    invoiceDetails {
+      id
+      type
+      cost
+      index
+      productInvoiceDetail {
+        type
+        unitPrice
+        quantity
+        price
+        product {
+          id
+          type
+          productName
+          basicUnit
+          price
+          productUnit {
+            id
+            unitName
+          }
+        }
+      }
+      serviceInvoiceDetail {
+        type
+        unitPrice
+        quantity
+        price
+        service {
+          id
+          type
+          name
+          price
+          serviceUnit {
+            id
+            unitName
+          }
+        }
+      }
+    }
+  }
+}

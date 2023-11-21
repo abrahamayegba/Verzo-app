@@ -1,0 +1,3 @@
+mutation ArchiveServiceByBusiness($serviceId: String!) {
+  archiveServiceByBusiness(serviceId: $serviceId)
+}

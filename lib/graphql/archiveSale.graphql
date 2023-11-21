@@ -1,0 +1,3 @@
+mutation ArchiveSale($saleId: String!) {
+  archiveSale(saleId: $saleId)
+}

@@ -1,0 +1,9 @@
+mutation CreateMerchant($name: String!, $businessId: String!, $email: String!) {
+  createMerchant(
+    input: { name: $name, businessId: $businessId, email: $email }
+  ) {
+    id
+    name
+    email
+  }
+}

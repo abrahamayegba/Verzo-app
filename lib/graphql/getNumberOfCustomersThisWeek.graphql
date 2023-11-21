@@ -1,0 +1,6 @@
+query NumberOfCustomersThisWeek($businessId: String!, $weekly: Boolean) {
+  numberOfCustomersThisWeek(businessId: $businessId, weekly: $weekly) {
+    customersThisWeek
+    totalCustomers
+  }
+}

@@ -1,0 +1,20 @@
+mutation MakeSalePayment(
+  $saleId: String!
+  $transactionDate: Date!
+  $description: String!
+  $reference: String!
+  $file: String
+) {
+  makeSalePayment(
+    input: {
+      saleId: $saleId
+      transactionDate: $transactionDate
+      description: $description
+      reference: $reference
+      file: $file
+    }
+  ) {
+    paid
+    saleStatus
+  }
+}

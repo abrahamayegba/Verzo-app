@@ -1,0 +1,22 @@
+query GetServiceByBusiness(
+  $businessId: String!
+  $cursor: String
+  $sets: Float
+) {
+  getServiceByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
+    serviceByBusiness {
+      id
+      name
+      price
+      type
+      serviceUnit {
+        unitName
+      }
+      serviceUnitId
+      businessId
+      isArchived
+      createdAt
+    }
+    cursorId
+  }
+}

@@ -1,0 +1,30 @@
+query GetPurchaseByBusinessMobile(
+  $businessId: String!
+  $cursor: String
+  $take: Float
+) {
+  getPurchaseByBusinessMobile(
+    businessId: $businessId
+    cursor: $cursor
+    take: $take
+  ) {
+    purchaseByBusiness {
+      id
+      description
+      transactionDate
+      total
+      businessId
+      purchaseItems {
+        description
+        quantity
+        unitPrice
+        price
+        product {
+          productName
+          price
+        }
+      }
+    }
+    cursorId
+  }
+}

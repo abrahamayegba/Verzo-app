@@ -1,0 +1,14 @@
+query GetPlans {
+  getPlans {
+    id
+    planName
+    currentPrice
+    isActive
+    optionIncluded {
+      option {
+        id
+        optionName
+      }
+    }
+  }
+}

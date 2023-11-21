@@ -1,0 +1,98 @@
+query GetSaleById($saleId: String!) {
+  getSaleById(saleId: $saleId) {
+    id
+    description
+    reference
+    saleStatus {
+      id
+      saleStatus
+    }
+    saleExpenses {
+      id
+      index
+      saleId
+      description
+      amount
+      effected
+    }
+    saleServiceExpenses {
+      id
+      effected
+      amount
+      index
+      service {
+        name
+        id
+      }
+    }
+    paid
+    description
+    saleAmount
+    transactionDate
+    dueDate
+    invoice {
+      totalAmount
+      VAT
+      id
+      totalAmount
+      createdAt
+      subtotal
+      VAT
+      paidFully
+      discount
+      dateOfIssue
+      dueDate
+      customer {
+        id
+        name
+        email
+        address
+        mobile
+      }
+      business {
+        id
+        businessName
+        businessEmail
+      }
+      invoiceDetails {
+        id
+        type
+        cost
+        index
+        productInvoiceDetail {
+          type
+          unitPrice
+          quantity
+          price
+          product {
+            id
+            type
+            productName
+            basicUnit
+            price
+            productUnit {
+              id
+              unitName
+            }
+          }
+        }
+        serviceInvoiceDetail {
+          type
+          unitPrice
+          quantity
+          price
+          service {
+            id
+            type
+            name
+            price
+            serviceUnit {
+              id
+              unitName
+            }
+          }
+        }
+      }
+    }
+  }
+}

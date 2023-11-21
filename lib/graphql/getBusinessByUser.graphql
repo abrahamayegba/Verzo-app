@@ -1,0 +1,16 @@
+query GetBusinessesByUserId {
+  getBusinessesByUserId {
+    user {
+      id
+      email
+      fullname
+      verified
+    }
+    businesses {
+      id
+      businessName
+      businessEmail
+      businessMobile
+    }
+  }
+}

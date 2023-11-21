@@ -1,0 +1,18 @@
+query TotalWeeklyInvoicesAmount($businessId: String!, $weekly: Boolean) {
+  totalWeeklyInvoicesAmount(businessId: $businessId, weekly: $weekly) {
+    dailyTotalAmounts {
+      date
+      dayOfWeek
+      totalAmount
+      totalPendingAmount
+      totalPaidAmount
+    }
+    totalInvoiceAmountForWeek
+    percentageOfPaidInvoices
+    totalPendingInvoiceAmountThisWeek
+    percentageIncreaseInPendingInvoiceThisWeek
+    totalOverDueInvoiceAmountThisWeek
+    percentageIncreaseInOverdueInvoicesThisWeek
+    percentageOfIncreaseInInvoicesThisWeek
+  }
+}

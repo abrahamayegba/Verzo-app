@@ -1,0 +1,6 @@
+query NumberOfInvoicesThisMonth($businessId: String!, $monthly: Boolean) {
+  numberOfInvoicesThisMonth(businessId: $businessId, monthly: $monthly) {
+    invoicesThisMonth
+    totalInvoices
+  }
+}
