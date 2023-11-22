@@ -124,7 +124,7 @@ const CardSheet: React.FC<CardProps> = ({
                   <div className=" flex flex-col gap-y-2">
                     <label htmlFor="name">Name on card</label>
                     <input
-                      className=" w-full rounded-lg border border-gray-300 p-[12px] text-[15px] focus:outline-none"
+                      className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
                       type="text"
                       placeholder="Name"
                     />
@@ -132,7 +132,7 @@ const CardSheet: React.FC<CardProps> = ({
                   <div className=" flex flex-col gap-y-2">
                     <label htmlFor="cardnumber">Card number</label>
                     <input
-                      className=" w-full rounded-lg border border-gray-300 p-[12px] text-[15px] focus:outline-none"
+                      className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                       type="text"
                       placeholder="16 digits"
                       maxLength={16}
@@ -143,7 +143,7 @@ const CardSheet: React.FC<CardProps> = ({
                       <div className=" flex flex-col gap-y-2">
                         <label htmlFor="expiry">Expiry</label>
                         <input
-                          className=" w-full rounded-lg border border-gray-300 p-[12px] text-[15px] focus:outline-none"
+                          className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                           type="text"
                           placeholder="MM/YY"
                         />
@@ -151,7 +151,7 @@ const CardSheet: React.FC<CardProps> = ({
                       <div className=" flex flex-col gap-y-2">
                         <label htmlFor="cvv">CVV</label>
                         <input
-                          className=" w-full rounded-lg border border-gray-300 p-[12px] text-[15px] focus:outline-none"
+                          className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                           type="text"
                           maxLength={3}
                           placeholder="3 digits"
@@ -167,7 +167,7 @@ const CardSheet: React.FC<CardProps> = ({
                 onClose();
                 saveAsDefault();
               }}
-              className=" bg-primary-blue text-white rounded-[10px] py-3 "
+              className=" bg-primary-blue text-white rounded-[10px] py-[10px] "
             >
               {currentStep === 1 ? "Save as default" : "Save card"}
             </button>

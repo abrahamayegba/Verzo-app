@@ -2,15 +2,25 @@
 import CustomerForm from "@/components/CustomerForm";
 import InvoiceItem from "@/components/InvoiceItem";
 import SaleExpenseItem from "@/components/SaleExpenseItem";
+import ServiceExpenseItem from "@/components/ServiceExpenseItem";
 import CreateCustomerSheet from "@/components/sheets/invoice/CreateCustomerSheet";
 import CreateItemSheet from "@/components/sheets/invoice/CreateItemSheet";
+import ViewInvoiceSheet from "@/components/sheets/invoice/ViewInvoiceSheet";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import ActiveProductIcon from "@/components/ui/icons/ActiveProductIcon";
 import BankIcon from "@/components/ui/icons/BankIcon";
+import InfoIcon from "@/components/ui/icons/InfoIcon";
 import LocationIcon from "@/components/ui/icons/LocationIcon";
 import ProfileIcon from "@/components/ui/icons/ProfileIcon";
-import { Eye, Info, Menu, MoveLeft, Phone, Plus, Trash2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Eye, Info, MoveLeft, Phone, Plus } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 
 interface InvoiceItem {
   name: string;
@@ -23,11 +33,23 @@ interface Expense {
   amount: string;
 }
 
+interface ServiceExpense {
+  service: string;
+  amount: string;
+}
+
 const CreateInvoice = () => {
   const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [serviceExpenses, setServiceExpenses] = useState<ServiceExpense[]>([]);
   const [openCustomerSheet, setOpenCustomerSheet] = useState(false);
+  const [openViewInvoiceSheet, setOpenViewInvoiceSheet] = useState(false);
   const [openCreateItemSheet, setOpenCreateItemSheet] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<
+    string | ArrayBuffer | null
+  >(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const handleOpenCustomerSheet = () => {
     setOpenCustomerSheet(true);
   };
@@ -37,6 +59,10 @@ const CreateInvoice = () => {
 
   const handleCloseCreateItemSheet = () => {
     setOpenCreateItemSheet(false);
+  };
+
+  const handleCloseViewInvoiceSheet = () => {
+    setOpenViewInvoiceSheet(false);
   };
 
   const deleteItem = (index: number) => {
@@ -65,6 +91,10 @@ const CreateInvoice = () => {
     setExpenses([...expenses, { name: "", amount: "" }]);
   };
 
+  const handleAddServiceExpense = () => {
+    setServiceExpenses([...serviceExpenses, { service: "", amount: "" }]);
+  };
+
   const handleExpenseChange = (
     index: number,
     field: keyof Expense,
@@ -75,13 +105,48 @@ const CreateInvoice = () => {
     setExpenses(updatedExpenses);
   };
 
+  const handleServiceExpenseChange = (
+    index: number,
+    field: keyof ServiceExpense,
+    value: string
+  ) => {
+    const updatedServiceExpenses = [...serviceExpenses];
+    updatedServiceExpenses[index][field] = value;
+    setServiceExpenses(updatedServiceExpenses);
+  };
+
   const handleDeleteExpense = (index: number) => {
     const updatedExpenses = [...expenses];
     updatedExpenses.splice(index, 1);
     setExpenses(updatedExpenses);
   };
 
+  const handleDeleteServiceExpense = (index: number) => {
+    const updatedServiceExpenses = [...serviceExpenses];
+    updatedServiceExpenses.splice(index, 1);
+    setServiceExpenses(updatedServiceExpenses);
+  };
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        // Ensure that e.target?.result is not undefined
+        setSelectedImage(e.target?.result || null);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   console.log(expenses);
+  console.log(serviceExpenses);
 
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]">
@@ -92,7 +157,7 @@ const CreateInvoice = () => {
         >
           <button className=" flex items-center gap-x-2">
             <MoveLeft className=" w-5 h-5 " />
-            Back to invoice
+            Back to Invoices
           </button>
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
@@ -101,7 +166,10 @@ const CreateInvoice = () => {
             Fill out the information below to create an invoice
           </p>
         </div>
-        <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
+        <button
+          onClick={() => setOpenViewInvoiceSheet(true)}
+          className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
+        >
           Preview
           <Eye className=" w-5 h-5 text-gray-500" />
         </button>
@@ -109,9 +177,32 @@ const CreateInvoice = () => {
       <div className=" flex flex-col gap-y-5">
         <p className=" text-primary-black text-lg">Business details</p>
         <div className=" flex flex-row gap-x-9 items-center">
-          <button className=" h-[132px] border border-dashed border-primary-border rounded-md px-6 text-primary-greytext">
-            Drag or <br /> upload logo
-          </button>
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+              ref={fileInputRef}
+            />
+            {selectedImage ? (
+              <div>
+                <Image
+                  alt="Preview"
+                  width={134}
+                  height={132}
+                  src={selectedImage as string}
+                />
+              </div>
+            ) : (
+              <button
+                className="h-[132px] border border-dashed border-primary-border rounded-md px-6 text-primary-greytext cursor-pointer"
+                onClick={handleClick}
+              >
+                Drag or <br /> upload logo
+              </button>
+            )}
+          </div>
           <div className=" flex flex-col gap-y-6 text-primary-greytext text-lg">
             <p className=" flex gap-x-3 items-center">
               <BankIcon />
@@ -188,7 +279,25 @@ const CreateInvoice = () => {
           <div className=" flex flex-col">
             <p className=" text-lg text-primary-black items-center flex flex-row gap-x-2">
               Sale expense
-              <Info className=" w-5 h-5 text-gray-400 mt-[2px]" />
+              <HoverCard>
+                <HoverCardTrigger>
+                  <Info className=" w-5 h-5 text-gray-400 mt-[2px] cursor-pointer" />
+                </HoverCardTrigger>
+                <HoverCardContent className=" bg-white shadow-none rounded-[10px] w-[350px] p-5">
+                  <div className=" flex flex-col gap-y-3">
+                    <div className=" flex">
+                      <span className=" rounded-full bg-[#EDF6FF] p-2 flex">
+                        <InfoIcon />
+                      </span>
+                    </div>
+                    <p className=" text-lg text-primary-black">Sale expense</p>
+                    <p className=" text-primary-greytext text-sm mt-[-4px]">
+                      A short text explaining this component of invoice creation
+                      to the user. It should be concise
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
             </p>
             <p className=" text-primary-greytext">Include extra expenses</p>
           </div>
@@ -208,11 +317,86 @@ const CreateInvoice = () => {
             onDeleteExpense={handleDeleteExpense}
           />
         ))}
+        <div className=" flex justify-between items-center w-full mt-3">
+          <div className=" flex flex-col">
+            <p className=" text-lg text-primary-black items-center flex flex-row gap-x-2">
+              Service expense
+              <HoverCard>
+                <HoverCardTrigger>
+                  <Info className=" w-5 h-5 text-gray-400 mt-[2px] cursor-pointer" />
+                </HoverCardTrigger>
+                <HoverCardContent className=" bg-white shadow-none rounded-[10px] w-[350px] p-5">
+                  <div className=" flex flex-col gap-y-3">
+                    <div className=" flex">
+                      <span className=" rounded-full bg-[#EDF6FF] p-2 flex">
+                        <InfoIcon />
+                      </span>
+                    </div>
+                    <p className=" text-lg text-primary-black">
+                      Service expense
+                    </p>
+                    <p className=" text-primary-greytext text-sm mt-[-4px]">
+                      A short text explaining this component of invoice creation
+                      to the user. It should be concise
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </p>
+            <p className=" text-primary-greytext">
+              Include extra service expenses
+            </p>
+          </div>
+          <button
+            onClick={handleAddServiceExpense}
+            className=" text-primary-blue flex items-center gap-x-2"
+          >
+            Add expense <Plus className=" w-5 h-5" />
+          </button>
+        </div>
+        {serviceExpenses.map((serviceExpense, index) => (
+          <ServiceExpenseItem
+            key={index}
+            expense={serviceExpense}
+            index={index}
+            onServiceExpenseChange={handleServiceExpenseChange}
+            onDeleteServiceExpense={handleDeleteServiceExpense}
+          />
+        ))}
+        <div className=" flex flex-col mt-2">
+          <p className=" text-lg text-primary-black">Description</p>
+          <p className=" text-primary-greytext mt-[2px]">
+            Say more to your customer
+          </p>
+          <Textarea className=" mt-5" />
+        </div>
+        <div className=" flex flex-col">
+          <p className=" text-lg text-primary-black">Reference</p>
+          <p className=" text-primary-greytext mt-[2px]">
+            A unique identifier for this invoice
+          </p>
+          <input
+            className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none mt-5"
+            type="text"
+          />
+        </div>
+        <div className=" flex flex-row items-center gap-x-5 mt-2">
+          <button className=" px-9 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
+            Cancel
+          </button>
+          <button className=" bg-primary-blue text-white rounded-[10px] px-10 py-3">
+            Save
+          </button>
+        </div>
       </div>
       <CreateItemSheet
         open={openCreateItemSheet}
         onClose={handleCloseCreateItemSheet}
         onItemSelected={setSideSheetCallback}
+      />
+      <ViewInvoiceSheet
+        open={openViewInvoiceSheet}
+        onClose={handleCloseViewInvoiceSheet}
       />
       <CreateCustomerSheet
         open={openCustomerSheet}

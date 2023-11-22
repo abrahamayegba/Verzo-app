@@ -1,6 +1,7 @@
 import React from "react";
 import GraphUp from "./ui/icons/GraphUp";
 import Graphflat from "./ui/icons/Graphflat";
+import ArrowUpIcon from "./ui/icons/ArrowUpIcon";
 
 const Metrics = () => {
   return (
@@ -17,21 +18,7 @@ const Metrics = () => {
             <p className=" text-[30px]  font-medium">₦500,000</p>
             <div className=" flex items-center text-primary-greytext">
               <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                >
-                  <path
-                    d="M4.3714 8.10001L8.99997 3.60001M8.99997 3.60001L13.6285 8.10001M8.99997 3.60001V14.4"
-                    stroke="#4BB543"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <ArrowUpIcon />
               </span>
               <span className="text-[#4BB543] mx-1">40%</span> since last month
             </div>
@@ -51,26 +38,11 @@ const Metrics = () => {
             <p className=" text-[30px]  font-medium">₦0.00</p>
             <div className=" items-center text-primary-greytext hidden">
               <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                >
-                  <path
-                    d="M4.3714 8.10001L8.99997 3.60001M8.99997 3.60001L13.6285 8.10001M8.99997 3.60001V14.4"
-                    stroke="#4BB543"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <ArrowUpIcon />
               </span>
               <span className="text-[#4BB543] mx-1">10%</span> since last month
             </div>
           </div>
-          {/* <GraphUp /> */}
           <Graphflat />
         </div>
       </div>
@@ -86,21 +58,7 @@ const Metrics = () => {
             <p className=" text-[30px]  font-medium">₦300,000</p>
             <div className=" flex items-center text-primary-greytext">
               <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                >
-                  <path
-                    d="M4.3714 8.10001L8.99997 3.60001M8.99997 3.60001L13.6285 8.10001M8.99997 3.60001V14.4"
-                    stroke="#4BB543"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <ArrowUpIcon />
               </span>
               <span className="text-[#4BB543] mx-1">20%</span> since last month
             </div>

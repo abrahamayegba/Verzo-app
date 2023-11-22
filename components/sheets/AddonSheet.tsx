@@ -51,7 +51,7 @@ const AddonSheet: React.FC<AddonProps> = ({ open, onClose }) => {
                 onClose();
                 openAddonsModal();
               }}
-              className=" bg-primary-blue text-white rounded-[10px] py-3 mt-[18px]"
+              className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[18px]"
             >
               Purchase add on for ₦2,500 monthly
             </button>

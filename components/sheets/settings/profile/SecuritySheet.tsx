@@ -40,7 +40,7 @@ const SecuritySheet: React.FC<SecurityProps> = ({ open, onClose }) => {
                 name="oldpassword"
                 id="oldpassword"
                 placeholder="Enter current password"
-                className=" w-full border p-[14px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -52,7 +52,7 @@ const SecuritySheet: React.FC<SecurityProps> = ({ open, onClose }) => {
                 name="password"
                 id="password"
                 placeholder="8+ characters"
-                className=" w-full border p-[14px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -64,12 +64,12 @@ const SecuritySheet: React.FC<SecurityProps> = ({ open, onClose }) => {
                 name="newpassword"
                 id="newpassword"
                 placeholder="8+ characters"
-                className=" w-full border p-[14px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <button
               onClick={onClose}
-              className=" bg-primary-blue text-white rounded-[10px] py-3 mt-[15px]"
+              className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px]"
             >
               Update password
             </button>

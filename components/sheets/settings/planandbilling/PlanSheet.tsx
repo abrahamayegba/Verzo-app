@@ -197,7 +197,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                       confirmPlan();
                     }
               }
-              className=" bg-primary-blue text-white rounded-[10px] py-3 mt-[10px]"
+              className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[10px]"
             >
               {currentStep === 1 ? "Next" : "Update billing"}
             </button>

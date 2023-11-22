@@ -37,7 +37,7 @@ const SaleExpenseItem: React.FC<ExpenseInputProps> = ({
         <label htmlFor={`expenseAmount${index}`}>Amount</label>
         <div className="flex gap-x-3">
           <input
-            type="text"
+            type="number"
             className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2 w-full"
             id={`expenseAmount${index}`}
             placeholder="Enter amount"

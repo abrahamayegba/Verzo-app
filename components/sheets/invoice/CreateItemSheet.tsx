@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Check, ChevronDown, ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import CardIcon from "@/components/ui/icons/CardIcon";
 import {
   Popover,
   PopoverContent,
@@ -134,7 +133,6 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                   <Popover open={openPopover} onOpenChange={setOpenPopover}>
                     <PopoverTrigger asChild>
                       <button
-                        role="combobox"
                         aria-expanded={openPopover}
                         className=" w-full justify-between bg-gray-50 text-primary-black flex items-center border border-gray-200 py-2 px-3 rounded-[8px]"
                       >
@@ -219,7 +217,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="productname">Product name</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                         type="text"
                         placeholder="Product name"
                       />
@@ -227,7 +225,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="price">Price</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                         type="text"
                         placeholder="Price"
                       />
@@ -235,7 +233,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="basicunit">Basic unit</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                         type="number"
                         placeholder="1"
                         min={1}
@@ -244,14 +242,14 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="productunit">Product unit</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                         type="text"
                         placeholder="Product unit"
                       />
                     </div>
                     <button
                       onClick={onClose}
-                      className=" bg-primary-blue text-white rounded-[10px] py-3 mt-[15px]"
+                      className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px]"
                     >
                       Create product
                     </button>
@@ -262,7 +260,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="servicename">Service name</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                         type="text"
                         placeholder="Service name"
                       />
@@ -270,7 +268,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="price">Price</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                         type="text"
                         placeholder="Price"
                       />
@@ -278,14 +276,14 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="serviceunit">Service unit</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
                         type="text"
                         placeholder="Service unit"
                       />
                     </div>
                     <button
                       onClick={onClose}
-                      className=" bg-primary-blue text-white rounded-[10px] py-3 mt-[15px]"
+                      className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px]"
                     >
                       Create service
                     </button>

@@ -15,7 +15,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className=" py-[70px]">
+        <SheetContent className=" py-[60px]">
           <button
             onClick={onClose}
             className=" flex gap-x-2 text-primary-greytext items-center text-sm"
@@ -42,7 +42,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 name="fullname"
                 id="fullname"
                 placeholder="full name"
-                className=" w-full border p-[12px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -54,7 +54,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 name="email"
                 id="email"
                 placeholder="Email address"
-                className=" w-full border p-[12px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -66,7 +66,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 name="phone"
                 id="phone"
                 placeholder="Phone number"
-                className=" w-full border p-[12px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -78,12 +78,12 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 name="address"
                 id="address"
                 placeholder="Customer address"
-                className=" w-full border p-[12px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <button
               onClick={onClose}
-              className=" bg-primary-blue text-white rounded-[10px] py-3 mt-[15px]"
+              className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px]"
             >
               Save customer
             </button>

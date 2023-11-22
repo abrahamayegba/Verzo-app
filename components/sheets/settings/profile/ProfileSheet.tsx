@@ -41,7 +41,7 @@ const ProfileSheet: React.FC<ProfileProps> = ({ open, onClose }) => {
                 name="firstname"
                 id="firstname"
                 placeholder="Full name"
-                className=" w-full border p-[14px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -53,12 +53,12 @@ const ProfileSheet: React.FC<ProfileProps> = ({ open, onClose }) => {
                 name="email"
                 id="email"
                 placeholder="Email address"
-                className=" w-full border p-[14px] focus:outline-none rounded-lg text-sm border-primary-mainGrey"
+                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <button
               onClick={onClose}
-              className=" bg-primary-blue text-white rounded-[10px] py-3 mt-[15px]"
+              className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px]"
             >
               Update profile
             </button>
