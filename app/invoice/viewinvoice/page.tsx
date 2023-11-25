@@ -42,7 +42,7 @@ const ViewInvoice = () => {
           </p>
         </div>
         <Link href="/invoice/recordsaleexpense">
-          <button className=" px-12 py-3 mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
+          <button className=" px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
             Next
           </button>
         </Link>

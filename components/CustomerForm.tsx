@@ -50,31 +50,31 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ openCustomerSheet }) => {
               <SelectContent className=" bg-white w-full">
                 <SelectGroup>
                   <SelectItem
-                    className=" hover:bg-gray-100 cursor-pointer py-2"
+                    className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
                     value="apple"
                   >
                     Customer A
                   </SelectItem>
                   <SelectItem
-                    className=" hover:bg-gray-100 cursor-pointer py-2"
+                    className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
                     value="banana"
                   >
                     Customer B
                   </SelectItem>
                   <SelectItem
-                    className=" hover:bg-gray-100 cursor-pointer py-2"
+                    className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
                     value="blueberry"
                   >
                     Customer C
                   </SelectItem>
                   <SelectItem
-                    className=" hover:bg-gray-100 cursor-pointer py-2"
+                    className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
                     value="grapes"
                   >
                     Customer D
                   </SelectItem>
                   <SelectItem
-                    className=" hover:bg-gray-100 cursor-pointer py-2"
+                    className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
                     value="pineapple"
                   >
                     Customer E
