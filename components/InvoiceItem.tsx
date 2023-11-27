@@ -1,5 +1,3 @@
-// InvoiceItem.tsx
-
 import { Menu, Trash2 } from "lucide-react";
 import React from "react";
 
@@ -48,9 +46,14 @@ const InvoiceItem: React.FC<InvoiceItemProps> = ({
           value={`₦${item.price}`}
           onChange={(e) => {
             const inputValue = e.target.value.trim();
-            const parsedValue = inputValue === "" ? 0 : parseFloat(inputValue);
+            const parsedValue =
+              inputValue === "" ? 0 : parseFloat(inputValue.replace("₦", ""));
+
             if (!isNaN(parsedValue)) {
               onPriceChange(index, parsedValue);
+            } else {
+              // Handle the case where parsing fails (e.g., non-numeric input)
+              onPriceChange(index, 0);
             }
           }}
         />

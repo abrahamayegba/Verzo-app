@@ -145,9 +145,6 @@ const CreateInvoice = () => {
     }
   };
 
-  console.log(expenses);
-  console.log(serviceExpenses);
-
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]">
       <div className=" flex justify-between w-full items-center relative">
@@ -236,7 +233,7 @@ const CreateInvoice = () => {
             onClick={() => setOpenCreateItemSheet(true)}
             className=" text-primary-blue flex items-center gap-x-2"
           >
-            Add item <Plus className=" w-5 h-5" />
+            Add item <Plus className=" w-[18px] h-[18px]" />
           </button>
         </div>
         <div className=" flex flex-col">
@@ -264,16 +261,18 @@ const CreateInvoice = () => {
               />
             ))
           )}
-          <div className=" w-full flex flex-col items-end text-primary-black text-lg mt-[50px]">
-            <div className=" flex gap-x-[180px] p-4">
-              <p className=" text-primary-greytext">Subtotal</p>
-              <p>₦3,000</p>
+          {invoiceItems.length > 0 && (
+            <div className=" w-full flex flex-col items-end text-primary-black text-lg mt-[30px]">
+              <div className=" flex gap-x-[180px] p-4">
+                <p className=" text-primary-greytext">Subtotal</p>
+                <p>₦3,000</p>
+              </div>
+              <div className=" flex gap-x-[180px] p-4 border-t border-t-gray-100">
+                <p className=" text-primary-greytext">Amount due</p>
+                <p>₦3,000</p>
+              </div>
             </div>
-            <div className=" flex gap-x-[180px] p-4 border-t border-t-gray-100">
-              <p className=" text-primary-greytext">Amount due</p>
-              <p>₦3,000</p>
-            </div>
-          </div>
+          )}
         </div>
         <div className=" flex justify-between items-center w-full">
           <div className=" flex flex-col">
@@ -305,7 +304,7 @@ const CreateInvoice = () => {
             onClick={handleAddExpense}
             className=" text-primary-blue flex items-center gap-x-2"
           >
-            Add expense <Plus className=" w-5 h-5" />
+            Add expense <Plus className=" w-[18px] h-[18px]" />
           </button>
         </div>
         {expenses.map((expense, index) => (
@@ -351,7 +350,7 @@ const CreateInvoice = () => {
             onClick={handleAddServiceExpense}
             className=" text-primary-blue flex items-center gap-x-2"
           >
-            Add expense <Plus className=" w-5 h-5" />
+            Add expense <Plus className=" w-[18px] h-[18px]" />
           </button>
         </div>
         {serviceExpenses.map((serviceExpense, index) => (

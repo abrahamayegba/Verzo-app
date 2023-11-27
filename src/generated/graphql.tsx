@@ -5174,11 +5174,6 @@ export type GetAddOnOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAddOnOptionsQuery = { __typename?: 'Query', getAddOnOptions: Array<{ __typename?: 'AddOnOption', id?: string | null, addOnName?: string | null, addOnPrice?: number | null } | null> };
 
-export type GetBusinessQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetBusinessQuery = { __typename?: 'Query', getBusinesses: Array<{ __typename?: 'Business', id: string, businessName: string, createdAt?: any | null, createdById?: string | null, createdBy?: { __typename?: 'User', fullname: string, email: string } | null } | null> };
-
 export type GetBusinessCoaByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
 }>;
@@ -7187,52 +7182,6 @@ export type GetAddOnOptionsQueryHookResult = ReturnType<typeof useGetAddOnOption
 export type GetAddOnOptionsLazyQueryHookResult = ReturnType<typeof useGetAddOnOptionsLazyQuery>;
 export type GetAddOnOptionsSuspenseQueryHookResult = ReturnType<typeof useGetAddOnOptionsSuspenseQuery>;
 export type GetAddOnOptionsQueryResult = Apollo.QueryResult<GetAddOnOptionsQuery, GetAddOnOptionsQueryVariables>;
-export const GetBusinessDocument = gql`
-    query GetBusiness {
-  getBusinesses {
-    id
-    businessName
-    createdBy {
-      fullname
-      email
-    }
-    createdAt
-    createdById
-  }
-}
-    `;
-
-/**
- * __useGetBusinessQuery__
- *
- * To run a query within a React component, call `useGetBusinessQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetBusinessQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetBusinessQuery(baseOptions?: Apollo.QueryHookOptions<GetBusinessQuery, GetBusinessQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetBusinessQuery, GetBusinessQueryVariables>(GetBusinessDocument, options);
-      }
-export function useGetBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBusinessQuery, GetBusinessQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetBusinessQuery, GetBusinessQueryVariables>(GetBusinessDocument, options);
-        }
-export function useGetBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBusinessQuery, GetBusinessQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetBusinessQuery, GetBusinessQueryVariables>(GetBusinessDocument, options);
-        }
-export type GetBusinessQueryHookResult = ReturnType<typeof useGetBusinessQuery>;
-export type GetBusinessLazyQueryHookResult = ReturnType<typeof useGetBusinessLazyQuery>;
-export type GetBusinessSuspenseQueryHookResult = ReturnType<typeof useGetBusinessSuspenseQuery>;
-export type GetBusinessQueryResult = Apollo.QueryResult<GetBusinessQuery, GetBusinessQueryVariables>;
 export const GetBusinessCoaByBusinessDocument = gql`
     query GetBusinessCOAByBusiness($businessId: String!) {
   getBusinessCOAByBusiness(businessId: $businessId) {

@@ -92,7 +92,7 @@ const AddPayment = () => {
             </p>
           </div>
           <div className=" flex gap-x-4">
-            <Link href="/invoices/viewinvoice">
+            <Link href="/invoice/viewinvoice">
               <button className=" px-10 py-[10px] mt-3 rounded-[10px] flex border border-gray-200 items-center justify-center">
                 Back
               </button>

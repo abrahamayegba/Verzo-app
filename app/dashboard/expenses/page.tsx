@@ -2,6 +2,7 @@ import ExpenseList from "@/components/ExpenseList";
 import ExpenseMetrics from "@/components/ExpenseMetrics";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
 import { PlusCircle } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const Expenses = () => {
@@ -14,10 +15,12 @@ const Expenses = () => {
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
           <FilterDataDropdown />
-          <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-            Record expense
-            <PlusCircle className=" w-5 h-5" />
-          </button>
+          <Link href="/expense/createexpense">
+            <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
+              Record expense
+              <PlusCircle className=" w-5 h-5" />
+            </button>
+          </Link>
         </div>
       </div>
       <ExpenseMetrics />
