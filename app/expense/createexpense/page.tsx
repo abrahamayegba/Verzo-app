@@ -166,20 +166,6 @@ const CreateInvoice = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex flex-col gap-y-2">
-              <label className=" text-primary-black" htmlFor={`expenseAmount`}>
-                Amount
-              </label>
-              <div className="flex gap-x-3">
-                <input
-                  type="number"
-                  className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2 w-full"
-                  id={`expenseAmount`}
-                  placeholder="Enter amount"
-                  required
-                />
-              </div>
-            </div>
           </div>
           <div className=" flex flex-col gap-y-6 text-primary-greytext w-1/2">
             <div className=" flex flex-col gap-y-[6px] ">

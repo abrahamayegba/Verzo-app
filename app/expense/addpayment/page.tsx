@@ -1,6 +1,6 @@
 "use client";
-import InvoiceStepIndicator from "@/components/InvoiceTimeline";
-import ViewInvoiceSheet from "@/components/sheets/invoice/ViewInvoiceSheet";
+import ExpenseStepIndicator from "@/components/ExpenseTimeline";
+import ViewExpenseSheet from "@/components/sheets/expense/ViewExpenseSheet";
 import { Calendar } from "@/components/ui/calendar";
 import FileIcon from "@/components/ui/icons/FileIcon";
 import {
@@ -17,18 +17,19 @@ import React, { useRef, useState } from "react";
 
 const AddPayment = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const currentStep = 3;
-  const saleCompleted = true;
+  const currentStep = 4;
+  const merchantInvoiceAdded = true;
+  const itemsConfirmed = true;
   const paymentAdded = false;
 
   const [isDragActive, setIsDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [date, setDate] = React.useState<Date>();
   const [openPaymentDate, setOpenPaymentDate] = React.useState(false);
-  const [openViewInvoiceSheet, setOpenViewInvoiceSheet] = useState(false);
+  const [openViewExpenseSheet, setOpenViewExpenseSheet] = useState(false);
 
-  const handleCloseViewInvoiceSheet = () => {
-    setOpenViewInvoiceSheet(false);
+  const handleCloseViewExpenseSheet = () => {
+    setOpenViewExpenseSheet(false);
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
@@ -78,34 +79,36 @@ const AddPayment = () => {
         <div className=" flex justify-between w-full items-center relative">
           <Link
             className=" absolute top-0 text-primary-greytext "
-            href="/dashboard/invoices"
+            href="/dashboard/expenses"
           >
             <button className=" flex items-center gap-x-2">
               <MoveLeft className=" w-5 h-5 " />
-              Back to Invoices
+              Back to Expenses
             </button>
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
-            <p className=" text-[30px] text-primary-black ">Invoice #001 </p>
+            <p className=" text-[30px] text-primary-black ">Expense #001 </p>
             <p className=" text-primary-greytext font-light text-lg">
-              Add extra information to the invoice
+              Add extra information to the expense
             </p>
           </div>
           <div className=" flex gap-x-4">
-            <Link href="/invoice/viewinvoice">
+            <Link href="/expense/viewexpense">
               <button className=" px-10 py-[10px] mt-3 rounded-[10px] flex border border-gray-200 items-center justify-center">
                 Back
               </button>
             </Link>
-            <button className=" px-10 py-[10px] mt-3 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
-              Save
-            </button>
+            <Link href="/expense/addpayment">
+              <button className=" px-10 py-[10px] mt-3 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
+                Save
+              </button>
+            </Link>
           </div>
         </div>
-        <InvoiceStepIndicator
-          saleRecorded={saleCompleted}
-          hasStep2={true}
+        <ExpenseStepIndicator
+          merchantInvoiceAdded={merchantInvoiceAdded}
           currentStep={currentStep}
+          itemsConfirmed={itemsConfirmed}
           paymentAdded={paymentAdded}
         />
         <div className=" w-full flex flex-col mt-[30px] gap-y-[30px]">
@@ -115,14 +118,14 @@ const AddPayment = () => {
                 <Image src="/preview.png" width={80} height={80} alt="image" />
               </div>
               <div className=" flex flex-col">
-                <p className=" text-xl text-primary-black">Invoice #001</p>
+                <p className=" text-xl text-primary-black">Expense #001</p>
                 <p className=" text-lg text-primary-greytext font-light">
-                  Short description about the invoice
+                  Short description about the expense
                 </p>
               </div>
             </div>
             <button
-              onClick={() => setOpenViewInvoiceSheet(true)}
+              onClick={() => setOpenViewExpenseSheet(true)}
               className="rounded-[10px] flex text-primary-blue items-center gap-x-[6px] justify-center"
             >
               Preview
@@ -240,9 +243,9 @@ const AddPayment = () => {
           </div>
         </div>
       </div>
-      <ViewInvoiceSheet
-        open={openViewInvoiceSheet}
-        onClose={handleCloseViewInvoiceSheet}
+      <ViewExpenseSheet
+        open={openViewExpenseSheet}
+        onClose={handleCloseViewExpenseSheet}
       />
     </>
   );

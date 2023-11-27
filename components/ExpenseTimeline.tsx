@@ -3,15 +3,15 @@ import React from "react";
 
 interface HorizontalStepIndicatorProps {
   currentStep: number;
-  hasStep2: boolean;
-  saleRecorded: boolean;
+  itemsConfirmed: boolean;
+  merchantInvoiceAdded: boolean;
   paymentAdded: boolean;
 }
 
-const InvoiceStepIndicator: React.FC<HorizontalStepIndicatorProps> = ({
+const ExpenseStepIndicator: React.FC<HorizontalStepIndicatorProps> = ({
   currentStep,
-  hasStep2,
-  saleRecorded,
+  itemsConfirmed,
+  merchantInvoiceAdded,
   paymentAdded,
 }) => {
   return (
@@ -37,31 +37,49 @@ const InvoiceStepIndicator: React.FC<HorizontalStepIndicatorProps> = ({
               currentStep == 1 ? "text-primary-black" : "text-gray-500"
             }`}
           >
-            Invoice
+            Expense
           </span>
         </div>
-        {hasStep2 && (
-          <div className="flex items-center flex-col gap-y-1 relative">
-            <div
-              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                saleRecorded === true
-                  ? "bg-blue-500 border-blue-500"
-                  : "border-gray-300 border-dashed bg-white"
-              }`}
-            >
-              {saleRecorded === true && (
-                <Check strokeWidth={3} className="text-white w-4 h-4" />
-              )}
-            </div>
-            <span
-              className={`text-lg ${
-                currentStep == 2 ? "text-primary-black" : "text-gray-500"
-              }`}
-            >
-              Record sale expense
-            </span>
+        <div className="flex items-center flex-col gap-y-1 relative">
+          <div
+            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+              itemsConfirmed === true
+                ? "bg-blue-500 border-blue-500"
+                : "border-gray-300 border-dashed bg-white"
+            }`}
+          >
+            {itemsConfirmed === true && (
+              <Check strokeWidth={3} className="text-white w-4 h-4" />
+            )}
           </div>
-        )}
+          <span
+            className={`text-lg ${
+              currentStep == 2 ? "text-primary-black" : "text-gray-500"
+            }`}
+          >
+            Confirm items
+          </span>
+        </div>
+        <div className="flex items-center flex-col gap-y-1 relative">
+          <div
+            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+              merchantInvoiceAdded === true
+                ? "bg-blue-500 border-blue-500"
+                : "border-gray-300 border-dashed bg-white"
+            }`}
+          >
+            {merchantInvoiceAdded === true && (
+              <Check strokeWidth={3} className="text-white w-4 h-4" />
+            )}
+          </div>
+          <span
+            className={`text-lg ${
+              currentStep == 3 ? "text-primary-black" : "text-gray-500"
+            }`}
+          >
+            Merchant invoice
+          </span>
+        </div>
         <div className="flex items-end flex-col gap-y-1 relative">
           <div
             className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
@@ -76,7 +94,7 @@ const InvoiceStepIndicator: React.FC<HorizontalStepIndicatorProps> = ({
           </div>
           <span
             className={`text-lg ${
-              currentStep == 3 ? " text-primary-black" : "text-gray-500"
+              currentStep == 4 ? " text-primary-black" : "text-gray-500"
             }`}
           >
             Add payment details
@@ -87,4 +105,4 @@ const InvoiceStepIndicator: React.FC<HorizontalStepIndicatorProps> = ({
   );
 };
 
-export default InvoiceStepIndicator;
+export default ExpenseStepIndicator;

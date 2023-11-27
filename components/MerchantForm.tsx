@@ -16,7 +16,7 @@ interface MerchantFormProps {
 
 const MerchantForm: React.FC<MerchantFormProps> = ({ openMerchantSheet }) => {
   return (
-    <div className=" flex w-full justify-between flex-col gap-y-7">
+    <div className=" flex w-full justify-between flex-col gap-y-5">
       <div className=" flex flex-row w-full justify-between">
         <p className=" text-primary-black text-lg">Merchant details</p>
         <button

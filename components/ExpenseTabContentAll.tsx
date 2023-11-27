@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Archive, Download, Eye, Pen, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 interface ExpenseTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
@@ -138,8 +139,13 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
                   <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                    <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    View Expense
+                    <Link
+                      className=" flex gap-x-2 items-center"
+                      href="/expense/viewexpense"
+                    >
+                      <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      View Expense
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                     <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />

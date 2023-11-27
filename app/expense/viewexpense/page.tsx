@@ -1,13 +1,14 @@
-import InvoiceStepIndicator from "@/components/InvoiceTimeline";
+import ExpenseStepIndicator from "@/components/ExpenseTimeline";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const ViewInvoice = () => {
+const ViewExpense = () => {
   const currentStep = 1;
-  const saleCompleted = false;
+  const merchantInvoiceAdded = false;
   const paymentAdded = false;
+  const itemsConfirmed = false;
 
   interface TableData {
     item: string;
@@ -16,11 +17,11 @@ const ViewInvoice = () => {
   }
 
   const sampleData: TableData[] = [
-    { item: "Item 1", qty: 3, amount: 100000 },
-    { item: "Item 2", qty: 2, amount: 5000 },
-    { item: "Item 3", qty: 1, amount: 300 },
-    { item: "Item 4", qty: 1, amount: 300 },
-    { item: "Item 5", qty: 1, amount: 300 },
+    { item: "Expense 1", qty: 3, amount: 100000 },
+    { item: "Expense 2", qty: 2, amount: 5000 },
+    { item: "Expense 3", qty: 1, amount: 300 },
+    { item: "Expense 4", qty: 1, amount: 300 },
+    { item: "Expense 5", qty: 1, amount: 300 },
   ];
 
   return (
@@ -28,29 +29,29 @@ const ViewInvoice = () => {
       <div className=" flex justify-between w-full items-center relative">
         <Link
           className=" absolute top-0 text-primary-greytext "
-          href="/dashboard/invoices"
+          href="/dashboard/expenses"
         >
           <button className=" flex items-center gap-x-2">
             <MoveLeft className=" w-5 h-5 " />
-            Back to Invoices
+            Back to Expenses
           </button>
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
-          <p className=" text-[30px] text-primary-black ">Invoice #001 </p>
+          <p className=" text-[30px] text-primary-black ">Expense #001 </p>
           <p className=" text-primary-greytext font-light text-lg">
-            Add extra information to the invoice
+            Add extra information to the expense
           </p>
         </div>
-        <Link href="/invoice/recordsaleexpense">
+        <Link href="/expense/confirmitems">
           <button className=" px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
             Next
           </button>
         </Link>
       </div>
-      <InvoiceStepIndicator
-        saleRecorded={saleCompleted}
-        hasStep2={true}
+      <ExpenseStepIndicator
+        merchantInvoiceAdded={merchantInvoiceAdded}
         currentStep={currentStep}
+        itemsConfirmed={itemsConfirmed}
         paymentAdded={paymentAdded}
       />
       <div className=" w-full flex flex-col shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 py-[56px] px-[44px]">
@@ -59,13 +60,13 @@ const ViewInvoice = () => {
             <Verzologoblue />
           </span>
           <button className=" px-8 py-3 rounded-[10px] flex border border-gray-200 items-center justify-center">
-            Edit invoice
+            Edit expense
           </button>
         </div>
         <div className=" flex flex-col border-t border-t-[#f4f4f4] mt-[40px]">
           <div className="grid grid-cols-3 pt-8">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-              <p>Invoice</p>
+              <p>Expense</p>
               <p className=" text-primary-black font-normal">#001</p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
@@ -95,7 +96,7 @@ const ViewInvoice = () => {
             </div>
           </div>
           <div className=" w-full flex flex-col mt-[40px] gap-y-4">
-            <p className=" text-lg">Invoice details</p>
+            <p className=" text-lg">Expense details</p>
             <table className=" w-full ">
               <thead>
                 <tr className=" text-sm text-primary-greytext border-y border-y-gray-100">
@@ -126,7 +127,7 @@ const ViewInvoice = () => {
                   info@verzo.io
                 </span>
               </p>
-              <p>Invoice created with Verzo</p>
+              <p>Expense created with Verzo</p>
             </div>
             <div className=" flex flex-col text-sm text-primary-black">
               <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
@@ -145,4 +146,4 @@ const ViewInvoice = () => {
   );
 };
 
-export default ViewInvoice;
+export default ViewExpense;

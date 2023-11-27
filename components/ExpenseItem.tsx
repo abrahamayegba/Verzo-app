@@ -51,7 +51,7 @@ const ExpenseItem: React.FC<ExpenseInputProps> = ({
             type="number"
             className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2 w-full"
             id={`expenseAmount${index}`}
-            placeholder="Enter amount"
+            placeholder="Amount"
             required
             value={expense.price}
             onChange={(e) => onExpenseChange(index, "price", e.target.value)}
@@ -64,7 +64,7 @@ const ExpenseItem: React.FC<ExpenseInputProps> = ({
             type="number"
             className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2 w-full"
             id={`expenseQuantity${index}`}
-            placeholder="Enter quantity"
+            placeholder="Quantity"
             required
             value={expense.quantity}
             onChange={(e) => onExpenseChange(index, "quantity", e.target.value)}
