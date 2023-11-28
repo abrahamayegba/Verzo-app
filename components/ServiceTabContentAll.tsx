@@ -34,7 +34,7 @@ const ServiceTabContentAll: React.FC<ServiceTabContentAllProps> = ({
     id: index + 1,
     name: `Service ${index + 1}`,
     amount: `₦${((index + 1) * 2500).toLocaleString("en-NG")}.0`,
-    unit: ["Hours", "Days"][Math.floor(Math.random() * 2)], // Add Product Unit property with random value from ['KG', 'Bags', 'Cartons']
+    unit: `Hours`,
   }));
 
   // Function to handle individual row selection

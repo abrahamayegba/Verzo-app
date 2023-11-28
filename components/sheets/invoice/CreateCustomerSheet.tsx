@@ -42,7 +42,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 name="fullname"
                 id="fullname"
                 placeholder="full name"
-                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
+                className=" w-full border p-[8px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -54,7 +54,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 name="email"
                 id="email"
                 placeholder="Email address"
-                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
+                className=" w-full border p-[8px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -66,7 +66,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 name="phone"
                 id="phone"
                 placeholder="Phone number"
-                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
+                className=" w-full border p-[8px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -78,7 +78,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 name="address"
                 id="address"
                 placeholder="Customer address"
-                className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
+                className=" w-full border p-[8px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
               />
             </div>
             <button

@@ -35,7 +35,7 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
     name: `Product ${index + 1}`,
     basicunit: 1,
     amount: `₦${((index + 1) * 2500).toLocaleString("en-NG")}.0`,
-    unit: ["KG", "Bags", "Cartons"][Math.floor(Math.random() * 3)], // Add Product Unit property with random value from ['KG', 'Bags', 'Cartons']
+    unit: `KG`,
   }));
 
   // Function to handle individual row selection

@@ -32,7 +32,7 @@ interface ExpenseItemProp {
   account: string;
 }
 
-const CreateInvoice = () => {
+const CreateExpense = () => {
   const [expenseItems, setExpenseItems] = useState<ExpenseItemProp[]>([]);
   const [openMerchantSheet, setOpenMerchantSheet] = useState(false);
   const [openViewExpenseSheet, setOpenViewExpenseSheet] = useState(false);
@@ -295,4 +295,4 @@ const CreateInvoice = () => {
   );
 };
 
-export default CreateInvoice;
+export default CreateExpense;

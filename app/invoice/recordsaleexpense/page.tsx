@@ -72,11 +72,18 @@ const RecordSaleExpense = () => {
             Add extra information to the invoice
           </p>
         </div>
-        <Link href="/invoice/addpayment">
-          <button className=" px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
-            Next
-          </button>
-        </Link>
+        <div className=" flex gap-x-4">
+          <Link href="/invoice/viewinvoice">
+            <button className=" px-10 py-[10px] mt-6 rounded-[10px] flex text-primary-black border border-gray-200 items-center justify-center">
+              Previous
+            </button>
+          </Link>
+          <Link href="/invoice/addpayment">
+            <button className=" px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
+              Next
+            </button>
+          </Link>
+        </div>
       </div>
       <InvoiceStepIndicator
         saleRecorded={saleCompleted}

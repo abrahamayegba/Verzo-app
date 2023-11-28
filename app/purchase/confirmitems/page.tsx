@@ -1,5 +1,5 @@
 "use client";
-import ExpenseStepIndicator from "@/components/ExpenseTimeline";
+import PurchaseStepIndicator from "@/components/PurchaseTimeline";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -11,7 +11,7 @@ import { Check, ChevronDown, MoveLeft } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 
-const ConfirmItems = () => {
+const ConfirmPurchaseItems = () => {
   const [date, setDate] = React.useState<Date>();
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
   const currentStep = 2;
@@ -19,66 +19,65 @@ const ConfirmItems = () => {
   const paymentAdded = false;
   const itemsConfirmed = false;
 
-  const [expenseItems, setExpenseItems] = useState([
+  const [purchaseItems, setPurchaseItems] = useState([
     {
       id: 1,
-      title: "Expense A",
+      title: "Purchase A",
       amount: "₦30,000",
       quantity: "4",
       quantityreceived: "",
     },
     {
       id: 2,
-      title: "Expense B",
+      title: "Purchase B",
       amount: "₦20,000",
       quantity: "7",
       quantityreceived: "",
     },
-    // Add more sale expenses as needed
   ]);
 
   const handleQuantityChange = (id: number, value: string) => {
-    setExpenseItems((prevExpenses) =>
-      prevExpenses.map((expense) =>
-        expense.id === id ? { ...expense, quantityreceived: value } : expense
+    setPurchaseItems((prevPurchases) =>
+      prevPurchases.map((purchase) =>
+        purchase.id === id ? { ...purchase, quantityreceived: value } : purchase
       )
     );
   };
 
-  console.log(expenseItems);
+  console.log(purchaseItems);
 
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[20px]">
       <div className=" flex justify-between w-full items-center relative">
         <Link
           className=" absolute top-0 text-primary-greytext "
-          href="/dashboard/expenses"
+          href="/dashboard/purchases"
         >
           <button className=" flex items-center gap-x-2">
             <MoveLeft className=" w-5 h-5 " />
-            Back to Expenses
+            Back to Purchases
           </button>
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
-          <p className=" text-[30px] text-primary-black ">Expense #001 </p>
+          <p className=" text-[30px] text-primary-black ">Purchase #001 </p>
           <p className=" text-primary-greytext font-light text-lg">
-            Add extra information to the expense
+            Add extra information to the purchase
           </p>
         </div>
         <div className=" flex gap-x-4">
-          <Link href="/expense/viewexpense">
+          <Link href="/purchase/viewpurchase">
             <button className=" px-10 py-[10px] mt-6 rounded-[10px] flex text-primary-black border border-gray-200 items-center justify-center">
               Previous
             </button>
           </Link>
-          <Link href="/expense/merchantinvoice">
+          <Link href="/purchase/merchantinvoice">
             <button className=" px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
               Next
             </button>
           </Link>
         </div>
       </div>
-      <ExpenseStepIndicator
+      <PurchaseStepIndicator
         merchantInvoiceAdded={merchantInvoiceAdded}
         currentStep={currentStep}
         itemsConfirmed={itemsConfirmed}
@@ -137,33 +136,33 @@ const ConfirmItems = () => {
           </div>
         </div>
         <div className=" w-full flex justify-between mt-2">
-          <p className=" text-lg">Expenses</p>
+          <p className=" text-lg">Purchase items</p>
           <button className=" text-primary-blue flex items-center gap-x-2">
             Mark as received <Check className=" w-4 h-4" />
           </button>
         </div>
         <div className=" mt-[-8px] flex flex-col gap-y-7">
-          {expenseItems.map((expense) => (
+          {purchaseItems.map((purchase) => (
             <div
-              key={expense.id}
+              key={purchase.id}
               className="grid grid-cols-2 grid-rows-2 gap-5 w-full"
             >
               <div className="text-primary-greytext flex flex-col gap-y-2">
                 <p>Title</p>
                 <p className="border text-gray-700 cursor-not-allowed border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
-                  {expense.title}
+                  {purchase.title}
                 </p>
               </div>
               <div className="text-primary-greytext flex flex-col gap-y-2">
                 <p>Amount</p>
                 <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
-                  {expense.amount}
+                  {purchase.amount}
                 </p>
               </div>
               <div className="text-primary-greytext flex flex-col gap-y-2">
                 <p>Quantity ordered</p>
                 <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
-                  {expense.quantity}
+                  {purchase.quantity}
                 </p>
               </div>
               <div className="text-primary-greytext flex flex-col gap-y-2">
@@ -172,9 +171,9 @@ const ConfirmItems = () => {
                   className="w-full text-primary-black rounded-lg border border-gray-200 p-[8px] pl-[12px] text-[15px] focus:outline-none"
                   type="text"
                   placeholder="Enter quantity"
-                  value={expense.quantityreceived}
+                  value={purchase.quantityreceived}
                   onChange={(e) =>
-                    handleQuantityChange(expense.id, e.target.value)
+                    handleQuantityChange(purchase.id, e.target.value)
                   }
                 />
               </div>
@@ -186,4 +185,4 @@ const ConfirmItems = () => {
   );
 };
 
-export default ConfirmItems;
+export default ConfirmPurchaseItems;

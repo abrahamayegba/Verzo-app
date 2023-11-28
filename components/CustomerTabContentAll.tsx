@@ -35,7 +35,7 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
     date: new Date(2023, 0, index + 1),
     name: `Customer ${index + 1}`,
     email: `user${index + 1}@example.com`,
-    phone: `080${Math.floor(Math.random() * 90000000) + 10000000}`,
+    phone: `0909090909`,
   }));
 
   // Function to handle individual row selection

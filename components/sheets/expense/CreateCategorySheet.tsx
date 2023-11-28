@@ -3,12 +3,15 @@ import { ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import PlusIcon from "@/components/ui/icons/PlusIcon";
 
-interface CreateItemProps {
+interface CreateCategoryProps {
   open: boolean;
   onClose: () => void;
 }
 
-const CreateItemSheet: React.FC<CreateItemProps> = ({ open, onClose }) => {
+const CreateCategorySheet: React.FC<CreateCategoryProps> = ({
+  open,
+  onClose,
+}) => {
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
@@ -54,4 +57,4 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({ open, onClose }) => {
   );
 };
 
-export default CreateItemSheet;
+export default CreateCategorySheet;

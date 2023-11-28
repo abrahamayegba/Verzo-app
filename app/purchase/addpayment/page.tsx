@@ -1,6 +1,6 @@
 "use client";
-import ExpenseStepIndicator from "@/components/ExpenseTimeline";
-import ViewExpenseSheet from "@/components/sheets/expense/ViewExpenseSheet";
+import PurchaseStepIndicator from "@/components/PurchaseTimeline";
+import ViewPurchaseSheet from "@/components/sheets/purchase/ViewPurchaseSheet";
 import { Calendar } from "@/components/ui/calendar";
 import FileIcon from "@/components/ui/icons/FileIcon";
 import {
@@ -15,7 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 
-const AddPayment = () => {
+const AddPurchasePayment = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const currentStep = 4;
   const merchantInvoiceAdded = true;
@@ -26,10 +26,10 @@ const AddPayment = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [date, setDate] = React.useState<Date>();
   const [openPaymentDate, setOpenPaymentDate] = React.useState(false);
-  const [openViewExpenseSheet, setOpenViewExpenseSheet] = useState(false);
+  const [openViewPurchaseSheet, setOpenViewPurchaseSheet] = useState(false);
 
-  const handleCloseViewExpenseSheet = () => {
-    setOpenViewExpenseSheet(false);
+  const handleCloseViewPurchaseSheet = () => {
+    setOpenViewPurchaseSheet(false);
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
@@ -79,33 +79,33 @@ const AddPayment = () => {
         <div className=" flex justify-between w-full items-center relative">
           <Link
             className=" absolute top-0 text-primary-greytext "
-            href="/dashboard/expenses"
+            href="/dashboard/purchases"
           >
             <button className=" flex items-center gap-x-2">
               <MoveLeft className=" w-5 h-5 " />
-              Back to Expenses
+              Back to Purchases
             </button>
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
-            <p className=" text-[30px] text-primary-black ">Expense #001 </p>
+            <p className=" text-[30px] text-primary-black ">Purchase #001 </p>
             <p className=" text-primary-greytext font-light text-lg">
-              Add extra information to the expense
+              Add extra information to the purchase
             </p>
           </div>
           <div className=" flex gap-x-4">
-            <Link href="/expense/viewexpense">
+            <Link href="/purchase/viewpurchase">
               <button className=" px-10 py-[10px] mt-3 rounded-[10px] flex border border-gray-200 items-center justify-center">
                 Back
               </button>
             </Link>
-            <Link href="/expense/addpayment">
+            <Link href="/purchase/addpayment">
               <button className=" px-10 py-[10px] mt-3 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
                 Save
               </button>
             </Link>
           </div>
         </div>
-        <ExpenseStepIndicator
+        <PurchaseStepIndicator
           merchantInvoiceAdded={merchantInvoiceAdded}
           currentStep={currentStep}
           itemsConfirmed={itemsConfirmed}
@@ -118,14 +118,14 @@ const AddPayment = () => {
                 <Image src="/preview.png" width={80} height={80} alt="image" />
               </div>
               <div className=" flex flex-col">
-                <p className=" text-xl text-primary-black">Expense #001</p>
+                <p className=" text-xl text-primary-black">Purchase #001</p>
                 <p className=" text-lg text-primary-greytext font-light">
-                  Short description about the expense
+                  Short description about the purchase
                 </p>
               </div>
             </div>
             <button
-              onClick={() => setOpenViewExpenseSheet(true)}
+              onClick={() => setOpenViewPurchaseSheet(true)}
               className="rounded-[10px] flex text-primary-blue items-center gap-x-[6px] justify-center"
             >
               Preview
@@ -243,12 +243,12 @@ const AddPayment = () => {
           </div>
         </div>
       </div>
-      <ViewExpenseSheet
-        open={openViewExpenseSheet}
-        onClose={handleCloseViewExpenseSheet}
+      <ViewPurchaseSheet
+        open={openViewPurchaseSheet}
+        onClose={handleCloseViewPurchaseSheet}
       />
     </>
   );
 };
 
-export default AddPayment;
+export default AddPurchasePayment;
