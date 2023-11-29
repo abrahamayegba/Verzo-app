@@ -93,8 +93,6 @@ const CreatePurchase = () => {
     setOpenCreateItemSheet(false);
   };
 
-  console.log(purchaseItems);
-
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]">
       <div className=" flex justify-between w-full items-center relative">
