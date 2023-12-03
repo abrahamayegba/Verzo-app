@@ -1,3 +1,3 @@
-import Dashboard from "./dashboard/page";
+import SignIn from "./auth/signin/page";
 
-export default Dashboard;
+export default SignIn;

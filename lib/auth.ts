@@ -18,18 +18,14 @@ export const clearRefreshToken = () => storage.removeItem(REFRESH_TOKEN);
 
 export const isAuthenticated = async (): Promise<boolean> => {
   const token = getToken();
-  // console.log(`isAuthenticated has gotten token ${token}`);
   if (!token) {
-    // console.log("token was misplaced");
     return false;
   }
   try {
     const { exp }: JwtPayload = jwtDecode(token);
     if (Date.now() >= exp! * 1000) {
-      // console.log("token has expired");
       return false;
     }
-    // console.log("everything working fine");
     return true;
   } catch (error) {
     return false;

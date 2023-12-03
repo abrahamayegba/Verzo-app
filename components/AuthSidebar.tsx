@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const AuthSidebar = () => {
   return (
-    <div className=" w-[34%] purplegradient fixed z-20 inset-y-0 h-screen pt-[45px] px-[50px] pb-[100px] flex flex-col justify-between">
+    <div className=" w-[34%] hidden lg:flex purplegradient fixed z-20 inset-y-0 h-screen pt-[45px] px-[50px] pb-[100px] flex-col justify-between">
       <LogoIcon />
       <p className=" text-white text-[32px] leading-[44px]">
         Manage business <br /> activity in one place

@@ -3,7 +3,7 @@ import CustomerForm from "@/components/CustomerForm";
 import InvoiceItem from "@/components/InvoiceItem";
 import SaleExpenseItem from "@/components/SaleExpenseItem";
 import ServiceExpenseItem from "@/components/ServiceExpenseItem";
-import CreateCustomerSheet from "@/components/sheets/invoice/CreateCustomerSheet";
+import CreateCustomerSheet from "@/components/sheets/customer/CreateCustomerSheet";
 import CreateItemSheet from "@/components/sheets/invoice/CreateItemSheet";
 import ViewInvoiceSheet from "@/components/sheets/invoice/ViewInvoiceSheet";
 import {

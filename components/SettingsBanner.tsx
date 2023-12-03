@@ -7,7 +7,7 @@ interface Bannerprops {
 
 const Banner: React.FC<Bannerprops> = ({ onClose }) => {
   return (
-    <div className=" h-[50px] purplegradient flex items-center px-[54px]">
+    <div className=" h-[50px] purplegradient flex w-full items-center px-[54px]">
       <div
         id="discountBanner"
         className="flex items-center text-white font-normal justify-between w-full"
@@ -19,7 +19,7 @@ const Banner: React.FC<Bannerprops> = ({ onClose }) => {
             Update billing
           </span>
         </div>
-        <X className=" w-4 h-4 text-white cursor-pointer hidden md:block" />
+        <X className=" w-4 h-4 text-white cursor-pointer hidden md:block " />
       </div>
     </div>
   );

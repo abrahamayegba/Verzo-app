@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
 import CustomerList from "@/components/CustomerList";
-import CreateCustomerSheet from "@/components/sheets/invoice/CreateCustomerSheet";
+import CreateCustomerSheet from "@/components/sheets/customer/CreateCustomerSheet";
 
 const Customers = () => {
   const [openCustomerSheet, setOpenCustomerSheet] = useState(false);

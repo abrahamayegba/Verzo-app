@@ -5,21 +5,34 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import PlanIcon from "@/components/ui/icons/PlanIcon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import VerveIcon from "@/components/ui/icons/VerveIcon";
-import MastercardIcon from "@/components/ui/icons/MastercardIcon";
+import Link from "next/link";
 
-interface PlanProps {
+interface BillingProps {
   open: boolean;
   onClose: () => void;
   confirmPlan: () => void;
 }
 
-const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
+const BillingSheet: React.FC<BillingProps> = ({
+  open,
+  onClose,
+  confirmPlan,
+}) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [inputValue, setInputValue] = useState("");
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    value = value.replace(/\D/g, "");
+    if (value.length >= 2) {
+      value = `${value.slice(0, 2)}/${value.slice(2, 4)}`;
+    }
+    setInputValue(value);
+  };
+
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
@@ -39,16 +52,12 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
           <p className=" mt-[14px] text-lg text-primary-black">Billing</p>
           <p className="font-light text-primary-greytext mt-2">
             {currentStep === 1
-              ? "Switch plan or billing frequency"
+              ? "First 30 days are free. You can set up later"
               : "Select a card to bill"}
           </p>
           <div className=" w-full mt-[30px] flex flex-col gap-y-6">
             {currentStep === 1 ? (
               <>
-                <div className=" py-[20px] px-[18px] flex items-center justify-between purplegradient text-white rounded-[10px]">
-                  <p>Verzo Plus plan will renew in 21 days</p>
-                  <X className=" w-4 h-4 cursor-pointer" />
-                </div>
                 <Tabs defaultValue="monthly" className=" w-full">
                   <TabsList className=" bg-primary-borderGrey p-1 rounded-[10px] mb-6">
                     <TabsTrigger
@@ -138,54 +147,48 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
               </>
             ) : (
               <>
-                <RadioGroup
-                  className=" max-h-[300px] overflow-y-scroll"
-                  defaultValue="option-one"
-                >
-                  <div className="flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-4 py-4 rounded-[10px]">
-                    <div className=" flex flex-col gap-y-2">
-                      <div className=" text-primary-black flex flex-row gap-x-3 items-center">
-                        <span className="">
-                          <VerveIcon />
-                        </span>
-                        <div className=" flex flex-col text-sm">
-                          <p className="  text-primary-black">ending in 7160</p>
-                          <p className=" text-primary-greytext font-light">
-                            Exp 06/2027
-                          </p>
-                        </div>
-                        <span className=" text-xs px-[6px] ml-2 text-primary-blue py-[2px] bg-primary-bluetint rounded-[20px]">
-                          default
-                        </span>
-                      </div>
-                    </div>
-                    <RadioGroupItem
-                      className=" w-5 h-5"
-                      value="option-one"
-                      id="option-one"
+                <form className=" gap-y-5 flex flex-col">
+                  <div className=" flex flex-col gap-y-[6px]">
+                    <label htmlFor="name">Name on card</label>
+                    <input
+                      className=" w-full rounded-lg border border-gray-300 p-[10px] text-[15px] focus:outline-none"
+                      type="text"
+                      placeholder="Name"
                     />
                   </div>
-                  <div className="flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-4 py-4 rounded-[10px]">
-                    <div className=" flex flex-col gap-y-2">
-                      <div className=" text-primary-black flex flex-row gap-x-3 items-center">
-                        <span className="">
-                          <MastercardIcon />
-                        </span>
-                        <div className=" flex flex-col text-sm">
-                          <p className="  text-primary-black">ending in 3460</p>
-                          <p className=" text-primary-greytext font-light">
-                            Exp 06/2027
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <RadioGroupItem
-                      className=" w-5 h-5"
-                      value="option-two"
-                      id="option-two"
+                  <div className=" flex flex-col gap-y-[6px]">
+                    <label htmlFor="cardnumber">Card number</label>
+                    <input
+                      className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
+                      type="text"
+                      placeholder="16 digits"
+                      maxLength={16}
                     />
                   </div>
-                </RadioGroup>
+                  <div className=" flex flex-col gap-y-[6px]">
+                    <div className=" flex flex-row gap-x-6">
+                      <div className=" flex flex-col gap-y-2">
+                        <label htmlFor="expiry">Expiry</label>
+                        <input
+                          className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
+                          type="text"
+                          placeholder="MM/YY"
+                          value={inputValue}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className=" flex flex-col gap-y-2">
+                        <label htmlFor="cvv">CVV</label>
+                        <input
+                          className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
+                          type="text"
+                          maxLength={3}
+                          placeholder="3 digits"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </form>
               </>
             )}
             <button
@@ -199,8 +202,16 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
               }
               className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[10px]"
             >
-              {currentStep === 1 ? "Next" : "Update billing"}
+              {currentStep === 1 ? "Next" : "Puchase plan"}
             </button>
+            <Link
+              className=" flex justify-center items-center"
+              href="/dashboard"
+            >
+              <button className=" text-primary-blue underline underline-offset-4">
+                Set up later
+              </button>
+            </Link>
           </div>
         </SheetContent>
       </Sheet>
@@ -208,4 +219,4 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
   );
 };
 
-export default PlanSheet;
+export default BillingSheet;

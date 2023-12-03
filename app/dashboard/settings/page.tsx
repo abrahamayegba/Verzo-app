@@ -4,15 +4,15 @@ import SettingsContent from "@/components/SettingsContent";
 import Banner from "@/components/SettingsBanner";
 
 const Settings = () => {
-  const [showDiscountBanner, setShowDiscountBanner] = useState(true);
+  const [showBillingBanner, setShowBillingBanner] = useState(true);
 
-  const handleDiscountBannerClick = () => {
-    setShowDiscountBanner(false);
+  const handleBillingBannerClick = () => {
+    setShowBillingBanner(false);
   };
 
   return (
     <>
-      {showDiscountBanner && <Banner onClose={handleDiscountBannerClick} />}
+      {showBillingBanner && <Banner onClose={handleBillingBannerClick} />}
       <div className=" px-[52px] bg-primary-whiteTint mt-[24px] pb-[20px] gap-y-[36px] flex flex-col">
         <div className=" flex flex-col  gap-y-2">
           <p className=" text-primary-black font-medium text-3xl">Settings</p>
