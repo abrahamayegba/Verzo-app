@@ -6,7 +6,7 @@ import { TokenRefreshLink } from "apollo-link-token-refresh";
 import { setContext } from "@apollo/client/link/context";
 import { createUploadLink } from "apollo-upload-client";
 
-export const EXPRESS_URL = "https://api2.verzo.app";
+export const EXPRESS_URL = "https://api.verzo.app";
 export const GRAPHQL_URL = `${EXPRESS_URL}/graphql`;
 
 const refreshLink = new TokenRefreshLink({
