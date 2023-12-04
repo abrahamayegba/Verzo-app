@@ -43,12 +43,11 @@ const OTPModal: React.FC<OTPProps> = ({ open, openModal, onClose }) => {
   const router = useRouter();
   const { handleSubmit } = useForm<FormData>();
   const [verificationMutation, { loading }] = useVerificationMutation();
-
-  const showFailureToast = () => {
+  const showFailureToast = (error: any) => {
     toast({
       variant: "destructive",
       title: "Uh oh! Something went wrong.",
-      description: "There was a problem with your request.",
+      description: error.message,
       duration: 3000,
     });
   };
@@ -62,6 +61,7 @@ const OTPModal: React.FC<OTPProps> = ({ open, openModal, onClose }) => {
         },
       });
       router.push("/auth/businesssetup");
+      onClose();
       setCodes(["", "", "", ""]);
     } catch (error: any) {
       console.error(error);
@@ -72,11 +72,9 @@ const OTPModal: React.FC<OTPProps> = ({ open, openModal, onClose }) => {
           title: "User already verified",
           description: "Please sign in to your account",
         });
-      } else if (error.message === "Verification code is expired") {
-        router.push("/codeExpired");
       }
       onClose();
-      showFailureToast();
+      showFailureToast(error);
       setCodes(["", "", "", ""]);
     }
   };
@@ -136,6 +134,7 @@ const OTPModal: React.FC<OTPProps> = ({ open, openModal, onClose }) => {
                   </div>
                   <div className=" flex justify-between mt-8">
                     <button
+                      type="button"
                       onClick={onClose}
                       className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border text-gray-800"
                     >

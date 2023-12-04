@@ -18,7 +18,6 @@ const Signup = () => {
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm<FormData>();
   const router = useRouter();

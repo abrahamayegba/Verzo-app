@@ -92,7 +92,7 @@ const SignIn = () => {
               <p className="text-base text-primary-black mt-4">
                 Forgot password?{" "}
                 <Link
-                  href="/auth/resetpassword"
+                  href="/auth/resetlink"
                   className="text-primary-blue underline underline-offset-4 ml-[2px]"
                 >
                   Reset here

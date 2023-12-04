@@ -1,7 +1,8 @@
+import MainLoader from "@/components/loading/MainLoader";
 import React from "react";
 
 const Loading = () => {
-  return <div>loading...</div>;
+  return <MainLoader />;
 };
 
 export default Loading;
