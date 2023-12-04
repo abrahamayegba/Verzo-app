@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import localStorage from "local-storage-fallback";
 import { format } from "date-fns";
 import { ChevronDown, Eye, MoveLeft, Plus } from "lucide-react";
 import Link from "next/link";
@@ -80,6 +81,9 @@ const CreateExpense = () => {
   };
 
   console.log(expenseItems);
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
 
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]">

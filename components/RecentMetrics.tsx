@@ -3,7 +3,7 @@ import RecentInvoices from "./RecentInvoices";
 import RecentExpenses from "./RecentExpenses";
 import RecentProducts from "./RecentProducts";
 import RecentMetricEmptyState from "./emptystates/RecentMetricEmptyState";
-import RecentInvoiceEmptyIcon from "./ui/icons/RecentInvoiceEmptyIcon";
+import RecentInvoiceEmptyIcon from "./ui/icons/RecentCustomerEmptyIcon";
 
 const RecentMetrics = () => {
   return (

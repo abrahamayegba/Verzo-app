@@ -8,6 +8,7 @@ import useModal from "@/app/hooks/useModal";
 import BillingSheet from "@/components/sheets/auth/BillingSheet";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";
+import { useGetBusinessesByUserIdQuery } from "@/src/generated/graphql";
 
 const BusinessSetup = () => {
   const {
@@ -18,6 +19,7 @@ const BusinessSetup = () => {
 
   const [openBusinessSheet, setOpenBusinessSheet] = useState(false);
   const [openBillingSheet, setOpenBillingSheet] = useState(false);
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const handleCloseBusinessSheet = () => {
     setOpenBusinessSheet(false);
   };
@@ -27,6 +29,14 @@ const BusinessSetup = () => {
   const confirmBilling = () => {
     openConfirmPlanModal();
   };
+  const businessNames =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
+      (business) => business?.businessName
+    ) || [];
+
+  console.log(businessNames);
+
+  const businessPresent = businessNames.length > 0;
 
   return (
     <>
@@ -34,12 +44,14 @@ const BusinessSetup = () => {
         <AuthSidebar />
         <div className=" flex-1 ml-[34%] flex-col h-full gap-y-[60px] flex mt-[-20px] justify-center pl-[140px] pr-[60px]">
           <div className=" flex flex-col ">
-            <Link href="/dashboard">
-              <button className=" flex gap-x-2 mb-3 items-center text-gray-700">
-                <MoveRight className=" w-5 h-5 text-primary-greytext" /> Go to
-                Dashboard
-              </button>
-            </Link>
+            {businessPresent && (
+              <Link href="/dashboard">
+                <button className=" flex gap-x-2 mb-3 items-center text-gray-700">
+                  <MoveRight className=" w-5 h-5 text-primary-greytext" /> Go to
+                  Dashboard
+                </button>
+              </Link>
+            )}
             <p className=" text-primary-black text-[32px]">Business profile</p>
             <p className=" text-primary-greytext text-lg">
               Complete these steps to get your business up and running
@@ -47,7 +59,11 @@ const BusinessSetup = () => {
           </div>
           <div className=" flex gap-x-[40px]">
             <div className=" w-1/2 flex flex-col rounded-[10px] max-w-[270px]">
-              <div className=" purplegradient h-[84px] rounded-t-[10px] px-6 flex items-center">
+              <div
+                className={` h-[84px] rounded-t-[10px] px-6 flex items-center ${
+                  businessPresent ? " bg-green-500" : "purplegradient"
+                }`}
+              >
                 <div className=" flex">
                   <span className=" border border-white rounded-full p-3">
                     <WhiteBankIcon />
@@ -60,12 +76,20 @@ const BusinessSetup = () => {
                   Provide your business details and the category
                 </p>
                 <div className=" flex mt-auto">
-                  <button
-                    onClick={() => setOpenBusinessSheet(true)}
-                    className="rounded-[10px] mt-[10px] text-primary-black flex justify-center px-10 py-[8px] items-center border border-primary-border"
-                  >
-                    Set up
-                  </button>
+                  {businessPresent ? (
+                    <Link href="/dashboard">
+                      <button className="rounded-[10px] mt-[10px] text-primary-black flex justify-center px-10 py-[8px] items-center border border-primary-border">
+                        Finish
+                      </button>
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => setOpenBusinessSheet(true)}
+                      className="rounded-[10px] mt-[10px] text-primary-black flex justify-center px-10 py-[8px] items-center border border-primary-border"
+                    >
+                      Set up
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
