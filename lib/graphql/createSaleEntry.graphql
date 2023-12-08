@@ -1,8 +1,8 @@
 mutation CreateSaleEntry(
   $description: String!
   $invoiceInput: CreateCompleteInvoiceB!
-  $saleExpense: [SaleExpenseItem]
-  $saleServiceExpense: [SaleServiceExpenseEntry]
+  $saleExpense: [SaleExpenseItem!]
+  $saleServiceExpense: [SaleServiceExpenseEntry!]
 ) {
   createSaleEntry(
     input: {

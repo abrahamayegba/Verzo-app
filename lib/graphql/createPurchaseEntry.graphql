@@ -1,16 +1,14 @@
 mutation CreatePurchaseEntry(
   $transactionDate: Date!
   $description: String!
-  $reference: String!
   $merchantId: String!
   $businessId: String!
-  $purchaseItem: [PurchaseItemDetail]!
+  $purchaseItem: [PurchaseItemDetail!]!
 ) {
   createPurchaseEntry(
     input: {
       transactionDate: $transactionDate
       description: $description
-      reference: $reference
       merchantId: $merchantId
       businessId: $businessId
       purchaseItem: $purchaseItem
@@ -18,6 +16,7 @@ mutation CreatePurchaseEntry(
   ) {
     id
     description
+    reference
     transactionDate
     businessId
     createdAt

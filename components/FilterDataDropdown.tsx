@@ -8,7 +8,19 @@ import {
 import { ListFilter } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 
-const FilterDataDropdown = () => {
+interface FilterDataDropdownProps {
+  selectedFilter: string | null;
+  onFilterChange: (filter: string) => void;
+}
+
+const FilterDataDropdown: React.FC<FilterDataDropdownProps> = ({
+  selectedFilter,
+  onFilterChange,
+}) => {
+  const handleFilterSelection = (filter: string) => {
+    onFilterChange(filter);
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className=" focus:outline-none">
@@ -18,20 +30,32 @@ const FilterDataDropdown = () => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
-        <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-          <Checkbox id="weekly" />
+        <DropdownMenuItem
+          className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+          onClick={() => handleFilterSelection("weekly")}
+        >
+          <Checkbox id="weekly" checked={selectedFilter === "weekly"} />
           Last 7 days
         </DropdownMenuItem>
-        <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-          <Checkbox id="monthly" />
+        <DropdownMenuItem
+          className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+          onClick={() => handleFilterSelection("monthly")}
+        >
+          <Checkbox id="monthly" checked={selectedFilter === "monthly"} />
           Last 30 days
         </DropdownMenuItem>
-        <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-          <Checkbox id="quarterly" />
+        <DropdownMenuItem
+          className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+          onClick={() => handleFilterSelection("quarterly")}
+        >
+          <Checkbox id="quarterly" checked={selectedFilter === "quarterly"} />
           Last 3 months
         </DropdownMenuItem>
-        <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-          <Checkbox id="yearly" />
+        <DropdownMenuItem
+          className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+          onClick={() => handleFilterSelection("yearly")}
+        >
+          <Checkbox id="yearly" checked={selectedFilter === "yearly"} />
           Last 12 months
         </DropdownMenuItem>
       </DropdownMenuContent>

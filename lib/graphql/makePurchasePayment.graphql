@@ -3,7 +3,6 @@ mutation MakePurchasePayment(
   $purchaseId: String!
   $transactionDate: Date!
   $description: String!
-  $reference: String!
   $total: Float!
   $file: String
 ) {
@@ -13,7 +12,6 @@ mutation MakePurchasePayment(
       purchaseId: $purchaseId
       transactionDate: $transactionDate
       description: $description
-      reference: $reference
       total: $total
       file: $file
     }

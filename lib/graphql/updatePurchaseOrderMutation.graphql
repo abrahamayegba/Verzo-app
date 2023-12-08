@@ -2,16 +2,14 @@ mutation UpdatePurchase(
   $purchaseId: String!
   $transactionDate: Date
   $description: String
-  $reference: String
   $merchantId: String
-  $purchaseItem: [PurchaseItemDetail]
+  $purchaseItem: [PurchaseItemDetail!]
 ) {
   updatePurchaseEntry(
     purchaseId: $purchaseId
     input: {
       transactionDate: $transactionDate
       description: $description
-      reference: $reference
       merchantId: $merchantId
       purchaseItem: $purchaseItem
     }

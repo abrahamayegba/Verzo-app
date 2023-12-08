@@ -21,7 +21,6 @@ query GetProductOrServiceByBusiness(
         price
         id
         type
-        basicUnit
         productUnit {
           id
           unitName

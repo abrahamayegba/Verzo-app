@@ -1,0 +1,12 @@
+query GetProductById($productId: String!) {
+  getProductById(productId: $productId) {
+    productName
+    price
+    productUnit {
+      unitName
+    }
+    productUnitId
+    reorderLevel
+    trackReorderLevel
+  }
+}

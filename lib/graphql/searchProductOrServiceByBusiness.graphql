@@ -6,7 +6,6 @@ query SearchProductOrServiceByBusiness($businessId: String!, $search: String!) {
     product {
       id
       productName
-      basicUnit
       price
       isArchived
       createdAt

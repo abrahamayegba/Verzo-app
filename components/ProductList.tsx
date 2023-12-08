@@ -6,12 +6,18 @@ import DeleteProduct from "./modals/product/DeleteProductModal";
 import UnarchiveProduct from "./modals/product/UnarchiveProductModal";
 import ArchiveProduct from "./modals/product/ArchiveProductModal";
 import ProductTabContentAll from "./ProductTabContentAll";
+import localStorage from "local-storage-fallback";
 import ProductTabContentArchived from "./ProductTabContentArchived";
+import { useGetProductsByBusinessQuery } from "@/src/generated/graphql";
+import EditProductSheet from "./sheets/product/EditProductSheet";
 
 const ProductList = () => {
-  const allProducts = "(15)";
-  const archivedProducts = "(5)";
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
   const [isChecked, setIsChecked] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const { isOpen, openModal, closeModal } = useModal();
   const {
     isOpen: isDeleteProductOpen,
@@ -25,8 +31,45 @@ const ProductList = () => {
     closeModal: closeUnarchiveModal,
   } = useModal();
 
+  const {
+    isOpen: isEditModalOpen,
+    openModal: openEditModal,
+    closeModal: closeEditModal,
+  } = useModal();
+
+  const getProductsByBusiness = useGetProductsByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+
+  const products =
+    getProductsByBusiness.data?.getProductsByBusiness?.productByBusiness ?? [];
+
+  const allProducts = products.length;
+  const archivedProducts = products.filter(
+    (product) => product?.isArchived
+  ).length;
+
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
+  };
+
+  const handleOpenArchiveModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openModal();
+  };
+
+  const handleOpenDeleteModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openDeleteProductModal();
+  };
+
+  const handleOpenEditModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openEditModal();
   };
 
   return (
@@ -38,7 +81,8 @@ const ProductList = () => {
               className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
               value="all"
             >
-              All <span className=" text-primary-mainGrey">{allProducts}</span>
+              All{" "}
+              <span className=" text-primary-mainGrey">({allProducts})</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -47,7 +91,7 @@ const ProductList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                {archivedProducts}
+                ({archivedProducts})
               </span>
             </TabsTrigger>
           </div>
@@ -70,8 +114,9 @@ const ProductList = () => {
         </TabsList>
         <TabsContent value="all">
           <ProductTabContentAll
-            openDeleteModal={openDeleteProductModal}
-            openArchiveModal={openModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openArchiveModal={handleOpenArchiveModal}
+            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
         </TabsContent>
@@ -87,16 +132,24 @@ const ProductList = () => {
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
+        productId={selectedId}
+      />
+      <EditProductSheet
+        open={isEditModalOpen}
+        onClose={closeEditModal}
+        productId={selectedId}
       />
       <UnarchiveProduct
         open={isUnarchiveOpen}
         openModal={openUnarchiveModal}
         onClose={closeUnarchiveModal}
+        productId={selectedId}
       />
       <DeleteProduct
         open={isDeleteProductOpen}
         openModal={openDeleteProductModal}
         onClose={closeDeleteProductModal}
+        productId={selectedId}
       />
     </div>
   );

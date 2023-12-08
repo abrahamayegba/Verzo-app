@@ -16,30 +16,41 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Archive, Eye, Pen, Trash2 } from "lucide-react";
+import localStorage from "local-storage-fallback";
+import TableEmptyState from "./emptystates/TableEmptyState";
+import CustomerTableEmptyIcon from "./ui/icons/CustomerTableEmptyIcon";
+import { useGetCustomerByBusinessQuery } from "@/src/generated/graphql";
 
 interface CustomerTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
-  openArchiveModal: () => void;
-  openDeleteModal: () => void;
+  openArchiveModal: (customerId: string) => void;
+  openEditModal: (customerId: string) => void;
+  openDeleteModal: (customerId: string) => void;
 }
 
 const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
   onToggleSelectAll,
   openArchiveModal,
   openDeleteModal,
+  openEditModal,
 }) => {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const getCustomersByBusiness = useGetCustomerByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const customers =
+    getCustomersByBusiness.data?.getCustomerByBusiness?.customerByBusiness ??
+    [];
 
-  const data = Array.from({ length: 12 }, (_, index) => ({
-    id: index + 1,
-    date: new Date(2023, 0, index + 1),
-    name: `Customer ${index + 1}`,
-    email: `user${index + 1}@example.com`,
-    phone: `0909090909`,
-  }));
-
-  // Function to handle individual row selection
-  const handleRowSelect = (rowId: number) => {
+  const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
     } else {
@@ -48,15 +59,16 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== data.length;
+    const isChecked = selectedRows.length !== customers?.length;
     if (isChecked) {
-      setSelectedRows(data.map((row) => row.id));
+      setSelectedRows(
+        customers?.map((customer) => String(customer?.id) || "") || []
+      );
     } else {
       setSelectedRows([]);
     }
     onToggleSelectAll(isChecked);
   };
-
   return (
     <Table>
       <TableHeader>
@@ -64,8 +76,11 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
           <TableHead className="w-[100px] flex gap-x-3 items-center font-normal text-sm text-primary-greytext">
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-              checked={selectedRows.length === data.length && data.length > 0}
-              disabled={data.length === 0}
+              checked={
+                selectedRows.length === customers?.length &&
+                customers.length > 0
+              }
+              disabled={customers?.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Name
@@ -85,55 +100,73 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {data.map((row) => (
-          <TableRow className="" key={row.id}>
-            <TableCell className="flex gap-x-3 items-center py-[22px]">
-              <Checkbox
-                className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                checked={selectedRows.includes(row.id)}
-                onCheckedChange={() => handleRowSelect(row.id)}
+        {customers?.length === 0 ? (
+          <TableRow>
+            <TableCell
+              colSpan={7}
+              className="text-center text-primary-greytext py-4 h-[293px]"
+            >
+              <TableEmptyState
+                icon={<CustomerTableEmptyIcon />}
+                emptytext="No customers added"
               />
-
-              {row.name}
-            </TableCell>
-            <TableCell className=" text-primary-greytext">
-              {row.date.toDateString()}
-            </TableCell>
-            <TableCell className=" text-primary-greytext">
-              {row.email}
-            </TableCell>
-            <TableCell className=" text-primary-greytext">
-              {row.phone}
-            </TableCell>
-            <TableCell className="text-right text-primary-blue">
-              <DropdownMenu>
-                <DropdownMenuTrigger className=" focus:outline-none">
-                  More
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
-                  <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                    <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    Edit Customer
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={openArchiveModal}
-                    className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                  >
-                    <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    Archive Customer
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={openDeleteModal}
-                    className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                  >
-                    <Trash2 className=" w-4 h-4 text-opacity-80" />
-                    Delete Customer
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          customers?.map((customer) => (
+            <TableRow key={customer?.id}>
+              <TableCell className="flex gap-x-3 items-center py-[22px]">
+                <Checkbox
+                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                  checked={selectedRows.includes(customer?.id!)}
+                  onCheckedChange={() => handleRowSelect(customer?.id!)}
+                />
+                {customer?.name}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {customer?.createdAt
+                  ? new Date(customer.createdAt).toDateString()
+                  : ""}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {customer?.email}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {customer?.mobile}
+              </TableCell>
+              <TableCell className="text-right text-primary-blue">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" focus:outline-none">
+                    More
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
+                    <DropdownMenuItem
+                      onClick={() => openEditModal(customer?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Edit Customer
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openArchiveModal(customer?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Archive Customer
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openDeleteModal(customer?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Trash2 className=" w-4 h-4 text-opacity-80" />
+                      Delete Customer
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );

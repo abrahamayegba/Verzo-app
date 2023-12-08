@@ -2,23 +2,23 @@ mutation CreateProduct(
   $productName: String!
   $businessId: String!
   $price: Float!
-  $basicUnit: Float!
   $productUnitId: String!
+  $initialStockLevel: Float
 ) {
   createProduct(
     input: {
       businessId: $businessId
       productName: $productName
       price: $price
-      basicUnit: $basicUnit
       productUnitId: $productUnitId
+      initialStockLevel: $initialStockLevel
     }
   ) {
     id
     productName
     price
-    basicUnit
     productUnitId
+    businessProductUnitId
     isArchived
     createdAt
   }

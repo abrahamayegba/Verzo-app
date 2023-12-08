@@ -9,7 +9,7 @@ export default function Dashboard2Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className=" bg-primary-background">
+    <div className=" bg-primary-whiteTint">
       <div className="min-h-screen flex flex-col">
         <Topbar />
         <Sidebar />

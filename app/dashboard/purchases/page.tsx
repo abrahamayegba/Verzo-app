@@ -15,7 +15,7 @@ const Purchases = () => {
           <p className=" text-primary-greytext">Create and manage purchases</p>
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
-          <FilterDataDropdown />
+          {/* <FilterDataDropdown /> */}
           <Link href="/purchase/createpurchase">
             <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
               Create order

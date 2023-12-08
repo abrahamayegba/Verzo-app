@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useSignUpMutation } from "@/src/generated/graphql";
 import { saveToken } from "@/lib/auth";
+import { useToast } from "@/app/hooks/use-toast";
 type FormData = {
   fullname: string;
   email: string;
@@ -21,16 +22,24 @@ const Signup = () => {
     formState: { errors },
   } = useForm<FormData>();
   const router = useRouter();
+  const { toast } = useToast();
   const [type, setType] = useState("password");
   const [error, setError] = useState<string | null>(null);
   const togglePasswordVisibility = () => {
     setType((prevType) => (prevType === "password" ? "text" : "password"));
   };
-
   const handleInputChange = () => {
     setError(null);
   };
   const [signUpMutation, { loading }] = useSignUpMutation();
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
   const SignUpHandler = async (form: FormData) => {
     try {
       const response = await signUpMutation({
@@ -38,8 +47,9 @@ const Signup = () => {
       });
       saveToken(response.data?.signUp.access_token!);
       router.push("/auth/verifyemail");
-    } catch (error) {
-      setError("Email already used, Sign in");
+    } catch (error: any) {
+      console.error(error);
+      showFailureToast(error);
     }
   };
 
@@ -118,6 +128,11 @@ const Signup = () => {
                   {errors.password.message}
                 </p>
               )}
+              {/* {error && (
+                <p className="text-red-500 text-sm pl-1 max-w-[400px]">
+                  {errors.password.message}
+                </p>
+              )} */}
               <span
                 onClick={togglePasswordVisibility}
                 className="absolute cursor-pointer mt-[48px] ml-[360px]"

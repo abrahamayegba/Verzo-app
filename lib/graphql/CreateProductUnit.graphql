@@ -1,0 +1,7 @@
+mutation CreateBusinessProductUnit($unitName: String!, $businessId: String!) {
+  createBusinessProductUnit(
+    input: { unitName: $unitName, businessId: $businessId }
+  ) {
+    unitName
+  }
+}

@@ -38,7 +38,6 @@ query GetSaleByBusiness($businessId: String!, $cursor: String, $sets: Float) {
             product {
               type
               productName
-              basicUnit
               productUnit {
                 id
                 unitName

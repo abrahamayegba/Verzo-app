@@ -1,7 +1,6 @@
 mutation EffectSaleExpense(
   $expenseId: String!
   $description: String!
-  $reference: String!
   $transactionDate: Date!
   $file: String
 ) {
@@ -9,7 +8,6 @@ mutation EffectSaleExpense(
     input: {
       expenseId: $expenseId
       description: $description
-      reference: $reference
       transactionDate: $transactionDate
       file: $file
     }

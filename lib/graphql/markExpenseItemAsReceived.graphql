@@ -5,9 +5,9 @@ mutation MarkExpenseItemAsReceived(
   $transactionDate: Date!
 ) {
   markExpenseItemAsReceived(
-    expenseItemId: $expenseItemId
     input: {
       businessId: $businessId
+      expenseItemId: $expenseItemId
       quantity: $quantity
       transactionDate: $transactionDate
     }

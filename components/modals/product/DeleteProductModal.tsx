@@ -2,17 +2,54 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
+import { useToast } from "@/app/hooks/use-toast";
+import {
+  GetProductsByBusinessDocument,
+  useDeleteProductMutation,
+} from "@/src/generated/graphql";
 
 interface DeleteProductProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  productId: string;
 }
 const DeleteProduct: React.FC<DeleteProductProps> = ({
   open,
   openModal,
   onClose,
+  productId,
 }) => {
+  const { toast } = useToast();
+  const [deleteProductMutation, { loading }] = useDeleteProductMutation();
+  const showSuccessToast = () => {
+    toast({
+      title: "Product delete successful",
+      description: "Your product has been successfully deleted",
+      duration: 3500,
+    });
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+  const handleDeleteProductClick = async () => {
+    try {
+      await deleteProductMutation({
+        variables: { productId: productId },
+        refetchQueries: [GetProductsByBusinessDocument],
+      });
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[200]" onClose={onClose}>
@@ -57,8 +94,14 @@ const DeleteProduct: React.FC<DeleteProductProps> = ({
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white">
-                      Delete
+                    <button
+                      type="button"
+                      onClick={handleDeleteProductClick}
+                      className={`px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white ${
+                        loading ? "opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading..." : "Delete"}
                     </button>
                   </div>
                 </div>

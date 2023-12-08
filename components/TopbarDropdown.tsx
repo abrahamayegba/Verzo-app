@@ -23,7 +23,6 @@ const TopbarDropdown = () => {
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
       (business) => business?.businessName
     ) || [];
-
   const businessId =
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
       (business) => business?.id

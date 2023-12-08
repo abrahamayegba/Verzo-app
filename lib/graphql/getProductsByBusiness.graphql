@@ -12,8 +12,8 @@ query GetProductsByBusiness(
       productUnit {
         unitName
       }
+      stockStatus
       productUnitId
-      basicUnit
       isArchived
       businessId
       createdAt

@@ -13,7 +13,7 @@ const RecentMetricEmptyState: React.FC<props> = ({ name, icon, emptytext }) => {
         <p className=" text-primary-greytext text-sm">Recent {name}</p>
         <button
           disabled
-          className=" text-primary-blue text-sm tracking-[-0.2px]"
+          className=" text-primary-blue text-sm tracking-[-0.2px] cursor-not-allowed"
         >
           View all
         </button>

@@ -7,12 +7,14 @@ interface UnarchiveProductProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  productId: string;
 }
 
 const UnarchiveProduct: React.FC<UnarchiveProductProps> = ({
   open,
   openModal,
   onClose,
+  productId,
 }) => {
   return (
     <Transition.Root show={open} as={Fragment}>

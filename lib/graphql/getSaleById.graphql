@@ -68,7 +68,6 @@ query GetSaleById($saleId: String!) {
             id
             type
             productName
-            basicUnit
             price
             productUnit {
               id

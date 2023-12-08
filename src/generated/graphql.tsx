@@ -91,6 +91,7 @@ export type Business = {
   businessCategory?: Maybe<BusinessCategory>;
   businessCategoryId: Scalars['String']['output'];
   businessEmail?: Maybe<Scalars['String']['output']>;
+  businessInitials?: Maybe<Scalars['String']['output']>;
   businessMobile?: Maybe<Scalars['String']['output']>;
   businessName: Scalars['String']['output'];
   cards?: Maybe<Array<Maybe<Card>>>;
@@ -99,6 +100,7 @@ export type Business = {
   createdById?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   logo?: Maybe<Scalars['String']['output']>;
+  settlementAccounts?: Maybe<Array<Maybe<SettlementAccount>>>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
@@ -356,8 +358,7 @@ export type CreateCompleteInvoiceB = {
   dateOfIssue: Scalars['Date']['input'];
   discount?: InputMaybe<Scalars['Float']['input']>;
   dueDate: Scalars['Date']['input'];
-  item: Array<InputMaybe<ItemDetail>>;
-  reference: Scalars['String']['input'];
+  item: Array<ItemDetail>;
 };
 
 export type CreateCompletePurchaseCsvData = {
@@ -429,7 +430,6 @@ export type CreateExpense = {
   expenseItem: Array<ExpenseDetail>;
   merchantId: Scalars['String']['input'];
   recurring?: InputMaybe<Scalars['Boolean']['input']>;
-  reference: Scalars['String']['input'];
 };
 
 export type CreateExpenseCategory = {
@@ -446,6 +446,18 @@ export type CreateExpenseWithCsv = {
   quantity: Scalars['Float']['input'];
   reference: Scalars['String']['input'];
   unitPrice: Scalars['Float']['input'];
+};
+
+export type CreateGeneralJournal = {
+  amount: Scalars['Float']['input'];
+  businessId: Scalars['String']['input'];
+  chartOfAccountId: Scalars['String']['input'];
+  createdById: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  productId?: InputMaybe<Scalars['String']['input']>;
+  reference: Scalars['String']['input'];
+  transactionDate: Scalars['Date']['input'];
+  transactionType: Scalars['String']['input'];
 };
 
 export type CreateInvite = {
@@ -497,6 +509,13 @@ export type CreateMerchantInvoice = {
   merchantId: Scalars['String']['input'];
 };
 
+export type CreateMerchantWithCsv = {
+  businessId: Scalars['String']['input'];
+  createdById: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
 export type CreateOffer = {
   description: Scalars['String']['input'];
   discountAmount: Scalars['Float']['input'];
@@ -532,10 +551,10 @@ export type CreatePlan = {
 };
 
 export type CreateProduct = {
-  basicUnit: Scalars['Float']['input'];
   businessId: Scalars['String']['input'];
   categoryId?: InputMaybe<Scalars['String']['input']>;
   image?: InputMaybe<Scalars['String']['input']>;
+  initialStockLevel?: InputMaybe<Scalars['Float']['input']>;
   price: Scalars['Float']['input'];
   productName: Scalars['String']['input'];
   productUnitId: Scalars['String']['input'];
@@ -563,8 +582,8 @@ export type CreateProductUnit = {
 };
 
 export type CreateProductWithCsv = {
-  basicUnit: Scalars['Float']['input'];
   businessId: Scalars['String']['input'];
+  initialStockLevel: Scalars['Float']['input'];
   price: Scalars['Float']['input'];
   productName: Scalars['String']['input'];
   productUnit: Scalars['String']['input'];
@@ -575,8 +594,7 @@ export type CreatePurchase = {
   businessId: Scalars['String']['input'];
   description: Scalars['String']['input'];
   merchantId: Scalars['String']['input'];
-  purchaseItem: Array<InputMaybe<PurchaseItemDetail>>;
-  reference: Scalars['String']['input'];
+  purchaseItem: Array<PurchaseItemDetail>;
   transactionDate: Scalars['Date']['input'];
 };
 
@@ -640,8 +658,8 @@ export type CreateSaleCsvData = {
 export type CreateSaleEntry = {
   description: Scalars['String']['input'];
   invoiceInput: CreateCompleteInvoiceB;
-  saleExpense?: InputMaybe<Array<InputMaybe<SaleExpenseItem>>>;
-  saleServiceExpense?: InputMaybe<Array<InputMaybe<SaleServiceExpenseEntry>>>;
+  saleExpense?: InputMaybe<Array<SaleExpenseItem>>;
+  saleServiceExpense?: InputMaybe<Array<SaleServiceExpenseEntry>>;
 };
 
 export type CreateSaleStatus = {
@@ -682,6 +700,13 @@ export type CreateServiceWithCsv = {
   price: Scalars['Float']['input'];
   serviceUnit: Scalars['String']['input'];
   type: Scalars['String']['input'];
+};
+
+export type CreateSettlementAccount = {
+  accountName: Scalars['String']['input'];
+  accountNumber: Scalars['String']['input'];
+  bankName: Scalars['String']['input'];
+  businessId: Scalars['String']['input'];
 };
 
 export type CreateSubscription = {
@@ -781,7 +806,6 @@ export type EffectSaleExpense = {
   description: Scalars['String']['input'];
   expenseId: Scalars['String']['input'];
   file?: InputMaybe<Scalars['String']['input']>;
-  reference: Scalars['String']['input'];
   transactionDate: Scalars['Date']['input'];
 };
 
@@ -936,6 +960,7 @@ export type ExpenseItem = {
 
 export type ExpenseItemReceived = {
   businessId: Scalars['String']['input'];
+  expenseItemId: Scalars['String']['input'];
   quantity: Scalars['Float']['input'];
   transactionDate: Scalars['Date']['input'];
 };
@@ -1018,7 +1043,6 @@ export type ExpensePaymentEntry = {
   description: Scalars['String']['input'];
   expenseId: Scalars['String']['input'];
   file?: InputMaybe<Scalars['String']['input']>;
-  reference: Scalars['String']['input'];
   total: Scalars['Float']['input'];
   transactionDate: Scalars['Date']['input'];
 };
@@ -1055,6 +1079,26 @@ export type GrirClearingAccount = {
   purchase?: Maybe<Purchase>;
   purchaseId?: Maybe<Scalars['String']['output']>;
   purchaseMerchantInvoices?: Maybe<Array<Maybe<PurchaseMerchantInvoice>>>;
+  updatedAt?: Maybe<Scalars['Date']['output']>;
+};
+
+export type GeneralJournal = {
+  __typename?: 'GeneralJournal';
+  amount?: Maybe<Scalars['Float']['output']>;
+  business?: Maybe<Business>;
+  businessId?: Maybe<Scalars['String']['output']>;
+  chartOfAccount?: Maybe<ChartOfAccount>;
+  chartOfAccountId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Date']['output']>;
+  createdBy?: Maybe<User>;
+  createdById?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  product?: Maybe<Product>;
+  productId?: Maybe<Scalars['String']['output']>;
+  reference?: Maybe<Scalars['String']['output']>;
+  transactionDate?: Maybe<Scalars['Date']['output']>;
+  transactionType?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
@@ -1125,6 +1169,7 @@ export type GetPurchaseForMonthResponse = {
   __typename?: 'GetPurchaseForMonthResponse';
   paidPurchasesThisMonth?: Maybe<Scalars['Float']['output']>;
   pendingPurchasesThisMonth?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPurchaseThisMonth?: Maybe<Scalars['Float']['output']>;
   purchasesThisMonth?: Maybe<Scalars['Float']['output']>;
   totalPaidPurchaseAmountThisMonth?: Maybe<Scalars['Float']['output']>;
   totalPendingPurchaseAmountThisMonth?: Maybe<Scalars['Float']['output']>;
@@ -1135,6 +1180,7 @@ export type GetPurchaseForQuarterResponse = {
   __typename?: 'GetPurchaseForQuarterResponse';
   paidPurchasesThisQuarter?: Maybe<Scalars['Float']['output']>;
   pendingpurchasesThisQuarter?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPurchaseThisQuarter?: Maybe<Scalars['Float']['output']>;
   purchasesThisQuarter?: Maybe<Scalars['Float']['output']>;
   totalPaidPurchaseAmountThisQuarter?: Maybe<Scalars['Float']['output']>;
   totalPendingPurchaseAmountThisQuarter?: Maybe<Scalars['Float']['output']>;
@@ -1145,6 +1191,7 @@ export type GetPurchaseForWeekResponse = {
   __typename?: 'GetPurchaseForWeekResponse';
   paidPurchasesThisWeek?: Maybe<Scalars['Float']['output']>;
   pendingPurchasesThisWeek?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPurchaseThisWeek?: Maybe<Scalars['Float']['output']>;
   purchasesThisWeek?: Maybe<Scalars['Float']['output']>;
   totalPaidPurchaseAmountThisWeek?: Maybe<Scalars['Float']['output']>;
   totalPendingPurchaseAmountThisWeek?: Maybe<Scalars['Float']['output']>;
@@ -1155,6 +1202,7 @@ export type GetPurchaseForYearResponse = {
   __typename?: 'GetPurchaseForYearResponse';
   paidPurchasesThisYear?: Maybe<Scalars['Float']['output']>;
   pendingPurchasesThisYear?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPurchaseThisYear?: Maybe<Scalars['Float']['output']>;
   purchasesThisYear?: Maybe<Scalars['Float']['output']>;
   totalPaidPurchaseAmountThisYear?: Maybe<Scalars['Float']['output']>;
   totalPendingPurchaseAmountThisYear?: Maybe<Scalars['Float']['output']>;
@@ -1318,7 +1366,6 @@ export type MakePurchasePaymentResponse = {
 export type MakeSalePayment = {
   description: Scalars['String']['input'];
   file?: InputMaybe<Scalars['String']['input']>;
-  reference: Scalars['String']['input'];
   saleId: Scalars['String']['input'];
   transactionDate: Scalars['Date']['input'];
 };
@@ -1432,6 +1479,7 @@ export type Mutation = {
   archiveSale?: Maybe<Scalars['Boolean']['output']>;
   archiveServiceByBusiness?: Maybe<Scalars['Boolean']['output']>;
   archiveServiceUnit?: Maybe<Scalars['Boolean']['output']>;
+  archiveSettlementAccount?: Maybe<Scalars['Boolean']['output']>;
   authenticate?: Maybe<TwoFactorLoginResponse>;
   authorizeChargeCard?: Maybe<Scalars['String']['output']>;
   changeBusinessEmail?: Maybe<Business>;
@@ -1469,6 +1517,7 @@ export type Mutation = {
   createInvoice?: Maybe<Invoice>;
   createMerchant?: Maybe<Merchant>;
   createMerchantInvoice?: Maybe<ExpenseMerchantInvoice>;
+  createMerchantWithCsv?: Maybe<Scalars['Boolean']['output']>;
   createOffer?: Maybe<Offer>;
   createOption?: Maybe<Option>;
   createOptionIncluded?: Maybe<OptionIncluded>;
@@ -1490,6 +1539,7 @@ export type Mutation = {
   createServiceSaleItem?: Maybe<ServiceSaleItem>;
   createServiceUnit?: Maybe<ServiceUnit>;
   createServicesWithCsv?: Maybe<Scalars['Boolean']['output']>;
+  createSettlementAccount?: Maybe<SettlementAccount>;
   createSubscription?: Maybe<Subscription>;
   createSubscriptionNewCardA?: Maybe<SeerbitStandardCheckoutResponse>;
   createSubscriptionNewCardB?: Maybe<Subscription>;
@@ -1554,11 +1604,13 @@ export type Mutation = {
   deleteServiceInvoiceDetail?: Maybe<Scalars['Boolean']['output']>;
   deleteServiceSaleItem?: Maybe<Scalars['Boolean']['output']>;
   deleteServiceUnit?: Maybe<Scalars['Boolean']['output']>;
+  deleteSettlementAccount?: Maybe<Scalars['Boolean']['output']>;
   deleteSubscription?: Maybe<Scalars['Boolean']['output']>;
   deleteUser?: Maybe<Scalars['Boolean']['output']>;
   deleteUserById?: Maybe<Scalars['Boolean']['output']>;
   deleteUserFromWaitlist?: Maybe<Scalars['Boolean']['output']>;
   deleteUserFromWaitlistById?: Maybe<Scalars['Boolean']['output']>;
+  deleteUserInvite?: Maybe<Scalars['Boolean']['output']>;
   effectSaleExpense: EffectSaleExpenseResponse;
   employeeChangePassword?: Maybe<Scalars['Boolean']['output']>;
   employeeForgotPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -1632,6 +1684,7 @@ export type Mutation = {
   updateServiceInvoiceDetail?: Maybe<ServiceInvoiceDetail>;
   updateServiceSaleItem?: Maybe<ServiceSaleItem>;
   updateServiceUnit?: Maybe<ServiceUnit>;
+  updateSettlementAccount?: Maybe<SettlementAccount>;
   updateUser?: Maybe<User>;
   updateUserInWaitlist?: Maybe<UserWaitlist>;
   uploadBusinessLogo?: Maybe<Scalars['Boolean']['output']>;
@@ -1734,6 +1787,11 @@ export type MutationArchiveServiceByBusinessArgs = {
 
 export type MutationArchiveServiceUnitArgs = {
   serviceUnitId: Scalars['String']['input'];
+};
+
+
+export type MutationArchiveSettlementAccountArgs = {
+  accountId: Scalars['String']['input'];
 };
 
 
@@ -1931,12 +1989,17 @@ export type MutationCreateInvoiceArgs = {
 
 export type MutationCreateMerchantArgs = {
   input: CreateMerchant;
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationCreateMerchantInvoiceArgs = {
   input?: InputMaybe<CreateMerchantInvoice>;
+};
+
+
+export type MutationCreateMerchantWithCsvArgs = {
+  businessId: Scalars['String']['input'];
+  csvFile: Scalars['Any']['input'];
 };
 
 
@@ -2057,6 +2120,11 @@ export type MutationCreateServicesWithCsvArgs = {
 };
 
 
+export type MutationCreateSettlementAccountArgs = {
+  input: CreateSettlementAccount;
+};
+
+
 export type MutationCreateSubscriptionArgs = {
   input: CreateSubscription;
   userId?: InputMaybe<Scalars['String']['input']>;
@@ -2144,6 +2212,7 @@ export type MutationDeleteCustomerArgs = {
 
 
 export type MutationDeleteEmployeeArgs = {
+  deleteEmployeeId: Scalars['String']['input'];
   email: Scalars['String']['input'];
 };
 
@@ -2280,6 +2349,11 @@ export type MutationDeleteServiceUnitArgs = {
 };
 
 
+export type MutationDeleteSettlementAccountArgs = {
+  accountId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteSubscriptionArgs = {
   subscriptionId: Scalars['String']['input'];
 };
@@ -2302,6 +2376,12 @@ export type MutationDeleteUserFromWaitlistArgs = {
 
 export type MutationDeleteUserFromWaitlistByIdArgs = {
   waitlistId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteUserInviteArgs = {
+  businessId: Scalars['String']['input'];
+  inviteId: Scalars['String']['input'];
 };
 
 
@@ -2401,14 +2481,12 @@ export type MutationMarkExpenseAsRecurringArgs = {
 
 
 export type MutationMarkExpenseItemAsReceivedArgs = {
-  expenseItemId: Scalars['String']['input'];
   input: ExpenseItemReceived;
 };
 
 
 export type MutationMarkPurchaseItemAsReceivedArgs = {
   input: PurchaseItemReceived;
-  purchaseItemId: Scalars['String']['input'];
 };
 
 
@@ -2729,6 +2807,12 @@ export type MutationUpdateServiceUnitArgs = {
 };
 
 
+export type MutationUpdateSettlementAccountArgs = {
+  accountId: Scalars['String']['input'];
+  input: UpdateSettlementAccount;
+};
+
+
 export type MutationUpdateUserArgs = {
   input?: InputMaybe<UpdateUser>;
 };
@@ -2863,7 +2947,6 @@ export type PlanHistory = {
 
 export type Product = {
   __typename?: 'Product';
-  basicUnit?: Maybe<Scalars['Float']['output']>;
   business?: Maybe<Business>;
   businessId?: Maybe<Scalars['String']['output']>;
   businessProductUnit?: Maybe<BusinessProductUnit>;
@@ -2881,7 +2964,9 @@ export type Product = {
   productUnit?: Maybe<ProductUnit>;
   productUnitId?: Maybe<Scalars['String']['output']>;
   productsInventory?: Maybe<ProductInventory>;
+  reorderLevel?: Maybe<Scalars['Float']['output']>;
   stockStatus?: Maybe<Scalars['String']['output']>;
+  trackReorderLevel?: Maybe<Scalars['Boolean']['output']>;
   type?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
@@ -3029,6 +3114,7 @@ export type PurchaseItemDetail = {
 
 export type PurchaseItemReceived = {
   businessId: Scalars['String']['input'];
+  purchaseItemId: Scalars['String']['input'];
   quantity: Scalars['Float']['input'];
   transactionDate: Scalars['Date']['input'];
 };
@@ -3111,7 +3197,6 @@ export type PurchasePaymentEntry = {
   description: Scalars['String']['input'];
   file?: InputMaybe<Scalars['String']['input']>;
   purchaseId: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
   total: Scalars['Float']['input'];
   transactionDate: Scalars['Date']['input'];
 };
@@ -3261,6 +3346,9 @@ export type Query = {
   getServiceUnitById?: Maybe<ServiceUnit>;
   getServiceUnits: Array<Maybe<ServiceUnit>>;
   getServices: Array<Maybe<Service>>;
+  getSettlementAccountById?: Maybe<SettlementAccount>;
+  getSettlementAccounts?: Maybe<Array<Maybe<SettlementAccount>>>;
+  getSettlementAccountsByBusiness?: Maybe<Array<Maybe<SettlementAccount>>>;
   getSubscriptionByBusiness: Array<Maybe<Subscription>>;
   getSubscriptionById?: Maybe<Subscription>;
   getSubscriptionInvoiceByBusiness: Array<Maybe<SubscriptionInvoice>>;
@@ -3793,6 +3881,16 @@ export type QueryGetServiceUnitByIdArgs = {
 };
 
 
+export type QueryGetSettlementAccountByIdArgs = {
+  accountId: Scalars['String']['input'];
+};
+
+
+export type QueryGetSettlementAccountsByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
 export type QueryGetSubscriptionByBusinessArgs = {
   businessId: Scalars['String']['input'];
 };
@@ -4033,7 +4131,7 @@ export type Sale = {
   businessId?: Maybe<Scalars['String']['output']>;
   chartOfAccount?: Maybe<ChartOfAccount>;
   chartOfAccountId?: Maybe<Scalars['String']['output']>;
-  createdAt: Scalars['Date']['output'];
+  createdAt?: Maybe<Scalars['Date']['output']>;
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
   customer?: Maybe<Customer>;
@@ -4042,7 +4140,7 @@ export type Sale = {
   dueDate?: Maybe<Scalars['Date']['output']>;
   id: Scalars['String']['output'];
   invoice?: Maybe<Invoice>;
-  invoiceId: Scalars['String']['output'];
+  invoiceId?: Maybe<Scalars['String']['output']>;
   paid?: Maybe<Scalars['Boolean']['output']>;
   paidAt?: Maybe<Scalars['Date']['output']>;
   productSaleItems?: Maybe<Array<Maybe<ProductSaleItem>>>;
@@ -4057,7 +4155,7 @@ export type Sale = {
   saleStatusId?: Maybe<Scalars['Int']['output']>;
   serviceSaleItems?: Maybe<Array<Maybe<ServiceSaleItem>>>;
   transactionDate?: Maybe<Scalars['Date']['output']>;
-  updatedAt: Scalars['Date']['output'];
+  updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
 export type SaleExpense = {
@@ -4115,8 +4213,12 @@ export type SaleLine = {
   lineAmount: Scalars['Float']['output'];
   lineChartOfAccountId: Scalars['String']['output'];
   lineQuantity?: Maybe<Scalars['Float']['output']>;
+  product?: Maybe<Product>;
+  productId?: Maybe<Scalars['String']['output']>;
   sale?: Maybe<Sale>;
   saleId: Scalars['String']['output'];
+  service?: Maybe<Service>;
+  serviceId?: Maybe<Scalars['String']['output']>;
   transactionDate: Scalars['Date']['output'];
 };
 
@@ -4163,6 +4265,7 @@ export type SaleServiceExpense = {
 
 export type SaleServiceExpenseEntry = {
   amount: Scalars['Float']['input'];
+  description: Scalars['String']['input'];
   index: Scalars['Float']['input'];
   serviceId: Scalars['String']['input'];
 };
@@ -4273,6 +4376,20 @@ export type ServiceUnit = {
   id?: Maybe<Scalars['String']['output']>;
   isArchived?: Maybe<Scalars['Boolean']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['Date']['output']>;
+};
+
+export type SettlementAccount = {
+  __typename?: 'SettlementAccount';
+  accountName?: Maybe<Scalars['String']['output']>;
+  accountNumber?: Maybe<Scalars['String']['output']>;
+  bankName?: Maybe<Scalars['String']['output']>;
+  business?: Maybe<Business>;
+  businessId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Date']['output']>;
+  createdBy?: Maybe<User>;
+  createdById?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
@@ -4574,8 +4691,7 @@ export type UpdateCompleteInvoiceB = {
   dateOfIssue?: InputMaybe<Scalars['Date']['input']>;
   discount?: InputMaybe<Scalars['Float']['input']>;
   dueDate?: InputMaybe<Scalars['Date']['input']>;
-  item?: InputMaybe<Array<InputMaybe<ItemDetail>>>;
-  reference?: InputMaybe<Scalars['String']['input']>;
+  item?: InputMaybe<Array<ItemDetail>>;
 };
 
 export type UpdateCustomer = {
@@ -4592,7 +4708,6 @@ export type UpdateExpense = {
   expenseDate?: InputMaybe<Scalars['Date']['input']>;
   expenseItem?: InputMaybe<Array<InputMaybe<ExpenseDetail>>>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
-  reference?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateExpenseCategory = {
@@ -4667,13 +4782,14 @@ export type UpdatePlan = {
 };
 
 export type UpdateProduct = {
-  basicUnit?: InputMaybe<Scalars['Float']['input']>;
   categoryId?: InputMaybe<Scalars['String']['input']>;
   image?: InputMaybe<Scalars['String']['input']>;
   isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   productName?: InputMaybe<Scalars['String']['input']>;
   productUnitId?: InputMaybe<Scalars['String']['input']>;
+  reorderLevel?: InputMaybe<Scalars['Float']['input']>;
+  trackReorderLevel?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateProductInvoiceDetail = {
@@ -4696,8 +4812,7 @@ export type UpdateProductUnit = {
 export type UpdatePurchase = {
   description?: InputMaybe<Scalars['String']['input']>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
-  purchaseItem?: InputMaybe<Array<InputMaybe<PurchaseItemDetail>>>;
-  reference?: InputMaybe<Scalars['String']['input']>;
+  purchaseItem?: InputMaybe<Array<PurchaseItemDetail>>;
   transactionDate?: InputMaybe<Scalars['Date']['input']>;
 };
 
@@ -4716,8 +4831,8 @@ export type UpdateSale = {
 
 export type UpdateSaleEntry = {
   description?: InputMaybe<Scalars['String']['input']>;
-  saleExpense?: InputMaybe<Array<InputMaybe<SaleExpenseItem>>>;
-  saleServiceExpense?: InputMaybe<Array<InputMaybe<SaleServiceExpenseEntry>>>;
+  saleExpense?: InputMaybe<Array<SaleExpenseItem>>;
+  saleServiceExpense?: InputMaybe<Array<SaleServiceExpenseEntry>>;
   updateInvoiceInput: UpdateCompleteInvoiceB;
 };
 
@@ -4746,6 +4861,12 @@ export type UpdateServiceSaleItem = {
 export type UpdateServiceUnit = {
   isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   unitName?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateSettlementAccount = {
+  accountName?: InputMaybe<Scalars['String']['input']>;
+  accountNumber?: InputMaybe<Scalars['String']['input']>;
+  bankName?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateSubscription = {
@@ -4874,6 +4995,14 @@ export type YearlySales = {
   salesThisYear: Array<Maybe<Sale>>;
 };
 
+export type CreateBusinessProductUnitMutationVariables = Exact<{
+  unitName: Scalars['String']['input'];
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type CreateBusinessProductUnitMutation = { __typename?: 'Mutation', createBusinessProductUnit?: { __typename?: 'BusinessProductUnit', unitName?: string | null } | null };
+
 export type ArchiveCustomerByBusinessMutationVariables = Exact<{
   customerId: Scalars['String']['input'];
 }>;
@@ -4988,7 +5117,6 @@ export type CreateCustomerWithCsvMutation = { __typename?: 'Mutation', createCus
 
 export type CreateExpenseMutationVariables = Exact<{
   description: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
   expenseCategoryId?: InputMaybe<Scalars['String']['input']>;
   businessId: Scalars['String']['input'];
   expenseDate: Scalars['Date']['input'];
@@ -4998,7 +5126,7 @@ export type CreateExpenseMutationVariables = Exact<{
 }>;
 
 
-export type CreateExpenseMutation = { __typename?: 'Mutation', createExpense?: { __typename?: 'Expense', id: string, description?: string | null, amount: number, expenseDate?: any | null, createdAt: any } | null };
+export type CreateExpenseMutation = { __typename?: 'Mutation', createExpense?: { __typename?: 'Expense', id: string, description?: string | null, reference?: string | null, amount: number, expenseDate?: any | null, createdAt: any } | null };
 
 export type CreateCompleteExpenseWithCsvMutationVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5007,20 +5135,6 @@ export type CreateCompleteExpenseWithCsvMutationVariables = Exact<{
 
 
 export type CreateCompleteExpenseWithCsvMutation = { __typename?: 'Mutation', createCompletedExpenseWithCsv?: boolean | null };
-
-export type CreateCompleteInvoiceBMutationVariables = Exact<{
-  businessId: Scalars['String']['input'];
-  customerId: Scalars['String']['input'];
-  item: Array<InputMaybe<ItemDetail>> | InputMaybe<ItemDetail>;
-  dueDate: Scalars['Date']['input'];
-  reference: Scalars['String']['input'];
-  dateOfIssue: Scalars['Date']['input'];
-  discount?: InputMaybe<Scalars['Float']['input']>;
-  VAT: Scalars['Float']['input'];
-}>;
-
-
-export type CreateCompleteInvoiceBMutation = { __typename?: 'Mutation', createCompleteInvoiceB?: { __typename?: 'Invoice', id: string, subtotal: number, totalAmount: number, createdAt?: any | null, customer?: { __typename?: 'Customer', name: string } | null, business?: { __typename?: 'Business', businessName: string } | null } | null };
 
 export type CreateMerchantMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -5035,12 +5149,12 @@ export type CreateProductMutationVariables = Exact<{
   productName: Scalars['String']['input'];
   businessId: Scalars['String']['input'];
   price: Scalars['Float']['input'];
-  basicUnit: Scalars['Float']['input'];
   productUnitId: Scalars['String']['input'];
+  initialStockLevel?: InputMaybe<Scalars['Float']['input']>;
 }>;
 
 
-export type CreateProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', id: string, productName: string, price?: number | null, basicUnit?: number | null, productUnitId?: string | null, isArchived?: boolean | null, createdAt?: any | null } };
+export type CreateProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', id: string, productName: string, price?: number | null, productUnitId?: string | null, businessProductUnitId?: string | null, isArchived?: boolean | null, createdAt?: any | null } };
 
 export type CreateProductWithCsvMutationVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5053,14 +5167,13 @@ export type CreateProductWithCsvMutation = { __typename?: 'Mutation', createProd
 export type CreatePurchaseEntryMutationVariables = Exact<{
   transactionDate: Scalars['Date']['input'];
   description: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
   merchantId: Scalars['String']['input'];
   businessId: Scalars['String']['input'];
-  purchaseItem: Array<InputMaybe<PurchaseItemDetail>> | InputMaybe<PurchaseItemDetail>;
+  purchaseItem: Array<PurchaseItemDetail> | PurchaseItemDetail;
 }>;
 
 
-export type CreatePurchaseEntryMutation = { __typename?: 'Mutation', createPurchaseEntry?: { __typename?: 'Purchase', id?: string | null, description?: string | null, transactionDate?: any | null, businessId?: string | null, createdAt?: any | null } | null };
+export type CreatePurchaseEntryMutation = { __typename?: 'Mutation', createPurchaseEntry?: { __typename?: 'Purchase', id?: string | null, description?: string | null, reference?: string | null, transactionDate?: any | null, businessId?: string | null, createdAt?: any | null } | null };
 
 export type CreateCompletedPurchaseWithCsvMutationVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5073,8 +5186,8 @@ export type CreateCompletedPurchaseWithCsvMutation = { __typename?: 'Mutation', 
 export type CreateSaleEntryMutationVariables = Exact<{
   description: Scalars['String']['input'];
   invoiceInput: CreateCompleteInvoiceB;
-  saleExpense?: InputMaybe<Array<InputMaybe<SaleExpenseItem>> | InputMaybe<SaleExpenseItem>>;
-  saleServiceExpense?: InputMaybe<Array<InputMaybe<SaleServiceExpenseEntry>> | InputMaybe<SaleServiceExpenseEntry>>;
+  saleExpense?: InputMaybe<Array<SaleExpenseItem> | SaleExpenseItem>;
+  saleServiceExpense?: InputMaybe<Array<SaleServiceExpenseEntry> | SaleServiceExpenseEntry>;
 }>;
 
 
@@ -5116,12 +5229,26 @@ export type CreateSubscriptionMutationVariables = Exact<{
 
 export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, dateSubscribed: any, validTo: any, business?: { __typename?: 'Business', businessName: string } | null, subscriptionInvoice?: Array<{ __typename?: 'SubscriptionInvoice', invoiceDescription?: string | null, invoiceTotal?: number | null, invoicePaid?: any | null } | null> | null } | null };
 
+export type DeleteProductMutationVariables = Exact<{
+  productId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteProductMutation = { __typename?: 'Mutation', deleteProduct?: boolean | null };
+
 export type DeleteAddOnOptionMutationVariables = Exact<{
   addOnOptionId: Scalars['String']['input'];
 }>;
 
 
 export type DeleteAddOnOptionMutation = { __typename?: 'Mutation', deleteAddOnOption?: boolean | null };
+
+export type DeleteCustomerMutationVariables = Exact<{
+  customerId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteCustomerMutation = { __typename?: 'Mutation', deleteCustomer?: boolean | null };
 
 export type DeleteExpenseMutationVariables = Exact<{
   expenseId: Scalars['String']['input'];
@@ -5147,7 +5274,6 @@ export type DeleteSaleMutation = { __typename?: 'Mutation', deleteSale?: boolean
 export type EffectSaleExpenseMutationVariables = Exact<{
   expenseId: Scalars['String']['input'];
   description: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
   transactionDate: Scalars['Date']['input'];
   file?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -5203,10 +5329,24 @@ export type GetBusinessCategoriesQueryVariables = Exact<{ [key: string]: never; 
 
 export type GetBusinessCategoriesQuery = { __typename?: 'Query', getBusinessCategories: Array<{ __typename?: 'BusinessCategory', id: string, categoryName: string, createdAt?: any | null } | null> };
 
+export type GetBusinessProductUnitsQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetBusinessProductUnitsQuery = { __typename?: 'Query', getBusinessProductUnits?: Array<{ __typename?: 'BusinessProductUnit', id?: string | null, unitName?: string | null } | null> | null };
+
 export type GetChartOfAccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetChartOfAccountsQuery = { __typename?: 'Query', getChartOfAccounts: Array<{ __typename?: 'ChartOfAccount', id?: string | null, name?: string | null, code?: string | null, createdAt?: any | null } | null> };
+
+export type GetCustomerByIdQueryVariables = Exact<{
+  customerId: Scalars['String']['input'];
+}>;
+
+
+export type GetCustomerByIdQuery = { __typename?: 'Query', getCustomerById?: { __typename?: 'Customer', id: string, name: string, address?: string | null, mobile: string, email: string } | null };
 
 export type GetCustomersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5303,14 +5443,14 @@ export type GetInvoicesByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetInvoicesByBusinessQuery = { __typename?: 'Query', getInvoiceByBusiness?: { __typename?: 'GetInvoiceByBusinessResponse', cursorId?: string | null, invoicesByBusiness: Array<{ __typename?: 'Invoice', id: string, totalAmount: number, createdAt?: any | null, subtotal: number, VAT?: number | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, basicUnit?: number | null, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null> } | null };
+export type GetInvoicesByBusinessQuery = { __typename?: 'Query', getInvoiceByBusiness?: { __typename?: 'GetInvoiceByBusinessResponse', cursorId?: string | null, invoicesByBusiness: Array<{ __typename?: 'Invoice', id: string, totalAmount: number, createdAt?: any | null, subtotal: number, VAT?: number | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null> } | null };
 
 export type GetInvoiceByIdQueryVariables = Exact<{
   invoiceId: Scalars['String']['input'];
 }>;
 
 
-export type GetInvoiceByIdQuery = { __typename?: 'Query', getInvoiceById?: { __typename?: 'Invoice', id: string, subtotal: number, totalAmount: number, discount?: number | null, dueDate?: any | null, dateOfIssue?: any | null, paidFully?: boolean | null, VAT?: number | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, mobile: string, address?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, basicUnit?: number | null, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null };
+export type GetInvoiceByIdQuery = { __typename?: 'Query', getInvoiceById?: { __typename?: 'Invoice', id: string, subtotal: number, totalAmount: number, discount?: number | null, dueDate?: any | null, dateOfIssue?: any | null, paidFully?: boolean | null, VAT?: number | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, mobile: string, address?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null };
 
 export type GetMerchantsByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5388,6 +5528,13 @@ export type GetPlansQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetPlansQuery = { __typename?: 'Query', getPlans: Array<{ __typename?: 'Plan', id: string, planName: string, currentPrice: number, isActive?: boolean | null, optionIncluded?: Array<{ __typename?: 'OptionIncluded', option?: { __typename?: 'Option', id: string, optionName: string } | null } | null> | null } | null> };
 
+export type GetProductByIdQueryVariables = Exact<{
+  productId: Scalars['String']['input'];
+}>;
+
+
+export type GetProductByIdQuery = { __typename?: 'Query', getProductById?: { __typename?: 'Product', productName: string, price?: number | null, productUnitId?: string | null, reorderLevel?: number | null, trackReorderLevel?: boolean | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null };
+
 export type GetProductOrServiceByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
   take?: InputMaybe<Scalars['Float']['input']>;
@@ -5396,7 +5543,7 @@ export type GetProductOrServiceByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetProductOrServiceByBusinessQuery = { __typename?: 'Query', getProductOrServiceByBusiness?: { __typename?: 'GetProductOrServiceResponse', cursorId?: string | null, type?: string | null, productOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, title: string, type: string, price?: number | null, isArchived?: boolean | null, createdAt?: any | null, product?: { __typename?: 'Product', productName: string, price?: number | null, id: string, type?: string | null, basicUnit?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null, service?: { __typename?: 'Service', name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null, business?: { __typename?: 'Business', businessName: string } | null } | null> } | null };
+export type GetProductOrServiceByBusinessQuery = { __typename?: 'Query', getProductOrServiceByBusiness?: { __typename?: 'GetProductOrServiceResponse', cursorId?: string | null, type?: string | null, productOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, title: string, type: string, price?: number | null, isArchived?: boolean | null, createdAt?: any | null, product?: { __typename?: 'Product', productName: string, price?: number | null, id: string, type?: string | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null, service?: { __typename?: 'Service', name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null, business?: { __typename?: 'Business', businessName: string } | null } | null> } | null };
 
 export type GetProductUnitsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5410,7 +5557,7 @@ export type GetProductsByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsByBusinessQuery = { __typename?: 'Query', getProductsByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, productUnitId?: string | null, basicUnit?: number | null, isArchived?: boolean | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null> } | null };
+export type GetProductsByBusinessQuery = { __typename?: 'Query', getProductsByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, stockStatus?: string | null, productUnitId?: string | null, isArchived?: boolean | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null> } | null };
 
 export type GetProductForWeekQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5489,7 +5636,7 @@ export type GetSaleByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetSaleByBusinessQuery = { __typename?: 'Query', getSaleByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, saleAmount?: number | null, paid?: boolean | null, transactionDate?: any | null, business?: { __typename?: 'Business', businessName: string } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: number, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: number, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, basicUnit?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: number | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
+export type GetSaleByBusinessQuery = { __typename?: 'Query', getSaleByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, saleAmount?: number | null, paid?: boolean | null, transactionDate?: any | null, business?: { __typename?: 'Business', businessName: string } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: number, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: number, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: number | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
 
 export type GetSaleByBusinessMobileQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5505,7 +5652,7 @@ export type GetSaleByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetSaleByIdQuery = { __typename?: 'Query', getSaleById?: { __typename?: 'Sale', id: string, description?: string | null, reference?: string | null, paid?: boolean | null, saleAmount?: number | null, transactionDate?: any | null, dueDate?: any | null, saleStatus?: { __typename?: 'SaleStatusRef', id?: number | null, saleStatus?: string | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', id?: string | null, index?: number | null, saleId?: string | null, description?: string | null, amount?: number | null, effected?: boolean | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', id?: string | null, effected?: boolean | null, amount?: number | null, index?: number | null, service?: { __typename?: 'Service', name: string, id: string } | null } | null> | null, invoice?: { __typename?: 'Invoice', totalAmount: number, VAT?: number | null, id: string, createdAt?: any | null, subtotal: number, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null, mobile: string } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, basicUnit?: number | null, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null };
+export type GetSaleByIdQuery = { __typename?: 'Query', getSaleById?: { __typename?: 'Sale', id: string, description?: string | null, reference?: string | null, paid?: boolean | null, saleAmount?: number | null, transactionDate?: any | null, dueDate?: any | null, saleStatus?: { __typename?: 'SaleStatusRef', id?: number | null, saleStatus?: string | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', id?: string | null, index?: number | null, saleId?: string | null, description?: string | null, amount?: number | null, effected?: boolean | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', id?: string | null, effected?: boolean | null, amount?: number | null, index?: number | null, service?: { __typename?: 'Service', name: string, id: string } | null } | null> | null, invoice?: { __typename?: 'Invoice', totalAmount: number, VAT?: number | null, id: string, createdAt?: any | null, subtotal: number, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null, mobile: string } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null };
 
 export type GetSalesForMonthQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5669,7 +5816,6 @@ export type MakeExpensePaymentMutationVariables = Exact<{
   expenseId: Scalars['String']['input'];
   transactionDate: Scalars['Date']['input'];
   description: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
   total: Scalars['Float']['input'];
   file?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -5682,7 +5828,6 @@ export type MakePurchasePaymentMutationVariables = Exact<{
   purchaseId: Scalars['String']['input'];
   transactionDate: Scalars['Date']['input'];
   description: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
   total: Scalars['Float']['input'];
   file?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -5694,7 +5839,6 @@ export type MakeSalePaymentMutationVariables = Exact<{
   saleId: Scalars['String']['input'];
   transactionDate: Scalars['Date']['input'];
   description: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
   file?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -5752,7 +5896,7 @@ export type SearchProductOrServiceByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type SearchProductOrServiceByBusinessQuery = { __typename?: 'Query', searchProductOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, type: string, title: string, product?: { __typename?: 'Product', id: string, productName: string, basicUnit?: number | null, price?: number | null, isArchived?: boolean | null, createdAt?: any | null } | null, service?: { __typename?: 'Service', id: string, name: string, price: number, isArchived?: boolean | null, createdAt?: any | null } | null } | null> };
+export type SearchProductOrServiceByBusinessQuery = { __typename?: 'Query', searchProductOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, type: string, title: string, product?: { __typename?: 'Product', id: string, productName: string, price?: number | null, isArchived?: boolean | null, createdAt?: any | null } | null, service?: { __typename?: 'Service', id: string, name: string, price: number, isArchived?: boolean | null, createdAt?: any | null } | null } | null> };
 
 export type SendInvoiceBMutationVariables = Exact<{
   invoiceId: Scalars['String']['input'];
@@ -5846,20 +5990,20 @@ export type UpdateProductMutationVariables = Exact<{
   productId: Scalars['String']['input'];
   productName?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
-  basicUnit?: InputMaybe<Scalars['Float']['input']>;
   productUnitId?: InputMaybe<Scalars['String']['input']>;
+  trackReorderLevel?: InputMaybe<Scalars['Boolean']['input']>;
+  reorderLevel?: InputMaybe<Scalars['Float']['input']>;
 }>;
 
 
-export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: { __typename?: 'Product', id: string, productName: string, price?: number | null, basicUnit?: number | null, productUnitId?: string | null } | null };
+export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: { __typename?: 'Product', id: string, productName: string, price?: number | null, productUnitId?: string | null } | null };
 
 export type UpdatePurchaseMutationVariables = Exact<{
   purchaseId: Scalars['String']['input'];
   transactionDate?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  reference?: InputMaybe<Scalars['String']['input']>;
   merchantId?: InputMaybe<Scalars['String']['input']>;
-  purchaseItem?: InputMaybe<Array<InputMaybe<PurchaseItemDetail>> | InputMaybe<PurchaseItemDetail>>;
+  purchaseItem?: InputMaybe<Array<PurchaseItemDetail> | PurchaseItemDetail>;
 }>;
 
 
@@ -5869,12 +6013,12 @@ export type UpdateSaleMutationVariables = Exact<{
   saleId: Scalars['String']['input'];
   updateInvoiceInput: UpdateCompleteInvoiceB;
   description?: InputMaybe<Scalars['String']['input']>;
-  saleExpense?: InputMaybe<Array<InputMaybe<SaleExpenseItem>> | InputMaybe<SaleExpenseItem>>;
-  saleServiceExpense?: InputMaybe<Array<InputMaybe<SaleServiceExpenseEntry>> | InputMaybe<SaleServiceExpenseEntry>>;
+  saleExpense?: InputMaybe<Array<SaleExpenseItem> | SaleExpenseItem>;
+  saleServiceExpense?: InputMaybe<Array<SaleServiceExpenseEntry> | SaleServiceExpenseEntry>;
 }>;
 
 
-export type UpdateSaleMutation = { __typename?: 'Mutation', updateSaleEntry?: { __typename?: 'Sale', id: string, description?: string | null, saleAmount?: number | null } | null };
+export type UpdateSaleMutation = { __typename?: 'Mutation', updateSaleEntry?: { __typename?: 'Sale', id: string, description?: string | null, saleAmount?: number | null, transactionDate?: any | null, invoice?: { __typename?: 'Invoice', id: string, subtotal: number, totalAmount: number } | null } | null };
 
 export type UpdateServiceMutationVariables = Exact<{
   serviceId: Scalars['String']['input'];
@@ -5925,6 +6069,40 @@ export type VerificationWithEmailLinkMutationVariables = Exact<{
 export type VerificationWithEmailLinkMutation = { __typename?: 'Mutation', verificationWithEmailLink?: boolean | null };
 
 
+export const CreateBusinessProductUnitDocument = gql`
+    mutation CreateBusinessProductUnit($unitName: String!, $businessId: String!) {
+  createBusinessProductUnit(input: {unitName: $unitName, businessId: $businessId}) {
+    unitName
+  }
+}
+    `;
+export type CreateBusinessProductUnitMutationFn = Apollo.MutationFunction<CreateBusinessProductUnitMutation, CreateBusinessProductUnitMutationVariables>;
+
+/**
+ * __useCreateBusinessProductUnitMutation__
+ *
+ * To run a mutation, you first call `useCreateBusinessProductUnitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBusinessProductUnitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBusinessProductUnitMutation, { data, loading, error }] = useCreateBusinessProductUnitMutation({
+ *   variables: {
+ *      unitName: // value for 'unitName'
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useCreateBusinessProductUnitMutation(baseOptions?: Apollo.MutationHookOptions<CreateBusinessProductUnitMutation, CreateBusinessProductUnitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBusinessProductUnitMutation, CreateBusinessProductUnitMutationVariables>(CreateBusinessProductUnitDocument, options);
+      }
+export type CreateBusinessProductUnitMutationHookResult = ReturnType<typeof useCreateBusinessProductUnitMutation>;
+export type CreateBusinessProductUnitMutationResult = Apollo.MutationResult<CreateBusinessProductUnitMutation>;
+export type CreateBusinessProductUnitMutationOptions = Apollo.BaseMutationOptions<CreateBusinessProductUnitMutation, CreateBusinessProductUnitMutationVariables>;
 export const ArchiveCustomerByBusinessDocument = gql`
     mutation ArchiveCustomerByBusiness($customerId: String!) {
   archiveCustomerByBusiness(customerId: $customerId)
@@ -6417,12 +6595,13 @@ export type CreateCustomerWithCsvMutationHookResult = ReturnType<typeof useCreat
 export type CreateCustomerWithCsvMutationResult = Apollo.MutationResult<CreateCustomerWithCsvMutation>;
 export type CreateCustomerWithCsvMutationOptions = Apollo.BaseMutationOptions<CreateCustomerWithCsvMutation, CreateCustomerWithCsvMutationVariables>;
 export const CreateExpenseDocument = gql`
-    mutation CreateExpense($description: String!, $reference: String!, $expenseCategoryId: String, $businessId: String!, $expenseDate: Date!, $merchantId: String!, $recurring: Boolean, $expenseItem: [ExpenseDetail!]!) {
+    mutation CreateExpense($description: String!, $expenseCategoryId: String, $businessId: String!, $expenseDate: Date!, $merchantId: String!, $recurring: Boolean, $expenseItem: [ExpenseDetail!]!) {
   createExpense(
-    input: {description: $description, expenseCategoryId: $expenseCategoryId, reference: $reference, businessId: $businessId, expenseDate: $expenseDate, merchantId: $merchantId, recurring: $recurring, expenseItem: $expenseItem}
+    input: {description: $description, expenseCategoryId: $expenseCategoryId, businessId: $businessId, expenseDate: $expenseDate, merchantId: $merchantId, recurring: $recurring, expenseItem: $expenseItem}
   ) {
     id
     description
+    reference
     amount
     expenseDate
     createdAt
@@ -6445,7 +6624,6 @@ export type CreateExpenseMutationFn = Apollo.MutationFunction<CreateExpenseMutat
  * const [createExpenseMutation, { data, loading, error }] = useCreateExpenseMutation({
  *   variables: {
  *      description: // value for 'description'
- *      reference: // value for 'reference'
  *      expenseCategoryId: // value for 'expenseCategoryId'
  *      businessId: // value for 'businessId'
  *      expenseDate: // value for 'expenseDate'
@@ -6494,57 +6672,6 @@ export function useCreateCompleteExpenseWithCsvMutation(baseOptions?: Apollo.Mut
 export type CreateCompleteExpenseWithCsvMutationHookResult = ReturnType<typeof useCreateCompleteExpenseWithCsvMutation>;
 export type CreateCompleteExpenseWithCsvMutationResult = Apollo.MutationResult<CreateCompleteExpenseWithCsvMutation>;
 export type CreateCompleteExpenseWithCsvMutationOptions = Apollo.BaseMutationOptions<CreateCompleteExpenseWithCsvMutation, CreateCompleteExpenseWithCsvMutationVariables>;
-export const CreateCompleteInvoiceBDocument = gql`
-    mutation CreateCompleteInvoiceB($businessId: String!, $customerId: String!, $item: [ItemDetail]!, $dueDate: Date!, $reference: String!, $dateOfIssue: Date!, $discount: Float, $VAT: Float!) {
-  createCompleteInvoiceB(
-    input: {businessId: $businessId, customerId: $customerId, discount: $discount, VAT: $VAT, dueDate: $dueDate, reference: $reference, dateOfIssue: $dateOfIssue, item: $item}
-  ) {
-    id
-    subtotal
-    totalAmount
-    customer {
-      name
-    }
-    business {
-      businessName
-    }
-    createdAt
-  }
-}
-    `;
-export type CreateCompleteInvoiceBMutationFn = Apollo.MutationFunction<CreateCompleteInvoiceBMutation, CreateCompleteInvoiceBMutationVariables>;
-
-/**
- * __useCreateCompleteInvoiceBMutation__
- *
- * To run a mutation, you first call `useCreateCompleteInvoiceBMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCompleteInvoiceBMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createCompleteInvoiceBMutation, { data, loading, error }] = useCreateCompleteInvoiceBMutation({
- *   variables: {
- *      businessId: // value for 'businessId'
- *      customerId: // value for 'customerId'
- *      item: // value for 'item'
- *      dueDate: // value for 'dueDate'
- *      reference: // value for 'reference'
- *      dateOfIssue: // value for 'dateOfIssue'
- *      discount: // value for 'discount'
- *      VAT: // value for 'VAT'
- *   },
- * });
- */
-export function useCreateCompleteInvoiceBMutation(baseOptions?: Apollo.MutationHookOptions<CreateCompleteInvoiceBMutation, CreateCompleteInvoiceBMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateCompleteInvoiceBMutation, CreateCompleteInvoiceBMutationVariables>(CreateCompleteInvoiceBDocument, options);
-      }
-export type CreateCompleteInvoiceBMutationHookResult = ReturnType<typeof useCreateCompleteInvoiceBMutation>;
-export type CreateCompleteInvoiceBMutationResult = Apollo.MutationResult<CreateCompleteInvoiceBMutation>;
-export type CreateCompleteInvoiceBMutationOptions = Apollo.BaseMutationOptions<CreateCompleteInvoiceBMutation, CreateCompleteInvoiceBMutationVariables>;
 export const CreateMerchantDocument = gql`
     mutation CreateMerchant($name: String!, $businessId: String!, $email: String!) {
   createMerchant(input: {name: $name, businessId: $businessId, email: $email}) {
@@ -6583,15 +6710,15 @@ export type CreateMerchantMutationHookResult = ReturnType<typeof useCreateMercha
 export type CreateMerchantMutationResult = Apollo.MutationResult<CreateMerchantMutation>;
 export type CreateMerchantMutationOptions = Apollo.BaseMutationOptions<CreateMerchantMutation, CreateMerchantMutationVariables>;
 export const CreateProductDocument = gql`
-    mutation CreateProduct($productName: String!, $businessId: String!, $price: Float!, $basicUnit: Float!, $productUnitId: String!) {
+    mutation CreateProduct($productName: String!, $businessId: String!, $price: Float!, $productUnitId: String!, $initialStockLevel: Float) {
   createProduct(
-    input: {businessId: $businessId, productName: $productName, price: $price, basicUnit: $basicUnit, productUnitId: $productUnitId}
+    input: {businessId: $businessId, productName: $productName, price: $price, productUnitId: $productUnitId, initialStockLevel: $initialStockLevel}
   ) {
     id
     productName
     price
-    basicUnit
     productUnitId
+    businessProductUnitId
     isArchived
     createdAt
   }
@@ -6615,8 +6742,8 @@ export type CreateProductMutationFn = Apollo.MutationFunction<CreateProductMutat
  *      productName: // value for 'productName'
  *      businessId: // value for 'businessId'
  *      price: // value for 'price'
- *      basicUnit: // value for 'basicUnit'
  *      productUnitId: // value for 'productUnitId'
+ *      initialStockLevel: // value for 'initialStockLevel'
  *   },
  * });
  */
@@ -6660,12 +6787,13 @@ export type CreateProductWithCsvMutationHookResult = ReturnType<typeof useCreate
 export type CreateProductWithCsvMutationResult = Apollo.MutationResult<CreateProductWithCsvMutation>;
 export type CreateProductWithCsvMutationOptions = Apollo.BaseMutationOptions<CreateProductWithCsvMutation, CreateProductWithCsvMutationVariables>;
 export const CreatePurchaseEntryDocument = gql`
-    mutation CreatePurchaseEntry($transactionDate: Date!, $description: String!, $reference: String!, $merchantId: String!, $businessId: String!, $purchaseItem: [PurchaseItemDetail]!) {
+    mutation CreatePurchaseEntry($transactionDate: Date!, $description: String!, $merchantId: String!, $businessId: String!, $purchaseItem: [PurchaseItemDetail!]!) {
   createPurchaseEntry(
-    input: {transactionDate: $transactionDate, description: $description, reference: $reference, merchantId: $merchantId, businessId: $businessId, purchaseItem: $purchaseItem}
+    input: {transactionDate: $transactionDate, description: $description, merchantId: $merchantId, businessId: $businessId, purchaseItem: $purchaseItem}
   ) {
     id
     description
+    reference
     transactionDate
     businessId
     createdAt
@@ -6689,7 +6817,6 @@ export type CreatePurchaseEntryMutationFn = Apollo.MutationFunction<CreatePurcha
  *   variables: {
  *      transactionDate: // value for 'transactionDate'
  *      description: // value for 'description'
- *      reference: // value for 'reference'
  *      merchantId: // value for 'merchantId'
  *      businessId: // value for 'businessId'
  *      purchaseItem: // value for 'purchaseItem'
@@ -6736,7 +6863,7 @@ export type CreateCompletedPurchaseWithCsvMutationHookResult = ReturnType<typeof
 export type CreateCompletedPurchaseWithCsvMutationResult = Apollo.MutationResult<CreateCompletedPurchaseWithCsvMutation>;
 export type CreateCompletedPurchaseWithCsvMutationOptions = Apollo.BaseMutationOptions<CreateCompletedPurchaseWithCsvMutation, CreateCompletedPurchaseWithCsvMutationVariables>;
 export const CreateSaleEntryDocument = gql`
-    mutation CreateSaleEntry($description: String!, $invoiceInput: CreateCompleteInvoiceB!, $saleExpense: [SaleExpenseItem], $saleServiceExpense: [SaleServiceExpenseEntry]) {
+    mutation CreateSaleEntry($description: String!, $invoiceInput: CreateCompleteInvoiceB!, $saleExpense: [SaleExpenseItem!], $saleServiceExpense: [SaleServiceExpenseEntry!]) {
   createSaleEntry(
     input: {invoiceInput: $invoiceInput, description: $description, saleExpense: $saleExpense, saleServiceExpense: $saleServiceExpense}
   ) {
@@ -6915,6 +7042,37 @@ export function useCreateSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type CreateSubscriptionMutationHookResult = ReturnType<typeof useCreateSubscriptionMutation>;
 export type CreateSubscriptionMutationResult = Apollo.MutationResult<CreateSubscriptionMutation>;
 export type CreateSubscriptionMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
+export const DeleteProductDocument = gql`
+    mutation DeleteProduct($productId: String!) {
+  deleteProduct(productId: $productId)
+}
+    `;
+export type DeleteProductMutationFn = Apollo.MutationFunction<DeleteProductMutation, DeleteProductMutationVariables>;
+
+/**
+ * __useDeleteProductMutation__
+ *
+ * To run a mutation, you first call `useDeleteProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteProductMutation, { data, loading, error }] = useDeleteProductMutation({
+ *   variables: {
+ *      productId: // value for 'productId'
+ *   },
+ * });
+ */
+export function useDeleteProductMutation(baseOptions?: Apollo.MutationHookOptions<DeleteProductMutation, DeleteProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteProductMutation, DeleteProductMutationVariables>(DeleteProductDocument, options);
+      }
+export type DeleteProductMutationHookResult = ReturnType<typeof useDeleteProductMutation>;
+export type DeleteProductMutationResult = Apollo.MutationResult<DeleteProductMutation>;
+export type DeleteProductMutationOptions = Apollo.BaseMutationOptions<DeleteProductMutation, DeleteProductMutationVariables>;
 export const DeleteAddOnOptionDocument = gql`
     mutation DeleteAddOnOption($addOnOptionId: String!) {
   deleteAddOnOption(addOnOptionId: $addOnOptionId)
@@ -6946,6 +7104,37 @@ export function useDeleteAddOnOptionMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteAddOnOptionMutationHookResult = ReturnType<typeof useDeleteAddOnOptionMutation>;
 export type DeleteAddOnOptionMutationResult = Apollo.MutationResult<DeleteAddOnOptionMutation>;
 export type DeleteAddOnOptionMutationOptions = Apollo.BaseMutationOptions<DeleteAddOnOptionMutation, DeleteAddOnOptionMutationVariables>;
+export const DeleteCustomerDocument = gql`
+    mutation DeleteCustomer($customerId: String!) {
+  deleteCustomer(customerId: $customerId)
+}
+    `;
+export type DeleteCustomerMutationFn = Apollo.MutationFunction<DeleteCustomerMutation, DeleteCustomerMutationVariables>;
+
+/**
+ * __useDeleteCustomerMutation__
+ *
+ * To run a mutation, you first call `useDeleteCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCustomerMutation, { data, loading, error }] = useDeleteCustomerMutation({
+ *   variables: {
+ *      customerId: // value for 'customerId'
+ *   },
+ * });
+ */
+export function useDeleteCustomerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCustomerMutation, DeleteCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCustomerMutation, DeleteCustomerMutationVariables>(DeleteCustomerDocument, options);
+      }
+export type DeleteCustomerMutationHookResult = ReturnType<typeof useDeleteCustomerMutation>;
+export type DeleteCustomerMutationResult = Apollo.MutationResult<DeleteCustomerMutation>;
+export type DeleteCustomerMutationOptions = Apollo.BaseMutationOptions<DeleteCustomerMutation, DeleteCustomerMutationVariables>;
 export const DeleteExpenseDocument = gql`
     mutation DeleteExpense($expenseId: String!) {
   deleteExpense(expenseId: $expenseId)
@@ -7040,9 +7229,9 @@ export type DeleteSaleMutationHookResult = ReturnType<typeof useDeleteSaleMutati
 export type DeleteSaleMutationResult = Apollo.MutationResult<DeleteSaleMutation>;
 export type DeleteSaleMutationOptions = Apollo.BaseMutationOptions<DeleteSaleMutation, DeleteSaleMutationVariables>;
 export const EffectSaleExpenseDocument = gql`
-    mutation EffectSaleExpense($expenseId: String!, $description: String!, $reference: String!, $transactionDate: Date!, $file: String) {
+    mutation EffectSaleExpense($expenseId: String!, $description: String!, $transactionDate: Date!, $file: String) {
   effectSaleExpense(
-    input: {expenseId: $expenseId, description: $description, reference: $reference, transactionDate: $transactionDate, file: $file}
+    input: {expenseId: $expenseId, description: $description, transactionDate: $transactionDate, file: $file}
   ) {
     effected
     saleStatus
@@ -7066,7 +7255,6 @@ export type EffectSaleExpenseMutationFn = Apollo.MutationFunction<EffectSaleExpe
  *   variables: {
  *      expenseId: // value for 'expenseId'
  *      description: // value for 'description'
- *      reference: // value for 'reference'
  *      transactionDate: // value for 'transactionDate'
  *      file: // value for 'file'
  *   },
@@ -7404,6 +7592,47 @@ export type GetBusinessCategoriesQueryHookResult = ReturnType<typeof useGetBusin
 export type GetBusinessCategoriesLazyQueryHookResult = ReturnType<typeof useGetBusinessCategoriesLazyQuery>;
 export type GetBusinessCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetBusinessCategoriesSuspenseQuery>;
 export type GetBusinessCategoriesQueryResult = Apollo.QueryResult<GetBusinessCategoriesQuery, GetBusinessCategoriesQueryVariables>;
+export const GetBusinessProductUnitsDocument = gql`
+    query GetBusinessProductUnits($businessId: String!) {
+  getBusinessProductUnits(businessId: $businessId) {
+    id
+    unitName
+  }
+}
+    `;
+
+/**
+ * __useGetBusinessProductUnitsQuery__
+ *
+ * To run a query within a React component, call `useGetBusinessProductUnitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBusinessProductUnitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBusinessProductUnitsQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetBusinessProductUnitsQuery(baseOptions: Apollo.QueryHookOptions<GetBusinessProductUnitsQuery, GetBusinessProductUnitsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBusinessProductUnitsQuery, GetBusinessProductUnitsQueryVariables>(GetBusinessProductUnitsDocument, options);
+      }
+export function useGetBusinessProductUnitsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBusinessProductUnitsQuery, GetBusinessProductUnitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBusinessProductUnitsQuery, GetBusinessProductUnitsQueryVariables>(GetBusinessProductUnitsDocument, options);
+        }
+export function useGetBusinessProductUnitsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBusinessProductUnitsQuery, GetBusinessProductUnitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBusinessProductUnitsQuery, GetBusinessProductUnitsQueryVariables>(GetBusinessProductUnitsDocument, options);
+        }
+export type GetBusinessProductUnitsQueryHookResult = ReturnType<typeof useGetBusinessProductUnitsQuery>;
+export type GetBusinessProductUnitsLazyQueryHookResult = ReturnType<typeof useGetBusinessProductUnitsLazyQuery>;
+export type GetBusinessProductUnitsSuspenseQueryHookResult = ReturnType<typeof useGetBusinessProductUnitsSuspenseQuery>;
+export type GetBusinessProductUnitsQueryResult = Apollo.QueryResult<GetBusinessProductUnitsQuery, GetBusinessProductUnitsQueryVariables>;
 export const GetChartOfAccountsDocument = gql`
     query GetChartOfAccounts {
   getChartOfAccounts {
@@ -7446,6 +7675,50 @@ export type GetChartOfAccountsQueryHookResult = ReturnType<typeof useGetChartOfA
 export type GetChartOfAccountsLazyQueryHookResult = ReturnType<typeof useGetChartOfAccountsLazyQuery>;
 export type GetChartOfAccountsSuspenseQueryHookResult = ReturnType<typeof useGetChartOfAccountsSuspenseQuery>;
 export type GetChartOfAccountsQueryResult = Apollo.QueryResult<GetChartOfAccountsQuery, GetChartOfAccountsQueryVariables>;
+export const GetCustomerByIdDocument = gql`
+    query GetCustomerById($customerId: String!) {
+  getCustomerById(customerId: $customerId) {
+    id
+    name
+    address
+    mobile
+    email
+  }
+}
+    `;
+
+/**
+ * __useGetCustomerByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCustomerByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCustomerByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCustomerByIdQuery({
+ *   variables: {
+ *      customerId: // value for 'customerId'
+ *   },
+ * });
+ */
+export function useGetCustomerByIdQuery(baseOptions: Apollo.QueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+      }
+export function useGetCustomerByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+        }
+export function useGetCustomerByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+        }
+export type GetCustomerByIdQueryHookResult = ReturnType<typeof useGetCustomerByIdQuery>;
+export type GetCustomerByIdLazyQueryHookResult = ReturnType<typeof useGetCustomerByIdLazyQuery>;
+export type GetCustomerByIdSuspenseQueryHookResult = ReturnType<typeof useGetCustomerByIdSuspenseQuery>;
+export type GetCustomerByIdQueryResult = Apollo.QueryResult<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>;
 export const GetCustomersDocument = gql`
     query GetCustomers {
   getCustomers {
@@ -8036,7 +8309,6 @@ export const GetInvoicesByBusinessDocument = gql`
             id
             type
             productName
-            basicUnit
             price
             productUnit {
               id
@@ -8133,7 +8405,6 @@ export const GetInvoiceByIdDocument = gql`
           id
           type
           productName
-          basicUnit
           price
           productUnit {
             id
@@ -8625,6 +8896,53 @@ export type GetPlansQueryHookResult = ReturnType<typeof useGetPlansQuery>;
 export type GetPlansLazyQueryHookResult = ReturnType<typeof useGetPlansLazyQuery>;
 export type GetPlansSuspenseQueryHookResult = ReturnType<typeof useGetPlansSuspenseQuery>;
 export type GetPlansQueryResult = Apollo.QueryResult<GetPlansQuery, GetPlansQueryVariables>;
+export const GetProductByIdDocument = gql`
+    query GetProductById($productId: String!) {
+  getProductById(productId: $productId) {
+    productName
+    price
+    productUnit {
+      unitName
+    }
+    productUnitId
+    reorderLevel
+    trackReorderLevel
+  }
+}
+    `;
+
+/**
+ * __useGetProductByIdQuery__
+ *
+ * To run a query within a React component, call `useGetProductByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductByIdQuery({
+ *   variables: {
+ *      productId: // value for 'productId'
+ *   },
+ * });
+ */
+export function useGetProductByIdQuery(baseOptions: Apollo.QueryHookOptions<GetProductByIdQuery, GetProductByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductByIdQuery, GetProductByIdQueryVariables>(GetProductByIdDocument, options);
+      }
+export function useGetProductByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductByIdQuery, GetProductByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductByIdQuery, GetProductByIdQueryVariables>(GetProductByIdDocument, options);
+        }
+export function useGetProductByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetProductByIdQuery, GetProductByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetProductByIdQuery, GetProductByIdQueryVariables>(GetProductByIdDocument, options);
+        }
+export type GetProductByIdQueryHookResult = ReturnType<typeof useGetProductByIdQuery>;
+export type GetProductByIdLazyQueryHookResult = ReturnType<typeof useGetProductByIdLazyQuery>;
+export type GetProductByIdSuspenseQueryHookResult = ReturnType<typeof useGetProductByIdSuspenseQuery>;
+export type GetProductByIdQueryResult = Apollo.QueryResult<GetProductByIdQuery, GetProductByIdQueryVariables>;
 export const GetProductOrServiceByBusinessDocument = gql`
     query GetProductOrServiceByBusiness($businessId: String!, $take: Float, $cursor: String, $type: String) {
   getProductOrServiceByBusiness(
@@ -8644,7 +8962,6 @@ export const GetProductOrServiceByBusinessDocument = gql`
         price
         id
         type
-        basicUnit
         productUnit {
           id
           unitName
@@ -8756,8 +9073,8 @@ export const GetProductsByBusinessDocument = gql`
       productUnit {
         unitName
       }
+      stockStatus
       productUnitId
-      basicUnit
       isArchived
       businessId
       createdAt
@@ -9347,7 +9664,6 @@ export const GetSaleByBusinessDocument = gql`
             product {
               type
               productName
-              basicUnit
               productUnit {
                 id
                 unitName
@@ -9527,7 +9843,6 @@ export const GetSaleByIdDocument = gql`
             id
             type
             productName
-            basicUnit
             price
             productUnit {
               id
@@ -10573,9 +10888,9 @@ export type LogOutMutationHookResult = ReturnType<typeof useLogOutMutation>;
 export type LogOutMutationResult = Apollo.MutationResult<LogOutMutation>;
 export type LogOutMutationOptions = Apollo.BaseMutationOptions<LogOutMutation, LogOutMutationVariables>;
 export const MakeExpensePaymentDocument = gql`
-    mutation MakeExpensePayment($businessId: String!, $expenseId: String!, $transactionDate: Date!, $description: String!, $reference: String!, $total: Float!, $file: String) {
+    mutation MakeExpensePayment($businessId: String!, $expenseId: String!, $transactionDate: Date!, $description: String!, $total: Float!, $file: String) {
   makeExpensePayment(
-    input: {businessId: $businessId, expenseId: $expenseId, transactionDate: $transactionDate, description: $description, reference: $reference, total: $total, file: $file}
+    input: {businessId: $businessId, expenseId: $expenseId, transactionDate: $transactionDate, description: $description, total: $total, file: $file}
   ) {
     paid
     expenseStatus
@@ -10601,7 +10916,6 @@ export type MakeExpensePaymentMutationFn = Apollo.MutationFunction<MakeExpensePa
  *      expenseId: // value for 'expenseId'
  *      transactionDate: // value for 'transactionDate'
  *      description: // value for 'description'
- *      reference: // value for 'reference'
  *      total: // value for 'total'
  *      file: // value for 'file'
  *   },
@@ -10615,9 +10929,9 @@ export type MakeExpensePaymentMutationHookResult = ReturnType<typeof useMakeExpe
 export type MakeExpensePaymentMutationResult = Apollo.MutationResult<MakeExpensePaymentMutation>;
 export type MakeExpensePaymentMutationOptions = Apollo.BaseMutationOptions<MakeExpensePaymentMutation, MakeExpensePaymentMutationVariables>;
 export const MakePurchasePaymentDocument = gql`
-    mutation MakePurchasePayment($businessId: String!, $purchaseId: String!, $transactionDate: Date!, $description: String!, $reference: String!, $total: Float!, $file: String) {
+    mutation MakePurchasePayment($businessId: String!, $purchaseId: String!, $transactionDate: Date!, $description: String!, $total: Float!, $file: String) {
   makePurchasePayment(
-    input: {businessId: $businessId, purchaseId: $purchaseId, transactionDate: $transactionDate, description: $description, reference: $reference, total: $total, file: $file}
+    input: {businessId: $businessId, purchaseId: $purchaseId, transactionDate: $transactionDate, description: $description, total: $total, file: $file}
   ) {
     paid
     purchaseStatus
@@ -10643,7 +10957,6 @@ export type MakePurchasePaymentMutationFn = Apollo.MutationFunction<MakePurchase
  *      purchaseId: // value for 'purchaseId'
  *      transactionDate: // value for 'transactionDate'
  *      description: // value for 'description'
- *      reference: // value for 'reference'
  *      total: // value for 'total'
  *      file: // value for 'file'
  *   },
@@ -10657,9 +10970,9 @@ export type MakePurchasePaymentMutationHookResult = ReturnType<typeof useMakePur
 export type MakePurchasePaymentMutationResult = Apollo.MutationResult<MakePurchasePaymentMutation>;
 export type MakePurchasePaymentMutationOptions = Apollo.BaseMutationOptions<MakePurchasePaymentMutation, MakePurchasePaymentMutationVariables>;
 export const MakeSalePaymentDocument = gql`
-    mutation MakeSalePayment($saleId: String!, $transactionDate: Date!, $description: String!, $reference: String!, $file: String) {
+    mutation MakeSalePayment($saleId: String!, $transactionDate: Date!, $description: String!, $file: String) {
   makeSalePayment(
-    input: {saleId: $saleId, transactionDate: $transactionDate, description: $description, reference: $reference, file: $file}
+    input: {saleId: $saleId, transactionDate: $transactionDate, description: $description, file: $file}
   ) {
     paid
     saleStatus
@@ -10684,7 +10997,6 @@ export type MakeSalePaymentMutationFn = Apollo.MutationFunction<MakeSalePaymentM
  *      saleId: // value for 'saleId'
  *      transactionDate: // value for 'transactionDate'
  *      description: // value for 'description'
- *      reference: // value for 'reference'
  *      file: // value for 'file'
  *   },
  * });
@@ -10699,8 +11011,7 @@ export type MakeSalePaymentMutationOptions = Apollo.BaseMutationOptions<MakeSale
 export const MarkExpenseItemAsReceivedDocument = gql`
     mutation MarkExpenseItemAsReceived($expenseItemId: String!, $businessId: String!, $quantity: Float!, $transactionDate: Date!) {
   markExpenseItemAsReceived(
-    expenseItemId: $expenseItemId
-    input: {businessId: $businessId, quantity: $quantity, transactionDate: $transactionDate}
+    input: {businessId: $businessId, expenseItemId: $expenseItemId, quantity: $quantity, transactionDate: $transactionDate}
   ) {
     completed
     expenseStatus
@@ -10739,8 +11050,7 @@ export type MarkExpenseItemAsReceivedMutationOptions = Apollo.BaseMutationOption
 export const MarkPurchaseItemAsReceivedDocument = gql`
     mutation MarkPurchaseItemAsReceived($purchaseItemId: String!, $businessId: String!, $quantity: Float!, $transactionDate: Date!) {
   markPurchaseItemAsReceived(
-    purchaseItemId: $purchaseItemId
-    input: {businessId: $businessId, quantity: $quantity, transactionDate: $transactionDate}
+    input: {businessId: $businessId, purchaseItemId: $purchaseItemId, quantity: $quantity, transactionDate: $transactionDate}
   ) {
     completed
     purchaseStatus
@@ -10927,7 +11237,6 @@ export const SearchProductOrServiceByBusinessDocument = gql`
     product {
       id
       productName
-      basicUnit
       price
       isArchived
       createdAt
@@ -11337,15 +11646,14 @@ export type UpdateExpenseMutationHookResult = ReturnType<typeof useUpdateExpense
 export type UpdateExpenseMutationResult = Apollo.MutationResult<UpdateExpenseMutation>;
 export type UpdateExpenseMutationOptions = Apollo.BaseMutationOptions<UpdateExpenseMutation, UpdateExpenseMutationVariables>;
 export const UpdateProductDocument = gql`
-    mutation UpdateProduct($productId: String!, $productName: String, $price: Float, $basicUnit: Float, $productUnitId: String) {
+    mutation UpdateProduct($productId: String!, $productName: String, $price: Float, $productUnitId: String, $trackReorderLevel: Boolean, $reorderLevel: Float) {
   updateProduct(
     productId: $productId
-    input: {productName: $productName, price: $price, basicUnit: $basicUnit, productUnitId: $productUnitId}
+    input: {productName: $productName, price: $price, productUnitId: $productUnitId, trackReorderLevel: $trackReorderLevel, reorderLevel: $reorderLevel}
   ) {
     id
     productName
     price
-    basicUnit
     productUnitId
   }
 }
@@ -11368,8 +11676,9 @@ export type UpdateProductMutationFn = Apollo.MutationFunction<UpdateProductMutat
  *      productId: // value for 'productId'
  *      productName: // value for 'productName'
  *      price: // value for 'price'
- *      basicUnit: // value for 'basicUnit'
  *      productUnitId: // value for 'productUnitId'
+ *      trackReorderLevel: // value for 'trackReorderLevel'
+ *      reorderLevel: // value for 'reorderLevel'
  *   },
  * });
  */
@@ -11381,10 +11690,10 @@ export type UpdateProductMutationHookResult = ReturnType<typeof useUpdateProduct
 export type UpdateProductMutationResult = Apollo.MutationResult<UpdateProductMutation>;
 export type UpdateProductMutationOptions = Apollo.BaseMutationOptions<UpdateProductMutation, UpdateProductMutationVariables>;
 export const UpdatePurchaseDocument = gql`
-    mutation UpdatePurchase($purchaseId: String!, $transactionDate: Date, $description: String, $reference: String, $merchantId: String, $purchaseItem: [PurchaseItemDetail]) {
+    mutation UpdatePurchase($purchaseId: String!, $transactionDate: Date, $description: String, $merchantId: String, $purchaseItem: [PurchaseItemDetail!]) {
   updatePurchaseEntry(
     purchaseId: $purchaseId
-    input: {transactionDate: $transactionDate, description: $description, reference: $reference, merchantId: $merchantId, purchaseItem: $purchaseItem}
+    input: {transactionDate: $transactionDate, description: $description, merchantId: $merchantId, purchaseItem: $purchaseItem}
   ) {
     id
     description
@@ -11412,7 +11721,6 @@ export type UpdatePurchaseMutationFn = Apollo.MutationFunction<UpdatePurchaseMut
  *      purchaseId: // value for 'purchaseId'
  *      transactionDate: // value for 'transactionDate'
  *      description: // value for 'description'
- *      reference: // value for 'reference'
  *      merchantId: // value for 'merchantId'
  *      purchaseItem: // value for 'purchaseItem'
  *   },
@@ -11426,7 +11734,7 @@ export type UpdatePurchaseMutationHookResult = ReturnType<typeof useUpdatePurcha
 export type UpdatePurchaseMutationResult = Apollo.MutationResult<UpdatePurchaseMutation>;
 export type UpdatePurchaseMutationOptions = Apollo.BaseMutationOptions<UpdatePurchaseMutation, UpdatePurchaseMutationVariables>;
 export const UpdateSaleDocument = gql`
-    mutation UpdateSale($saleId: String!, $updateInvoiceInput: UpdateCompleteInvoiceB!, $description: String, $saleExpense: [SaleExpenseItem], $saleServiceExpense: [SaleServiceExpenseEntry]) {
+    mutation UpdateSale($saleId: String!, $updateInvoiceInput: UpdateCompleteInvoiceB!, $description: String, $saleExpense: [SaleExpenseItem!], $saleServiceExpense: [SaleServiceExpenseEntry!]) {
   updateSaleEntry(
     saleId: $saleId
     input: {updateInvoiceInput: $updateInvoiceInput, description: $description, saleExpense: $saleExpense, saleServiceExpense: $saleServiceExpense}
@@ -11434,6 +11742,12 @@ export const UpdateSaleDocument = gql`
     id
     description
     saleAmount
+    transactionDate
+    invoice {
+      id
+      subtotal
+      totalAmount
+    }
   }
 }
     `;

@@ -1,42 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import ActiveCustomerIcon from "@/components/ui/icons/ActiveCustomerIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
-import localStorage from "local-storage-fallback";
 import {
   GetCustomerByBusinessDocument,
-  useCreateCustomerMutation,
+  useGetCustomerByIdQuery,
+  useUpdateCustomerMutation,
 } from "@/src/generated/graphql";
 
-interface CreateCustomerProps {
+interface EditCustomerProps {
   open: boolean;
   onClose: () => void;
+  customerId: string;
 }
 
-type FormData = {
-  name: string;
-  address: string;
-  mobile: string;
-  email: string;
-};
-
-const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
+const EditCustomerSheet: React.FC<EditCustomerProps> = ({
   open,
   onClose,
+  customerId,
 }) => {
-  const storedBusinessId = JSON.parse(
-    localStorage.getItem("businessId") || "[]"
-  );
-  const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
-  const { register, reset, handleSubmit } = useForm<FormData>();
-  const [createCustomerMutation, { loading }] = useCreateCustomerMutation();
+  const [customerData, setCustomerData] = useState({
+    fullname: "",
+    email: "",
+    mobile: "",
+    address: "",
+  });
+  const { handleSubmit } = useForm<FormData>();
+  const getCustomerById = useGetCustomerByIdQuery({
+    variables: {
+      customerId: customerId,
+    },
+  });
+  const [updateCustomerMutation, { loading }] = useUpdateCustomerMutation();
   const showSuccessToast = () => {
     toast({
-      title: "Customer Successfully Created!",
-      description: "Your customer has been successfully created",
+      title: "Customer Successfully Edited!",
+      description: "Your customer has been successfully edited",
       duration: 3000,
     });
   };
@@ -49,32 +51,60 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
       duration: 3000,
     });
   };
-  const onCreateCustomerHandler = async (data: FormData) => {
+  const onEditCustomerHandler = async () => {
     try {
-      await createCustomerMutation({
+      await updateCustomerMutation({
         variables: {
-          businessId: businessId,
-          ...data,
+          customerId: customerId,
+          name: customerData.fullname,
+          email: customerData.email,
+          address: customerData.address,
+          mobile: customerData.mobile,
         },
         refetchQueries: [GetCustomerByBusinessDocument],
       });
       onClose();
       showSuccessToast();
-      reset();
     } catch (error) {
       console.error(error);
       onClose();
       showFailureToast(error);
-      reset();
     }
   };
+  useEffect(() => {
+    if (getCustomerById.data) {
+      setCustomerData((prevData) => ({
+        ...prevData,
+        fullname: getCustomerById.data?.getCustomerById?.name || "",
+        email: getCustomerById.data?.getCustomerById?.email || "",
+        mobile: getCustomerById.data?.getCustomerById?.mobile || "",
+        address: getCustomerById.data?.getCustomerById?.address || "",
+      }));
+    }
+  }, [getCustomerById.data]);
+
+  useEffect(() => {
+    if (customerId) {
+      getCustomerById.refetch({
+        customerId: customerId,
+      });
+    }
+  }, [customerId, getCustomerById]);
+
+  const handleFieldChange = (field: string, value: string) => {
+    setCustomerData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
         <SheetContent className=" py-[60px]">
           <button
             onClick={onClose}
-            className=" flex gap-x-2 text-primary-greytext items-center text-sm"
+            className=" flex gap-x-2 text-primary-greytext items-center text-sm focus:outline-none"
           >
             <ChevronLeft className=" w-4 h-4" />
             Back
@@ -84,12 +114,12 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
               <ActiveCustomerIcon />
             </span>
           </div>
-          <p className=" mt-[14px] text-lg text-primary-black">New customer</p>
+          <p className=" mt-[14px] text-lg text-primary-black">Edit customer</p>
           <p className=" font-light text-primary-greytext mt-2">
-            Add a new customer to your business
+            Make changes to this customer’s details.
           </p>
           <form
-            onSubmit={handleSubmit(onCreateCustomerHandler)}
+            onSubmit={handleSubmit(onEditCustomerHandler)}
             className=" w-full mt-[30px] flex flex-col gap-y-4 "
           >
             <div className=" flex flex-col gap-y-2">
@@ -101,8 +131,9 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 required
                 id="fullname"
                 placeholder="Full name"
+                value={customerData.fullname}
+                onChange={(e) => handleFieldChange("fullname", e.target.value)}
                 className=" w-full border p-[10px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
-                {...register("name")}
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -114,8 +145,9 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 id="email"
                 required
                 placeholder="Email address"
+                value={customerData.email}
+                onChange={(e) => handleFieldChange("email", e.target.value)}
                 className=" w-full border p-[10px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
-                {...register("email")}
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -127,8 +159,9 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 required
                 id="phone"
                 placeholder="Phone number"
+                value={customerData.mobile}
+                onChange={(e) => handleFieldChange("mobile", e.target.value)}
                 className=" w-full border p-[10px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
-                {...register("mobile")}
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -140,8 +173,9 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
                 required
                 id="address"
                 placeholder="Customer address"
+                value={customerData.address}
+                onChange={(e) => handleFieldChange("address", e.target.value)}
                 className=" w-full border p-[10px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
-                {...register("address")}
               />
             </div>
             <button
@@ -159,4 +193,4 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
   );
 };
 
-export default CreateCustomerSheet;
+export default EditCustomerSheet;

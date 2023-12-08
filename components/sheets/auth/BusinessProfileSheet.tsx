@@ -43,7 +43,7 @@ const CreateBusinessSheet: React.FC<CreateBusinessProps> = ({
   const showSuccessToast = () => {
     toast({
       title: "Business creation successful",
-      description: "Your business profile has been succesfull created!",
+      description: "Your business profile has been successfully created!",
       duration: 3000,
     });
   };

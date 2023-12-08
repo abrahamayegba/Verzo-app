@@ -2,8 +2,8 @@ mutation UpdateSale(
   $saleId: String!
   $updateInvoiceInput: UpdateCompleteInvoiceB!
   $description: String
-  $saleExpense: [SaleExpenseItem]
-  $saleServiceExpense: [SaleServiceExpenseEntry]
+  $saleExpense: [SaleExpenseItem!]
+  $saleServiceExpense: [SaleServiceExpenseEntry!]
 ) {
   updateSaleEntry(
     saleId: $saleId
@@ -17,5 +17,11 @@ mutation UpdateSale(
     id
     description
     saleAmount
+    transactionDate
+    invoice {
+      id
+      subtotal
+      totalAmount
+    }
   }
 }

@@ -33,9 +33,6 @@ const BusinessSetup = () => {
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
       (business) => business?.businessName
     ) || [];
-
-  console.log(businessNames);
-
   const businessPresent = businessNames.length > 0;
 
   return (

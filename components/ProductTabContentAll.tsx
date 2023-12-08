@@ -15,31 +15,41 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import localStorage from "local-storage-fallback";
 import { Archive, Pen, Trash2 } from "lucide-react";
+import { useGetProductsByBusinessQuery } from "@/src/generated/graphql";
+import TableEmptyState from "./emptystates/TableEmptyState";
+import ProductTableEmptyIcon from "./ui/icons/ProductTableEmptyIcon";
 
 interface ProductTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
-  openArchiveModal: () => void;
-  openDeleteModal: () => void;
+  openArchiveModal: (productId: string) => void;
+  openDeleteModal: (productId: string) => void;
+  openEditModal: (productId: string) => void;
 }
 
 const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
   onToggleSelectAll,
   openArchiveModal,
   openDeleteModal,
+  openEditModal,
 }) => {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const getProductsByBusiness = useGetProductsByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
 
-  const data = Array.from({ length: 12 }, (_, index) => ({
-    id: index + 1,
-    name: `Product ${index + 1}`,
-    basicunit: 1,
-    amount: `₦${((index + 1) * 2500).toLocaleString("en-NG")}.0`,
-    unit: `KG`,
-  }));
-
-  // Function to handle individual row selection
-  const handleRowSelect = (rowId: number) => {
+  const products =
+    getProductsByBusiness.data?.getProductsByBusiness?.productByBusiness ?? [];
+  const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
     } else {
@@ -48,9 +58,11 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== data.length;
+    const isChecked = selectedRows.length !== products?.length;
     if (isChecked) {
-      setSelectedRows(data.map((row) => row.id));
+      setSelectedRows(
+        products?.map((product) => String(product?.id) || "") || []
+      );
     } else {
       setSelectedRows([]);
     }
@@ -64,8 +76,10 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
           <TableHead className="w-[100px] flex gap-x-3 items-center font-normal text-sm text-primary-greytext">
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-              checked={selectedRows.length === data.length && data.length > 0}
-              disabled={data.length === 0}
+              checked={
+                selectedRows.length === products.length && products.length > 0
+              }
+              disabled={products.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Name
@@ -74,7 +88,7 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
             Amount
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Basic unit
+            Stock status
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Product unit
@@ -85,53 +99,72 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {data.map((row) => (
-          <TableRow className="" key={row.id}>
-            <TableCell className="flex gap-x-3 items-center py-[22px]">
-              <Checkbox
-                className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                checked={selectedRows.includes(row.id)}
-                onCheckedChange={() => handleRowSelect(row.id)}
+        {products?.length === 0 ? (
+          <TableRow>
+            <TableCell
+              colSpan={7}
+              className="text-center text-primary-greytext py-4 h-[293px]"
+            >
+              <TableEmptyState
+                icon={<ProductTableEmptyIcon />}
+                emptytext="No products added"
               />
-
-              {row.name}
-            </TableCell>
-            <TableCell className=" text-primary-greytext">
-              {row.amount}
-            </TableCell>
-            <TableCell className=" text-primary-greytext">
-              {row.basicunit}
-            </TableCell>
-            <TableCell className=" text-primary-greytext">{row.unit}</TableCell>
-            <TableCell className="text-right text-primary-blue">
-              <DropdownMenu>
-                <DropdownMenuTrigger className=" focus:outline-none">
-                  More
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
-                  <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                    <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    Edit Product
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={openArchiveModal}
-                    className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                  >
-                    <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                    Archive Product
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={openDeleteModal}
-                    className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                  >
-                    <Trash2 className=" w-4 h-4 text-opacity-80" />
-                    Delete Product
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          products.map((product) => (
+            <TableRow className="" key={product?.id}>
+              <TableCell className="flex gap-x-3 items-center py-[22px]">
+                <Checkbox
+                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                  checked={selectedRows.includes(product?.id!)}
+                  onCheckedChange={() => handleRowSelect(product?.id!)}
+                />
+
+                {product?.productName}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {product?.price}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {product?.stockStatus}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {product?.productUnit?.unitName}
+              </TableCell>
+              <TableCell className="text-right text-primary-blue">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" focus:outline-none">
+                    More
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
+                    <DropdownMenuItem
+                      onClick={() => openEditModal(product?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Edit Product
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openArchiveModal(product?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Archive Product
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openDeleteModal(product?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Trash2 className=" w-4 h-4 text-opacity-80" />
+                      Delete Product
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );

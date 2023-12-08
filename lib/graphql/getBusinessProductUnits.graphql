@@ -1,0 +1,6 @@
+query GetBusinessProductUnits($businessId: String!) {
+  getBusinessProductUnits(businessId: $businessId) {
+    id
+    unitName
+  }
+}

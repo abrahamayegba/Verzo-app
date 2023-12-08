@@ -7,12 +7,14 @@ interface UnarchiveCustomerProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  customerId: string;
 }
 
 const UnarchiveCustomer: React.FC<UnarchiveCustomerProps> = ({
   open,
   openModal,
   onClose,
+  customerId,
 }) => {
   return (
     <Transition.Root show={open} as={Fragment}>

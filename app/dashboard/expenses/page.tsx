@@ -14,7 +14,7 @@ const Expenses = () => {
           <p className=" text-primary-greytext">Record and manage expenses</p>
         </div>
         <div className=" flex gap-x-[14px] max-h-[48px]">
-          <FilterDataDropdown />
+          {/* <FilterDataDropdown /> */}
           <Link href="/expense/createexpense">
             <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
               Record expense

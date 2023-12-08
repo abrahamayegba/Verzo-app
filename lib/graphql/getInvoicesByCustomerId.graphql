@@ -29,7 +29,6 @@ query GetInvoiceById($invoiceId: String!) {
           id
           type
           productName
-          basicUnit
           price
           productUnit {
             id
