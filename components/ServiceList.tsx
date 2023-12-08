@@ -3,15 +3,20 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import useModal from "@/app/hooks/useModal";
 import ArchiveService from "./modals/service/ArchiveServiceModal";
+import localStorage from "local-storage-fallback";
 import UnarchiveService from "./modals/service/UnarchiveServiceModal";
 import DeleteService from "./modals/service/DeleteServiceModal";
 import ServiceTabContentAll from "./ServiceTabContentAll";
 import ServiceTabContentArchived from "./ServiceTabContentArchived";
+import { useGetServiceByBusinessQuery } from "@/src/generated/graphql";
 
 const ServiceList = () => {
-  const allServices = "(15)";
-  const archivedServices = "(5)";
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
   const [isChecked, setIsChecked] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const { isOpen, openModal, closeModal } = useModal();
   const {
     isOpen: isDeleteServiceOpen,
@@ -25,8 +30,45 @@ const ServiceList = () => {
     closeModal: closeUnarchiveModal,
   } = useModal();
 
+  const {
+    isOpen: isEditModalOpen,
+    openModal: openEditModal,
+    closeModal: closeEditModal,
+  } = useModal();
+
+  const getServicesByBusiness = useGetServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+
+  const services =
+    getServicesByBusiness.data?.getServiceByBusiness?.serviceByBusiness ?? [];
+
+  const allServices = services.length;
+  const archivedServices = services.filter(
+    (service) => service?.isArchived
+  ).length;
+
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
+  };
+
+  const handleOpenArchiveModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openModal();
+  };
+
+  const handleOpenDeleteModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openDeleteServiceModal();
+  };
+
+  const handleOpenEditModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openEditModal();
   };
 
   return (
@@ -38,7 +80,8 @@ const ServiceList = () => {
               className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
               value="all"
             >
-              All <span className=" text-primary-mainGrey">{allServices}</span>
+              All{" "}
+              <span className=" text-primary-mainGrey">({allServices})</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -47,7 +90,7 @@ const ServiceList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                {archivedServices}
+                ({archivedServices})
               </span>
             </TabsTrigger>
           </div>
@@ -70,8 +113,9 @@ const ServiceList = () => {
         </TabsList>
         <TabsContent value="all">
           <ServiceTabContentAll
-            openDeleteModal={openDeleteServiceModal}
-            openArchiveModal={openModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openArchiveModal={handleOpenArchiveModal}
+            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
         </TabsContent>
