@@ -1,5 +1,5 @@
 "use client";
-import ExpenseStepIndicator from "@/components/ExpenseTimeline";
+import ExpenseStepIndicator from "@/components/Expense/ExpenseTimeline";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,

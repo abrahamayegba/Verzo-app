@@ -1,5 +1,5 @@
 "use client";
-import ExpenseStepIndicator from "@/components/ExpenseTimeline";
+import ExpenseStepIndicator from "@/components/Expense/ExpenseTimeline";
 import ViewExpenseSheet from "@/components/sheets/expense/ViewExpenseSheet";
 import { Calendar } from "@/components/ui/calendar";
 import FileIcon from "@/components/ui/icons/FileIcon";

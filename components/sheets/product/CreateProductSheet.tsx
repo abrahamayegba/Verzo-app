@@ -3,13 +3,12 @@ import { ChevronLeft, Plus } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import ActiveProductIcon from "@/components/ui/icons/ActiveProductIcon";
 import {
-  GetBusinessProductUnitsDocument,
+  GetCombinesServiceUnitsDocument,
   GetProductUnitsDocument,
   GetProductsByBusinessDocument,
   useCreateBusinessProductUnitMutation,
   useCreateProductMutation,
-  useGetBusinessProductUnitsQuery,
-  useGetProductUnitsQuery,
+  useGetCombinedProductUnitsQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
@@ -62,17 +61,15 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
   const [createProductMutation, { loading }] = useCreateProductMutation();
   const [createBusinessProductUnitMutation, { loading: unitLoading }] =
     useCreateBusinessProductUnitMutation();
-  const getProductUnits = useGetProductUnitsQuery();
-  const getBusinessProductUnits = useGetBusinessProductUnitsQuery({
+
+  const combinedProductUnits = useGetCombinedProductUnitsQuery({
     variables: {
       businessId: businessId,
     },
   });
-  const productUnits = getProductUnits.data?.getProductUnits || [];
-  const businessProductUnits =
-    getBusinessProductUnits.data?.getBusinessProductUnits || [];
 
-  const allProductUnits = [...productUnits, ...businessProductUnits];
+  const allProductUnits = combinedProductUnits.data?.getCombinedProductUnits;
+
   const showSuccessToast = () => {
     toast({
       title: "Product Successfully Created!",
@@ -118,7 +115,7 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
         },
         refetchQueries: [
           GetProductUnitsDocument,
-          GetBusinessProductUnitsDocument,
+          GetCombinesServiceUnitsDocument,
         ],
       });
       resetUnit();
@@ -188,7 +185,7 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
                   </SelectTrigger>
                   <SelectContent className="bg-white w-full z-[200] shadow-sm text-gray-800 max-h-[250px] overflow-y-scroll">
                     <SelectGroup>
-                      {allProductUnits.map((productUnit) => (
+                      {allProductUnits?.map((productUnit) => (
                         <SelectItem
                           className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
                           key={productUnit?.id}

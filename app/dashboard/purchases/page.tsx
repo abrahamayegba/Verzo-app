@@ -1,4 +1,4 @@
-import ExpenseList from "@/components/ExpenseList";
+import ExpenseList from "@/components/Expense/ExpenseList";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
 import PurchaseList from "@/components/PurchaseList";
 import PurchaseMetrics from "@/components/PurchaseMetrics";

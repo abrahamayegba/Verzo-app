@@ -124,7 +124,10 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
                   {product?.productName}
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
-                  {product?.price}
+                  {product?.price?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
                   {product?.stockStatus}

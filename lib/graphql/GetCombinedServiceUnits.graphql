@@ -1,0 +1,6 @@
+query GetCombinesServiceUnits($businessId: String!) {
+  getCombinedServiceUnits(businessId: $businessId) {
+    id
+    unitName
+  }
+}

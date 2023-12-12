@@ -1,0 +1,6 @@
+query GetCombinedCOAs($businessId: String!) {
+  getCombinedCOAs(businessId: $businessId) {
+    id
+    name
+  }
+}

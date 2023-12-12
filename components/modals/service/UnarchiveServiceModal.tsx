@@ -7,12 +7,14 @@ interface UnarchiveServiceProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  serviceId: string;
 }
 
 const UnarchiveService: React.FC<UnarchiveServiceProps> = ({
   open,
   openModal,
   onClose,
+  serviceId,
 }) => {
   return (
     <Transition.Root show={open} as={Fragment}>

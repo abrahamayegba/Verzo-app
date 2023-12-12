@@ -1,5 +1,5 @@
 "use client";
-import ExpenseItem from "@/components/ExpenseItem";
+import ExpenseItem from "@/components/Expense/ExpenseItem";
 import MerchantForm from "@/components/MerchantForm";
 import CreateCategorySheet from "@/components/sheets/expense/CreateCategorySheet";
 import CreateMerchantSheet from "@/components/sheets/expense/CreateMerchantSheet";
@@ -25,21 +25,53 @@ import { format } from "date-fns";
 import { ChevronDown, Eye, MoveLeft, Plus } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useToast } from "@/app/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import {
+  useCreateExpenseMutation,
+  useGetExpenseCategoryWithSetsQuery,
+} from "@/src/generated/graphql";
 
 interface ExpenseItemProp {
-  name: string;
-  quantity: string;
-  price: string;
-  account: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  index: number;
+  creditAccountId: string;
 }
 
+type FormData = {
+  description: string;
+  reference: string;
+};
+
 const CreateExpense = () => {
+  const { toast } = useToast();
+  const { register, reset, handleSubmit } = useForm<FormData>();
   const [expenseItems, setExpenseItems] = useState<ExpenseItemProp[]>([]);
+  const [expenseCategoryId, setExpenseCategoryId] = useState("");
+  const [merchantId, setMerchantId] = useState("");
   const [openMerchantSheet, setOpenMerchantSheet] = useState(false);
   const [openViewExpenseSheet, setOpenViewExpenseSheet] = useState(false);
+  const [merchantFormKey, setMerchantFormKey] = useState(0);
   const [openCreateCategorySheet, setOpenCreateCategorySheet] = useState(false);
-  const [date, setDate] = React.useState<Date>();
+  const [date, setDate] = React.useState<Date | null>(null);
+  const [expenseDate, setExpenseDate] = useState("");
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+
+  const [createExpenseMutation, { loading }] = useCreateExpenseMutation();
+  const getExpenseCategories = useGetExpenseCategoryWithSetsQuery();
+  const expenseCategories =
+    getExpenseCategories?.data?.getExpenseCategoryWithSets?.expenseCategories ??
+    [];
+
+  const handleMerchantChange = (id: string) => {
+    setMerchantId(id);
+  };
 
   const handleCloseMerchantSheet = () => {
     setOpenMerchantSheet(false);
@@ -64,46 +96,125 @@ const CreateExpense = () => {
   };
 
   const handleAddExpense = () => {
+    const lastExpenseItem = expenseItems[expenseItems.length - 1];
+    const newExpenseItemIndex = lastExpenseItem ? lastExpenseItem.index + 1 : 1;
     setExpenseItems([
       ...expenseItems,
-      { name: "", quantity: "", price: "", account: "" },
+      {
+        description: "",
+        quantity: 0,
+        unitPrice: 0,
+        creditAccountId: "",
+        index: newExpenseItemIndex,
+      },
     ]);
   };
+
+  React.useEffect(() => {
+    if (date) {
+      const formattedDueDate = format(date, "yyyy-MM-dd").toString();
+      setExpenseDate(formattedDueDate);
+    }
+  }, [date]);
 
   const handleExpenseChange = (
     index: number,
     field: keyof ExpenseItemProp,
-    value: string
+    value: string | number
   ) => {
     const updatedExpenses = [...expenseItems];
-    updatedExpenses[index][field] = value;
+    const parsedValue = ["quantity", "unitPrice"].includes(field)
+      ? !isNaN(Number(value))
+        ? parseFloat(value as string)
+        : 0
+      : value;
+    updatedExpenses[index] = {
+      ...updatedExpenses[index],
+      [field]: parsedValue,
+    };
     setExpenseItems(updatedExpenses);
   };
 
-  console.log(expenseItems);
-  const storedBusinessId = JSON.parse(
-    localStorage.getItem("businessId") || "[]"
+  const showSuccessToast = () => {
+    toast({
+      title: "Expense Successfully Created!",
+      description: "Your expense has been successfully created",
+      duration: 3000,
+    });
+  };
+
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+
+  const resetFormState = () => {
+    reset();
+    setDate(null);
+    setMerchantId("");
+    setExpenseCategoryId("");
+    setExpenseDate("");
+    setExpenseItems([]);
+    expenseItems.length = 0;
+  };
+
+  const subtotal = expenseItems.reduce(
+    (acc, items) => acc + items?.unitPrice * items?.quantity,
+    0
   );
 
+  const amountDue = subtotal;
+
+  console.log(merchantId);
+  console.log(expenseItems);
+
+  const onCreateExpenseHandler = async (data: FormData) => {
+    try {
+      await createExpenseMutation({
+        variables: {
+          businessId: businessId,
+          expenseCategoryId: expenseCategoryId,
+          expenseDate: expenseDate,
+          merchantId: merchantId,
+          expenseItem: expenseItems,
+          ...data,
+        },
+      });
+      showSuccessToast();
+      resetFormState();
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
+
   return (
-    <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]">
+    <form
+      onSubmit={handleSubmit(onCreateExpenseHandler)}
+      className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]"
+    >
       <div className=" flex justify-between w-full items-center relative">
         <Link
           className=" absolute top-0 text-primary-greytext "
           href="/dashboard/expenses"
         >
-          <button className=" flex items-center gap-x-2">
+          <button type="button" className=" flex items-center gap-x-2">
             <MoveLeft className=" w-5 h-5 " />
             Back to Expenses
           </button>
         </Link>
-        <div className=" flex flex-col gap-y-[4px] mt-9">
+        <div className=" flex flex-col gap-y-[4px] mt-12">
           <p className=" text-[30px] text-primary-black ">Record expense </p>
           <p className=" text-primary-greytext font-light text-lg">
             Fill out the information below to record an expense
           </p>
         </div>
         <button
+          type="button"
           onClick={() => setOpenViewExpenseSheet(true)}
           className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
         >
@@ -114,12 +225,12 @@ const CreateExpense = () => {
       <div className=" flex flex-col gap-y-5">
         <div className=" text-primary-black text-lg flex flex-row justify-between">
           <p>Expense details</p>
-          <button
+          {/* <button
             onClick={() => setOpenCreateCategorySheet(true)}
             className=" text-primary-blue flex items-center gap-x-2 text-base"
           >
             Add category <Plus className=" w-[18px] h-[18px]" />
-          </button>
+          </button> */}
         </div>
         <div className=" flex flex-row gap-x-9 w-full">
           <div className=" flex flex-col gap-y-6 text-primary-greytext w-1/2">
@@ -127,45 +238,24 @@ const CreateExpense = () => {
               <label className=" text-primary-black" htmlFor="customer">
                 Category
               </label>
-              <Select>
-                <SelectTrigger className=" w-full rounded-lg border border-gray-200">
-                  <SelectValue
-                    className=" text-primary-greytext"
-                    placeholder="Select a category"
-                  />
+              <Select
+                value={expenseCategoryId}
+                onValueChange={setExpenseCategoryId}
+              >
+                <SelectTrigger className=" w-full rounded-lg border text-primary-black border-gray-200">
+                  <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent className=" bg-white w-full">
                   <SelectGroup>
-                    <SelectItem
-                      className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
-                      value="apple"
-                    >
-                      Category A
-                    </SelectItem>
-                    <SelectItem
-                      className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
-                      value="banana"
-                    >
-                      Category B
-                    </SelectItem>
-                    <SelectItem
-                      className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
-                      value="blueberry"
-                    >
-                      Category C
-                    </SelectItem>
-                    <SelectItem
-                      className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
-                      value="grapes"
-                    >
-                      Category D
-                    </SelectItem>
-                    <SelectItem
-                      className=" hover:bg-gray-100 cursor-pointer py-2 text-base"
-                      value="pineapple"
-                    >
-                      Category E
-                    </SelectItem>
+                    {expenseCategories?.map((category) => (
+                      <SelectItem
+                        className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
+                        key={category?.id}
+                        value={category?.id!}
+                      >
+                        {category?.name}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -178,7 +268,7 @@ const CreateExpense = () => {
               </label>
               <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
                 <PopoverTrigger asChild>
-                  <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                  <button className=" text-left text-sm font-normal text-primary-black flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                     {date ? (
                       format(date, "PPP")
                     ) : (
@@ -192,9 +282,9 @@ const CreateExpense = () => {
                 <PopoverContent className="w-full p-0 bg-white">
                   <Calendar
                     mode="single"
-                    selected={date}
+                    selected={date!}
                     onSelect={(date) => {
-                      setDate(date);
+                      setDate(date!);
                       setOpenIssueDate(false);
                     }}
                     initialFocus
@@ -205,7 +295,11 @@ const CreateExpense = () => {
           </div>
         </div>
       </div>
-      <MerchantForm openMerchantSheet={handleOpenMerchantSheet} />
+      <MerchantForm
+        onMerchantChange={handleMerchantChange}
+        openMerchantSheet={handleOpenMerchantSheet}
+        resetChildStates={resetFormState}
+      />
       <div className=" w-full mt-5 flex flex-col gap-y-9">
         <div className=" flex justify-between items-center w-full">
           <div className=" flex flex-col">
@@ -213,6 +307,7 @@ const CreateExpense = () => {
             <p className=" text-primary-greytext">List the items purchased</p>
           </div>
           <button
+            type="button"
             onClick={handleAddExpense}
             className=" text-primary-blue flex items-center gap-x-2"
           >
@@ -248,11 +343,11 @@ const CreateExpense = () => {
             <div className=" w-full flex flex-col items-end text-primary-black text-lg mt-[30px]">
               <div className=" flex gap-x-[180px] p-4">
                 <p className=" text-primary-greytext">Subtotal</p>
-                <p>₦3,000</p>
+                <p>₦{subtotal.toLocaleString("en-NG")}</p>
               </div>
               <div className=" flex gap-x-[180px] p-4 border-t border-t-gray-100">
                 <p className=" text-primary-greytext">Amount due</p>
-                <p>₦3,000</p>
+                <p>₦{amountDue.toLocaleString("en-NG")}</p>
               </div>
             </div>
           )}
@@ -262,7 +357,12 @@ const CreateExpense = () => {
           <p className=" text-primary-greytext mt-[2px]">
             Say more to your customer
           </p>
-          <Textarea className=" mt-5" />
+          <Textarea
+            {...register("description")}
+            required
+            id="description"
+            className=" mt-5"
+          />
         </div>
         <div className=" flex flex-col">
           <p className=" text-lg text-primary-black">Reference</p>
@@ -272,14 +372,25 @@ const CreateExpense = () => {
           <input
             className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none mt-5"
             type="text"
+            id="reference"
+            required
+            {...register("reference")}
           />
         </div>
         <div className=" flex flex-row items-center gap-x-5 mt-2">
-          <button className=" px-9 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
+          <button
+            type="button"
+            className=" px-9 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
+          >
             Cancel
           </button>
-          <button className=" bg-primary-blue text-white rounded-[10px] px-10 py-3">
-            Save
+          <button
+            type="submit"
+            className={`bg-primary-blue text-white rounded-[10px] px-10 py-3 ${
+              loading ? "opacity-50" : ""
+            }`}
+          >
+            {loading ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
@@ -295,7 +406,7 @@ const CreateExpense = () => {
         open={openMerchantSheet}
         onClose={handleCloseMerchantSheet}
       />
-    </div>
+    </form>
   );
 };
 

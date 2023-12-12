@@ -43,11 +43,11 @@ const TeamList = () => {
           <TeamTabContentAll openDeleteModal={openDeleteServiceModal} />
         </TabsContent>
       </Tabs>
-      <DeleteService
+      {/* <DeleteService
         open={isDeleteServiceOpen}
         openModal={openDeleteServiceModal}
         onClose={closeDeleteServiceModal}
-      />
+      /> */}
     </div>
   );
 };

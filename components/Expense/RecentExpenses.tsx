@@ -2,8 +2,8 @@ import { MoreHorizontal } from "lucide-react";
 import React from "react";
 import localStorage from "local-storage-fallback";
 import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
-import RecentMetricEmptyState from "./emptystates/RecentMetricEmptyState";
-import RecentExpenseEmptyIcon from "./ui/icons/RecentExpenseEmptyIcon";
+import RecentMetricEmptyState from "../emptystates/RecentMetricEmptyState";
+import RecentExpenseEmptyIcon from "../ui/icons/RecentExpenseEmptyIcon";
 import Link from "next/link";
 
 const RecentExpenses = () => {

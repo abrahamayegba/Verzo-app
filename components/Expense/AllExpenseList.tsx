@@ -1,17 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import ArchiveInvoice from "../modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
-import ArchiveService from "./modals/service/ArchiveServiceModal";
+import ExpenseTabContentAll from "./ExpenseTabContentAll";
+import ExpenseTabContentArchived from "./ExpenseTabContentArchived";
+import UnarchiveExpense from "../modals/expense/UnarchiveExpenseModal";
+import CustomPagination from "../InvoiceListPagination";
+import DeleteExpense from "../modals/expense/DeleteExpenseModal";
 import localStorage from "local-storage-fallback";
-import UnarchiveService from "./modals/service/UnarchiveServiceModal";
-import DeleteService from "./modals/service/DeleteServiceModal";
-import ServiceTabContentAll from "./ServiceTabContentAll";
-import ServiceTabContentArchived from "./ServiceTabContentArchived";
-import { useGetServiceByBusinessQuery } from "@/src/generated/graphql";
-import EditServiceSheet from "./sheets/service/EditServiceSheet";
+import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
 
-const ServiceList = () => {
+const AllExpenseList = () => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
@@ -19,16 +19,17 @@ const ServiceList = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const { isOpen, openModal, closeModal } = useModal();
+
   const {
-    isOpen: isDeleteServiceOpen,
-    openModal: openDeleteServiceModal,
-    closeModal: closeDeleteServiceModal,
+    isOpen: isUnarchiveExpenseOpen,
+    openModal: openUnarchiveExpenseModal,
+    closeModal: closeUnarchiveExpenseModal,
   } = useModal();
 
   const {
-    isOpen: isUnarchiveOpen,
-    openModal: openUnarchiveModal,
-    closeModal: closeUnarchiveModal,
+    isOpen: isDeleteExpenseOpen,
+    openModal: openDeleteExpenseModal,
+    closeModal: closeDeleteExpenseModal,
   } = useModal();
 
   const {
@@ -36,22 +37,6 @@ const ServiceList = () => {
     openModal: openEditModal,
     closeModal: closeEditModal,
   } = useModal();
-
-  const getServicesByBusiness = useGetServiceByBusinessQuery({
-    variables: {
-      businessId: businessId,
-      cursor: null,
-      sets: 1,
-    },
-  });
-
-  const services =
-    getServicesByBusiness.data?.getServiceByBusiness?.serviceByBusiness ?? [];
-
-  const allServices = services.length;
-  const archivedServices = services.filter(
-    (service) => service?.isArchived
-  ).length;
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
@@ -64,12 +49,33 @@ const ServiceList = () => {
 
   const handleOpenDeleteModal = (customerId: string) => {
     setSelectedId(customerId);
-    openDeleteServiceModal();
+    openDeleteExpenseModal();
   };
 
   const handleOpenEditModal = (customerId: string) => {
     setSelectedId(customerId);
     openEditModal();
+  };
+
+  const getExpensesByBusiness = useGetExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const expenses =
+    getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness ?? [];
+  const allExpenses = expenses.length;
+  const archivedExpenses = expenses.filter(
+    (customer) => customer?.archived
+  ).length;
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const totalPages: number = 5;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -82,7 +88,7 @@ const ServiceList = () => {
               value="all"
             >
               All{" "}
-              <span className=" text-primary-mainGrey">({allServices})</span>
+              <span className=" text-primary-mainGrey">({allExpenses})</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -91,7 +97,7 @@ const ServiceList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                ({archivedServices})
+                ({archivedExpenses})
               </span>
             </TabsTrigger>
           </div>
@@ -104,7 +110,7 @@ const ServiceList = () => {
                 Archive
               </button>
               <button
-                onClick={openDeleteServiceModal}
+                onClick={openDeleteExpenseModal}
                 className=" px-6 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-sm text-white"
               >
                 Delete
@@ -113,46 +119,53 @@ const ServiceList = () => {
           ) : null}
         </TabsList>
         <TabsContent value="all">
-          <ServiceTabContentAll
+          <ExpenseTabContentAll
             openDeleteModal={handleOpenDeleteModal}
             openArchiveModal={handleOpenArchiveModal}
             openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
+          {expenses.length > 0 && (
+            <CustomPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </TabsContent>
         <TabsContent value="archived">
-          <ServiceTabContentArchived
-            openDeleteModal={openDeleteServiceModal}
-            openUnarchiveModal={openUnarchiveModal}
+          <ExpenseTabContentArchived
+            openDeleteModal={handleOpenDeleteModal}
+            openUnarchiveModal={handleOpenArchiveModal}
+            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
+          {expenses.length > 0 && (
+            <CustomPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </TabsContent>
       </Tabs>
-      <ArchiveService
+      <ArchiveInvoice
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
-        serviceId={selectedId}
       />
-      <EditServiceSheet
-        open={isEditModalOpen}
-        onClose={closeEditModal}
-        serviceId={selectedId}
+      <UnarchiveExpense
+        open={isUnarchiveExpenseOpen}
+        openModal={openUnarchiveExpenseModal}
+        onClose={closeUnarchiveExpenseModal}
       />
-      <UnarchiveService
-        open={isUnarchiveOpen}
-        openModal={openUnarchiveModal}
-        onClose={closeUnarchiveModal}
-        serviceId={selectedId}
-      />
-      <DeleteService
-        open={isDeleteServiceOpen}
-        openModal={openDeleteServiceModal}
-        onClose={closeDeleteServiceModal}
-        serviceId={selectedId}
+      <DeleteExpense
+        open={isDeleteExpenseOpen}
+        openModal={openDeleteExpenseModal}
+        onClose={closeDeleteExpenseModal}
       />
     </div>
   );
 };
 
-export default ServiceList;
+export default AllExpenseList;

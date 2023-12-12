@@ -2,18 +2,56 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
+import { useToast } from "@/app/hooks/use-toast";
+import {
+  GetServiceByBusinessDocument,
+  useArchiveServiceByBusinessMutation,
+} from "@/src/generated/graphql";
 
 interface ArchiveServiceProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  serviceId: string;
 }
 
 const ArchiveService: React.FC<ArchiveServiceProps> = ({
   open,
   openModal,
   onClose,
+  serviceId,
 }) => {
+  const { toast } = useToast();
+  const [archiveServiceByBusinessMutation, { loading }] =
+    useArchiveServiceByBusinessMutation();
+  const showSuccessToast = () => {
+    toast({
+      title: "Service archive successful",
+      description: "Your service has been successfully archived",
+      duration: 3500,
+    });
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+  const handleArchiveServiceClick = async () => {
+    try {
+      await archiveServiceByBusinessMutation({
+        variables: { serviceId: serviceId },
+        refetchQueries: [GetServiceByBusinessDocument],
+      });
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -58,8 +96,14 @@ const ArchiveService: React.FC<ArchiveServiceProps> = ({
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-                      Archive
+                    <button
+                      type="button"
+                      onClick={handleArchiveServiceClick}
+                      className={` px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                        loading ? " opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading..." : "Archive"}
                     </button>
                   </div>
                 </div>

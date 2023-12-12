@@ -37,12 +37,14 @@ const RecentProducts = () => {
             </Link>
           </div>
           <div className=" flex flex-col bg-white h-full rounded-b-[16px]">
-            {products.map((product, index) => (
+            {products.slice(0, 3).map((product, index) => (
               <div
                 key={product?.id}
-                className=" border-t border-t-gray-100 min-h-[63px] flex justify-between text-sm items-center px-6"
+                className={`min-h-[63px] flex justify-between text-sm items-center px-6 ${
+                  index === 2 ? "" : "border-b border-b-gray-100"
+                }`}
               >
-                <p>#{String(index + 1).padStart(3, "0")}</p>
+                <p>{product?.productName}</p>
                 <p className=" text-primary-greytext">₦{product?.price}</p>
                 <p className=" text-primary-greytext">
                   {product?.productUnit?.unitName}

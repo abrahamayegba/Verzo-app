@@ -1,10 +1,16 @@
 import {
   useGetExpenseForMonthQuery,
+  useGetExpenseForQuarterQuery,
   useGetExpenseForWeekQuery,
+  useGetExpenseForYearQuery,
   useGetPurchaseForMonthQuery,
+  useGetPurchaseForQuarterQuery,
   useGetPurchaseForWeekQuery,
+  useGetPurchaseForYearQuery,
   useTotalMonthlyInvoicesAmountQuery,
+  useTotalQuarterlyInvoicesAmountQuery,
   useTotalWeeklyInvoicesAmountQuery,
+  useTotalYearlyInvoicesAmountQuery,
 } from "@/src/generated/graphql";
 import Link from "next/link";
 import React from "react";
@@ -97,8 +103,85 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
     };
   };
 
+  const FetchQuarterlyData = () => {
+    const totalQuarterlyInvoicesAmount = useTotalQuarterlyInvoicesAmountQuery({
+      variables: {
+        businessId: businessId,
+        quarterly: true,
+      },
+    });
+    const getExpenseForQuarter = useGetExpenseForQuarterQuery({
+      variables: {
+        businessId: businessId,
+        quarterly: true,
+      },
+    });
+    const getPurchaseForQuarter = useGetPurchaseForQuarterQuery({
+      variables: {
+        businessId: businessId,
+        quarterly: true,
+      },
+    });
+    return {
+      quarterlyRevenue:
+        totalQuarterlyInvoicesAmount.data?.totalQuarterlyInvoicesAmount
+          ?.totalInvoiceAmountForQuarter,
+      percentageQuarterlyRevenue:
+        totalQuarterlyInvoicesAmount.data?.totalQuarterlyInvoicesAmount
+          ?.percentageIncreaseInInvoiceThisQuarter,
+      totalExpenseAmountThisQuarter:
+        getExpenseForQuarter.data?.getExpensesForQuarter
+          ?.totalExpenseAmountThisQuarter,
+      percentageIncreaseInExpenseThisQuarter:
+        getExpenseForQuarter.data?.getExpensesForQuarter
+          ?.percentageIncreaseInExpensesThisQuarter,
+      totalPurchaseAmountThisQuarter:
+        getPurchaseForQuarter.data?.getPurchaseForQuarter
+          ?.totalPurchaseAmountThisQuarter,
+    };
+  };
+
+  const FetchYearlyData = () => {
+    const totalYearlyInvoicesAmount = useTotalYearlyInvoicesAmountQuery({
+      variables: {
+        businessId: businessId,
+        yearly: true,
+      },
+    });
+    const getExpenseForYear = useGetExpenseForYearQuery({
+      variables: {
+        businessId: businessId,
+        yearly: true,
+      },
+    });
+    const getPurchaseForYear = useGetPurchaseForYearQuery({
+      variables: {
+        businessId: businessId,
+        yearly: true,
+      },
+    });
+    return {
+      yearlyRevenue:
+        totalYearlyInvoicesAmount.data?.totalYearlyInvoicesAmount
+          ?.totalInvoiceAmountForYear,
+      percentageYearlyRevenue:
+        totalYearlyInvoicesAmount.data?.totalYearlyInvoicesAmount
+          ?.percentageIncreaseInInvoiceThisYear,
+      totalExpenseAmountThisYear:
+        getExpenseForYear.data?.getExpensesForYear?.totalExpenseAmountThisYear,
+      percentageIncreaseInExpenseThisYear:
+        getExpenseForYear.data?.getExpensesForYear
+          ?.percentageIncreaseInExpensesThisYear,
+      totalPurchaseAmountThisYear:
+        getPurchaseForYear.data?.getPurchaseForYear
+          ?.totalPurchaseAmountThisYear,
+    };
+  };
+
   const weeklyData = FetchWeeklyData();
   const monthlyData = FetchMonthlyData();
+  const quarterlyData = FetchQuarterlyData();
+  const yearlyData = FetchYearlyData();
 
   return (
     <>
@@ -128,6 +211,21 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                   minimumFractionDigits: 2,
                 }
               )}
+            {filter === "quarterly" &&
+              quarterlyData?.totalPurchaseAmountThisQuarter?.toLocaleString(
+                "en-NG",
+                {
+                  style: "currency",
+                  currency: "NGN",
+                  minimumFractionDigits: 2,
+                }
+              )}
+            {filter === "yearly" &&
+              yearlyData?.totalPurchaseAmountThisYear?.toLocaleString("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                minimumFractionDigits: 2,
+              })}
           </p>
           {filter === "weekly" &&
             weeklyData?.totalPurchaseAmountThisWeek! > 0 && (
@@ -149,6 +247,26 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                 month
               </div>
             )}
+          {filter === "quarterly" &&
+            quarterlyData?.totalPurchaseAmountThisQuarter! > 0 && (
+              <div className=" flex items-center text-primary-greytext">
+                <span>
+                  <ArrowUpIcon />
+                </span>
+                <span className="text-[#4BB543] mx-1">20%</span> since last
+                month
+              </div>
+            )}
+          {filter === "yearly" &&
+            yearlyData?.totalPurchaseAmountThisYear! > 0 && (
+              <div className=" flex items-center text-primary-greytext">
+                <span>
+                  <ArrowUpIcon />
+                </span>
+                <span className="text-[#4BB543] mx-1">20%</span> since last
+                month
+              </div>
+            )}
         </div>
         {filter === "weekly" &&
           (weeklyData?.totalPurchaseAmountThisWeek === 0 ? (
@@ -158,6 +276,18 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
           ))}
         {filter === "monthly" &&
           (monthlyData?.totalPurchaseAmountThisMonth === 0 ? (
+            <Graphflat />
+          ) : (
+            <GraphUp />
+          ))}
+        {filter === "quarterly" &&
+          (quarterlyData?.totalPurchaseAmountThisQuarter === 0 ? (
+            <Graphflat />
+          ) : (
+            <GraphUp />
+          ))}
+        {filter === "yearly" &&
+          (yearlyData?.totalPurchaseAmountThisYear === 0 ? (
             <Graphflat />
           ) : (
             <GraphUp />

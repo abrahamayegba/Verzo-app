@@ -120,11 +120,13 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
                   checked={selectedRows.includes(product?.id!)}
                   onCheckedChange={() => handleRowSelect(product?.id!)}
                 />
-
                 {product?.productName}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {product?.price}
+                {product?.price?.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {product?.stockStatus}

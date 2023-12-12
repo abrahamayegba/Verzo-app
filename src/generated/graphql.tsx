@@ -4995,6 +4995,14 @@ export type YearlySales = {
   salesThisYear: Array<Maybe<Sale>>;
 };
 
+export type CreateBusinessServiceUnitMutationVariables = Exact<{
+  unitName: Scalars['String']['input'];
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type CreateBusinessServiceUnitMutation = { __typename?: 'Mutation', createBusinessServiceUnit?: { __typename?: 'BusinessServiceUnit', unitName?: string | null } | null };
+
 export type CreateBusinessProductUnitMutationVariables = Exact<{
   unitName: Scalars['String']['input'];
   businessId: Scalars['String']['input'];
@@ -5002,6 +5010,20 @@ export type CreateBusinessProductUnitMutationVariables = Exact<{
 
 
 export type CreateBusinessProductUnitMutation = { __typename?: 'Mutation', createBusinessProductUnit?: { __typename?: 'BusinessProductUnit', unitName?: string | null } | null };
+
+export type GetCombinedProductUnitsQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetCombinedProductUnitsQuery = { __typename?: 'Query', getCombinedProductUnits?: Array<{ __typename?: 'CombinedProductUnit', id?: string | null, unitName?: string | null } | null> | null };
+
+export type GetCombinesServiceUnitsQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetCombinesServiceUnitsQuery = { __typename?: 'Query', getCombinedServiceUnits?: Array<{ __typename?: 'CombinedServiceUnit', id?: string | null, unitName?: string | null } | null> | null };
 
 export type ArchiveCustomerByBusinessMutationVariables = Exact<{
   customerId: Scalars['String']['input'];
@@ -5271,6 +5293,13 @@ export type DeleteSaleMutationVariables = Exact<{
 
 export type DeleteSaleMutation = { __typename?: 'Mutation', deleteSale?: boolean | null };
 
+export type DeleteServiceMutationVariables = Exact<{
+  serviceId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteServiceMutation = { __typename?: 'Mutation', deleteService?: boolean | null };
+
 export type EffectSaleExpenseMutationVariables = Exact<{
   expenseId: Scalars['String']['input'];
   description: Scalars['String']['input'];
@@ -5280,6 +5309,13 @@ export type EffectSaleExpenseMutationVariables = Exact<{
 
 
 export type EffectSaleExpenseMutation = { __typename?: 'Mutation', effectSaleExpense: { __typename?: 'EffectSaleExpenseResponse', effected: boolean, saleStatus: number } };
+
+export type GetCombinedCoAsQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetCombinedCoAsQuery = { __typename?: 'Query', getCombinedCOAs?: Array<{ __typename?: 'CombinedChartOfAccount', id: string, name: string } | null> | null };
 
 export type UploadMutationVariables = Exact<{
   image: Scalars['Any']['input'];
@@ -5425,7 +5461,7 @@ export type GetExpensesByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetExpensesByBusinessQuery = { __typename?: 'Query', getExpenseByBusiness?: { __typename?: 'GetExpenseResponse', cursorId?: string | null, expenseByBusiness: Array<{ __typename?: 'Expense', id: string, description?: string | null, amount: number, paid?: boolean | null, expenseDate?: any | null, recurring?: boolean | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, business?: { __typename?: 'Business', businessName: string } | null, merchant?: { __typename?: 'Merchant', name: string, id?: string | null } | null } | null> } | null };
+export type GetExpensesByBusinessQuery = { __typename?: 'Query', getExpenseByBusiness?: { __typename?: 'GetExpenseResponse', cursorId?: string | null, expenseByBusiness: Array<{ __typename?: 'Expense', id: string, description?: string | null, amount: number, paid?: boolean | null, archived?: boolean | null, expenseDate?: any | null, recurring?: boolean | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, business?: { __typename?: 'Business', businessName: string } | null, merchant?: { __typename?: 'Merchant', name: string, id?: string | null } | null } | null> } | null };
 
 export type GetExpenseByBusinessMobileQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5693,6 +5729,13 @@ export type GetSalesForYearQueryVariables = Exact<{
 
 
 export type GetSalesForYearQuery = { __typename?: 'Query', getSalesForYear?: { __typename?: 'YearlySales', numberOfSalesThisYear: number, cursorId?: string | null, salesThisYear: Array<{ __typename?: 'Sale', id: string, paidAt?: any | null, saleAmount?: number | null, invoice?: { __typename?: 'Invoice', customer?: { __typename?: 'Customer', name: string, email: string } | null } | null } | null> } | null };
+
+export type GetServiceByIdQueryVariables = Exact<{
+  serviceId: Scalars['String']['input'];
+}>;
+
+
+export type GetServiceByIdQuery = { __typename?: 'Query', getServiceById?: { __typename?: 'Service', name: string, price: number, serviceUnitId?: string | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null } | null };
 
 export type GetServiceForWeekQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6069,6 +6112,40 @@ export type VerificationWithEmailLinkMutationVariables = Exact<{
 export type VerificationWithEmailLinkMutation = { __typename?: 'Mutation', verificationWithEmailLink?: boolean | null };
 
 
+export const CreateBusinessServiceUnitDocument = gql`
+    mutation CreateBusinessServiceUnit($unitName: String!, $businessId: String!) {
+  createBusinessServiceUnit(input: {unitName: $unitName, businessId: $businessId}) {
+    unitName
+  }
+}
+    `;
+export type CreateBusinessServiceUnitMutationFn = Apollo.MutationFunction<CreateBusinessServiceUnitMutation, CreateBusinessServiceUnitMutationVariables>;
+
+/**
+ * __useCreateBusinessServiceUnitMutation__
+ *
+ * To run a mutation, you first call `useCreateBusinessServiceUnitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBusinessServiceUnitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBusinessServiceUnitMutation, { data, loading, error }] = useCreateBusinessServiceUnitMutation({
+ *   variables: {
+ *      unitName: // value for 'unitName'
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useCreateBusinessServiceUnitMutation(baseOptions?: Apollo.MutationHookOptions<CreateBusinessServiceUnitMutation, CreateBusinessServiceUnitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBusinessServiceUnitMutation, CreateBusinessServiceUnitMutationVariables>(CreateBusinessServiceUnitDocument, options);
+      }
+export type CreateBusinessServiceUnitMutationHookResult = ReturnType<typeof useCreateBusinessServiceUnitMutation>;
+export type CreateBusinessServiceUnitMutationResult = Apollo.MutationResult<CreateBusinessServiceUnitMutation>;
+export type CreateBusinessServiceUnitMutationOptions = Apollo.BaseMutationOptions<CreateBusinessServiceUnitMutation, CreateBusinessServiceUnitMutationVariables>;
 export const CreateBusinessProductUnitDocument = gql`
     mutation CreateBusinessProductUnit($unitName: String!, $businessId: String!) {
   createBusinessProductUnit(input: {unitName: $unitName, businessId: $businessId}) {
@@ -6103,6 +6180,88 @@ export function useCreateBusinessProductUnitMutation(baseOptions?: Apollo.Mutati
 export type CreateBusinessProductUnitMutationHookResult = ReturnType<typeof useCreateBusinessProductUnitMutation>;
 export type CreateBusinessProductUnitMutationResult = Apollo.MutationResult<CreateBusinessProductUnitMutation>;
 export type CreateBusinessProductUnitMutationOptions = Apollo.BaseMutationOptions<CreateBusinessProductUnitMutation, CreateBusinessProductUnitMutationVariables>;
+export const GetCombinedProductUnitsDocument = gql`
+    query GetCombinedProductUnits($businessId: String!) {
+  getCombinedProductUnits(businessId: $businessId) {
+    id
+    unitName
+  }
+}
+    `;
+
+/**
+ * __useGetCombinedProductUnitsQuery__
+ *
+ * To run a query within a React component, call `useGetCombinedProductUnitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCombinedProductUnitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCombinedProductUnitsQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetCombinedProductUnitsQuery(baseOptions: Apollo.QueryHookOptions<GetCombinedProductUnitsQuery, GetCombinedProductUnitsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCombinedProductUnitsQuery, GetCombinedProductUnitsQueryVariables>(GetCombinedProductUnitsDocument, options);
+      }
+export function useGetCombinedProductUnitsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCombinedProductUnitsQuery, GetCombinedProductUnitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCombinedProductUnitsQuery, GetCombinedProductUnitsQueryVariables>(GetCombinedProductUnitsDocument, options);
+        }
+export function useGetCombinedProductUnitsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCombinedProductUnitsQuery, GetCombinedProductUnitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCombinedProductUnitsQuery, GetCombinedProductUnitsQueryVariables>(GetCombinedProductUnitsDocument, options);
+        }
+export type GetCombinedProductUnitsQueryHookResult = ReturnType<typeof useGetCombinedProductUnitsQuery>;
+export type GetCombinedProductUnitsLazyQueryHookResult = ReturnType<typeof useGetCombinedProductUnitsLazyQuery>;
+export type GetCombinedProductUnitsSuspenseQueryHookResult = ReturnType<typeof useGetCombinedProductUnitsSuspenseQuery>;
+export type GetCombinedProductUnitsQueryResult = Apollo.QueryResult<GetCombinedProductUnitsQuery, GetCombinedProductUnitsQueryVariables>;
+export const GetCombinesServiceUnitsDocument = gql`
+    query GetCombinesServiceUnits($businessId: String!) {
+  getCombinedServiceUnits(businessId: $businessId) {
+    id
+    unitName
+  }
+}
+    `;
+
+/**
+ * __useGetCombinesServiceUnitsQuery__
+ *
+ * To run a query within a React component, call `useGetCombinesServiceUnitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCombinesServiceUnitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCombinesServiceUnitsQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetCombinesServiceUnitsQuery(baseOptions: Apollo.QueryHookOptions<GetCombinesServiceUnitsQuery, GetCombinesServiceUnitsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCombinesServiceUnitsQuery, GetCombinesServiceUnitsQueryVariables>(GetCombinesServiceUnitsDocument, options);
+      }
+export function useGetCombinesServiceUnitsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCombinesServiceUnitsQuery, GetCombinesServiceUnitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCombinesServiceUnitsQuery, GetCombinesServiceUnitsQueryVariables>(GetCombinesServiceUnitsDocument, options);
+        }
+export function useGetCombinesServiceUnitsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCombinesServiceUnitsQuery, GetCombinesServiceUnitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCombinesServiceUnitsQuery, GetCombinesServiceUnitsQueryVariables>(GetCombinesServiceUnitsDocument, options);
+        }
+export type GetCombinesServiceUnitsQueryHookResult = ReturnType<typeof useGetCombinesServiceUnitsQuery>;
+export type GetCombinesServiceUnitsLazyQueryHookResult = ReturnType<typeof useGetCombinesServiceUnitsLazyQuery>;
+export type GetCombinesServiceUnitsSuspenseQueryHookResult = ReturnType<typeof useGetCombinesServiceUnitsSuspenseQuery>;
+export type GetCombinesServiceUnitsQueryResult = Apollo.QueryResult<GetCombinesServiceUnitsQuery, GetCombinesServiceUnitsQueryVariables>;
 export const ArchiveCustomerByBusinessDocument = gql`
     mutation ArchiveCustomerByBusiness($customerId: String!) {
   archiveCustomerByBusiness(customerId: $customerId)
@@ -7228,6 +7387,37 @@ export function useDeleteSaleMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteSaleMutationHookResult = ReturnType<typeof useDeleteSaleMutation>;
 export type DeleteSaleMutationResult = Apollo.MutationResult<DeleteSaleMutation>;
 export type DeleteSaleMutationOptions = Apollo.BaseMutationOptions<DeleteSaleMutation, DeleteSaleMutationVariables>;
+export const DeleteServiceDocument = gql`
+    mutation DeleteService($serviceId: String!) {
+  deleteService(serviceId: $serviceId)
+}
+    `;
+export type DeleteServiceMutationFn = Apollo.MutationFunction<DeleteServiceMutation, DeleteServiceMutationVariables>;
+
+/**
+ * __useDeleteServiceMutation__
+ *
+ * To run a mutation, you first call `useDeleteServiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteServiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteServiceMutation, { data, loading, error }] = useDeleteServiceMutation({
+ *   variables: {
+ *      serviceId: // value for 'serviceId'
+ *   },
+ * });
+ */
+export function useDeleteServiceMutation(baseOptions?: Apollo.MutationHookOptions<DeleteServiceMutation, DeleteServiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteServiceMutation, DeleteServiceMutationVariables>(DeleteServiceDocument, options);
+      }
+export type DeleteServiceMutationHookResult = ReturnType<typeof useDeleteServiceMutation>;
+export type DeleteServiceMutationResult = Apollo.MutationResult<DeleteServiceMutation>;
+export type DeleteServiceMutationOptions = Apollo.BaseMutationOptions<DeleteServiceMutation, DeleteServiceMutationVariables>;
 export const EffectSaleExpenseDocument = gql`
     mutation EffectSaleExpense($expenseId: String!, $description: String!, $transactionDate: Date!, $file: String) {
   effectSaleExpense(
@@ -7267,6 +7457,47 @@ export function useEffectSaleExpenseMutation(baseOptions?: Apollo.MutationHookOp
 export type EffectSaleExpenseMutationHookResult = ReturnType<typeof useEffectSaleExpenseMutation>;
 export type EffectSaleExpenseMutationResult = Apollo.MutationResult<EffectSaleExpenseMutation>;
 export type EffectSaleExpenseMutationOptions = Apollo.BaseMutationOptions<EffectSaleExpenseMutation, EffectSaleExpenseMutationVariables>;
+export const GetCombinedCoAsDocument = gql`
+    query GetCombinedCOAs($businessId: String!) {
+  getCombinedCOAs(businessId: $businessId) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetCombinedCoAsQuery__
+ *
+ * To run a query within a React component, call `useGetCombinedCoAsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCombinedCoAsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCombinedCoAsQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetCombinedCoAsQuery(baseOptions: Apollo.QueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
+      }
+export function useGetCombinedCoAsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
+        }
+export function useGetCombinedCoAsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
+        }
+export type GetCombinedCoAsQueryHookResult = ReturnType<typeof useGetCombinedCoAsQuery>;
+export type GetCombinedCoAsLazyQueryHookResult = ReturnType<typeof useGetCombinedCoAsLazyQuery>;
+export type GetCombinedCoAsSuspenseQueryHookResult = ReturnType<typeof useGetCombinedCoAsSuspenseQuery>;
+export type GetCombinedCoAsQueryResult = Apollo.QueryResult<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>;
 export const UploadDocument = gql`
     mutation Upload($image: Any!) {
   uploadFile(image: $image)
@@ -8167,6 +8398,7 @@ export const GetExpensesByBusinessDocument = gql`
       description
       amount
       paid
+      archived
       expenseCategory {
         name
         id
@@ -10144,6 +10376,51 @@ export type GetSalesForYearQueryHookResult = ReturnType<typeof useGetSalesForYea
 export type GetSalesForYearLazyQueryHookResult = ReturnType<typeof useGetSalesForYearLazyQuery>;
 export type GetSalesForYearSuspenseQueryHookResult = ReturnType<typeof useGetSalesForYearSuspenseQuery>;
 export type GetSalesForYearQueryResult = Apollo.QueryResult<GetSalesForYearQuery, GetSalesForYearQueryVariables>;
+export const GetServiceByIdDocument = gql`
+    query GetServiceById($serviceId: String!) {
+  getServiceById(serviceId: $serviceId) {
+    name
+    price
+    serviceUnit {
+      unitName
+    }
+    serviceUnitId
+  }
+}
+    `;
+
+/**
+ * __useGetServiceByIdQuery__
+ *
+ * To run a query within a React component, call `useGetServiceByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetServiceByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetServiceByIdQuery({
+ *   variables: {
+ *      serviceId: // value for 'serviceId'
+ *   },
+ * });
+ */
+export function useGetServiceByIdQuery(baseOptions: Apollo.QueryHookOptions<GetServiceByIdQuery, GetServiceByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetServiceByIdQuery, GetServiceByIdQueryVariables>(GetServiceByIdDocument, options);
+      }
+export function useGetServiceByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetServiceByIdQuery, GetServiceByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetServiceByIdQuery, GetServiceByIdQueryVariables>(GetServiceByIdDocument, options);
+        }
+export function useGetServiceByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetServiceByIdQuery, GetServiceByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetServiceByIdQuery, GetServiceByIdQueryVariables>(GetServiceByIdDocument, options);
+        }
+export type GetServiceByIdQueryHookResult = ReturnType<typeof useGetServiceByIdQuery>;
+export type GetServiceByIdLazyQueryHookResult = ReturnType<typeof useGetServiceByIdLazyQuery>;
+export type GetServiceByIdSuspenseQueryHookResult = ReturnType<typeof useGetServiceByIdSuspenseQuery>;
+export type GetServiceByIdQueryResult = Apollo.QueryResult<GetServiceByIdQuery, GetServiceByIdQueryVariables>;
 export const GetServiceForWeekDocument = gql`
     query GetServiceForWeek($businessId: String!, $weekly: Boolean) {
   getServiceForWeek(businessId: $businessId, weekly: $weekly) {

@@ -7,47 +7,50 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
-import { Checkbox } from "./ui/checkbox";
+} from "../ui/table";
+import { Checkbox } from "../ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { ArchiveRestore, Eye, Pen, Trash2 } from "lucide-react";
-import TableEmptyState from "./emptystates/TableEmptyState";
-import ExpenseTableEmptyIcon from "./ui/icons/ExpenseTableEmptyIcon";
+} from "../ui/dropdown-menu";
+import { Archive, Download, Eye, Pen, Trash2 } from "lucide-react";
+import Link from "next/link";
+import localStorage from "local-storage-fallback";
+import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
+import TableEmptyState from "../emptystates/TableEmptyState";
+import ExpenseTableEmptyIcon from "../ui/icons/ExpenseTableEmptyIcon";
 
-interface ExpenseTabContentArchivedProps {
+interface ExpenseTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
-  openUnarchiveModal: () => void;
-  openDeleteModal: () => void;
+  openArchiveModal: (expenseId: string) => void;
+  openDeleteModal: (expenseId: string) => void;
+  openEditModal: (expenseId: string) => void;
 }
 
-const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
+const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
   onToggleSelectAll,
-  openUnarchiveModal,
+  openArchiveModal,
   openDeleteModal,
+  openEditModal,
 }) => {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const data = Array.from({ length: 3 }, (_, index) => ({
-    id: index + 1,
-    expense: `#EXP00${index + 1}`,
-    sentDate: new Date(2023, 0, index + 1),
-    category:
-      index % 3 === 0
-        ? "Category A"
-        : index % 3 === 1
-        ? "Category B"
-        : "Category C",
-    Merchant: `Merchant ${index + 1}`,
-    amount: `₦${((index + 1) * 2500).toLocaleString("en-NG")}.0`,
-  }));
-
-  // Function to handle individual row selection
-  const handleRowSelect = (rowId: number) => {
+  const getExpensesByBusiness = useGetExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const expenses =
+    getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness ?? [];
+  const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
     } else {
@@ -56,15 +59,16 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== data.length;
+    const isChecked = selectedRows.length !== expenses?.length;
     if (isChecked) {
-      setSelectedRows(data.map((row) => row.id));
+      setSelectedRows(
+        expenses?.map((expense) => String(expense?.id) || "") || []
+      );
     } else {
       setSelectedRows([]);
     }
     onToggleSelectAll(isChecked);
   };
-
   return (
     <Table>
       <TableHeader>
@@ -72,8 +76,10 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
           <TableHead className="w-[100px] flex gap-x-3 items-center font-normal text-sm text-primary-greytext">
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-              checked={selectedRows.length === data.length && data.length > 0}
-              disabled={data.length === 0}
+              checked={
+                selectedRows.length === expenses?.length && expenses.length > 0
+              }
+              disabled={expenses?.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Expense
@@ -82,7 +88,7 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
             Category
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Sent date
+            Date
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Merchant
@@ -96,7 +102,7 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {data.length === 0 ? (
+        {expenses.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -109,65 +115,64 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          data.map((row) => (
-            <TableRow className="" key={row.id}>
+          expenses.slice(0, 10).map((expense, index) => (
+            <TableRow className="" key={expense?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
                   className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                  checked={selectedRows.includes(row.id)}
-                  onCheckedChange={() => handleRowSelect(row.id)}
+                  checked={selectedRows.includes(expense?.id!)}
+                  onCheckedChange={() => handleRowSelect(expense?.id!)}
                 />
-                {row.expense}
+                {/* {expense?.description} */}#
+                {String(index + 1).padStart(3, "0")}
               </TableCell>
               <TableCell>
-                {row.category === "Category A" && (
-                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    Category A
-                  </span>
-                )}
-                {row.category === "Category B" && (
-                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    Category C
-                  </span>
-                )}
-                {row.category === "Category C" && (
-                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    Category B
-                  </span>
-                )}
+                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                  {expense?.expenseCategory?.name}
+                </span>
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {row.sentDate.toDateString()}
+                {expense?.expenseDate
+                  ? new Date(expense.expenseDate).toDateString()
+                  : ""}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {row.Merchant}
+                {expense?.merchant?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {row.amount}
+                {expense?.amount}
               </TableCell>
               <TableCell className="text-right text-primary-blue">
                 <DropdownMenu>
                   <DropdownMenuTrigger className=" focus:outline-none">
                     More
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className=" bg-white mt-1 mr-2 text-primary-greytext shadow1 w-[170px]">
+                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      View Expense
+                      <Link
+                        className=" flex gap-x-2 items-center"
+                        href="/expense/viewexpense"
+                      >
+                        <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        View Expense
+                      </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                    <DropdownMenuItem
+                      onClick={() => openEditModal(expense?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
                       <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Edit Expense
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={openUnarchiveModal}
+                      onClick={() => openArchiveModal(expense?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
-                      <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Unarchive Expense
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Archive Expense
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={openDeleteModal}
+                      onClick={() => openDeleteModal(expense?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
                       <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
@@ -184,4 +189,4 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
   );
 };
 
-export default ExpenseTabContentArchived;
+export default ExpenseTabContentAll;

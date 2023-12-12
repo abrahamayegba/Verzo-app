@@ -1,0 +1,10 @@
+query GetServiceById($serviceId: String!) {
+  getServiceById(serviceId: $serviceId) {
+    name
+    price
+    serviceUnit {
+      unitName
+    }
+    serviceUnitId
+  }
+}

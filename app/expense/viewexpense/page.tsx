@@ -1,4 +1,4 @@
-import ExpenseStepIndicator from "@/components/ExpenseTimeline";
+import ExpenseStepIndicator from "@/components/Expense/ExpenseTimeline";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";

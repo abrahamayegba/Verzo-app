@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, Plus } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import ActiveProductIcon from "@/components/ui/icons/ActiveProductIcon";
 import {
-  GetProductsByBusinessDocument,
-  useGetBusinessProductUnitsQuery,
-  useGetCombinedProductUnitsQuery,
-  useGetProductByIdQuery,
-  useGetProductUnitsQuery,
-  useUpdateProductMutation,
+  GetServiceByBusinessDocument,
+  useGetCombinesServiceUnitsQuery,
+  useGetServiceByIdQuery,
+  useUpdateServiceMutation,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
@@ -21,50 +18,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import ActiveServiceIcon from "@/components/ui/icons/ActiveServiceIcon";
 
-interface EditProductProps {
+interface EditServiceProps {
   open: boolean;
   onClose: () => void;
-  productId: string;
+  serviceId: string;
 }
 
-const EditProductSheet: React.FC<EditProductProps> = ({
+const EditServiceSheet: React.FC<EditServiceProps> = ({
   open,
   onClose,
-  productId,
+  serviceId,
 }) => {
+  console.log(serviceId);
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
   const { handleSubmit } = useForm<FormData>();
   const { toast } = useToast();
-  const [productData, setProductData] = useState({
-    productName: "",
+  const [serviceData, setServiceData] = useState({
+    name: "",
     price: 0,
-    productUnitName: "",
-    productUnitId: "",
+    serviceUnitName: "",
+    serviceUnitId: "",
   });
-  const [reorderLevel, setReorderLevel] = useState(0);
-  const [isReorderChecked, setIsReorderChecked] = useState(false);
-  const [updateProductMutation, { loading }] = useUpdateProductMutation();
-  const getProductsById = useGetProductByIdQuery({
-    variables: {
-      productId: productId,
-    },
-  });
-  const combinedProductUnits = useGetCombinedProductUnitsQuery({
+  const [updateServiceMutation, { loading }] = useUpdateServiceMutation();
+  const combinedServiceUnits = useGetCombinesServiceUnitsQuery({
     variables: {
       businessId: businessId,
     },
   });
-  const allProductUnits = combinedProductUnits.data?.getCombinedProductUnits;
-
+  const allServiceUnits = combinedServiceUnits.data?.getCombinedServiceUnits;
+  const getServicesById = useGetServiceByIdQuery({
+    variables: {
+      serviceId: serviceId,
+    },
+  });
   const showSuccessToast = () => {
     toast({
-      title: "Product Successfully Edited!",
-      description: "Your product has been successfully edited",
+      title: "Service Successfully Edited!",
+      description: "Your service has been successfully edited",
       duration: 3000,
     });
   };
@@ -76,57 +71,52 @@ const EditProductSheet: React.FC<EditProductProps> = ({
       duration: 3000,
     });
   };
-  const handleCheckboxChange = () => {
-    setIsReorderChecked(!isReorderChecked);
-  };
-
   useEffect(() => {
-    if (getProductsById.data) {
-      setProductData((prevData) => ({
+    if (getServicesById.data) {
+      setServiceData((prevData) => ({
         ...prevData,
-        productName: getProductsById.data?.getProductById?.productName || "",
-        price: getProductsById.data?.getProductById?.price || 0,
-        productUnitId:
-          getProductsById.data?.getProductById?.productUnitId || "",
-        productUnitName:
-          getProductsById.data?.getProductById?.productUnit?.unitName || "",
+        name: getServicesById.data?.getServiceById?.name || "",
+        price: getServicesById.data?.getServiceById?.price || 0,
+        serviceUnitId:
+          getServicesById.data?.getServiceById?.serviceUnitId || "",
+        serviceUnitName:
+          getServicesById.data?.getServiceById?.serviceUnit?.unitName || "",
       }));
     }
-  }, [getProductsById.data]);
+  }, [getServicesById.data]);
 
   useEffect(() => {
-    if (productId) {
-      getProductsById.refetch({
-        productId: productId,
+    if (serviceId) {
+      getServicesById.refetch({
+        serviceId: serviceId,
       });
     }
-  }, [productId, getProductsById]);
+  }, [serviceId, getServicesById]);
 
   const handleFieldChange = (field: string, value: string | number) => {
-    setProductData((prevData) => ({
+    setServiceData((prevData) => ({
       ...prevData,
       [field]: field === "price" ? parseFloat(value as string) : value,
     }));
   };
 
-  const handleProductUnitChange = (newValue: string) => {
-    setProductData((prevData) => ({
+  const handleServiceUnitChange = (newValue: string) => {
+    setServiceData((prevData) => ({
       ...prevData,
-      productUnitId: newValue,
+      serviceUnitId: newValue,
     }));
   };
 
-  const onEditProductHandler = async () => {
+  const onEditServiceHandler = async () => {
     try {
-      await updateProductMutation({
+      await updateServiceMutation({
         variables: {
-          productId: productId,
-          productName: productData.productName,
-          price: productData.price,
-          productUnitId: productData.productUnitId,
-          reorderLevel: reorderLevel,
+          serviceId: serviceId,
+          name: serviceData.name,
+          price: serviceData.price,
+          serviceUnitId: serviceData.serviceUnitId,
         },
-        refetchQueries: [GetProductsByBusinessDocument],
+        refetchQueries: [GetServiceByBusinessDocument],
       });
       onClose();
       showSuccessToast();
@@ -150,27 +140,25 @@ const EditProductSheet: React.FC<EditProductProps> = ({
           </button>
           <div className=" mt-[30px] flex">
             <span className=" p-3 rounded-full bg-[#EDF6FF] flex">
-              <ActiveProductIcon />
+              <ActiveServiceIcon />
             </span>
           </div>
-          <p className=" mt-[14px] text-lg text-primary-black">Edit Product</p>
+          <p className=" mt-[14px] text-lg text-primary-black">Edit Service</p>
           <p className=" font-light text-primary-greytext mt-2">
-            Edit the product details
+            Edit the service details
           </p>
           <form
-            onSubmit={handleSubmit(onEditProductHandler)}
+            onSubmit={handleSubmit(onEditServiceHandler)}
             className=" gap-y-4 flex flex-col mt-6"
           >
             <div className=" flex flex-col gap-y-1">
-              <label htmlFor="productname">Product name</label>
+              <label htmlFor="servicename">Service name</label>
               <input
                 className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
                 type="text"
-                placeholder="Product name"
-                value={productData.productName}
-                onChange={(e) =>
-                  handleFieldChange("productName", e.target.value)
-                }
+                placeholder="Service name"
+                value={serviceData.name}
+                onChange={(e) => handleFieldChange("name", e.target.value)}
                 required
               />
             </div>
@@ -180,56 +168,34 @@ const EditProductSheet: React.FC<EditProductProps> = ({
                 className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
                 type="number"
                 required
-                value={productData.price}
+                value={serviceData.price}
                 onChange={(e) => handleFieldChange("price", e.target.value)}
                 placeholder="Price"
               />
             </div>
             <div className=" flex flex-col gap-y-1">
-              <label htmlFor="productunit">Product unit</label>
+              <label htmlFor="serviceunit">Service unit</label>
               <Select
-                value={productData.productUnitId}
-                onValueChange={handleProductUnitChange}
+                value={serviceData.serviceUnitId}
+                onValueChange={handleServiceUnitChange}
               >
                 <SelectTrigger className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
                 <SelectContent className="bg-white w-full z-[200] shadow-sm text-gray-800 max-h-[250px] overflow-y-scroll">
                   <SelectGroup>
-                    {allProductUnits?.map((productUnit) => (
+                    {allServiceUnits?.map((serviceUnit) => (
                       <SelectItem
                         className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
-                        key={productUnit?.id}
-                        value={productUnit?.id!}
+                        key={serviceUnit?.id}
+                        value={serviceUnit?.id!}
                       >
-                        {productUnit?.unitName}
+                        {serviceUnit?.unitName}
                       </SelectItem>
                     ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
-            </div>
-            <div>
-              <p className=" flex items-center gap-x-3 text-[15px]">
-                Track reorder level
-                <Checkbox
-                  checked={isReorderChecked}
-                  onCheckedChange={handleCheckboxChange}
-                />
-              </p>
-              {isReorderChecked && (
-                <div className=" flex flex-col gap-y-1 mt-2">
-                  <label htmlFor="reorderLevel">Reorder Level</label>
-                  <input
-                    className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                    type="number"
-                    value={reorderLevel}
-                    onChange={(e) =>
-                      setReorderLevel(parseFloat(e.target.value))
-                    }
-                  />
-                </div>
-              )}
             </div>
             <button
               type="submit"
@@ -237,7 +203,7 @@ const EditProductSheet: React.FC<EditProductProps> = ({
                 loading ? " opacity-50" : ""
               }`}
             >
-              {loading ? "Loading..." : "Edit Product"}
+              {loading ? "Loading..." : "Edit Service"}
             </button>
           </form>
         </SheetContent>
@@ -246,4 +212,4 @@ const EditProductSheet: React.FC<EditProductProps> = ({
   );
 };
 
-export default EditProductSheet;
+export default EditServiceSheet;

@@ -1,6 +1,6 @@
 import React from "react";
 import RecentInvoices from "./RecentInvoices";
-import RecentExpenses from "./RecentExpenses";
+import RecentExpenses from "./Expense/RecentExpenses";
 import RecentProducts from "./RecentProducts";
 import RecentCustomers from "./RecentCustomers";
 

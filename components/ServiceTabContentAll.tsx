@@ -121,8 +121,11 @@ const ServiceTabContentAll: React.FC<ServiceTabContentAllProps> = ({
 
                 {service?.name}
               </TableCell>
-              <TableCell className=" text-primary-greytext">
-                {service?.price}
+              <TableCell className="text-primary-greytext">
+                {service?.price.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {service?.serviceUnit?.unitName}
@@ -134,18 +137,18 @@ const ServiceTabContentAll: React.FC<ServiceTabContentAllProps> = ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className=" bg-white mt-1 mr-1 text-primary-greytext shadow1 w-[170px]">
                     <DropdownMenuItem
+                      onClick={() => openArchiveModal(service?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Archive Service
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
                       onClick={() => openEditModal(service?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
                       <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Edit Service
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => openArchiveModal(service?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Unarchive Service
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => openDeleteModal(service?.id!)}

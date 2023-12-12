@@ -2,16 +2,68 @@ import React from "react";
 import { ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import ActiveCustomerIcon from "@/components/ui/icons/ActiveCustomerIcon";
+import { useToast } from "@/app/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import localStorage from "local-storage-fallback";
+import {
+  GetMerchantsByBusinessDocument,
+  useCreateMerchantMutation,
+} from "@/src/generated/graphql";
 
 interface CreateMerchantProps {
   open: boolean;
   onClose: () => void;
 }
 
+type MerchantData = {
+  name: string;
+  email: string;
+};
+
 const CreateMerchantSheet: React.FC<CreateMerchantProps> = ({
   open,
   onClose,
 }) => {
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const { toast } = useToast();
+  const { register, reset, handleSubmit } = useForm<MerchantData>();
+  const [createMerchantMutation, { loading: createMerchantLoading }] =
+    useCreateMerchantMutation();
+
+  const showSuccessToast = () => {
+    toast({
+      title: "Successful!",
+      description: "Your merchant has been successfully created.",
+      duration: 3000,
+    });
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+
+  const onSubmitMerchantHandler = async (data: MerchantData) => {
+    try {
+      await createMerchantMutation({
+        variables: { businessId: businessId, ...data },
+        refetchQueries: [GetMerchantsByBusinessDocument],
+      });
+      onClose();
+      showSuccessToast();
+      reset();
+    } catch (error) {
+      onClose();
+      showFailureToast(error);
+    }
+  };
+
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
@@ -32,17 +84,21 @@ const CreateMerchantSheet: React.FC<CreateMerchantProps> = ({
           <p className=" font-light text-primary-greytext mt-2">
             This can be your supplier or manufacturer
           </p>
-          <form className=" w-full mt-[30px] flex flex-col gap-y-4 ">
+          <form
+            onSubmit={handleSubmit(onSubmitMerchantHandler)}
+            className=" w-full mt-[30px] flex flex-col gap-y-4 "
+          >
             <div className=" flex flex-col gap-y-2">
               <label className=" text-[15px]" htmlFor="merchantname">
                 Merchant name
               </label>
               <input
                 type="text"
-                name="merchantname"
                 id="merchantname"
+                required
                 placeholder="Merchant name"
                 className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
+                {...register("name")}
               />
             </div>
             <div className=" flex flex-col gap-y-2">
@@ -51,17 +107,20 @@ const CreateMerchantSheet: React.FC<CreateMerchantProps> = ({
               </label>
               <input
                 type="email"
-                name="email"
                 id="email"
+                required
                 placeholder="Email address"
                 className=" w-full border p-[10px] focus:outline-none rounded-lg text-sm border-gray-200"
+                {...register("email")}
               />
             </div>
             <button
-              onClick={onClose}
-              className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px]"
+              type="submit"
+              className={`bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px] ${
+                createMerchantLoading ? "opacity-50" : ""
+              }`}
             >
-              Save merchant
+              {createMerchantLoading ? "Loading..." : "Save merchant"}
             </button>
           </form>
         </SheetContent>

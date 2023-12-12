@@ -1,18 +1,23 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import ArchiveInvoice from "./modals/invoice/ArchiveInvoice";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import useModal from "@/app/hooks/useModal";
+import Link from "next/link";
 import ExpenseTabContentAll from "./ExpenseTabContentAll";
 import ExpenseTabContentArchived from "./ExpenseTabContentArchived";
-import UnarchiveExpense from "./modals/expense/UnarchiveExpenseModal";
-import CustomPagination from "./InvoiceListPagination";
-import DeleteExpense from "./modals/expense/DeleteExpenseModal";
+import ArchiveExpense from "../modals/expense/ArchiveExpenseModal";
+import UnarchiveExpense from "../modals/expense/UnarchiveExpenseModal";
+import DeleteExpense from "../modals/expense/DeleteExpenseModal";
+import localStorage from "local-storage-fallback";
+import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
 
-const AllExpenseList = () => {
-  const allExpenses = "(12)";
-  const archivedExpenses = "(3)";
+const ExpenseList = () => {
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
   const [isChecked, setIsChecked] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const { isOpen, openModal, closeModal } = useModal();
   const {
     isOpen: isDeleteExpenseOpen,
@@ -21,21 +26,49 @@ const AllExpenseList = () => {
   } = useModal();
 
   const {
-    isOpen: isUnarchiveExpenseOpen,
-    openModal: openUnarchiveExpenseModal,
-    closeModal: closeUnarchiveExpenseModal,
+    isOpen: isUnarchiveOpen,
+    openModal: openUnarchiveModal,
+    closeModal: closeUnarchiveModal,
+  } = useModal();
+
+  const {
+    isOpen: isEditModalOpen,
+    openModal: openEditModal,
+    closeModal: closeEditModal,
   } = useModal();
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
   };
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const totalPages: number = 5;
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const handleOpenArchiveModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openModal();
   };
+
+  const handleOpenDeleteModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openDeleteExpenseModal();
+  };
+
+  const handleOpenEditModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openEditModal();
+  };
+
+  const getExpensesByBusiness = useGetExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const expenses =
+    getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness ?? [];
+  const allExpenses = expenses.length;
+  const archivedExpenses = expenses.filter(
+    (customer) => customer?.archived
+  ).length;
 
   return (
     <div className=" w-full flex flex-col">
@@ -46,7 +79,8 @@ const AllExpenseList = () => {
               className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
               value="all"
             >
-              All <span className=" text-primary-mainGrey">{allExpenses}</span>
+              All{" "}
+              <span className=" text-primary-mainGrey">({allExpenses})</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -55,7 +89,7 @@ const AllExpenseList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                {archivedExpenses}
+                ({archivedExpenses})
               </span>
             </TabsTrigger>
           </div>
@@ -74,37 +108,38 @@ const AllExpenseList = () => {
                 Delete
               </button>
             </div>
-          ) : null}
+          ) : (
+            <Link href="/dashboard/expenses/allexpenses">
+              <button className=" text-primary-blue ">See all expenses</button>
+            </Link>
+          )}
         </TabsList>
         <TabsContent value="all">
           <ExpenseTabContentAll
-            openDeleteModal={openDeleteExpenseModal}
-            openArchiveModal={openModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openArchiveModal={handleOpenArchiveModal}
+            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
-          />
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
           />
         </TabsContent>
         <TabsContent value="archived">
           <ExpenseTabContentArchived
-            openDeleteModal={openDeleteExpenseModal}
-            openUnarchiveModal={openUnarchiveExpenseModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openUnarchiveModal={handleOpenArchiveModal}
+            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
         </TabsContent>
       </Tabs>
-      <ArchiveInvoice
+      <ArchiveExpense
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
       />
       <UnarchiveExpense
-        open={isUnarchiveExpenseOpen}
-        openModal={openUnarchiveExpenseModal}
-        onClose={closeUnarchiveExpenseModal}
+        open={isUnarchiveOpen}
+        openModal={openUnarchiveModal}
+        onClose={closeUnarchiveModal}
       />
       <DeleteExpense
         open={isDeleteExpenseOpen}
@@ -115,4 +150,4 @@ const AllExpenseList = () => {
   );
 };
 
-export default AllExpenseList;
+export default ExpenseList;
