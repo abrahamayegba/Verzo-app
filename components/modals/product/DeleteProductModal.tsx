@@ -96,6 +96,7 @@ const DeleteProduct: React.FC<DeleteProductProps> = ({
                     </button>
                     <button
                       type="button"
+                      disabled={loading}
                       onClick={handleDeleteProductClick}
                       className={`px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white ${
                         loading ? "opacity-50" : ""

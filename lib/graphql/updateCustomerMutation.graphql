@@ -4,7 +4,7 @@ mutation UpdateCustomer(
   $address: String
   $mobile: String
   $email: String
-  $isArchived: Boolean
+  $archived: Boolean
 ) {
   updateCustomer(
     customerId: $customerId
@@ -13,7 +13,7 @@ mutation UpdateCustomer(
       address: $address
       mobile: $mobile
       email: $email
-      isArchived: $isArchived
+      archived: $archived
     }
   ) {
     id

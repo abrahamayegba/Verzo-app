@@ -278,25 +278,25 @@ const MetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
             )}
         </div>
         {filter === "weekly" &&
-          (weeklyData?.percentageWeeklyRevenue === 0 ? (
+          (weeklyData?.percentageIncreaseInExpenseThisWeek === 0 ? (
             <Graphflat />
           ) : (
             <GraphUp />
           ))}
         {filter === "monthly" &&
-          (monthlyData?.percentageMonthlyRevenue === 0 ? (
+          (monthlyData?.percentageIncreaseInExpenseThisMonth === 0 ? (
             <Graphflat />
           ) : (
             <GraphUp />
           ))}
         {filter === "quarterly" &&
-          (quarterlyData?.percentageQuarterlyRevenue === 0 ? (
+          (quarterlyData?.percentageIncreaseInExpenseThisQuarter === 0 ? (
             <Graphflat />
           ) : (
             <GraphUp />
           ))}
         {filter === "yearly" &&
-          (yearlyData?.percentageYearlyRevenue === 0 ? (
+          (yearlyData?.percentageIncreaseInExpenseThisYear === 0 ? (
             <Graphflat />
           ) : (
             <GraphUp />

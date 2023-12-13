@@ -14,7 +14,7 @@ query GetServiceByBusiness(
       }
       serviceUnitId
       businessId
-      isArchived
+      archived
       createdAt
     }
     cursorId

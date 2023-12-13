@@ -23,6 +23,7 @@ import TableEmptyState from "../emptystates/TableEmptyState";
 import ExpenseTableEmptyIcon from "../ui/icons/ExpenseTableEmptyIcon";
 
 interface ExpenseTabContentAllProps {
+  numberOfExpensesToShow?: number; // Make the prop optional
   onToggleSelectAll: (isChecked: boolean) => void;
   openArchiveModal: (expenseId: string) => void;
   openDeleteModal: (expenseId: string) => void;
@@ -34,6 +35,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
   openArchiveModal,
   openDeleteModal,
   openEditModal,
+  numberOfExpensesToShow,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -115,7 +117,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          expenses.slice(0, 10).map((expense, index) => (
+          expenses.slice(0, numberOfExpensesToShow).map((expense, index) => (
             <TableRow className="" key={expense?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
@@ -140,7 +142,10 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                 {expense?.merchant?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {expense?.amount}
+                {expense?.amount?.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
               </TableCell>
               <TableCell className="text-right text-primary-blue">
                 <DropdownMenu>
@@ -151,7 +156,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                       <Link
                         className=" flex gap-x-2 items-center"
-                        href="/expense/viewexpense"
+                        href={`/expense/viewexpense?expenseId=${expense?.id}`}
                       >
                         <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                         View Expense

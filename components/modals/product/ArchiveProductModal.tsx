@@ -98,6 +98,7 @@ const ArchiveProduct: React.FC<ArchiveProductProps> = ({
                     </button>
                     <button
                       type="button"
+                      disabled={loading}
                       onClick={handleArchiveProductClick}
                       className={`px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
                         loading ? " opacity-50" : ""

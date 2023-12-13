@@ -28,9 +28,12 @@ import React, { useState } from "react";
 import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import {
+  GetExpenseByIdDocument,
+  GetExpensesByBusinessDocument,
   useCreateExpenseMutation,
   useGetExpenseCategoryWithSetsQuery,
 } from "@/src/generated/graphql";
+import { useRouter } from "next/navigation";
 
 interface ExpenseItemProp {
   description: string;
@@ -48,6 +51,7 @@ type FormData = {
 const CreateExpense = () => {
   const { toast } = useToast();
   const { register, reset, handleSubmit } = useForm<FormData>();
+  const router = useRouter();
   const [expenseItems, setExpenseItems] = useState<ExpenseItemProp[]>([]);
   const [expenseCategoryId, setExpenseCategoryId] = useState("");
   const [merchantId, setMerchantId] = useState("");
@@ -169,9 +173,6 @@ const CreateExpense = () => {
 
   const amountDue = subtotal;
 
-  console.log(merchantId);
-  console.log(expenseItems);
-
   const onCreateExpenseHandler = async (data: FormData) => {
     try {
       await createExpenseMutation({
@@ -183,8 +184,10 @@ const CreateExpense = () => {
           expenseItem: expenseItems,
           ...data,
         },
+        refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
       });
       showSuccessToast();
+      router.push("/dashboard/expenses");
       resetFormState();
     } catch (error) {
       console.error(error);
@@ -215,8 +218,9 @@ const CreateExpense = () => {
         </div>
         <button
           type="button"
+          disabled
           onClick={() => setOpenViewExpenseSheet(true)}
-          className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
+          className=" px-6 py-3 cursor-not-allowed rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
         >
           Preview
           <Eye className=" w-5 h-5 text-gray-500" />
@@ -225,12 +229,6 @@ const CreateExpense = () => {
       <div className=" flex flex-col gap-y-5">
         <div className=" text-primary-black text-lg flex flex-row justify-between">
           <p>Expense details</p>
-          {/* <button
-            onClick={() => setOpenCreateCategorySheet(true)}
-            className=" text-primary-blue flex items-center gap-x-2 text-base"
-          >
-            Add category <Plus className=" w-[18px] h-[18px]" />
-          </button> */}
         </div>
         <div className=" flex flex-row gap-x-9 w-full">
           <div className=" flex flex-col gap-y-6 text-primary-greytext w-1/2">
@@ -398,10 +396,10 @@ const CreateExpense = () => {
         open={openCreateCategorySheet}
         onClose={handleCloseCreateCategorySheet}
       />
-      <ViewExpenseSheet
+      {/* <ViewExpenseSheet
         open={openViewExpenseSheet}
         onClose={handleCloseViewExpenseSheet}
-      />
+      /> */}
       <CreateMerchantSheet
         open={openMerchantSheet}
         onClose={handleCloseMerchantSheet}

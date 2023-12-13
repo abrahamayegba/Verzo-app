@@ -43,7 +43,7 @@ const RecentInvoices = () => {
         />
       ) : (
         <div className=" min-h-[241px] rounded-[16px] flex flex-col border border-gray-100">
-          <div className=" flex justify-between items-center py-[14px] px-6 rounded-t-[10px] ">
+          <div className=" flex justify-between items-center py-[14px]  max-h-[50px] px-6 rounded-t-[10px] ">
             <p className=" text-primary-greytext text-sm">Recent Invoices</p>
             <Link href="/dashboard/invoices">
               <button className=" text-primary-blue text-sm tracking-[-0.2px]">

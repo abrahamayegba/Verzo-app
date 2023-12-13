@@ -7,14 +7,14 @@ query SearchProductOrServiceByBusiness($businessId: String!, $search: String!) {
       id
       productName
       price
-      isArchived
+      archived
       createdAt
     }
     service {
       id
       name
       price
-      isArchived
+      archived
       createdAt
     }
   }

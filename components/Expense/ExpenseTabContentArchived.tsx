@@ -143,7 +143,10 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
                   {expense?.merchant?.name}
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
-                  {expense?.amount}
+                  {expense?.amount?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
                 </TableCell>
                 <TableCell className="text-right text-primary-blue">
                   <DropdownMenu>

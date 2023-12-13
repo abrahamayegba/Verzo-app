@@ -1,15 +1,5 @@
-mutation UpdateUser(
-  $fullname: String
-  $oldPassword: String
-  $newPassword: String
-) {
-  updateUser(
-    input: {
-      fullname: $fullname
-      oldPassword: $oldPassword
-      newPassword: $newPassword
-    }
-  ) {
+mutation UpdateUser($fullname: String, $email: String) {
+  updateUser(input: { fullname: $fullname, email: $email }) {
     id
     fullname
     email

@@ -128,22 +128,22 @@ export type BusinessChartOfAccount = {
 
 export type BusinessProductUnit = {
   __typename?: 'BusinessProductUnit';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   business?: Maybe<Business>;
   businessId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['String']['output']>;
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
 export type BusinessServiceUnit = {
   __typename?: 'BusinessServiceUnit';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   business?: Maybe<Business>;
   businessId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['String']['output']>;
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
@@ -241,18 +241,18 @@ export type CombinedChartOfAccount = {
 
 export type CombinedProductUnit = {
   __typename?: 'CombinedProductUnit';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['String']['output']>;
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
 export type CombinedServiceUnit = {
   __typename?: 'CombinedServiceUnit';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['String']['output']>;
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
@@ -724,20 +724,20 @@ export type CreateSubscription = {
   tax: Scalars['Float']['input'];
 };
 
-export type CreateSubscriptionAfterPayment = {
-  addOnOptionId?: InputMaybe<Scalars['String']['input']>;
-  addOnQuantity?: InputMaybe<Scalars['Float']['input']>;
-  businessId: Scalars['String']['input'];
-  currentPlanId: Scalars['String']['input'];
-  offerId?: InputMaybe<Scalars['String']['input']>;
-  tax: Scalars['Float']['input'];
-};
-
 export type CreateSubscriptionTokenizedInput = {
   addOnOptionId?: InputMaybe<Scalars['String']['input']>;
   addOnQuantity?: InputMaybe<Scalars['Float']['input']>;
   businessId: Scalars['String']['input'];
   cardNumber: Scalars['String']['input'];
+  currentPlanId: Scalars['String']['input'];
+  offerId?: InputMaybe<Scalars['String']['input']>;
+  tax: Scalars['Float']['input'];
+};
+
+export type CreateSubscriptionWithCard = {
+  addOnOptionId?: InputMaybe<Scalars['String']['input']>;
+  addOnQuantity?: InputMaybe<Scalars['Float']['input']>;
+  businessId: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
   tax: Scalars['Float']['input'];
@@ -753,6 +753,7 @@ export type CreateUserInvite = {
 export type Customer = {
   __typename?: 'Customer';
   address?: Maybe<Scalars['String']['output']>;
+  archived?: Maybe<Scalars['Boolean']['output']>;
   business?: Maybe<Business>;
   businessId: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['Date']['output']>;
@@ -762,7 +763,6 @@ export type Customer = {
   expenses?: Maybe<Array<Maybe<Expense>>>;
   id: Scalars['String']['output'];
   invoices?: Maybe<Array<Maybe<Invoice>>>;
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   mobile: Scalars['String']['output'];
   name: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Date']['output']>;
@@ -1468,6 +1468,8 @@ export type Mutation = {
   adminResetPassword?: Maybe<Scalars['Boolean']['output']>;
   archiveAccountCategory?: Maybe<Scalars['Boolean']['output']>;
   archiveBusinessCOA?: Maybe<Scalars['Boolean']['output']>;
+  archiveBusinessProductUnit?: Maybe<Scalars['Boolean']['output']>;
+  archiveBusinessServiceUnit?: Maybe<Scalars['Boolean']['output']>;
   archiveCard?: Maybe<Scalars['Boolean']['output']>;
   archiveCustomerByBusiness?: Maybe<Scalars['Boolean']['output']>;
   archiveExpense?: Maybe<Scalars['Boolean']['output']>;
@@ -1574,6 +1576,8 @@ export type Mutation = {
   deleteBusiness?: Maybe<Scalars['Boolean']['output']>;
   deleteBusinessCOA?: Maybe<Scalars['Boolean']['output']>;
   deleteBusinessCategory?: Maybe<Scalars['Boolean']['output']>;
+  deleteBusinessProductUnit?: Maybe<Scalars['Boolean']['output']>;
+  deleteBusinessServiceUnit?: Maybe<Scalars['Boolean']['output']>;
   deleteCategory?: Maybe<Scalars['Boolean']['output']>;
   deleteChartOfAccount?: Maybe<Scalars['Boolean']['output']>;
   deleteCustomer?: Maybe<Scalars['Boolean']['output']>;
@@ -1729,6 +1733,16 @@ export type MutationArchiveAccountCategoryArgs = {
 
 export type MutationArchiveBusinessCoaArgs = {
   businessCoaId: Scalars['String']['input'];
+};
+
+
+export type MutationArchiveBusinessProductUnitArgs = {
+  productUnitId: Scalars['String']['input'];
+};
+
+
+export type MutationArchiveBusinessServiceUnitArgs = {
+  serviceUnitId: Scalars['String']['input'];
 };
 
 
@@ -2132,12 +2146,12 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateSubscriptionNewCardAArgs = {
-  input: CreateSubscription;
+  input: CreateSubscriptionWithCard;
 };
 
 
 export type MutationCreateSubscriptionNewCardBArgs = {
-  input: CreateSubscriptionAfterPayment;
+  input: CreateSubscriptionWithCard;
   seerbitRef: Scalars['String']['input'];
 };
 
@@ -2191,6 +2205,16 @@ export type MutationDeleteBusinessCoaArgs = {
 export type MutationDeleteBusinessCategoryArgs = {
   businessCategoryId: Scalars['String']['input'];
   employeeId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationDeleteBusinessProductUnitArgs = {
+  productUnitId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteBusinessServiceUnitArgs = {
+  serviceUnitId: Scalars['String']['input'];
 };
 
 
@@ -2947,6 +2971,7 @@ export type PlanHistory = {
 
 export type Product = {
   __typename?: 'Product';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   business?: Maybe<Business>;
   businessId?: Maybe<Scalars['String']['output']>;
   businessProductUnit?: Maybe<BusinessProductUnit>;
@@ -2958,7 +2983,6 @@ export type Product = {
   createdById?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   image?: Maybe<Scalars['String']['output']>;
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
   productName: Scalars['String']['output'];
   productUnit?: Maybe<ProductUnit>;
@@ -3008,11 +3032,11 @@ export type ProductInvoiceDetail = {
 
 export type ProductOrService = {
   __typename?: 'ProductOrService';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   business?: Maybe<Business>;
   businessId: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['Date']['output']>;
   id: Scalars['String']['output'];
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
   product?: Maybe<Product>;
   service?: Maybe<Service>;
@@ -3040,9 +3064,9 @@ export type ProductSaleItem = {
 
 export type ProductUnit = {
   __typename?: 'ProductUnit';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['String']['output']>;
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
@@ -4308,6 +4332,7 @@ export type SeerbitTokenizeChargeInput = {
 
 export type Service = {
   __typename?: 'Service';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   business?: Maybe<Business>;
   businessId: Scalars['String']['output'];
   businessServiceUnit?: Maybe<BusinessServiceUnit>;
@@ -4318,7 +4343,6 @@ export type Service = {
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
   price: Scalars['Float']['output'];
   serviceUnit?: Maybe<ServiceUnit>;
@@ -4372,9 +4396,9 @@ export type ServiceSaleItem = {
 
 export type ServiceUnit = {
   __typename?: 'ServiceUnit';
+  archived?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['String']['output']>;
-  isArchived?: Maybe<Scalars['Boolean']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
@@ -4659,7 +4683,7 @@ export type UpdateBusinessCoa = {
 };
 
 export type UpdateBusinessCategory = {
-  categoryName?: InputMaybe<Scalars['String']['input']>;
+  categoryName: Scalars['String']['input'];
 };
 
 export type UpdateBusinessProductUnit = {
@@ -4673,7 +4697,6 @@ export type UpdateBusinessServiceUnit = {
 };
 
 export type UpdateCategory = {
-  businessId?: InputMaybe<Scalars['String']['input']>;
   categoryName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
 };
@@ -4696,8 +4719,8 @@ export type UpdateCompleteInvoiceB = {
 
 export type UpdateCustomer = {
   address?: InputMaybe<Scalars['String']['input']>;
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
-  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   mobile?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -4759,7 +4782,7 @@ export type UpdateOffer = {
 };
 
 export type UpdateOption = {
-  optionName?: InputMaybe<Scalars['String']['input']>;
+  optionName: Scalars['String']['input'];
 };
 
 export type UpdateOptionIncluded = {
@@ -4782,9 +4805,9 @@ export type UpdatePlan = {
 };
 
 export type UpdateProduct = {
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
   categoryId?: InputMaybe<Scalars['String']['input']>;
   image?: InputMaybe<Scalars['String']['input']>;
-  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   productName?: InputMaybe<Scalars['String']['input']>;
   productUnitId?: InputMaybe<Scalars['String']['input']>;
@@ -4805,7 +4828,7 @@ export type UpdateProductSaleItem = {
 };
 
 export type UpdateProductUnit = {
-  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
   unitName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -4841,8 +4864,8 @@ export type UpdateSaleStatus = {
 };
 
 export type UpdateService = {
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
   categoryId?: InputMaybe<Scalars['String']['input']>;
-  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   serviceUnitId?: InputMaybe<Scalars['String']['input']>;
@@ -4859,7 +4882,7 @@ export type UpdateServiceSaleItem = {
 };
 
 export type UpdateServiceUnit = {
-  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
   unitName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -4879,8 +4902,6 @@ export type UpdateSubscription = {
 export type UpdateUser = {
   email?: InputMaybe<Scalars['String']['input']>;
   fullname?: InputMaybe<Scalars['String']['input']>;
-  newPassword?: InputMaybe<Scalars['String']['input']>;
-  oldPassword?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateWaitlist = {
@@ -5176,7 +5197,7 @@ export type CreateProductMutationVariables = Exact<{
 }>;
 
 
-export type CreateProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', id: string, productName: string, price?: number | null, productUnitId?: string | null, businessProductUnitId?: string | null, isArchived?: boolean | null, createdAt?: any | null } };
+export type CreateProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', id: string, productName: string, price?: number | null, productUnitId?: string | null, businessProductUnitId?: string | null, archived?: boolean | null, createdAt?: any | null } };
 
 export type CreateProductWithCsvMutationVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5223,7 +5244,7 @@ export type CreateServiceMutationVariables = Exact<{
 }>;
 
 
-export type CreateServiceMutation = { __typename?: 'Mutation', createService?: { __typename?: 'Service', id: string, name: string, price: number, businessId: string, serviceUnitId?: string | null, isArchived?: boolean | null, createdAt?: any | null } | null };
+export type CreateServiceMutation = { __typename?: 'Mutation', createService?: { __typename?: 'Service', id: string, name: string, price: number, businessId: string, serviceUnitId?: string | null, archived?: boolean | null, createdAt?: any | null } | null };
 
 export type CreateServiceWithCsvMutationVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5310,13 +5331,6 @@ export type EffectSaleExpenseMutationVariables = Exact<{
 
 export type EffectSaleExpenseMutation = { __typename?: 'Mutation', effectSaleExpense: { __typename?: 'EffectSaleExpenseResponse', effected: boolean, saleStatus: number } };
 
-export type GetCombinedCoAsQueryVariables = Exact<{
-  businessId: Scalars['String']['input'];
-}>;
-
-
-export type GetCombinedCoAsQuery = { __typename?: 'Query', getCombinedCOAs?: Array<{ __typename?: 'CombinedChartOfAccount', id: string, name: string } | null> | null };
-
 export type UploadMutationVariables = Exact<{
   image: Scalars['Any']['input'];
 }>;
@@ -5377,6 +5391,13 @@ export type GetChartOfAccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetChartOfAccountsQuery = { __typename?: 'Query', getChartOfAccounts: Array<{ __typename?: 'ChartOfAccount', id?: string | null, name?: string | null, code?: string | null, createdAt?: any | null } | null> };
 
+export type GetCombinedCoAsQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetCombinedCoAsQuery = { __typename?: 'Query', getCombinedCOAs?: Array<{ __typename?: 'CombinedChartOfAccount', id: string, name: string } | null> | null };
+
 export type GetCustomerByIdQueryVariables = Exact<{
   customerId: Scalars['String']['input'];
 }>;
@@ -5396,7 +5417,7 @@ export type GetCustomerByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetCustomerByBusinessQuery = { __typename?: 'Query', getCustomerByBusiness?: { __typename?: 'GetCustomerResponse', cursorId?: string | null, customerByBusiness: Array<{ __typename?: 'Customer', id: string, name: string, email: string, mobile: string, createdAt?: any | null, address?: string | null, isArchived?: boolean | null, invoices?: Array<{ __typename?: 'Invoice', totalAmount: number, createdAt?: any | null } | null> | null } | null> } | null };
+export type GetCustomerByBusinessQuery = { __typename?: 'Query', getCustomerByBusiness?: { __typename?: 'GetCustomerResponse', cursorId?: string | null, customerByBusiness: Array<{ __typename?: 'Customer', id: string, name: string, email: string, mobile: string, createdAt?: any | null, address?: string | null, archived?: boolean | null, invoices?: Array<{ __typename?: 'Invoice', totalAmount: number, createdAt?: any | null } | null> | null } | null> } | null };
 
 export type GetDailyExpensesForMonthQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5412,7 +5433,7 @@ export type GetExpenseByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetExpenseByIdQuery = { __typename?: 'Query', getExpenseById?: { __typename?: 'Expense', id: string, description?: string | null, amount: number, expenseDate?: any | null, paid?: boolean | null, createdAt: any, expenseStatusId?: number | null, merchant?: { __typename?: 'Merchant', name: string, email?: string | null, id?: string | null } | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, expenseItems?: Array<{ __typename?: 'ExpenseItem', id?: string | null, quantityReceived?: number | null, received?: boolean | null, description?: string | null, quantity?: number | null, unitPrice?: number | null, index?: number | null, price?: number | null, chartOfAccount?: { __typename?: 'ChartOfAccount', name?: string | null, id?: string | null } | null } | null> | null, expenseLines?: Array<{ __typename?: 'ExpenseLine', lineAmount: number, lineQuantity?: number | null, id?: string | null, chartOfAccount?: { __typename?: 'ChartOfAccount', name?: string | null } | null } | null> | null } | null };
+export type GetExpenseByIdQuery = { __typename?: 'Query', getExpenseById?: { __typename?: 'Expense', id: string, description?: string | null, amount: number, createdAt: any, expenseDate?: any | null, businessId: string, paid?: boolean | null, expenseStatusId?: number | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, businessMobile?: string | null } | null, merchant?: { __typename?: 'Merchant', name: string, email?: string | null, id?: string | null } | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, expenseItems?: Array<{ __typename?: 'ExpenseItem', id?: string | null, quantityReceived?: number | null, received?: boolean | null, description?: string | null, quantity?: number | null, unitPrice?: number | null, index?: number | null, price?: number | null, chartOfAccount?: { __typename?: 'ChartOfAccount', name?: string | null, id?: string | null } | null } | null> | null, expenseLines?: Array<{ __typename?: 'ExpenseLine', lineAmount: number, lineQuantity?: number | null, id?: string | null, chartOfAccount?: { __typename?: 'ChartOfAccount', name?: string | null } | null } | null> | null } | null };
 
 export type GetExpenseCategoryWithSetsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']['input']>;
@@ -5579,7 +5600,7 @@ export type GetProductOrServiceByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetProductOrServiceByBusinessQuery = { __typename?: 'Query', getProductOrServiceByBusiness?: { __typename?: 'GetProductOrServiceResponse', cursorId?: string | null, type?: string | null, productOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, title: string, type: string, price?: number | null, isArchived?: boolean | null, createdAt?: any | null, product?: { __typename?: 'Product', productName: string, price?: number | null, id: string, type?: string | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null, service?: { __typename?: 'Service', name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null, business?: { __typename?: 'Business', businessName: string } | null } | null> } | null };
+export type GetProductOrServiceByBusinessQuery = { __typename?: 'Query', getProductOrServiceByBusiness?: { __typename?: 'GetProductOrServiceResponse', cursorId?: string | null, type?: string | null, productOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, title: string, type: string, price?: number | null, archived?: boolean | null, createdAt?: any | null, product?: { __typename?: 'Product', productName: string, price?: number | null, id: string, type?: string | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null, service?: { __typename?: 'Service', name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null, business?: { __typename?: 'Business', businessName: string } | null } | null> } | null };
 
 export type GetProductUnitsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5593,7 +5614,7 @@ export type GetProductsByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsByBusinessQuery = { __typename?: 'Query', getProductsByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, stockStatus?: string | null, productUnitId?: string | null, isArchived?: boolean | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null> } | null };
+export type GetProductsByBusinessQuery = { __typename?: 'Query', getProductsByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, stockStatus?: string | null, productUnitId?: string | null, archived?: boolean | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null> } | null };
 
 export type GetProductForWeekQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5757,7 +5778,7 @@ export type GetServiceByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetServiceByBusinessQuery = { __typename?: 'Query', getServiceByBusiness?: { __typename?: 'GetServiceResponse', cursorId?: string | null, serviceByBusiness: Array<{ __typename?: 'Service', id: string, name: string, price: number, type?: string | null, serviceUnitId?: string | null, businessId: string, isArchived?: boolean | null, createdAt?: any | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null } | null> } | null };
+export type GetServiceByBusinessQuery = { __typename?: 'Query', getServiceByBusiness?: { __typename?: 'GetServiceResponse', cursorId?: string | null, serviceByBusiness: Array<{ __typename?: 'Service', id: string, name: string, price: number, type?: string | null, serviceUnitId?: string | null, businessId: string, archived?: boolean | null, createdAt?: any | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null } | null> } | null };
 
 export type GetSubscriptionByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5939,7 +5960,7 @@ export type SearchProductOrServiceByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type SearchProductOrServiceByBusinessQuery = { __typename?: 'Query', searchProductOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, type: string, title: string, product?: { __typename?: 'Product', id: string, productName: string, price?: number | null, isArchived?: boolean | null, createdAt?: any | null } | null, service?: { __typename?: 'Service', id: string, name: string, price: number, isArchived?: boolean | null, createdAt?: any | null } | null } | null> };
+export type SearchProductOrServiceByBusinessQuery = { __typename?: 'Query', searchProductOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, type: string, title: string, product?: { __typename?: 'Product', id: string, productName: string, price?: number | null, archived?: boolean | null, createdAt?: any | null } | null, service?: { __typename?: 'Service', id: string, name: string, price: number, archived?: boolean | null, createdAt?: any | null } | null } | null> };
 
 export type SendInvoiceBMutationVariables = Exact<{
   invoiceId: Scalars['String']['input'];
@@ -6011,7 +6032,7 @@ export type UpdateCustomerMutationVariables = Exact<{
   address?: InputMaybe<Scalars['String']['input']>;
   mobile?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
-  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -6075,8 +6096,7 @@ export type UpdateServiceMutation = { __typename?: 'Mutation', updateService?: {
 
 export type UpdateUserMutationVariables = Exact<{
   fullname?: InputMaybe<Scalars['String']['input']>;
-  oldPassword?: InputMaybe<Scalars['String']['input']>;
-  newPassword?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -6878,7 +6898,7 @@ export const CreateProductDocument = gql`
     price
     productUnitId
     businessProductUnitId
-    isArchived
+    archived
     createdAt
   }
 }
@@ -7079,7 +7099,7 @@ export const CreateServiceDocument = gql`
     price
     businessId
     serviceUnitId
-    isArchived
+    archived
     createdAt
   }
 }
@@ -7457,47 +7477,6 @@ export function useEffectSaleExpenseMutation(baseOptions?: Apollo.MutationHookOp
 export type EffectSaleExpenseMutationHookResult = ReturnType<typeof useEffectSaleExpenseMutation>;
 export type EffectSaleExpenseMutationResult = Apollo.MutationResult<EffectSaleExpenseMutation>;
 export type EffectSaleExpenseMutationOptions = Apollo.BaseMutationOptions<EffectSaleExpenseMutation, EffectSaleExpenseMutationVariables>;
-export const GetCombinedCoAsDocument = gql`
-    query GetCombinedCOAs($businessId: String!) {
-  getCombinedCOAs(businessId: $businessId) {
-    id
-    name
-  }
-}
-    `;
-
-/**
- * __useGetCombinedCoAsQuery__
- *
- * To run a query within a React component, call `useGetCombinedCoAsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCombinedCoAsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCombinedCoAsQuery({
- *   variables: {
- *      businessId: // value for 'businessId'
- *   },
- * });
- */
-export function useGetCombinedCoAsQuery(baseOptions: Apollo.QueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
-      }
-export function useGetCombinedCoAsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
-        }
-export function useGetCombinedCoAsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
-        }
-export type GetCombinedCoAsQueryHookResult = ReturnType<typeof useGetCombinedCoAsQuery>;
-export type GetCombinedCoAsLazyQueryHookResult = ReturnType<typeof useGetCombinedCoAsLazyQuery>;
-export type GetCombinedCoAsSuspenseQueryHookResult = ReturnType<typeof useGetCombinedCoAsSuspenseQuery>;
-export type GetCombinedCoAsQueryResult = Apollo.QueryResult<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>;
 export const UploadDocument = gql`
     mutation Upload($image: Any!) {
   uploadFile(image: $image)
@@ -7906,6 +7885,47 @@ export type GetChartOfAccountsQueryHookResult = ReturnType<typeof useGetChartOfA
 export type GetChartOfAccountsLazyQueryHookResult = ReturnType<typeof useGetChartOfAccountsLazyQuery>;
 export type GetChartOfAccountsSuspenseQueryHookResult = ReturnType<typeof useGetChartOfAccountsSuspenseQuery>;
 export type GetChartOfAccountsQueryResult = Apollo.QueryResult<GetChartOfAccountsQuery, GetChartOfAccountsQueryVariables>;
+export const GetCombinedCoAsDocument = gql`
+    query GetCombinedCOAs($businessId: String!) {
+  getCombinedCOAs(businessId: $businessId) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetCombinedCoAsQuery__
+ *
+ * To run a query within a React component, call `useGetCombinedCoAsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCombinedCoAsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCombinedCoAsQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetCombinedCoAsQuery(baseOptions: Apollo.QueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
+      }
+export function useGetCombinedCoAsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
+        }
+export function useGetCombinedCoAsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>(GetCombinedCoAsDocument, options);
+        }
+export type GetCombinedCoAsQueryHookResult = ReturnType<typeof useGetCombinedCoAsQuery>;
+export type GetCombinedCoAsLazyQueryHookResult = ReturnType<typeof useGetCombinedCoAsLazyQuery>;
+export type GetCombinedCoAsSuspenseQueryHookResult = ReturnType<typeof useGetCombinedCoAsSuspenseQuery>;
+export type GetCombinedCoAsQueryResult = Apollo.QueryResult<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>;
 export const GetCustomerByIdDocument = gql`
     query GetCustomerById($customerId: String!) {
   getCustomerById(customerId: $customerId) {
@@ -8003,7 +8023,7 @@ export const GetCustomerByBusinessDocument = gql`
       mobile
       createdAt
       address
-      isArchived
+      archived
       invoices {
         totalAmount
         createdAt
@@ -8097,7 +8117,14 @@ export const GetExpenseByIdDocument = gql`
     id
     description
     amount
+    createdAt
     expenseDate
+    businessId
+    business {
+      businessName
+      businessEmail
+      businessMobile
+    }
     merchant {
       name
       email
@@ -9188,7 +9215,7 @@ export const GetProductOrServiceByBusinessDocument = gql`
       title
       type
       price
-      isArchived
+      archived
       product {
         productName
         price
@@ -9307,7 +9334,7 @@ export const GetProductsByBusinessDocument = gql`
       }
       stockStatus
       productUnitId
-      isArchived
+      archived
       businessId
       createdAt
     }
@@ -10517,7 +10544,7 @@ export const GetServiceByBusinessDocument = gql`
       }
       serviceUnitId
       businessId
-      isArchived
+      archived
       createdAt
     }
     cursorId
@@ -11515,14 +11542,14 @@ export const SearchProductOrServiceByBusinessDocument = gql`
       id
       productName
       price
-      isArchived
+      archived
       createdAt
     }
     service {
       id
       name
       price
-      isArchived
+      archived
       createdAt
     }
   }
@@ -11830,10 +11857,10 @@ export type UpdateBusinessCoaMutationHookResult = ReturnType<typeof useUpdateBus
 export type UpdateBusinessCoaMutationResult = Apollo.MutationResult<UpdateBusinessCoaMutation>;
 export type UpdateBusinessCoaMutationOptions = Apollo.BaseMutationOptions<UpdateBusinessCoaMutation, UpdateBusinessCoaMutationVariables>;
 export const UpdateCustomerDocument = gql`
-    mutation UpdateCustomer($customerId: String!, $name: String, $address: String, $mobile: String, $email: String, $isArchived: Boolean) {
+    mutation UpdateCustomer($customerId: String!, $name: String, $address: String, $mobile: String, $email: String, $archived: Boolean) {
   updateCustomer(
     customerId: $customerId
-    input: {name: $name, address: $address, mobile: $mobile, email: $email, isArchived: $isArchived}
+    input: {name: $name, address: $address, mobile: $mobile, email: $email, archived: $archived}
   ) {
     id
     name
@@ -11866,7 +11893,7 @@ export type UpdateCustomerMutationFn = Apollo.MutationFunction<UpdateCustomerMut
  *      address: // value for 'address'
  *      mobile: // value for 'mobile'
  *      email: // value for 'email'
- *      isArchived: // value for 'isArchived'
+ *      archived: // value for 'archived'
  *   },
  * });
  */
@@ -12101,10 +12128,8 @@ export type UpdateServiceMutationHookResult = ReturnType<typeof useUpdateService
 export type UpdateServiceMutationResult = Apollo.MutationResult<UpdateServiceMutation>;
 export type UpdateServiceMutationOptions = Apollo.BaseMutationOptions<UpdateServiceMutation, UpdateServiceMutationVariables>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($fullname: String, $oldPassword: String, $newPassword: String) {
-  updateUser(
-    input: {fullname: $fullname, oldPassword: $oldPassword, newPassword: $newPassword}
-  ) {
+    mutation UpdateUser($fullname: String, $email: String) {
+  updateUser(input: {fullname: $fullname, email: $email}) {
     id
     fullname
     email
@@ -12127,8 +12152,7 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
  *   variables: {
  *      fullname: // value for 'fullname'
- *      oldPassword: // value for 'oldPassword'
- *      newPassword: // value for 'newPassword'
+ *      email: // value for 'email'
  *   },
  * });
  */

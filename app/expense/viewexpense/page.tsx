@@ -1,28 +1,70 @@
+"use client";
 import ExpenseStepIndicator from "@/components/Expense/ExpenseTimeline";
+import MainLoader from "@/components/loading/MainLoader";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
+import {
+  useGetBusinessesByUserIdQuery,
+  useGetExpenseByIdQuery,
+} from "@/src/generated/graphql";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 
 const ViewExpense = () => {
   const currentStep = 1;
-  const merchantInvoiceAdded = false;
-  const paymentAdded = false;
-  const itemsConfirmed = false;
+  const expenseIdParams = useSearchParams();
+  const expenseId = expenseIdParams.get("expenseId")?.toString();
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const getExpenseById = useGetExpenseByIdQuery({
+    variables: {
+      expenseId: expenseId!,
+    },
+  });
+  const expense = getExpenseById?.data?.getExpenseById;
+  const expenseStatusId = expense?.expenseStatusId;
 
-  interface TableData {
-    item: string;
-    qty: number;
-    amount: number;
+  const expenseItems = expense?.expenseItems;
+
+  const expenseItem = expenseItems?.map((item) => ({
+    id: item?.id,
+    itemName: item?.description,
+    quantity: item?.quantity,
+    price: item?.price,
+  }));
+
+  const itemsConfirmed = expenseStatusId! >= 2;
+  const merchantInvoiceAdded = expenseStatusId! >= 3;
+  const paymentAdded = expenseStatusId! >= 4;
+
+  const businesses =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses;
+  const businessName = businesses?.map((business) => business?.businessName);
+  const businessEmail = businesses?.map((business) => business?.businessEmail);
+  const country = "Nigeria";
+
+  const merchantName = expense?.merchant?.name;
+  const merchantEmail = expense?.merchant?.email;
+  const issueDate = expense?.createdAt;
+  const expenseDate = expense?.expenseDate;
+  const subtotal = expense?.amount;
+  const total = subtotal;
+
+  let nextRoute = "";
+
+  if (!itemsConfirmed) {
+    nextRoute = `/expense/confirmitems?expenseId=${expenseId}`;
+  } else if (!merchantInvoiceAdded) {
+    nextRoute = `/expense/merchantinvoice?expenseId=${expenseId}`;
+  } else if (!paymentAdded) {
+    nextRoute = `/expense/addpayment?expenseId=${expenseId}`;
   }
 
-  const sampleData: TableData[] = [
-    { item: "Expense 1", qty: 3, amount: 100000 },
-    { item: "Expense 2", qty: 2, amount: 5000 },
-    { item: "Expense 3", qty: 1, amount: 300 },
-    { item: "Expense 4", qty: 1, amount: 300 },
-    { item: "Expense 5", qty: 1, amount: 300 },
-  ];
+  // console.log(merchantInvoiceAdded, expenseStatusId);
+
+  if (getBusinessesByUserId.loading || getExpenseById.loading) {
+    return <MainLoader />;
+  }
 
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[20px]">
@@ -42,11 +84,13 @@ const ViewExpense = () => {
             Add extra information to the expense
           </p>
         </div>
-        <Link href="/expense/confirmitems">
-          <button className=" px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
-            Next
-          </button>
-        </Link>
+        {nextRoute && (
+          <Link href={nextRoute}>
+            <button className="px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
+              Next
+            </button>
+          </Link>
+        )}
       </div>
       <ExpenseStepIndicator
         merchantInvoiceAdded={merchantInvoiceAdded}
@@ -72,27 +116,28 @@ const ViewExpense = () => {
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>Issue date</p>
               <p className=" text-primary-black font-normal">
-                {" "}
-                January 10, 2023
+                {issueDate ? new Date(issueDate).toDateString() : ""}
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
               <p>Due date</p>
-              <p className=" text-primary-black font-normal">March 7, 2023</p>
+              <p className=" text-primary-black font-normal">
+                {expenseDate ? new Date(expenseDate).toDateString() : ""}
+              </p>
             </div>
           </div>
           <div className=" grid grid-cols-3 w-full pt-8">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>From</p>
-              <p className=" text-primary-black font-normal mb-2">Verzo Inc.</p>
-              <p className=" text-sm">Address</p>
-              <p className=" text-sm">Country</p>
+              <p className=" text-primary-black font-normal">{businessName}</p>
+              <p className=" text-[16px]">{businessEmail}</p>
+              <p className=" text-[16px]">{country}</p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>For</p>
-              <p className=" text-primary-black font-normal mb-2">Olivia Doe</p>
-              <p className=" text-sm">Address</p>
-              <p className=" text-sm">Country</p>
+              <p className=" text-primary-black font-normal">{merchantName}</p>
+              <p className=" text-[16px]">{merchantEmail}</p>
+              <p className=" text-[16px]">{country}</p>
             </div>
           </div>
           <div className=" w-full flex flex-col mt-[40px] gap-y-4">
@@ -106,12 +151,12 @@ const ViewExpense = () => {
                 </tr>
               </thead>
               <tbody>
-                {sampleData.map((data, index) => (
-                  <tr key={index}>
-                    <td className=" py-4">{data.item}</td>
-                    <td className=" text-end py-4">{data.qty}</td>
+                {expenseItem?.map((item) => (
+                  <tr key={item?.id}>
+                    <td className=" py-4">{item?.itemName}</td>
+                    <td className=" text-end py-4">{item?.quantity}</td>
                     <td className=" text-end py-4">
-                      ₦{data.amount.toLocaleString()}
+                      ₦{item?.price?.toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -132,11 +177,23 @@ const ViewExpense = () => {
             <div className=" flex flex-col text-sm text-primary-black">
               <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                 <p className=" text-primary-greytext">Sub total</p>
-                <p className=" text-base">₦30,000</p>
+                <p className=" text-base">
+                  {subtotal?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
               <div className=" flex justify-between py-3 items-center">
                 <p className=" text-primary-greytext">Amount due</p>
-                <p className=" text-base">₦30,000</p>
+                <p className=" text-base">
+                  {total?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
             </div>
           </div>

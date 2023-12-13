@@ -24,7 +24,6 @@ const ExpenseMetricsCard1 = () => {
   expenses?.forEach((Expense) => {
     totalExpenses += Expense?.amount!;
   });
-  console.log(totalExpenses);
   return (
     <>
       <div className=" flex justify-between text-primary-black">

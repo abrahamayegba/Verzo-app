@@ -17,7 +17,7 @@ mutation CreateService(
     price
     businessId
     serviceUnitId
-    isArchived
+    archived
     createdAt
   }
 }

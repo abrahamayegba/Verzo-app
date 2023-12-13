@@ -15,7 +15,7 @@ query GetProductOrServiceByBusiness(
       title
       type
       price
-      isArchived
+      archived
       product {
         productName
         price

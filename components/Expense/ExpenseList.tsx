@@ -120,6 +120,7 @@ const ExpenseList = () => {
             openArchiveModal={handleOpenArchiveModal}
             openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
+            numberOfExpensesToShow={10}
           />
         </TabsContent>
         <TabsContent value="archived">
@@ -135,6 +136,7 @@ const ExpenseList = () => {
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
+        expenseId={selectedId}
       />
       <UnarchiveExpense
         open={isUnarchiveOpen}
@@ -145,6 +147,7 @@ const ExpenseList = () => {
         open={isDeleteExpenseOpen}
         openModal={openDeleteExpenseModal}
         onClose={closeDeleteExpenseModal}
+        expenseId={selectedId}
       />
     </div>
   );

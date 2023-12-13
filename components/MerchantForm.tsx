@@ -1,6 +1,6 @@
 "use client";
 import { Plus } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -37,7 +37,10 @@ const MerchantForm: React.FC<MerchantFormProps> = ({
   const getMerchants = useGetMerchantsByBusinessQuery({
     variables: { businessId: businessId },
   });
-  const merchants = getMerchants.data?.getMerchantsByBusiness ?? [];
+  const merchants = useMemo(
+    () => getMerchants.data?.getMerchantsByBusiness ?? [],
+    [getMerchants.data?.getMerchantsByBusiness]
+  );
   const [merchantId, setMerchantId] = useState("");
   const [merchantEmail, setMerchantEmail] = useState("");
   useEffect(() => {
@@ -54,14 +57,6 @@ const MerchantForm: React.FC<MerchantFormProps> = ({
   useEffect(() => {
     onMerchantChange(merchantId);
   }, [merchantId, onMerchantChange]);
-
-  useEffect(() => {
-    setMerchantId("");
-    setMerchantEmail("");
-    console.log("Effect is running"); // Debugging log
-  }, [resetChildStates]);
-
-  console.log(resetChildStates);
 
   if (getBusinessesByUserId.loading || getMerchants.loading) {
     return <MainLoader />;

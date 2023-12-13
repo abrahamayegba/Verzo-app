@@ -3,7 +3,14 @@ query GetExpenseById($expenseId: String!) {
     id
     description
     amount
+    createdAt
     expenseDate
+    businessId
+    business {
+      businessName
+      businessEmail
+      businessMobile
+    }
     merchant {
       name
       email

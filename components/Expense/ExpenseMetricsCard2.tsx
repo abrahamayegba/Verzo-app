@@ -34,7 +34,6 @@ const ExpenseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
   expenses?.forEach((Expense) => {
     totalExpenses += Expense?.amount!;
   });
-  console.log(totalExpenses);
 
   const FetchWeeklyData = () => {
     const getExpenseForWeek = useGetExpenseForWeekQuery({

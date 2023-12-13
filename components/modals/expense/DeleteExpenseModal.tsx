@@ -2,17 +2,58 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
+import { useToast } from "@/app/hooks/use-toast";
+import {
+  GetExpensesByBusinessDocument,
+  useDeleteExpenseMutation,
+} from "@/src/generated/graphql";
 
 interface DeleteExpenseProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  expenseId: string;
 }
 const DeleteExpense: React.FC<DeleteExpenseProps> = ({
   open,
   openModal,
   onClose,
+  expenseId,
 }) => {
+  const { toast } = useToast();
+  const [deleteExpenseMutation, { loading }] = useDeleteExpenseMutation({
+    variables: {
+      expenseId: expenseId,
+    },
+  });
+  const showSuccessToast = () => {
+    toast({
+      title: "Expense delete successful",
+      description: "Your expense has been successfully deleted",
+      duration: 3500,
+    });
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+  const handleDeleteExpenseClick = async () => {
+    try {
+      await deleteExpenseMutation({
+        variables: { expenseId: expenseId },
+        refetchQueries: [GetExpensesByBusinessDocument],
+      });
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -52,13 +93,21 @@ const DeleteExpense: React.FC<DeleteExpenseProps> = ({
                   </p>
                   <div className=" flex justify-between mt-6">
                     <button
+                      type="button"
                       onClick={onClose}
                       className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border text-gray-800"
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white">
-                      Delete
+                    <button
+                      type="button"
+                      disabled={loading}
+                      onClick={handleDeleteExpenseClick}
+                      className={`px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white ${
+                        loading ? "opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading..." : "Delete"}
                     </button>
                   </div>
                 </div>

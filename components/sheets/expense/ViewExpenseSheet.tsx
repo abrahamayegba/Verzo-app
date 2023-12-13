@@ -1,10 +1,12 @@
 import React from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
+import { useGetExpenseByIdQuery } from "@/src/generated/graphql";
 
 interface ViewExpenseProps {
   open: boolean;
   onClose: () => void;
+  expenseId: string;
 }
 
 interface TableData {
@@ -21,7 +23,28 @@ const sampleData: TableData[] = [
   { item: "Expense 5", qty: 1, amount: 300 },
 ];
 
-const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({ open, onClose }) => {
+const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({
+  open,
+  onClose,
+  expenseId,
+}) => {
+  const getExpenseById = useGetExpenseByIdQuery({
+    variables: {
+      expenseId: expenseId!,
+    },
+  });
+  const expense = getExpenseById?.data?.getExpenseById;
+  const expenseItems = expense?.expenseItems;
+  const merchantName = expense?.merchant?.name;
+  const merchantEmail = expense?.merchant?.email;
+  const issueDate = expense?.createdAt;
+  const expenseDate = expense?.expenseDate;
+  const subtotal = expense?.amount;
+  const total = subtotal;
+  const business = getExpenseById.data?.getExpenseById?.business;
+  const businessName = business?.businessName;
+  const businessEmail = business?.businessEmail;
+  const country = "Nigeria";
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
@@ -41,31 +64,32 @@ const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({ open, onClose }) => {
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>Issue date</p>
                 <p className=" text-primary-black font-normal">
-                  {" "}
-                  January 10, 2023
+                  {issueDate ? new Date(issueDate).toDateString() : ""}
                 </p>
               </div>
               <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
                 <p>Due date</p>
-                <p className=" text-primary-black font-normal">March 7, 2023</p>
+                <p className=" text-primary-black font-normal">
+                  {expenseDate ? new Date(expenseDate).toDateString() : ""}
+                </p>
               </div>
             </div>
             <div className=" grid grid-cols-3 w-full pt-5">
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>From</p>
                 <p className=" text-primary-black font-normal mb-2">
-                  Verzo Inc.
+                  {businessName}
                 </p>
-                <p className=" text-sm">Address</p>
-                <p className=" text-sm">Country</p>
+                <p className=" text-[16px]">{businessEmail}</p>
+                <p className=" text-[16px]">{"Nigeria"}</p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>For</p>
                 <p className=" text-primary-black font-normal mb-2">
-                  Olivia Doe
+                  {merchantName}
                 </p>
-                <p className=" text-sm">Address</p>
-                <p className=" text-sm">Country</p>
+                <p className=" text-[16px]">{merchantEmail}</p>
+                <p className=" text-[16px]">{"Nigeria"}</p>
               </div>
             </div>
             <div className=" w-full flex flex-col mt-[20px] gap-y-4 max-h-[250px] overflow-y-scroll">
@@ -79,12 +103,12 @@ const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({ open, onClose }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {sampleData.map((data, index) => (
-                    <tr key={index}>
-                      <td className=" py-4">{data.item}</td>
-                      <td className=" text-end py-4">{data.qty}</td>
+                  {expenseItems?.map((expense) => (
+                    <tr key={expense?.id}>
+                      <td className=" py-4">{expense?.description}</td>
+                      <td className=" text-end py-4">{expense?.quantity}</td>
                       <td className=" text-end py-4">
-                        ₦{data.amount.toLocaleString()}
+                        ₦{expense?.price?.toLocaleString()}
                       </td>
                     </tr>
                   ))}
@@ -105,11 +129,23 @@ const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({ open, onClose }) => {
               <div className=" flex flex-col text-sm text-primary-black">
                 <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                   <p className=" text-primary-greytext">Sub total</p>
-                  <p className=" text-base">₦30,000</p>
+                  <p className=" text-base">
+                    {subtotal?.toLocaleString("en-NG", {
+                      style: "currency",
+                      currency: "NGN",
+                      minimumFractionDigits: 0,
+                    })}
+                  </p>
                 </div>
                 <div className=" flex justify-between py-3 items-center">
                   <p className=" text-primary-greytext">Amount due</p>
-                  <p className=" text-base">₦30,000</p>
+                  <p className=" text-base">
+                    {total?.toLocaleString("en-NG", {
+                      style: "currency",
+                      currency: "NGN",
+                      minimumFractionDigits: 0,
+                    })}
+                  </p>
                 </div>
               </div>
             </div>

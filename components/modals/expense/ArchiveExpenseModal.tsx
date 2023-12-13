@@ -2,18 +2,60 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
+import { useToast } from "@/app/hooks/use-toast";
+import {
+  GetExpensesByBusinessDocument,
+  useArchiveExpenseMutation,
+} from "@/src/generated/graphql";
 
 interface ArchiveExpenseProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  expenseId: string;
 }
 
 const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
   open,
   openModal,
   onClose,
+  expenseId,
 }) => {
+  const { toast } = useToast();
+  const [archiveExpenseMutation, { loading }] = useArchiveExpenseMutation({
+    variables: {
+      expenseId: expenseId,
+    },
+  });
+  const showSuccessToast = () => {
+    toast({
+      title: "Expense archive successful",
+      description: "Your expense has been successfully archived",
+      duration: 3500,
+    });
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+  const handleArchiveClick = async () => {
+    try {
+      await archiveExpenseMutation({
+        variables: { expenseId: expenseId },
+        refetchQueries: [GetExpensesByBusinessDocument],
+      });
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -53,13 +95,21 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
                   </p>
                   <div className=" flex justify-between mt-6">
                     <button
+                      type="button"
                       onClick={onClose}
                       className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border text-gray-800"
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-                      Archive
+                    <button
+                      type="button"
+                      disabled={loading}
+                      onClick={() => handleArchiveClick()}
+                      className={` px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                        loading ? "opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading..." : "Archive"}
                     </button>
                   </div>
                 </div>

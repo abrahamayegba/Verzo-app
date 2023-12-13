@@ -14,7 +14,7 @@ query GetProductsByBusiness(
       }
       stockStatus
       productUnitId
-      isArchived
+      archived
       businessId
       createdAt
     }
