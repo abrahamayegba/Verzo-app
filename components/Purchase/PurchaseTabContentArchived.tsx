@@ -15,26 +15,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import localStorage from "local-storage-fallback";
 import { ArchiveRestore, Eye, Pen, Trash2 } from "lucide-react";
 import TableEmptyState from "../emptystates/TableEmptyState";
-import ExpenseTableEmptyIcon from "../ui/icons/ExpenseTableEmptyIcon";
-import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
+import localStorage from "local-storage-fallback";
+import PurchaseTableEmptyIcon from "../ui/icons/PurchaseTableEmptyIcon";
+import { useGetPurchaseByBusinessQuery } from "@/src/generated/graphql";
 
-interface ExpenseTabContentArchivedProps {
+interface PurchaseTabContentArchivedProps {
+  openUnarchiveModal: (purchaseId: string) => void;
+  numberOfPurchasesToShow?: number; // Make the prop optional
   onToggleSelectAll: (isChecked: boolean) => void;
-  openUnarchiveModal: (expenseId: string) => void;
-  openDeleteModal: (expenseId: string) => void;
-  openEditModal: (expenseId: string) => void;
-  numberOfExpensesToShow?: number; // Make the prop optional
+  openDeleteModal: (purchaseId: string) => void;
+  openEditModal: (purchaseId: string) => void;
 }
 
-const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
+const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
   onToggleSelectAll,
   openUnarchiveModal,
   openDeleteModal,
+  numberOfPurchasesToShow,
   openEditModal,
-  numberOfExpensesToShow,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -42,15 +42,17 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
   const businessId = storedBusinessId[0] || "";
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const getExpensesByBusiness = useGetExpensesByBusinessQuery({
+  const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
     variables: {
       businessId: businessId,
       sets: 1,
       cursor: null,
     },
   });
-  const expenses =
-    getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness ?? [];
+  const purchases =
+    getPurchasesByBusiness.data?.getPurchaseByBusiness?.purchaseByBusiness ??
+    [];
+
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
@@ -60,10 +62,10 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== expenses?.length;
+    const isChecked = selectedRows.length !== purchases?.length;
     if (isChecked) {
       setSelectedRows(
-        expenses?.map((expense) => String(expense?.id) || "") || []
+        purchases?.map((purchase) => String(purchase?.id) || "") || []
       );
     } else {
       setSelectedRows([]);
@@ -79,19 +81,21 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
               checked={
-                selectedRows.length === expenses?.length && expenses.length > 0
+                selectedRows.length === purchases?.length &&
+                purchases.length > 0
               }
-              disabled={expenses?.length === 0}
+              disabled={purchases?.length === 0}
               onCheckedChange={handleSelectAll}
             />
-            Expense
+            Purchase
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Category
+            Transaction date
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Date
+            Status
           </TableHead>
+
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Merchant
           </TableHead>
@@ -104,48 +108,55 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {expenses.length === 0 ? (
+        {purchases?.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
               className="text-center text-primary-greytext py-4 h-[293px]"
             >
               <TableEmptyState
-                icon={<ExpenseTableEmptyIcon />}
-                emptytext="No expenses available"
+                icon={<PurchaseTableEmptyIcon />}
+                emptytext="No purchase recorded"
               />
             </TableCell>
           </TableRow>
         ) : (
-          expenses
-            .filter((expense) => expense?.archived)
-            .slice(0, numberOfExpensesToShow)
-            .map((expense, index) => (
-              <TableRow className="" key={expense?.id}>
+          purchases
+            .filter((purchase) => purchase?.archived)
+            .slice(0, numberOfPurchasesToShow)
+            .map((purchase, index) => (
+              <TableRow key={purchase?.id}>
                 <TableCell className="flex gap-x-3 items-center py-[22px]">
                   <Checkbox
                     className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                    checked={selectedRows.includes(expense?.id!)}
-                    onCheckedChange={() => handleRowSelect(expense?.id!)}
+                    checked={selectedRows.includes(purchase?.id!)}
+                    onCheckedChange={() => handleRowSelect(purchase?.id!)}
                   />
-                  {/* {expense?.description} */}#
-                  {String(index + 1).padStart(3, "0")}
-                </TableCell>
-                <TableCell>
-                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    {expense?.expenseCategory?.name}
-                  </span>
+                  #PUR{String(index + 1).padStart(3, "0")}
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
-                  {expense?.expenseDate
-                    ? new Date(expense.expenseDate).toDateString()
+                  {purchase?.transactionDate
+                    ? new Date(purchase.transactionDate).toDateString()
                     : ""}
                 </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {expense?.merchant?.name}
+                <TableCell>
+                  {purchase?.paid === true ? (
+                    <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      <span className="mr-2 text-green-500">✔</span>
+                      Paid
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
+                      <span className="mr-2 text-yellow-500">⌛</span>
+                      Pending
+                    </span>
+                  )}
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
-                  {expense?.amount?.toLocaleString("en-NG", {
+                  {purchase?.merchant?.name}
+                </TableCell>
+                <TableCell className=" text-primary-greytext">
+                  {purchase?.total?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                   })}
@@ -155,31 +166,31 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
                     <DropdownMenuTrigger className=" focus:outline-none">
                       More
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className=" bg-white mt-1 mr-2 text-primary-greytext shadow1 w-[170px]">
+                    <DropdownMenuContent className=" bg-white mt-1 mr-2 text-primary-greytext shadow1 w-[180px]">
                       <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                         <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        View Expense
+                        View Purchase
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => openEditModal(expense?.id!)}
+                        onClick={() => openEditModal(purchase?.id!)}
                         className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                       >
                         <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Edit Expense
+                        Edit Purchase
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => openUnarchiveModal(expense?.id!)}
+                        onClick={() => openUnarchiveModal(purchase?.id!)}
                         className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                       >
                         <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Unarchive Expense
+                        Unarchive Purchase
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => openDeleteModal(expense?.id!)}
+                        onClick={() => openDeleteModal(purchase?.id!)}
                         className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                       >
                         <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Delete Expense
+                        Delete Purchase
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -192,4 +203,4 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
   );
 };
 
-export default ExpenseTabContentArchived;
+export default PurchaseTabContentArchived;

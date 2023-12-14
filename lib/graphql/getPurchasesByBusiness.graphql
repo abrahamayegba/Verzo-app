@@ -10,6 +10,7 @@ query GetPurchaseByBusiness(
       transactionDate
       total
       businessId
+      archived
       merchant {
         name
       }

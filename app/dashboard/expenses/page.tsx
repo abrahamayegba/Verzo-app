@@ -1,5 +1,4 @@
 "use client";
-import useModal from "@/app/hooks/useModal";
 import ExpenseList from "@/components/Expense/ExpenseList";
 import ExpenseMetrics from "@/components/Expense/ExpenseMetrics";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
@@ -19,7 +18,6 @@ import MainLoader from "@/components/loading/MainLoader";
 import Loader2 from "@/components/loading/Loader2";
 
 const Expenses = () => {
-  const { isOpen, openModal, closeModal } = useModal();
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"

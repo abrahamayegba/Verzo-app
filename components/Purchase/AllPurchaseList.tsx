@@ -1,18 +1,24 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import ArchiveInvoice from "../modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
-import Link from "next/link";
+import CustomPagination from "../InvoiceListPagination";
+import DeletePurchase from "../modals/purchase/DeletePurchaseModal";
+import UnarchivePurchase from "../modals/purchase/UnarchivePurchaseModal";
 import PurchaseTabContentAll from "./PurchaseTabContentAll";
 import PurchaseTabContentArchived from "./PurchaseTabContentArchived";
-import ArchivePurchase from "./modals/purchase/ArchivePurchaseModal";
-import UnarchivePurchase from "./modals/purchase/UnarchivePurchaseModal";
-import DeletePurchase from "./modals/purchase/DeletePurchaseModal";
+import ArchivePurchase from "../modals/purchase/ArchivePurchaseModal";
+import localStorage from "local-storage-fallback";
+import { useGetPurchaseByBusinessQuery } from "@/src/generated/graphql";
 
-const PurchaseList = () => {
-  const allPurchases = "(10)";
-  const archivedPurchases = "(5)";
+const AllPurchaseList = () => {
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
   const [isChecked, setIsChecked] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const { isOpen, openModal, closeModal } = useModal();
   const {
     isOpen: isDeletePurchaseOpen,
@@ -21,13 +27,56 @@ const PurchaseList = () => {
   } = useModal();
 
   const {
-    isOpen: isUnarchiveOpen,
-    openModal: openUnarchiveModal,
-    closeModal: closeUnarchiveModal,
+    isOpen: isUnarchivePurchaseOpen,
+    openModal: openUnarchivePurchaseModal,
+    closeModal: closeUnarchivePurchaseModal,
+  } = useModal();
+
+  const {
+    isOpen: isEditModalOpen,
+    openModal: openEditModal,
+    closeModal: closeEditModal,
   } = useModal();
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
+  };
+
+  const handleOpenArchiveModal = (expenseId: string) => {
+    setSelectedId(expenseId);
+    openModal();
+  };
+
+  const handleOpenDeleteModal = (expenseId: string) => {
+    setSelectedId(expenseId);
+    openDeletePurchaseModal();
+  };
+
+  const handleOpenEditModal = (expenseId: string) => {
+    setSelectedId(expenseId);
+    openEditModal();
+  };
+
+  const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+  const purchases =
+    getPurchasesByBusiness.data?.getPurchaseByBusiness?.purchaseByBusiness ??
+    [];
+  const allPurchases = purchases.length;
+  const archivedPurchases = purchases.filter(
+    (purchase) => purchase?.archived
+  ).length;
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const totalPages: number = 5;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -39,7 +88,8 @@ const PurchaseList = () => {
               className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
               value="all"
             >
-              All <span className=" text-primary-mainGrey">{allPurchases}</span>
+              All{" "}
+              <span className=" text-primary-mainGrey">({allPurchases})</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -48,7 +98,7 @@ const PurchaseList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                {archivedPurchases}
+                ({archivedPurchases})
               </span>
             </TabsTrigger>
           </div>
@@ -67,24 +117,27 @@ const PurchaseList = () => {
                 Delete
               </button>
             </div>
-          ) : (
-            <Link href="/dashboard/purchases/allpurchases">
-              <button className=" text-primary-blue ">See all purchases</button>
-            </Link>
-          )}
+          ) : null}
         </TabsList>
         <TabsContent value="all">
           <PurchaseTabContentAll
-            openDeleteModal={openDeletePurchaseModal}
-            openArchiveModal={openModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openArchiveModal={handleOpenArchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
+            openEditModal={handleOpenEditModal}
+          />
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
           />
         </TabsContent>
         <TabsContent value="archived">
           <PurchaseTabContentArchived
-            openDeleteModal={openDeletePurchaseModal}
-            openUnarchiveModal={openUnarchiveModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openUnarchiveModal={handleOpenArchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
+            openEditModal={handleOpenEditModal}
           />
         </TabsContent>
       </Tabs>
@@ -92,19 +145,21 @@ const PurchaseList = () => {
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
+        purchaseId={selectedId}
       />
       <UnarchivePurchase
-        open={isUnarchiveOpen}
-        openModal={openUnarchiveModal}
-        onClose={closeUnarchiveModal}
+        open={isUnarchivePurchaseOpen}
+        openModal={openUnarchivePurchaseModal}
+        onClose={closeUnarchivePurchaseModal}
       />
       <DeletePurchase
         open={isDeletePurchaseOpen}
         openModal={openDeletePurchaseModal}
         onClose={closeDeletePurchaseModal}
+        purchaseId={selectedId}
       />
     </div>
   );
 };
 
-export default PurchaseList;
+export default AllPurchaseList;

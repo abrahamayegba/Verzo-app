@@ -79,8 +79,6 @@ const ConfirmItems = () => {
     });
   };
 
-  console.log(formattedDateReceived);
-
   if (getBusinessesByUserId.loading || getExpenseById.loading) {
     return <MainLoader />;
   }
@@ -96,13 +94,6 @@ const ConfirmItems = () => {
       [itemId]: false,
     }));
   };
-
-  console.log(receivedQuantities);
-  console.log(markAsReceivedLoading);
-
-  console.log(allItemsReceived);
-
-  console.log(expenseItems?.length);
 
   const handleMarkAsReceived = async (itemId: string) => {
     try {
@@ -210,7 +201,11 @@ const ConfirmItems = () => {
             <div className=" flex flex-col gap-y-2 w-1/2">
               <p className=" text-primary-greytext">Issue date</p>
               <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
-                <PopoverTrigger asChild>
+                <PopoverTrigger
+                  className=" disabled:cursor-not-allowed"
+                  disabled={expenseStatusId! >= 2}
+                  asChild
+                >
                   <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                     {date ? (
                       format(date, "PPP")

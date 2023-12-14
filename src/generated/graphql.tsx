@@ -5645,7 +5645,7 @@ export type GetPurchaseByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetPurchaseByBusinessQuery = { __typename?: 'Query', getPurchaseByBusiness?: { __typename?: 'GetPurchaseByBusinessResponse', cursorId?: string | null, purchaseByBusiness: Array<{ __typename?: 'Purchase', id?: string | null, description?: string | null, transactionDate?: any | null, total?: number | null, businessId?: string | null, paid?: boolean | null, merchant?: { __typename?: 'Merchant', name: string } | null, business?: { __typename?: 'Business', businessName: string } | null, purchasePayments?: Array<{ __typename?: 'PurchasePayment', total?: number | null, file?: string | null, transactionDate?: any | null, description?: string | null } | null> | null, purchaseItems?: Array<{ __typename?: 'PurchaseItem', description: string, quantity: number, unitPrice: number, price: number, product?: { __typename?: 'Product', productName: string, price?: number | null } | null } | null> | null } | null> } | null };
+export type GetPurchaseByBusinessQuery = { __typename?: 'Query', getPurchaseByBusiness?: { __typename?: 'GetPurchaseByBusinessResponse', cursorId?: string | null, purchaseByBusiness: Array<{ __typename?: 'Purchase', id?: string | null, description?: string | null, transactionDate?: any | null, total?: number | null, businessId?: string | null, archived?: boolean | null, paid?: boolean | null, merchant?: { __typename?: 'Merchant', name: string } | null, business?: { __typename?: 'Business', businessName: string } | null, purchasePayments?: Array<{ __typename?: 'PurchasePayment', total?: number | null, file?: string | null, transactionDate?: any | null, description?: string | null } | null> | null, purchaseItems?: Array<{ __typename?: 'PurchaseItem', description: string, quantity: number, unitPrice: number, price: number, product?: { __typename?: 'Product', productName: string, price?: number | null } | null } | null> | null } | null> } | null };
 
 export type GetPurchaseByIdQueryVariables = Exact<{
   purchaseId: Scalars['String']['input'];
@@ -9546,6 +9546,7 @@ export const GetPurchaseByBusinessDocument = gql`
       transactionDate
       total
       businessId
+      archived
       merchant {
         name
       }

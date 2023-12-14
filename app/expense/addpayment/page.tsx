@@ -290,7 +290,11 @@ const AddPayment = () => {
                   open={openPaymentDate}
                   onOpenChange={setOpenPaymentDate}
                 >
-                  <PopoverTrigger asChild>
+                  <PopoverTrigger
+                    className=" disabled:cursor-not-allowed"
+                    disabled={expenseStatusId! >= 4}
+                    asChild
+                  >
                     <button className=" text-left text-sm font-normal bg-white flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                       {date ? (
                         format(date, "PPP")

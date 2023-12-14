@@ -4,6 +4,10 @@ import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetExpenseForMonthDocument,
+  GetExpenseForQuarterDocument,
+  GetExpenseForWeekDocument,
+  GetExpenseForYearDocument,
   GetExpensesByBusinessDocument,
   useDeleteExpenseMutation,
 } from "@/src/generated/graphql";
@@ -28,7 +32,7 @@ const DeleteExpense: React.FC<DeleteExpenseProps> = ({
   });
   const showSuccessToast = () => {
     toast({
-      title: "Expense delete successful",
+      title: "Deleted!",
       description: "Your expense has been successfully deleted",
       duration: 3500,
     });
@@ -45,7 +49,13 @@ const DeleteExpense: React.FC<DeleteExpenseProps> = ({
     try {
       await deleteExpenseMutation({
         variables: { expenseId: expenseId },
-        refetchQueries: [GetExpensesByBusinessDocument],
+        refetchQueries: [
+          GetExpensesByBusinessDocument,
+          GetExpenseForWeekDocument,
+          GetExpenseForMonthDocument,
+          GetExpenseForQuarterDocument,
+          GetExpenseForYearDocument,
+        ],
       });
       onClose();
       showSuccessToast();

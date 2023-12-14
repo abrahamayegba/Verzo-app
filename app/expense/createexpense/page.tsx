@@ -57,7 +57,6 @@ const CreateExpense = () => {
   const [merchantId, setMerchantId] = useState("");
   const [openMerchantSheet, setOpenMerchantSheet] = useState(false);
   const [openViewExpenseSheet, setOpenViewExpenseSheet] = useState(false);
-  const [merchantFormKey, setMerchantFormKey] = useState(0);
   const [openCreateCategorySheet, setOpenCreateCategorySheet] = useState(false);
   const [date, setDate] = React.useState<Date | null>(null);
   const [expenseDate, setExpenseDate] = useState("");
@@ -296,7 +295,6 @@ const CreateExpense = () => {
       <MerchantForm
         onMerchantChange={handleMerchantChange}
         openMerchantSheet={handleOpenMerchantSheet}
-        resetChildStates={resetFormState}
       />
       <div className=" w-full mt-5 flex flex-col gap-y-9">
         <div className=" flex justify-between items-center w-full">
@@ -384,6 +382,7 @@ const CreateExpense = () => {
           </button>
           <button
             type="submit"
+            disabled={loading}
             className={`bg-primary-blue text-white rounded-[10px] px-10 py-3 ${
               loading ? "opacity-50" : ""
             }`}

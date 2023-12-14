@@ -19,13 +19,11 @@ import MainLoader from "./loading/MainLoader";
 interface MerchantFormProps {
   openMerchantSheet: () => void;
   onMerchantChange: (id: string) => void;
-  resetChildStates: () => void; // Add this line
 }
 
 const MerchantForm: React.FC<MerchantFormProps> = ({
   openMerchantSheet,
   onMerchantChange,
-  resetChildStates,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -67,13 +65,14 @@ const MerchantForm: React.FC<MerchantFormProps> = ({
       <div className=" flex flex-row w-full justify-between">
         <p className=" text-primary-black text-lg">Merchant details</p>
         <button
+          type="button"
           onClick={openMerchantSheet}
           className=" text-primary-blue flex items-center gap-x-2"
         >
           Add merchant <Plus className=" w-5 h-5" />
         </button>
       </div>
-      <form className=" flex flex-col gap-y-[50px]">
+      <div className=" flex flex-col gap-y-[50px]">
         <div className=" flex flex-row gap-x-6">
           <div className=" flex flex-col gap-y-[6px] w-1/2">
             <label className="" htmlFor="merchant">
@@ -118,7 +117,7 @@ const MerchantForm: React.FC<MerchantFormProps> = ({
             </p>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

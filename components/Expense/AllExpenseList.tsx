@@ -42,18 +42,18 @@ const AllExpenseList = () => {
     setIsChecked(isChecked);
   };
 
-  const handleOpenArchiveModal = (customerId: string) => {
-    setSelectedId(customerId);
+  const handleOpenArchiveModal = (expenseId: string) => {
+    setSelectedId(expenseId);
     openModal();
   };
 
-  const handleOpenDeleteModal = (customerId: string) => {
-    setSelectedId(customerId);
+  const handleOpenDeleteModal = (expenseId: string) => {
+    setSelectedId(expenseId);
     openDeleteExpenseModal();
   };
 
-  const handleOpenEditModal = (customerId: string) => {
-    setSelectedId(customerId);
+  const handleOpenEditModal = (expenseId: string) => {
+    setSelectedId(expenseId);
     openEditModal();
   };
 
@@ -68,7 +68,7 @@ const AllExpenseList = () => {
     getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness ?? [];
   const allExpenses = expenses.length;
   const archivedExpenses = expenses.filter(
-    (customer) => customer?.archived
+    (expense) => expense?.archived
   ).length;
 
   const [currentPage, setCurrentPage] = useState<number>(1);

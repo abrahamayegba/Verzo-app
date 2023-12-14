@@ -2,18 +2,59 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
+import {
+  GetPurchaseByBusinessDocument,
+  useArchivePurchaseMutation,
+} from "@/src/generated/graphql";
+import { useToast } from "@/app/hooks/use-toast";
 
 interface ArchivePurchaseProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  purchaseId: string;
 }
 
 const ArchivePurchase: React.FC<ArchivePurchaseProps> = ({
   open,
   openModal,
   onClose,
+  purchaseId,
 }) => {
+  const { toast } = useToast();
+
+  const [archivePurchaseMutation, { loading }] = useArchivePurchaseMutation();
+
+  const showSuccessToast = () => {
+    toast({
+      title: "Archived!",
+      description: "Your purchase order has been successfully archived",
+      duration: 3500,
+    });
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+
+  const handleArchiveClick = async () => {
+    try {
+      await archivePurchaseMutation({
+        variables: { purchaseId: purchaseId },
+        refetchQueries: [GetPurchaseByBusinessDocument],
+      });
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -55,13 +96,21 @@ const ArchivePurchase: React.FC<ArchivePurchaseProps> = ({
                   </p>
                   <div className=" flex justify-between mt-6">
                     <button
+                      type="button"
                       onClick={onClose}
                       className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border text-gray-800"
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-                      Archive
+                    <button
+                      type="button"
+                      disabled={loading}
+                      onClick={() => handleArchiveClick()}
+                      className={` px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                        loading ? "opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading..." : "Archive"}
                     </button>
                   </div>
                 </div>

@@ -104,7 +104,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {expenses.length === 0 ? (
+        {expenses?.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -118,15 +118,14 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
           </TableRow>
         ) : (
           expenses.slice(0, numberOfExpensesToShow).map((expense, index) => (
-            <TableRow className="" key={expense?.id}>
+            <TableRow key={expense?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
                   className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
                   checked={selectedRows.includes(expense?.id!)}
                   onCheckedChange={() => handleRowSelect(expense?.id!)}
                 />
-                {/* {expense?.description} */}#
-                {String(index + 1).padStart(3, "0")}
+                #{String(index + 1).padStart(3, "0")}
               </TableCell>
               <TableCell>
                 <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">

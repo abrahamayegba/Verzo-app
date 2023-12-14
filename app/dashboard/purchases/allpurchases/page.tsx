@@ -1,32 +1,65 @@
+"use client";
 import React from "react";
-import AllInvoicesList from "@/components/Allinvoices";
 import { ArrowLeft, ListFilter, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
-import AllPurchaseList from "@/components/AllPurchaseList";
+import AllPurchaseList from "@/components/Purchase/AllPurchaseList";
+import {
+  useGetBusinessesByUserIdQuery,
+  useGetPurchaseByBusinessQuery,
+} from "@/src/generated/graphql";
+import MainLoader from "@/components/loading/MainLoader";
+import Loader2 from "@/components/loading/Loader2";
+import localStorage from "local-storage-fallback";
 
 const AllPurchases = () => {
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+  if (getBusinessesByUserId.loading) {
+    return <MainLoader />;
+  }
+  const purchaseLoading = getPurchasesByBusiness.loading;
   return (
-    <div className=" px-[52px] bg-primary-whiteTint pt-[47px] pb-[20px] gap-y-[30px] flex flex-col">
-      <div className=" flex flex-row justify-between items-center">
-        <div className=" flex flex-col gap-y-5">
-          <Link href="/dashboard/purchases">
-            <button className=" flex flex-row gap-x-2 text-primary-greytext items-center">
-              <ArrowLeft className=" w-4 h-4" /> Back to purchases
-            </button>
-          </Link>
-          <p className=" text-primary-black text-2xl">Complete purchase list</p>
+    <>
+      {purchaseLoading ? (
+        <Loader2 />
+      ) : (
+        <div className=" px-[52px] bg-primary-whiteTint pt-[47px] pb-[20px] gap-y-[30px] flex flex-col">
+          <div className=" flex flex-row justify-between items-center">
+            <div className=" flex flex-col gap-y-5">
+              <Link href="/dashboard/purchases">
+                <button className=" flex flex-row gap-x-2 text-primary-greytext items-center">
+                  <ArrowLeft className=" w-4 h-4" /> Back to purchases
+                </button>
+              </Link>
+              <p className=" text-primary-black text-2xl">
+                Complete purchase list
+              </p>
+            </div>
+            <div className=" flex gap-x-[14px] max-h-[48px]">
+              {/* <FilterDataDropdown /> */}
+              <Link href="/purchase/createpurchase">
+                <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
+                  Create order
+                  <PlusCircle className=" w-5 h-5" />
+                </button>
+              </Link>
+            </div>
+          </div>
+          <AllPurchaseList />
         </div>
-        <div className=" flex gap-x-[14px] max-h-[48px]">
-          {/* <FilterDataDropdown /> */}
-          <button className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-            Create purchases
-            <PlusCircle className=" w-5 h-5" />
-          </button>
-        </div>
-      </div>
-      <AllPurchaseList />
-    </div>
+      )}
+    </>
   );
 };
 

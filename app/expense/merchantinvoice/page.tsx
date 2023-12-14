@@ -61,12 +61,11 @@ const AddMerchantInvoice = () => {
   const expenseStatusId = expense?.expenseStatusId;
   const merchantInvoiceAdded = expenseStatusId! >= 3;
   const amount = expense?.amount;
-  console.log(expenseId);
   const apiKey = "Am510qpybQ3i95Kv17umgz";
   const client = filestack.init(apiKey);
   const showPickerSuccessToast = (filename: any) => {
     toast({
-      title: "Successful!",
+      title: "Uploaded!",
       description: `${filename} has been successfully uploaded`,
       duration: 3000,
     });
@@ -275,7 +274,11 @@ const AddMerchantInvoice = () => {
                   open={openPaymentDate}
                   onOpenChange={setOpenPaymentDate}
                 >
-                  <PopoverTrigger asChild>
+                  <PopoverTrigger
+                    className=" disabled:cursor-not-allowed"
+                    disabled={expenseStatusId! >= 3}
+                    asChild
+                  >
                     <button className=" text-left text-sm font-normal bg-white flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                       {date ? (
                         format(date, "PPP")
@@ -303,7 +306,7 @@ const AddMerchantInvoice = () => {
               <div className="text-primary-greytext flex flex-col gap-y-2 w-1/2">
                 <p>Amount</p>
                 <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
-                  ₦{amount}
+                  ₦{amount?.toLocaleString()}
                 </p>
               </div>
             </div>

@@ -12,6 +12,9 @@ import {
   useGetExpenseForQuarterQuery,
   useGetExpenseForWeekQuery,
   useGetExpenseForYearQuery,
+  useGetExpensesByBusinessQuery,
+  useGetInvoicesByBusinessQuery,
+  useGetPurchaseByBusinessQuery,
   useGetPurchaseForMonthQuery,
   useGetPurchaseForQuarterQuery,
   useGetPurchaseForWeekQuery,
@@ -113,6 +116,24 @@ const Dashboard = () => {
     },
   });
 
+  const getExpensesByBusiness = useGetExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
+  const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
+  const getInvoicesByBusiness = useGetInvoicesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
   console.log(businessId);
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
@@ -130,7 +151,10 @@ const Dashboard = () => {
     getPurchaseForQuarter.loading ||
     totalYearlyInvoicesAmount.loading ||
     getExpenseForYear.loading ||
-    getPurchaseForYear.loading;
+    getPurchaseForYear.loading ||
+    getExpensesByBusiness.loading ||
+    getPurchasesByBusiness.loading ||
+    getInvoicesByBusiness.loading;
 
   return (
     <>

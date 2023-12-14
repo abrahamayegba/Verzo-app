@@ -32,6 +32,7 @@ interface CreateItemProps {
     name: string;
     price: number;
     quantity: number;
+    index: number;
   }) => void;
 }
 
@@ -39,6 +40,7 @@ interface InvoiceItem {
   name: string;
   quantity: number;
   price: number;
+  index: number;
 }
 
 const Items = [
@@ -46,26 +48,31 @@ const Items = [
     name: "Item A",
     quantity: 1,
     price: 0,
+    index: 1,
   },
   {
     name: "Item B",
     quantity: 1,
     price: 0,
+    index: 2,
   },
   {
     name: "Item C",
     quantity: 1,
     price: 0,
+    index: 3,
   },
   {
     name: "Item D",
     quantity: 1,
     price: 0,
+    index: 4,
   },
   {
     name: "Item E",
     quantity: 1,
     price: 0,
+    index: 5,
   },
 ];
 
@@ -99,6 +106,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
         name: selectedItem.name,
         price: selectedItem.price,
         quantity: 1,
+        index: selectedItem?.index,
       });
       onClose();
       setSelectedItem(null);

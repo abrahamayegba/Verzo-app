@@ -29,7 +29,7 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
   });
   const showSuccessToast = () => {
     toast({
-      title: "Expense archive successful",
+      title: "Archived!",
       description: "Your expense has been successfully archived",
       duration: 3500,
     });

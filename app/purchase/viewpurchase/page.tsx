@@ -1,29 +1,68 @@
-import PurchaseStepIndicator from "@/components/PurchaseTimeline";
+"use client";
+import PurchaseStepIndicator from "@/components/Purchase/PurchaseTimeline";
+import MainLoader from "@/components/loading/MainLoader";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
+import {
+  useGetBusinessesByUserIdQuery,
+  useGetPurchaseByIdQuery,
+} from "@/src/generated/graphql";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 
 const ViewPurchase = () => {
   const currentStep = 1;
-  const merchantInvoiceAdded = false;
-  const paymentAdded = false;
-  const itemsConfirmed = false;
+  const purchaseIdParams = useSearchParams();
+  const purchaseId = purchaseIdParams.get("purchaseId")?.toString();
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const getPurchaseById = useGetPurchaseByIdQuery({
+    variables: {
+      purchaseId: purchaseId!,
+    },
+  });
+  const purchase = getPurchaseById?.data?.getPurchaseById;
+  const purchaseStatusId = purchase?.purchaseStatusId;
 
-  interface TableData {
-    item: string;
-    qty: number;
-    amount: number;
+  const purchaseItems = purchase?.purchaseItems;
+
+  const purchaseItem = purchaseItems?.map((item) => ({
+    id: item?.id,
+    itemName: item?.description,
+    quantity: item?.quantity,
+    price: item?.price,
+  }));
+
+  const itemsConfirmed = purchaseStatusId! >= 2;
+  const merchantInvoiceAdded = purchaseStatusId! >= 3;
+  const paymentAdded = purchaseStatusId! >= 4;
+
+  const businesses =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses;
+  const businessName = businesses?.map((business) => business?.businessName);
+  const businessEmail = businesses?.map((business) => business?.businessEmail);
+  const country = "Nigeria";
+
+  const merchantName = purchase?.merchant?.name;
+  const merchantEmail = purchase?.merchant?.email;
+  const issueDate = purchase?.createdAt;
+  const deliveryDate = purchase?.deliveryDate;
+  const subtotal = purchase?.total;
+  const total = subtotal;
+
+  let nextRoute = "";
+
+  if (!itemsConfirmed) {
+    nextRoute = `/purchase/confirmitems?purchaseId=${purchaseId}`;
+  } else if (!merchantInvoiceAdded) {
+    nextRoute = `/purchase/merchantinvoice?purchaseId=${purchaseId}`;
+  } else if (!paymentAdded) {
+    nextRoute = `/purchase/addpayment?purchaseId=${purchaseId}`;
   }
 
-  const sampleData: TableData[] = [
-    { item: "Purchase 1", qty: 3, amount: 100000 },
-    { item: "Purchase 2", qty: 2, amount: 5000 },
-    { item: "Purchase 3", qty: 1, amount: 300 },
-    { item: "Purchase 4", qty: 1, amount: 300 },
-    { item: "Purchase 5", qty: 1, amount: 300 },
-  ];
-
+  if (getBusinessesByUserId.loading || getPurchaseById.loading) {
+    return <MainLoader />;
+  }
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[20px]">
       <div className=" flex justify-between w-full items-center relative">
@@ -42,11 +81,13 @@ const ViewPurchase = () => {
             Add extra information to the purchase
           </p>
         </div>
-        <Link href="/purchase/confirmitems">
-          <button className=" px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
-            Next
-          </button>
-        </Link>
+        {nextRoute && (
+          <Link href={nextRoute}>
+            <button className="px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
+              Next
+            </button>
+          </Link>
+        )}
       </div>
       <PurchaseStepIndicator
         merchantInvoiceAdded={merchantInvoiceAdded}
@@ -72,27 +113,29 @@ const ViewPurchase = () => {
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>Issue date</p>
               <p className=" text-primary-black font-normal">
-                {" "}
-                January 10, 2023
+                {issueDate ? new Date(issueDate).toDateString() : ""}
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
               <p>Due date</p>
-              <p className=" text-primary-black font-normal">March 7, 2023</p>
+              <p className=" text-primary-black font-normal">
+                {" "}
+                {deliveryDate ? new Date(deliveryDate).toDateString() : ""}
+              </p>
             </div>
           </div>
           <div className=" grid grid-cols-3 w-full pt-8">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>From</p>
-              <p className=" text-primary-black font-normal mb-2">Verzo Inc.</p>
-              <p className=" text-sm">Address</p>
-              <p className=" text-sm">Country</p>
+              <p className=" text-primary-black font-normal">{businessName}</p>
+              <p className=" text-[16px]">{businessEmail}</p>
+              <p className=" text-[16px]">{country}</p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>For</p>
-              <p className=" text-primary-black font-normal mb-2">Olivia Doe</p>
-              <p className=" text-sm">Address</p>
-              <p className=" text-sm">Country</p>
+              <p className=" text-primary-black font-normal">{merchantName}</p>
+              <p className=" text-[16px]">{merchantEmail}</p>
+              <p className=" text-[16px]">{country}</p>
             </div>
           </div>
           <div className=" w-full flex flex-col mt-[40px] gap-y-4">
@@ -106,12 +149,12 @@ const ViewPurchase = () => {
                 </tr>
               </thead>
               <tbody>
-                {sampleData.map((data, index) => (
-                  <tr key={index}>
-                    <td className=" py-4">{data.item}</td>
-                    <td className=" text-end py-4">{data.qty}</td>
+                {purchaseItem?.map((item) => (
+                  <tr key={item?.id}>
+                    <td className=" py-4">{item?.itemName}</td>
+                    <td className=" text-end py-4">{item?.quantity}</td>
                     <td className=" text-end py-4">
-                      ₦{data.amount.toLocaleString()}
+                      ₦{item?.price?.toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -132,11 +175,23 @@ const ViewPurchase = () => {
             <div className=" flex flex-col text-sm text-primary-black">
               <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                 <p className=" text-primary-greytext">Sub total</p>
-                <p className=" text-base">₦30,000</p>
+                <p className=" text-base">
+                  {subtotal?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
               <div className=" flex justify-between py-3 items-center">
                 <p className=" text-primary-greytext">Amount due</p>
-                <p className=" text-base">₦30,000</p>
+                <p className=" text-base">
+                  {total?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
             </div>
           </div>

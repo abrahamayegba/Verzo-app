@@ -3,9 +3,10 @@ import React from "react";
 
 interface PurchaseItemProps {
   item: {
-    name: string;
+    itemDescription: string;
     quantity: number;
-    price: number;
+    unitPrice: number;
+    index: number;
   };
   index: number;
   onDelete: (index: number) => void;
@@ -24,13 +25,13 @@ const PurchaseItem: React.FC<PurchaseItemProps> = ({
     <div className="grid grid-cols-5 gap-x-5 text-primary-black border-t text-lg border-t-[#f4f4f4] py-[18px]">
       <p className="col-span-3 flex flex-row pr-2 flex-wrap items-center gap-x-3">
         <Menu className=" w-4 h-4 text-primary-greytext mt-[2px]" />
-        {item.name}
+        {item?.itemDescription}
       </p>
       <input
         type="number"
+        required
         className="col-span-1 focus:outline-none bg-transparent border border-gray-200 rounded-[8px] px-3 py-1"
         value={item.quantity}
-        min={1}
         onChange={(e) => {
           const inputValue = e.target.value.trim();
           const parsedValue = inputValue === "" ? 1 : parseInt(inputValue, 10);
@@ -42,13 +43,13 @@ const PurchaseItem: React.FC<PurchaseItemProps> = ({
       <div className=" flex flex-row">
         <input
           type="tel"
+          required
           className="col-span-1 max-w-[150px] focus:outline-none text-end bg-transparent border border-gray-200 rounded-[8px] px-3 py-1"
-          value={`₦${item.price}`}
+          value={`₦${item?.unitPrice}`}
           onChange={(e) => {
             const inputValue = e.target.value.trim();
             const parsedValue =
               inputValue === "" ? 0 : parseFloat(inputValue.replace("₦", ""));
-
             if (!isNaN(parsedValue)) {
               onPriceChange(index, parsedValue);
             } else {

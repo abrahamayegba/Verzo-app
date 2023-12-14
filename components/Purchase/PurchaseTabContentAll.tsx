@@ -7,42 +7,54 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
-import { Checkbox } from "./ui/checkbox";
+} from "../ui/table";
+import { Checkbox } from "../ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { ArchiveRestore, Eye, Pen, Trash2 } from "lucide-react";
-import TableEmptyState from "./emptystates/TableEmptyState";
-import ExpenseTableEmptyIcon from "./ui/icons/ExpenseTableEmptyIcon";
+} from "../ui/dropdown-menu";
+import { Archive, Download, Eye, Pen, Trash2 } from "lucide-react";
+import Link from "next/link";
+import localStorage from "local-storage-fallback";
+import { useGetPurchaseByBusinessQuery } from "@/src/generated/graphql";
+import TableEmptyState from "../emptystates/TableEmptyState";
+import PurchaseTableEmptyIcon from "../ui/icons/PurchaseTableEmptyIcon";
 
-interface PurchaseTabContentArchivedProps {
+interface PurchaseTabContentAllProps {
+  numberOfPurchasesToShow?: number; // Make the prop optional
   onToggleSelectAll: (isChecked: boolean) => void;
-  openUnarchiveModal: () => void;
-  openDeleteModal: () => void;
+  openArchiveModal: (purchaseId: string) => void;
+  openDeleteModal: (purchaseId: string) => void;
+  openEditModal: (purchaseId: string) => void;
 }
 
-const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
+const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
   onToggleSelectAll,
-  openUnarchiveModal,
+  openArchiveModal,
   openDeleteModal,
+  openEditModal,
+  numberOfPurchasesToShow,
 }) => {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const data = Array.from({ length: 5 }, (_, index) => ({
-    id: index + 1,
-    order: `#PUR00${index + 1}`,
-    sentDate: new Date(2023, 0, index + 1),
-    status: index % 3 === 0 ? "Paid" : index % 3 === 1 ? "Unpaid" : "Pending",
-    Merchant: `Merchant ${index + 1}`,
-    amount: `₦${((index + 1) * 2500).toLocaleString("en-NG")}.0`,
-  }));
+  const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const purchases =
+    getPurchasesByBusiness.data?.getPurchaseByBusiness?.purchaseByBusiness ??
+    [];
 
-  // Function to handle individual row selection
-  const handleRowSelect = (rowId: number) => {
+  const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
     } else {
@@ -51,15 +63,16 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== data.length;
+    const isChecked = selectedRows.length !== purchases?.length;
     if (isChecked) {
-      setSelectedRows(data.map((row) => row.id));
+      setSelectedRows(
+        purchases?.map((purchase) => String(purchase?.id) || "") || []
+      );
     } else {
       setSelectedRows([]);
     }
     onToggleSelectAll(isChecked);
   };
-
   return (
     <Table>
       <TableHeader>
@@ -67,14 +80,17 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
           <TableHead className="w-[100px] flex gap-x-3 items-center font-normal text-sm text-primary-greytext">
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-              checked={selectedRows.length === data.length && data.length > 0}
-              disabled={data.length === 0}
+              checked={
+                selectedRows.length === purchases?.length &&
+                purchases.length > 0
+              }
+              disabled={purchases?.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Purchase
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Issue date
+            Transaction date
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Status
@@ -92,82 +108,93 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {data.length === 0 ? (
+        {purchases?.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
               className="text-center text-primary-greytext py-4 h-[293px]"
             >
               <TableEmptyState
-                icon={<ExpenseTableEmptyIcon />}
-                emptytext="No expenses available"
+                icon={<PurchaseTableEmptyIcon />}
+                emptytext="No purchase recorded"
               />
             </TableCell>
           </TableRow>
         ) : (
-          data.map((row) => (
-            <TableRow className="" key={row.id}>
+          purchases.slice(0, numberOfPurchasesToShow).map((purchase, index) => (
+            <TableRow key={purchase?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
                   className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                  checked={selectedRows.includes(row.id)}
-                  onCheckedChange={() => handleRowSelect(row.id)}
+                  checked={selectedRows.includes(purchase?.id!)}
+                  onCheckedChange={() => handleRowSelect(purchase?.id!)}
                 />
-                {row.order}
+                #PUR{String(index + 1).padStart(3, "0")}
               </TableCell>
-
               <TableCell className=" text-primary-greytext">
-                {row.sentDate.toDateString()}
+                {purchase?.transactionDate
+                  ? new Date(purchase.transactionDate).toDateString()
+                  : ""}
               </TableCell>
               <TableCell>
-                {row.status === "Paid" && (
+                {purchase?.paid === true ? (
                   <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                     <span className="mr-2 text-green-500">✔</span>
                     Paid
                   </span>
-                )}
-                {row.status === "Unpaid" && (
-                  <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
-                    <span className="mr-2 text-red-500">✘</span>
-                    Canceled
-                  </span>
-                )}
-                {row.status === "Pending" && (
+                ) : (
                   <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
                     <span className="mr-2 text-yellow-500">⌛</span>
                     Pending
                   </span>
                 )}
+                {/* {row.status === "Unpaid" && (
+                  <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                    <span className="mr-2 text-red-500">✘</span>
+                    Canceled
+                  </span>
+                )} */}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {row.Merchant}
+                {purchase?.merchant?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {row.amount}
+                {purchase?.total?.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
               </TableCell>
               <TableCell className="text-right text-primary-blue">
                 <DropdownMenu>
                   <DropdownMenuTrigger className=" focus:outline-none">
                     More
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className=" bg-white mt-1 mr-2 text-primary-greytext shadow1 w-[180px]">
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      View Purchase
+                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
+                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 py-2">
+                      <Link
+                        className=" flex gap-x-2 items-center"
+                        href={`/purchase/viewpurchase?purchaseId=${purchase?.id}`}
+                      >
+                        <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        View Purchase
+                      </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                    <DropdownMenuItem
+                      onClick={() => openEditModal(purchase?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
                       <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Edit Purchase
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={openUnarchiveModal}
+                      onClick={() => openArchiveModal(purchase?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
-                      <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Unarchive Purchase
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Archive Purchase
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={openDeleteModal}
+                      onClick={() => openDeleteModal(purchase?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
                       <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
@@ -184,4 +211,4 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
   );
 };
 
-export default PurchaseTabContentArchived;
+export default PurchaseTabContentAll;
