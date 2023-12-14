@@ -93,7 +93,7 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {services?.filter((service) => service?.isArchived).length === 0 ? (
+        {services?.filter((service) => service?.archived).length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -107,7 +107,7 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
           </TableRow>
         ) : (
           services
-            .filter((service) => service?.isArchived) // Filter only archived customers
+            .filter((service) => service?.archived) // Filter only archived customers
             .map((service) => (
               <TableRow className="" key={service?.id}>
                 <TableCell className="flex gap-x-3 items-center py-[22px]">

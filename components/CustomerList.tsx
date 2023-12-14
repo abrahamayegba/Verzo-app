@@ -68,7 +68,7 @@ const CustomerList = () => {
     [];
   const allCustomers = customers.length;
   const archivedCustomers = customers.filter(
-    (customer) => customer?.isArchived
+    (customer) => customer?.archived
   ).length;
 
   return (

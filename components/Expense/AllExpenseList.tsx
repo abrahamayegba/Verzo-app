@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import ArchiveInvoice from "../modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
 import ExpenseTabContentAll from "./ExpenseTabContentAll";
 import ExpenseTabContentArchived from "./ExpenseTabContentArchived";
@@ -10,6 +9,7 @@ import CustomPagination from "../InvoiceListPagination";
 import DeleteExpense from "../modals/expense/DeleteExpenseModal";
 import localStorage from "local-storage-fallback";
 import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
+import ArchiveExpense from "../modals/expense/ArchiveExpenseModal";
 
 const AllExpenseList = () => {
   const storedBusinessId = JSON.parse(
@@ -149,10 +149,11 @@ const AllExpenseList = () => {
           )}
         </TabsContent>
       </Tabs>
-      <ArchiveInvoice
+      <ArchiveExpense
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
+        expenseId={selectedId}
       />
       <UnarchiveExpense
         open={isUnarchiveExpenseOpen}
@@ -163,6 +164,7 @@ const AllExpenseList = () => {
         open={isDeleteExpenseOpen}
         openModal={openDeleteExpenseModal}
         onClose={closeDeleteExpenseModal}
+        expenseId={selectedId}
       />
     </div>
   );

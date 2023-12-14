@@ -99,7 +99,7 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {customers?.filter((customer) => customer?.isArchived).length === 0 ? (
+        {customers?.filter((customer) => customer?.archived).length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -113,7 +113,7 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
           </TableRow>
         ) : (
           customers
-            .filter((customer) => customer?.isArchived) // Filter only archived customers
+            .filter((customer) => customer?.archived) // Filter only archived customers
             .map((customer) => (
               <TableRow key={customer?.id}>
                 <TableCell className="flex gap-x-3 items-center py-[22px]">

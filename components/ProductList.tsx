@@ -50,7 +50,7 @@ const ProductList = () => {
 
   const allProducts = products.length;
   const archivedProducts = products.filter(
-    (product) => product?.isArchived
+    (product) => product?.archived
   ).length;
 
   const handleToggleSelectAll = (isChecked: boolean) => {

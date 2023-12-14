@@ -50,7 +50,7 @@ const ServiceList = () => {
 
   const allServices = services.length;
   const archivedServices = services.filter(
-    (service) => service?.isArchived
+    (service) => service?.archived
   ).length;
 
   const handleToggleSelectAll = (isChecked: boolean) => {
