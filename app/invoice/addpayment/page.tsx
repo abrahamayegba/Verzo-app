@@ -1,5 +1,5 @@
 "use client";
-import InvoiceStepIndicator from "@/components/InvoiceTimeline";
+import InvoiceStepIndicator from "@/components/Invoice/InvoiceTimeline";
 import ViewInvoiceSheet from "@/components/sheets/invoice/ViewInvoiceSheet";
 import { Calendar } from "@/components/ui/calendar";
 import FileIcon from "@/components/ui/icons/FileIcon";

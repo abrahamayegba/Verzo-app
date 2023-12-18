@@ -19,6 +19,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import * as filestack from "filestack-js";
 import {
   GetExpenseByIdDocument,
+  GetExpensesByBusinessDocument,
   useGetBusinessesByUserIdQuery,
   useGetExpenseByIdQuery,
   useUploadMerchantInvoiceMutation,
@@ -148,7 +149,7 @@ const AddMerchantInvoice = () => {
           invoiceDate: formattedExpenseDate,
           match: true,
         },
-        refetchQueries: [GetExpenseByIdDocument],
+        refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
       });
       router.push(`/expense/addpayment?expenseId=${expenseId}`);
     } catch (error) {

@@ -8,7 +8,10 @@ import UnarchiveExpense from "../modals/expense/UnarchiveExpenseModal";
 import CustomPagination from "../InvoiceListPagination";
 import DeleteExpense from "../modals/expense/DeleteExpenseModal";
 import localStorage from "local-storage-fallback";
-import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedExpensesByBusinessQuery,
+  useGetExpensesByBusinessQuery,
+} from "@/src/generated/graphql";
 import ArchiveExpense from "../modals/expense/ArchiveExpenseModal";
 
 const AllExpenseList = () => {
@@ -64,13 +67,20 @@ const AllExpenseList = () => {
       cursor: null,
     },
   });
+  const getArchivedExpensesByBusiness = useGetArchivedExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const archivedExpenses =
+    getArchivedExpensesByBusiness.data?.getArchivedExpenseByBusiness
+      ?.expenseByBusiness ?? [];
   const expenses =
     getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness ?? [];
   const allExpenses = expenses.length;
-  const archivedExpenses = expenses.filter(
-    (expense) => expense?.archived
-  ).length;
-
+  const allArchivedExpenses = archivedExpenses.length;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPages: number = 5;
 
@@ -97,7 +107,7 @@ const AllExpenseList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                ({archivedExpenses})
+                ({allArchivedExpenses})
               </span>
             </TabsTrigger>
           </div>

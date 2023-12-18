@@ -45,8 +45,8 @@ const ViewPurchase = () => {
 
   const merchantName = purchase?.merchant?.name;
   const merchantEmail = purchase?.merchant?.email;
-  const issueDate = purchase?.createdAt;
-  const deliveryDate = purchase?.deliveryDate;
+  const createdDate = purchase?.createdAt;
+  const transactionDate = purchase?.transactionDate;
   const subtotal = purchase?.total;
   const total = subtotal;
 
@@ -111,16 +111,18 @@ const ViewPurchase = () => {
               <p className=" text-primary-black font-normal">#001</p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-              <p>Issue date</p>
+              <p>Created date</p>
               <p className=" text-primary-black font-normal">
-                {issueDate ? new Date(issueDate).toDateString() : ""}
+                {createdDate ? new Date(createdDate).toDateString() : ""}
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
-              <p>Due date</p>
+              <p>Transaction date</p>
               <p className=" text-primary-black font-normal">
                 {" "}
-                {deliveryDate ? new Date(deliveryDate).toDateString() : ""}
+                {transactionDate
+                  ? new Date(transactionDate).toDateString()
+                  : ""}
               </p>
             </div>
           </div>

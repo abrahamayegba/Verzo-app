@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover";
 import {
   GetExpenseByIdDocument,
+  GetExpensesByBusinessDocument,
   useGetBusinessesByUserIdQuery,
   useGetExpenseByIdQuery,
   useMarkExpenseItemAsReceivedMutation,
@@ -116,7 +117,7 @@ const ConfirmItems = () => {
           quantity: receivedQuantity,
           transactionDate: formattedDateReceived,
         },
-        refetchQueries: [GetExpenseByIdDocument],
+        refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
       });
       // setExpenseStatus(response.data.markExpenseItemAsReceived.expenseStatus);
       showSuccessToast();

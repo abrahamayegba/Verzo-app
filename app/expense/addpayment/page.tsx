@@ -13,6 +13,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import {
   GetExpenseByIdDocument,
+  GetExpensesByBusinessDocument,
   useGetBusinessesByUserIdQuery,
   useGetExpenseByIdQuery,
   useMakeExpensePaymentMutation,
@@ -154,7 +155,7 @@ const AddPayment = () => {
           total: amount!,
           description: getValues("description"),
         },
-        refetchQueries: [GetExpenseByIdDocument],
+        refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
       });
       showSuccessToast();
       router.push("/dashboard/expenses");

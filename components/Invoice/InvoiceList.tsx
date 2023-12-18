@@ -1,27 +1,71 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import InvoiceTabContentAll from "./InvoiceTabContentAll";
 import InvoiceTabContentArchived from "./InvoiceTabContentArchived";
-import ArchiveInvoice from "./modals/invoice/ArchiveInvoice";
+import ArchiveInvoice from "../modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
-import DeleteInvoice from "./modals/invoice/DeleteInvoiceModal";
+import DeleteInvoice from "../modals/invoice/DeleteInvoiceModal";
 import Link from "next/link";
+import localStorage from "local-storage-fallback";
+import { useGetSaleByBusinessQuery } from "@/src/generated/graphql";
 
 const InvoiceList = () => {
-  const allInvoices = "(15)";
-  const archivedInvoices = "(0)";
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
   const [isChecked, setIsChecked] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const { isOpen, openModal, closeModal } = useModal();
   const {
-    isOpen: isDeleteModalOpen,
-    openModal: openDeleteModal,
-    closeModal: closeDeleteModal,
+    isOpen: isDeleteInvoiceOpen,
+    openModal: openDeleteInvoiceModal,
+    closeModal: closeDeleteInvoiceModal,
+  } = useModal();
+
+  const {
+    isOpen: isUnarchiveOpen,
+    openModal: openUnarchiveModal,
+    closeModal: closeUnarchiveModal,
+  } = useModal();
+
+  const {
+    isOpen: isEditModalOpen,
+    openModal: openEditModal,
+    closeModal: closeEditModal,
   } = useModal();
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
   };
+
+  const handleOpenArchiveModal = (saleId: string) => {
+    setSelectedId(saleId);
+    openModal();
+  };
+
+  const handleOpenDeleteModal = (saleId: string) => {
+    setSelectedId(saleId);
+    openDeleteInvoiceModal();
+  };
+
+  const handleOpenEditModal = (saleId: string) => {
+    setSelectedId(saleId);
+    openEditModal();
+  };
+
+  const getSalesByBusiness = useGetSaleByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const invoices =
+    getSalesByBusiness.data?.getSaleByBusiness?.salesByBusiness ?? [];
+  const allInvoices = invoices.length;
+  const archivedInvoices = invoices.filter(
+    (invoice) => invoice?.archived
+  ).length;
 
   return (
     <div className=" w-full flex flex-col">
@@ -32,7 +76,8 @@ const InvoiceList = () => {
               className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
               value="all"
             >
-              All <span className=" text-primary-mainGrey">{allInvoices}</span>
+              All{" "}
+              <span className=" text-primary-mainGrey">({allInvoices})</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -41,7 +86,7 @@ const InvoiceList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                {archivedInvoices}
+                ({archivedInvoices})
               </span>
             </TabsTrigger>
           </div>
@@ -54,7 +99,7 @@ const InvoiceList = () => {
                 Archive
               </button>
               <button
-                onClick={openDeleteModal}
+                onClick={openDeleteInvoiceModal}
                 className=" px-6 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-sm text-white"
               >
                 Delete
@@ -68,13 +113,21 @@ const InvoiceList = () => {
         </TabsList>
         <TabsContent value="all">
           <InvoiceTabContentAll
-            openArchiveModal={openModal}
-            openDeleteModal={openDeleteModal}
+            openArchiveModal={handleOpenArchiveModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
+            numberOfInvoicesToShow={10}
           />
         </TabsContent>
         <TabsContent value="archived">
-          <InvoiceTabContentArchived />
+          <InvoiceTabContentArchived
+            openArchiveModal={handleOpenArchiveModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openEditModal={handleOpenEditModal}
+            onToggleSelectAll={handleToggleSelectAll}
+            numberOfInvoicesToShow={10}
+          />
         </TabsContent>
       </Tabs>
       <ArchiveInvoice
@@ -83,9 +136,9 @@ const InvoiceList = () => {
         onClose={closeModal}
       />
       <DeleteInvoice
-        open={isDeleteModalOpen}
-        openModal={openDeleteModal}
-        onClose={closeDeleteModal}
+        open={isDeleteInvoiceOpen}
+        openModal={openDeleteInvoiceModal}
+        onClose={closeDeleteInvoiceModal}
       />
     </div>
   );

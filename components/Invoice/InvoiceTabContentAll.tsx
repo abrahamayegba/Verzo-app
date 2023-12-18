@@ -7,43 +7,50 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
-import { Checkbox } from "./ui/checkbox";
+} from "../ui/table";
+import { Checkbox } from "../ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
+import localStorage from "local-storage-fallback";
 import { Archive, Download, Eye, Pen, Trash2 } from "lucide-react";
-import TableEmptyState from "./emptystates/TableEmptyState";
-import InvoiceTableEmptyIcon from "./ui/icons/InvoiceTableEmptyIcon";
+import Link from "next/link";
+import { useGetSaleByBusinessQuery } from "@/src/generated/graphql";
+import InvoiceTableEmptyIcon from "../ui/icons/InvoiceTableEmptyIcon";
+import TableEmptyState from "../emptystates/TableEmptyState";
 
-interface InvoiceData {
-  id: number;
-  invoice: string;
-  sentDate: Date;
-  status: string;
-  customer: string;
-  amount: string;
+interface InvoiceTabContentAllProps {
+  numberOfInvoicesToShow?: number; // Make the prop optional
+  onToggleSelectAll: (isChecked: boolean) => void;
+  openArchiveModal: (purchaseId: string) => void;
+  openDeleteModal: (purchaseId: string) => void;
+  openEditModal: (purchaseId: string) => void;
 }
 
-const InvoiceTabContentArchived = () => {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
+  onToggleSelectAll,
+  openDeleteModal,
+  openArchiveModal,
+  numberOfInvoicesToShow,
+  openEditModal,
+}) => {
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const getSalesByBusiness = useGetSaleByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const invoices =
+    getSalesByBusiness.data?.getSaleByBusiness?.salesByBusiness ?? [];
 
-  // const data = Array.from({ length: 5 }, (_, index) => ({
-  //   id: index + 1,
-  //   invoice: `INV00${index + 1}`,
-  //   sentDate: new Date(2023, 0, index + 1),
-  //   status: index % 3 === 0 ? "Paid" : index % 3 === 1 ? "Unpaid" : "Pending",
-  //   customer: `Customer ${index + 1}`,
-  //   amount: `₦${((index + 1) * 1500).toLocaleString("en-NG")}.0`,
-  // }));
-
-  const data: InvoiceData[] = [];
-
-  // Function to handle individual row selection
-  const handleRowSelect = (rowId: number) => {
+  const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
     } else {
@@ -51,13 +58,16 @@ const InvoiceTabContentArchived = () => {
     }
   };
 
-  // Function to handle select all checkbox
   const handleSelectAll = () => {
-    if (selectedRows.length === data.length) {
-      setSelectedRows([]);
+    const isChecked = selectedRows.length !== invoices?.length;
+    if (isChecked) {
+      setSelectedRows(
+        invoices?.map((invoice) => String(invoice?.id) || "") || []
+      );
     } else {
-      setSelectedRows(data.map((row) => row.id));
+      setSelectedRows([]);
     }
+    onToggleSelectAll(isChecked);
   };
 
   return (
@@ -66,9 +76,11 @@ const InvoiceTabContentArchived = () => {
         <TableRow>
           <TableHead className="w-[100px] flex gap-x-3 items-center font-normal text-sm text-primary-greytext">
             <Checkbox
-              className=" w-5 h-5 text-primary-greytext rounded bg-white"
-              checked={selectedRows.length === data.length && data.length > 0}
-              disabled={data.length === 0}
+              className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+              checked={
+                selectedRows.length === invoices?.length && invoices.length > 0
+              }
+              disabled={invoices?.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Invoice
@@ -91,7 +103,7 @@ const InvoiceTabContentArchived = () => {
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {data.length === 0 ? (
+        {invoices?.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -104,34 +116,28 @@ const InvoiceTabContentArchived = () => {
             </TableCell>
           </TableRow>
         ) : (
-          data.map((row) => (
-            <TableRow className="" key={row.id}>
+          invoices.slice(0, numberOfInvoicesToShow).map((invoice, index) => (
+            <TableRow key={invoice?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
-                  className=" w-5 h-5 text-primary-greytext rounded bg-white"
-                  checked={selectedRows.includes(row.id)}
-                  onCheckedChange={() => handleRowSelect(row.id)}
+                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                  checked={selectedRows.includes(invoice?.id!)}
+                  onCheckedChange={() => handleRowSelect(invoice?.id!)}
                 />
-
-                {row.invoice}
+                #INV{String(index + 1).padStart(3, "0")}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {row.sentDate.toDateString()}
+                {invoice?.transactionDate
+                  ? new Date(invoice.transactionDate).toDateString()
+                  : ""}
               </TableCell>
               <TableCell>
-                {row.status === "Paid" && (
+                {invoice?.paid === true ? (
                   <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                     <span className="mr-2 text-green-500">✔</span>
                     Paid
                   </span>
-                )}
-                {row.status === "Unpaid" && (
-                  <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
-                    <span className="mr-2 text-red-500">✘</span>
-                    Canceled
-                  </span>
-                )}
-                {row.status === "Pending" && (
+                ) : (
                   <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
                     <span className="mr-2 text-yellow-500">⌛</span>
                     Pending
@@ -139,10 +145,13 @@ const InvoiceTabContentArchived = () => {
                 )}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {row.customer}
+                {invoice?.invoice?.customer?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {row.amount}
+                {invoice?.invoice?.totalAmount.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
               </TableCell>
               <TableCell className="text-right text-primary-blue">
                 <DropdownMenu>
@@ -151,10 +160,18 @@ const InvoiceTabContentArchived = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      View Invoice
+                      <Link
+                        className=" flex gap-x-2 items-center"
+                        href="/invoice/viewinvoice"
+                      >
+                        <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        View Invoice
+                      </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                    <DropdownMenuItem
+                      onClick={() => openEditModal(invoice?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
                       <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Edit Invoice
                     </DropdownMenuItem>
@@ -162,11 +179,17 @@ const InvoiceTabContentArchived = () => {
                       <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Download Invoice
                     </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                    <DropdownMenuItem
+                      onClick={() => openArchiveModal(invoice?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
                       <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Archive Invoice
                     </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                    <DropdownMenuItem
+                      onClick={() => openDeleteModal(invoice?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
                       <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Delete Invoice
                     </DropdownMenuItem>
@@ -181,4 +204,4 @@ const InvoiceTabContentArchived = () => {
   );
 };
 
-export default InvoiceTabContentArchived;
+export default InvoiceTabContentAll;

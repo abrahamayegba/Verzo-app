@@ -10,6 +10,7 @@ import {
 } from "@/src/generated/graphql";
 import Link from "next/link";
 import GraphUp from "../ui/icons/GraphUp";
+import { Plus } from "lucide-react";
 
 interface MetricsProps {
   filter: string;
@@ -144,10 +145,8 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
             {filter === "weekly" &&
               weeklyData?.numberOfPaidPurchasesThisWeek! > 0 && (
                 <div className=" flex items-center text-primary-greytext">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                  <Plus className=" w-4 h-4" />
+                  <span className=" ml-[2px] mr-1">
                     {weeklyData?.numberOfPaidPurchasesThisWeek}
                   </span>{" "}
                   this week
@@ -156,10 +155,8 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
             {filter === "monthly" &&
               monthlyData?.numberOfPaidPurchasesThisMonth! > 0 && (
                 <div className=" flex items-center text-primary-greytext">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                  <Plus className=" w-4 h-4" />
+                  <span className=" ml-[2px] mr-1">
                     {monthlyData?.numberOfPaidPurchasesThisMonth}
                   </span>{" "}
                   this month
@@ -168,10 +165,8 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
             {filter === "quarterly" &&
               quarterlyData?.numberOfPaidPurchasesThisQuarter! > 0 && (
                 <div className=" flex items-center text-primary-greytext">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                  <Plus className=" w-4 h-4" />
+                  <span className=" ml-[2px] mr-1">
                     {quarterlyData?.numberOfPaidPurchasesThisQuarter}%
                   </span>{" "}
                   this quarter
@@ -180,10 +175,8 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
             {filter === "yearly" &&
               yearlyData?.numberOfPaidPurchasesThisYear! > 0 && (
                 <div className=" flex items-center text-primary-greytext">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                  <Plus className=" w-4 h-4" />
+                  <span className=" ml-[2px] mr-1">
                     {yearlyData?.numberOfPaidPurchasesThisYear}%
                   </span>{" "}
                   this year

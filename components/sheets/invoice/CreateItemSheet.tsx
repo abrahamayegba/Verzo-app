@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Check, ChevronDown, ChevronLeft } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, Plus } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   Popover,
@@ -24,93 +24,172 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import PlusIcon from "@/components/ui/icons/PlusIcon";
+import { useToast } from "@/app/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import {
+  GetProductOrServiceByBusinessDocument,
+  GetProductsByBusinessDocument,
+  GetServiceByBusinessDocument,
+  useCreateProductMutation,
+  useCreateServiceMutation,
+  useGetCombinedProductUnitsQuery,
+  useGetCombinesServiceUnitsQuery,
+  useGetProductOrServiceByBusinessQuery,
+} from "@/src/generated/graphql";
+import localStorage from "local-storage-fallback";
 
 interface CreateItemProps {
   open: boolean;
   onClose: () => void;
   onItemSelected: (selectedItem: {
+    id: string;
     name: string;
     price: number;
+    type: string;
     quantity: number;
     index: number;
   }) => void;
 }
 
-interface InvoiceItem {
-  name: string;
-  quantity: number;
+type FormData = {
+  productName: string;
   price: number;
-  index: number;
-}
+  initialStockLevel: number;
+};
 
-const Items = [
-  {
-    name: "Item A",
-    quantity: 1,
-    price: 0,
-    index: 1,
-  },
-  {
-    name: "Item B",
-    quantity: 1,
-    price: 0,
-    index: 2,
-  },
-  {
-    name: "Item C",
-    quantity: 1,
-    price: 0,
-    index: 3,
-  },
-  {
-    name: "Item D",
-    quantity: 1,
-    price: 0,
-    index: 4,
-  },
-  {
-    name: "Item E",
-    quantity: 1,
-    price: 0,
-    index: 5,
-  },
-];
+type ServiceFormData = {
+  name: string;
+  price: number;
+};
 
 const CreateItemSheet: React.FC<CreateItemProps> = ({
   open,
   onClose,
   onItemSelected,
 }) => {
-  const [selectedItem, setSelectedItem] = useState<InvoiceItem | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const { toast } = useToast();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const { register, reset, handleSubmit } = useForm<FormData>();
+  const {
+    register: registerService,
+    reset: resetService,
+    handleSubmit: handleServiceSubmit,
+  } = useForm<ServiceFormData>();
+  const [selectedItem, setSelectedItem] = useState<{
+    id: string;
+    name: string;
+    price: number;
+    type: string;
+    index: number;
+  } | null>(null);
+  const [lastIndex, setLastIndex] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState(1);
+  const [productUnitId, setProductUnitId] = useState("");
+  const [serviceUnitId, setServiceUnitId] = useState("");
   const [openPopover, setOpenPopover] = React.useState(false);
   const [itemName, setItemName] = React.useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [createProductMutation, { loading }] = useCreateProductMutation();
+  const [createServiceMutation, { loading: serviceLoading }] =
+    useCreateServiceMutation();
+  const getProductOrServiceByBusiness = useGetProductOrServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const productsOrServices =
+    getProductOrServiceByBusiness.data?.getProductOrServiceByBusiness
+      ?.productOrServiceByBusiness ?? [];
+  const combinedProductUnits = useGetCombinedProductUnitsQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const combinedServiceUnits = useGetCombinesServiceUnitsQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const allProductUnits = combinedProductUnits.data?.getCombinedProductUnits;
+  const allServiceUnits = combinedServiceUnits.data?.getCombinedServiceUnits;
 
   const handleCategoryChange = (value: any) => {
     setSelectedCategory(value);
+    handleNext();
   };
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
 
-  const handleCategoryChangeAndNext = (value: any) => {
-    handleCategoryChange(value);
-    handleNext();
-  };
-
   const handleItemSelect = () => {
     if (selectedItem) {
       onItemSelected({
-        name: selectedItem.name,
+        id: selectedItem?.id,
         price: selectedItem.price,
+        name: selectedItem?.name,
         quantity: 1,
-        index: selectedItem?.index,
+        index: selectedItem.index,
+        type: selectedItem?.type,
       });
       onClose();
       setSelectedItem(null);
       setItemName("");
+    }
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+
+  const onCreateProductHandler = async (data: FormData) => {
+    try {
+      await createProductMutation({
+        variables: {
+          businessId: businessId,
+          productUnitId: productUnitId,
+          ...data,
+        },
+        refetchQueries: [
+          GetProductsByBusinessDocument,
+          GetProductOrServiceByBusinessDocument,
+        ],
+      });
+      setCurrentStep(1);
+      reset();
+      setProductUnitId("");
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
+
+  const onCreateServiceHandler = async (data: ServiceFormData) => {
+    try {
+      await createServiceMutation({
+        variables: {
+          businessId: businessId,
+          serviceUnitId: serviceUnitId,
+          ...data,
+        },
+        refetchQueries: [
+          GetServiceByBusinessDocument,
+          GetProductOrServiceByBusinessDocument,
+        ],
+      });
+      setCurrentStep(1);
+      resetService();
+      setServiceUnitId("");
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
     }
   };
 
@@ -141,8 +220,9 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                   <Popover open={openPopover} onOpenChange={setOpenPopover}>
                     <PopoverTrigger asChild>
                       <button
+                        type="button"
                         aria-expanded={openPopover}
-                        className=" w-full justify-between bg-gray-50 text-primary-black flex items-center border border-gray-200 py-2 px-3 rounded-[8px]"
+                        className=" w-full justify-between capitalize bg-gray-50 text-primary-black flex items-center border border-gray-200 py-2 px-3 rounded-[8px]"
                       >
                         {itemName ? itemName : "Select item..."}
                         <ChevronDown className=" w-5 h-5 text-primary-black text-opacity-70 mt-[2px]" />
@@ -150,33 +230,61 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     </PopoverTrigger>
                     <PopoverContent className="  w-[327px] p-0 bg-white z-[200]">
                       <Command>
-                        <CommandInput placeholder="Search items..." />
-                        <CommandEmpty>No framework found.</CommandEmpty>
+                        {productsOrServices?.length > 0 && (
+                          <CommandInput placeholder="Search items..." />
+                        )}
+                        {productsOrServices?.length > 0 && (
+                          <CommandEmpty className=" p-3 px-5 text-[15px]">
+                            No item found
+                          </CommandEmpty>
+                        )}
                         <CommandGroup>
-                          {Items.map((Item) => (
+                          {productsOrServices?.map((item) => (
                             <CommandItem
-                              key={Item.name}
-                              value={Item.name} // Pass the whole item as the value
+                              key={item?.id}
+                              value={item?.title}
                               className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800"
                               onSelect={(currentItem) => {
-                                setItemName(
-                                  currentItem === itemName ? "" : currentItem
-                                );
-                                setSelectedItem(Item);
+                                setItemName(currentItem);
+                                const newIndex = selectedItem
+                                  ? selectedItem.index
+                                  : lastIndex + 1;
+                                setLastIndex(newIndex);
+                                setSelectedItem({
+                                  id: item?.id!,
+                                  price: item?.price!,
+                                  name: item?.title!,
+                                  type: item?.type!,
+                                  index: newIndex,
+                                });
                                 setOpenPopover(false);
                               }}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  itemName === Item.name
+                                  itemName === item?.title
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
                               />
-                              {Item.name}
+                              {item?.title}
                             </CommandItem>
                           ))}
+                          <button
+                            type="button"
+                            onClick={() => handleCategoryChange("product")}
+                            className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-6 w-full flex justify-start"
+                          >
+                            Create product
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleCategoryChange("service")}
+                            className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-6 w-full flex justify-start"
+                          >
+                            Create service
+                          </button>
                         </CommandGroup>
                       </Command>
                     </PopoverContent>
@@ -191,7 +299,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                     <label className=" text-primary-black" htmlFor="newitem">
                       Create new item
                     </label>
-                    <Select onValueChange={handleCategoryChangeAndNext}>
+                    <Select onValueChange={handleCategoryChange}>
                       <SelectTrigger className=" w-full rounded-lg border border-gray-200">
                         <SelectValue
                           className=" text-primary-greytext"
@@ -221,79 +329,144 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
             ) : (
               <>
                 {selectedCategory === "product" && (
-                  <form className=" gap-y-4 flex flex-col mb-3">
+                  <form
+                    onSubmit={handleSubmit(onCreateProductHandler)}
+                    className=" gap-y-4 flex flex-col mt-[-10px]"
+                  >
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="productname">Product name</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
                         type="text"
                         placeholder="Product name"
+                        required
+                        {...register("productName")}
                       />
                     </div>
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="price">Price</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
-                        type="text"
-                        placeholder="Price"
-                      />
-                    </div>
-                    <div className=" flex flex-col gap-y-1">
-                      <label htmlFor="basicunit">Basic unit</label>
-                      <input
-                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
                         type="number"
-                        placeholder="1"
-                        min={1}
+                        required
+                        placeholder="Price"
+                        {...register("price", {
+                          valueAsNumber: true,
+                        })}
                       />
                     </div>
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="productunit">Product unit</label>
+                      <Select
+                        value={productUnitId}
+                        onValueChange={setProductUnitId}
+                      >
+                        <SelectTrigger className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white w-full z-[200] shadow-sm text-gray-800 max-h-[250px] overflow-y-scroll">
+                          <SelectGroup>
+                            {allProductUnits?.map((productUnit) => (
+                              <SelectItem
+                                className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
+                                key={productUnit?.id}
+                                value={productUnit?.id!}
+                              >
+                                {productUnit?.unitName}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className=" flex flex-col gap-y-1">
+                      <label htmlFor="basicunit">Initial stock level</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
-                        type="text"
-                        placeholder="Product unit"
+                        className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
+                        type="number"
+                        required
+                        placeholder="0"
+                        {...register("initialStockLevel", {
+                          valueAsNumber: true,
+                        })}
                       />
                     </div>
                     <button
-                      onClick={onClose}
-                      className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px]"
+                      type="submit"
+                      className={` bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px] ${
+                        loading ? " opacity-50" : ""
+                      }`}
                     >
-                      Create product
+                      {loading ? "Loading..." : "Create Product"}
                     </button>
                   </form>
                 )}
                 {selectedCategory === "service" && (
-                  <form className=" gap-y-4 flex flex-col mb-3">
+                  <form
+                    onSubmit={handleServiceSubmit(onCreateServiceHandler)}
+                    className=" gap-y-4 flex flex-col mt-2"
+                  >
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="servicename">Service name</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
+                        className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
                         type="text"
                         placeholder="Service name"
+                        required
+                        {...registerService("name")}
                       />
                     </div>
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="price">Price</label>
                       <input
-                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
-                        type="text"
+                        className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
+                        type="number"
+                        required
                         placeholder="Price"
+                        {...registerService("price", {
+                          valueAsNumber: true,
+                        })}
                       />
                     </div>
                     <div className=" flex flex-col gap-y-1">
                       <label htmlFor="serviceunit">Service unit</label>
-                      <input
-                        className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none"
-                        type="text"
-                        placeholder="Service unit"
-                      />
+                      <Select
+                        value={serviceUnitId}
+                        onValueChange={setServiceUnitId}
+                      >
+                        <SelectTrigger className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white w-full z-[200] shadow-sm text-gray-800 max-h-[250px] overflow-y-scroll">
+                          <SelectGroup>
+                            {allServiceUnits?.map((serviceUnit) => (
+                              <SelectItem
+                                className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
+                                key={serviceUnit?.id}
+                                value={serviceUnit?.id!}
+                              >
+                                {serviceUnit?.unitName}
+                              </SelectItem>
+                            ))}
+                            <button
+                              type="button"
+                              onClick={handleNext}
+                              className=" flex items-center text-primary-blue py-2 px-2 gap-x-2 hover:bg-gray-100 cursor-pointer w-full text-[15px]"
+                            >
+                              <Plus className=" w-[18px] h-[18px] " /> Add
+                              service unit
+                            </button>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <button
-                      onClick={onClose}
-                      className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px]"
+                      type="submit"
+                      className={` bg-primary-blue text-white rounded-[10px] py-[10px] mt-[15px] ${
+                        serviceLoading ? " opacity-50" : ""
+                      }`}
                     >
-                      Create service
+                      {serviceLoading ? "Loading..." : "Create Service"}
                     </button>
                   </form>
                 )}

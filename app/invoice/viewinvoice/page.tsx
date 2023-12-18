@@ -1,4 +1,4 @@
-import InvoiceStepIndicator from "@/components/InvoiceTimeline";
+import InvoiceStepIndicator from "@/components/Invoice/InvoiceTimeline";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";

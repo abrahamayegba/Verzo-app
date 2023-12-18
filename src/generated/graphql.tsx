@@ -1553,24 +1553,30 @@ export type Mutation = {
   deleteAllBusinesses?: Maybe<Scalars['Boolean']['output']>;
   deleteAllCards?: Maybe<Scalars['Boolean']['output']>;
   deleteAllCustomers?: Maybe<Scalars['Boolean']['output']>;
+  deleteAllCustomersByBusiness?: Maybe<Scalars['Boolean']['output']>;
   deleteAllEmployees?: Maybe<Scalars['Boolean']['output']>;
   deleteAllExpenseCategories?: Maybe<Scalars['Boolean']['output']>;
   deleteAllExpenseStatus?: Maybe<Scalars['Boolean']['output']>;
   deleteAllExpenses?: Maybe<Scalars['Boolean']['output']>;
   deleteAllExpensesByBusiness?: Maybe<Scalars['Boolean']['output']>;
   deleteAllInvoices?: Maybe<Scalars['Boolean']['output']>;
+  deleteAllMerchantByBusiness?: Maybe<Scalars['Boolean']['output']>;
   deleteAllMerchants?: Maybe<Scalars['Boolean']['output']>;
   deleteAllOPtions?: Maybe<Scalars['Boolean']['output']>;
   deleteAllPaidSubscriptions?: Maybe<Scalars['Boolean']['output']>;
   deleteAllPlans?: Maybe<Scalars['Boolean']['output']>;
   deleteAllProductUnits?: Maybe<Scalars['Boolean']['output']>;
   deleteAllProducts?: Maybe<Scalars['Boolean']['output']>;
+  deleteAllProductsByBusiness?: Maybe<Scalars['Boolean']['output']>;
   deleteAllPurchaseStatus?: Maybe<Scalars['Boolean']['output']>;
   deleteAllPurchases?: Maybe<Scalars['Boolean']['output']>;
+  deleteAllPurchasesByBusiness?: Maybe<Scalars['Boolean']['output']>;
   deleteAllSaleStatus?: Maybe<Scalars['Boolean']['output']>;
   deleteAllSales?: Maybe<Scalars['Boolean']['output']>;
+  deleteAllSalesByBusiness?: Maybe<Scalars['Boolean']['output']>;
   deleteAllServiceUnits?: Maybe<Scalars['Boolean']['output']>;
   deleteAllServices?: Maybe<Scalars['Boolean']['output']>;
+  deleteAllServicesByBusiness?: Maybe<Scalars['Boolean']['output']>;
   deleteAllSubscriptions?: Maybe<Scalars['Boolean']['output']>;
   deleteBillingPlan?: Maybe<BillingPlan>;
   deleteBusiness?: Maybe<Scalars['Boolean']['output']>;
@@ -1653,6 +1659,13 @@ export type Mutation = {
   testPdfConverter?: Maybe<Scalars['Boolean']['output']>;
   tokenizedCharge?: Maybe<Scalars['Boolean']['output']>;
   turnOnTwoFactorAuth?: Maybe<Scalars['Boolean']['output']>;
+  unarchiveCustomerByBusiness?: Maybe<Scalars['Boolean']['output']>;
+  unarchiveExpense?: Maybe<Scalars['Boolean']['output']>;
+  unarchiveMerchant?: Maybe<Scalars['Boolean']['output']>;
+  unarchiveProductByBusiness?: Maybe<Scalars['Boolean']['output']>;
+  unarchivePurchase?: Maybe<Scalars['Boolean']['output']>;
+  unarchiveSale?: Maybe<Scalars['Boolean']['output']>;
+  unarchiveServiceByBusiness?: Maybe<Scalars['Boolean']['output']>;
   updateAccountCategory?: Maybe<AccountCategory>;
   updateAccountCategoryType?: Maybe<AccountCategoryType>;
   updateAddOnOption?: Maybe<AddOnOption>;
@@ -1753,7 +1766,6 @@ export type MutationArchiveCardArgs = {
 
 export type MutationArchiveCustomerByBusinessArgs = {
   customerId: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1774,7 +1786,6 @@ export type MutationArchiveMerchantArgs = {
 
 export type MutationArchiveProductByBusinessArgs = {
   productId: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2045,7 +2056,6 @@ export type MutationCreatePlanArgs = {
 
 export type MutationCreateProductArgs = {
   input: CreateProduct;
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2181,7 +2191,37 @@ export type MutationDeleteAddOnOptionArgs = {
 };
 
 
+export type MutationDeleteAllCustomersByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteAllExpensesByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteAllMerchantByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteAllProductsByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteAllPurchasesByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteAllSalesByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteAllServicesByBusinessArgs = {
   businessId: Scalars['String']['input'];
 };
 
@@ -2306,7 +2346,6 @@ export type MutationDeletePlanArgs = {
 
 export type MutationDeleteProductArgs = {
   productId: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2608,6 +2647,42 @@ export type MutationTurnOnTwoFactorAuthArgs = {
 };
 
 
+export type MutationUnarchiveCustomerByBusinessArgs = {
+  customerId: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchiveExpenseArgs = {
+  expenseId: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchiveMerchantArgs = {
+  merchantId: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchiveProductByBusinessArgs = {
+  productId: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchivePurchaseArgs = {
+  purchaseId: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchiveSaleArgs = {
+  saleId: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchiveServiceByBusinessArgs = {
+  serviceId: Scalars['String']['input'];
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationUpdateAccountCategoryArgs = {
   accountCategoryId: Scalars['String']['input'];
   input?: InputMaybe<UpdateAccountCategory>;
@@ -2756,7 +2831,6 @@ export type MutationUpdatePlanArgs = {
 export type MutationUpdateProductArgs = {
   input?: InputMaybe<UpdateProduct>;
   productId: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3256,6 +3330,17 @@ export type Query = {
   getAccountCategoryTypeById?: Maybe<AccountCategoryType>;
   getAccountCategoryTypes: Array<Maybe<AccountCategoryType>>;
   getAddOnOptions: Array<Maybe<AddOnOption>>;
+  getArchivedCustomerByBusiness?: Maybe<GetCustomerResponse>;
+  getArchivedCustomerByBusinessMobile?: Maybe<GetCustomerResponse>;
+  getArchivedExpenseByBusiness?: Maybe<GetExpenseResponse>;
+  getArchivedExpenseByBusinessMobile?: Maybe<GetExpenseResponse>;
+  getArchivedMerchantByBusiness: Array<Maybe<Merchant>>;
+  getArchivedProductByBusiness?: Maybe<GetProductResponse>;
+  getArchivedPurchaseByBusiness?: Maybe<GetPurchaseByBusinessResponse>;
+  getArchivedPurchaseByBusinessMobile?: Maybe<GetPurchaseByBusinessResponse>;
+  getArchivedSalesByBusiness?: Maybe<GetSaleByBusinessResponse>;
+  getArchivedSalesByBusinessMobile?: Maybe<GetSaleByBusinessResponse>;
+  getArchivedServicesByBusiness?: Maybe<GetServiceResponse>;
   getBusinessById?: Maybe<Business>;
   getBusinessCOAByBusiness: Array<Maybe<BusinessChartOfAccount>>;
   getBusinessCOAById?: Maybe<BusinessChartOfAccount>;
@@ -3439,6 +3524,81 @@ export type QueryGetAccountCategoryByIdArgs = {
 
 export type QueryGetAccountCategoryTypeByIdArgs = {
   accountCategoryTypeId: Scalars['String']['input'];
+};
+
+
+export type QueryGetArchivedCustomerByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  sets?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedCustomerByBusinessMobileArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedExpenseByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  sets?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedExpenseByBusinessMobileArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedMerchantByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGetArchivedProductByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  sets?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedPurchaseByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  sets?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedPurchaseByBusinessMobileArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedSalesByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  sets?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedSalesByBusinessMobileArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetArchivedServicesByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  sets?: InputMaybe<Scalars['Float']['input']>;
 };
 
 
@@ -5350,6 +5510,15 @@ export type GetAddOnOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAddOnOptionsQuery = { __typename?: 'Query', getAddOnOptions: Array<{ __typename?: 'AddOnOption', id?: string | null, addOnName?: string | null, addOnPrice?: number | null } | null> };
 
+export type GetArchivedExpensesByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  sets?: InputMaybe<Scalars['Float']['input']>;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetArchivedExpensesByBusinessQuery = { __typename?: 'Query', getArchivedExpenseByBusiness?: { __typename?: 'GetExpenseResponse', cursorId?: string | null, expenseByBusiness: Array<{ __typename?: 'Expense', id: string, description?: string | null, amount: number, paid?: boolean | null, archived?: boolean | null, businessId: string, expenseDate?: any | null, recurring?: boolean | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, business?: { __typename?: 'Business', businessName: string } | null, merchant?: { __typename?: 'Merchant', name: string, id?: string | null } | null } | null> } | null };
+
 export type GetBusinessCoaByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
 }>;
@@ -5693,7 +5862,7 @@ export type GetSaleByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetSaleByBusinessQuery = { __typename?: 'Query', getSaleByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, saleAmount?: number | null, paid?: boolean | null, transactionDate?: any | null, business?: { __typename?: 'Business', businessName: string } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: number, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: number, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: number | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
+export type GetSaleByBusinessQuery = { __typename?: 'Query', getSaleByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, saleAmount?: number | null, paid?: boolean | null, archived?: boolean | null, transactionDate?: any | null, business?: { __typename?: 'Business', businessName: string } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: number, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: number, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: number | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
 
 export type GetSaleByBusinessMobileQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7580,6 +7749,73 @@ export type GetAddOnOptionsQueryHookResult = ReturnType<typeof useGetAddOnOption
 export type GetAddOnOptionsLazyQueryHookResult = ReturnType<typeof useGetAddOnOptionsLazyQuery>;
 export type GetAddOnOptionsSuspenseQueryHookResult = ReturnType<typeof useGetAddOnOptionsSuspenseQuery>;
 export type GetAddOnOptionsQueryResult = Apollo.QueryResult<GetAddOnOptionsQuery, GetAddOnOptionsQueryVariables>;
+export const GetArchivedExpensesByBusinessDocument = gql`
+    query GetArchivedExpensesByBusiness($businessId: String!, $sets: Float, $cursor: String) {
+  getArchivedExpenseByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    expenseByBusiness {
+      id
+      description
+      amount
+      paid
+      archived
+      businessId
+      expenseCategory {
+        name
+        id
+      }
+      expenseDate
+      business {
+        businessName
+      }
+      merchant {
+        name
+        id
+      }
+      recurring
+    }
+    cursorId
+  }
+}
+    `;
+
+/**
+ * __useGetArchivedExpensesByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetArchivedExpensesByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivedExpensesByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivedExpensesByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      sets: // value for 'sets'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useGetArchivedExpensesByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetArchivedExpensesByBusinessQuery, GetArchivedExpensesByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArchivedExpensesByBusinessQuery, GetArchivedExpensesByBusinessQueryVariables>(GetArchivedExpensesByBusinessDocument, options);
+      }
+export function useGetArchivedExpensesByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArchivedExpensesByBusinessQuery, GetArchivedExpensesByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArchivedExpensesByBusinessQuery, GetArchivedExpensesByBusinessQueryVariables>(GetArchivedExpensesByBusinessDocument, options);
+        }
+export function useGetArchivedExpensesByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetArchivedExpensesByBusinessQuery, GetArchivedExpensesByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetArchivedExpensesByBusinessQuery, GetArchivedExpensesByBusinessQueryVariables>(GetArchivedExpensesByBusinessDocument, options);
+        }
+export type GetArchivedExpensesByBusinessQueryHookResult = ReturnType<typeof useGetArchivedExpensesByBusinessQuery>;
+export type GetArchivedExpensesByBusinessLazyQueryHookResult = ReturnType<typeof useGetArchivedExpensesByBusinessLazyQuery>;
+export type GetArchivedExpensesByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetArchivedExpensesByBusinessSuspenseQuery>;
+export type GetArchivedExpensesByBusinessQueryResult = Apollo.QueryResult<GetArchivedExpensesByBusinessQuery, GetArchivedExpensesByBusinessQueryVariables>;
 export const GetBusinessCoaByBusinessDocument = gql`
     query GetBusinessCOAByBusiness($businessId: String!) {
   getBusinessCOAByBusiness(businessId: $businessId) {
@@ -9891,6 +10127,7 @@ export const GetSaleByBusinessDocument = gql`
       description
       saleAmount
       paid
+      archived
       business {
         businessName
       }

@@ -14,6 +14,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
+  GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
@@ -118,7 +119,10 @@ const ConfirmPurchaseItems = () => {
           quantity: receivedQuantity,
           transactionDate: formattedDateReceived,
         },
-        refetchQueries: [GetPurchaseByIdDocument],
+        refetchQueries: [
+          GetPurchaseByIdDocument,
+          GetPurchaseByBusinessDocument,
+        ],
       });
       showSuccessToast();
     } catch (error) {

@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import {
   GetPurchaseByBusinessDocument,
+  GetPurchaseByIdDocument,
   useCreatePurchaseEntryMutation,
   useGetBusinessesByUserIdQuery,
 } from "@/src/generated/graphql";
@@ -42,7 +43,6 @@ interface PurchaseItemProp {
 
 type FormData = {
   description: string;
-  // reference: string;
 };
 
 const CreatePurchase = () => {
@@ -173,7 +173,7 @@ const CreatePurchase = () => {
 
   const showSuccessToast = () => {
     toast({
-      title: "Purchase Successfully Created!",
+      title: "Successful!",
       description: "Your purchase order has been successfully created",
       duration: 3000,
     });
@@ -210,7 +210,10 @@ const CreatePurchase = () => {
       };
       await createPurchaseEntryMutation({
         variables: purchaseEntryData,
-        refetchQueries: [GetPurchaseByBusinessDocument],
+        refetchQueries: [
+          GetPurchaseByBusinessDocument,
+          GetPurchaseByIdDocument,
+        ],
       });
       client.refetchQueries({
         include: "active",

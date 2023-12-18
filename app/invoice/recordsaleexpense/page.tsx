@@ -1,5 +1,5 @@
 "use client";
-import InvoiceStepIndicator from "@/components/InvoiceTimeline";
+import InvoiceStepIndicator from "@/components/Invoice/InvoiceTimeline";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,

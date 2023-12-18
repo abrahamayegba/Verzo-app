@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import InvoiceTabContentAll from "./InvoiceTabContentAll";
 import InvoiceTabContentArchived from "./InvoiceTabContentArchived";
-import ArchiveInvoice from "./modals/invoice/ArchiveInvoice";
+import ArchiveInvoice from "../modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
-import DeleteInvoice from "./modals/invoice/DeleteInvoiceModal";
-import CustomPagination from "./InvoiceListPagination";
+import DeleteInvoice from "../modals/invoice/DeleteInvoiceModal";
+import CustomPagination from "../InvoiceListPagination";
 
 const AllInvoicesList = () => {
   const allInvoices = "(15)";

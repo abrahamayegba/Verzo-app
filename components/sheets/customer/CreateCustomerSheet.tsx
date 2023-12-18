@@ -35,7 +35,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
   const [createCustomerMutation, { loading }] = useCreateCustomerMutation();
   const showSuccessToast = () => {
     toast({
-      title: "Customer Successfully Created!",
+      title: "Successful!",
       description: "Your customer has been successfully created",
       duration: 3000,
     });

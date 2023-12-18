@@ -1,6 +1,6 @@
 "use client";
 import CustomerForm from "@/components/CustomerForm";
-import InvoiceItem from "@/components/InvoiceItem";
+import InvoiceItem from "@/components/Invoice/InvoiceItem";
 import SaleExpenseItem from "@/components/SaleExpenseItem";
 import ServiceExpenseItem from "@/components/ServiceExpenseItem";
 import CreateCustomerSheet from "@/components/sheets/customer/CreateCustomerSheet";
@@ -17,37 +17,94 @@ import InfoIcon from "@/components/ui/icons/InfoIcon";
 import LocationIcon from "@/components/ui/icons/LocationIcon";
 import ProfileIcon from "@/components/ui/icons/ProfileIcon";
 import { Textarea } from "@/components/ui/textarea";
-import { Eye, Info, MoveLeft, Phone, Plus } from "lucide-react";
+import localStorage from "local-storage-fallback";
+import {
+  GetInvoicesByBusinessDocument,
+  GetSaleByBusinessDocument,
+  GetSaleByIdDocument,
+  useCreateSaleEntryMutation,
+  useGetBusinessesByUserIdQuery,
+} from "@/src/generated/graphql";
+import { ChevronDown, Eye, Info, MoveLeft, Phone, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { ChangeEvent, useRef, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { useToast } from "@/app/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 interface InvoiceItem {
+  id: string;
   name: string;
-  quantity: number;
   price: number;
+  type: string;
+  quantity: number;
+  index: number;
 }
 
+type FormData = {
+  description: string;
+};
+
 interface Expense {
-  name: string;
-  amount: string;
+  description: string;
+  amount: number;
+  index: number;
 }
 
 interface ServiceExpense {
-  service: string;
-  amount: string;
+  description: string;
+  serviceId: string;
+  index: number;
+  amount: number;
 }
 
 const CreateInvoice = () => {
+  const { toast } = useToast();
+  const router = useRouter();
+  const { register, handleSubmit } = useForm<FormData>();
   const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [serviceExpenses, setServiceExpenses] = useState<ServiceExpense[]>([]);
   const [openCustomerSheet, setOpenCustomerSheet] = useState(false);
   const [openViewInvoiceSheet, setOpenViewInvoiceSheet] = useState(false);
+  const [date, setDate] = React.useState<Date | null>(null);
+  const [dueDate, setDueDate] = React.useState<Date | null>(null);
+  const [openDueDate, setOpenDueDate] = React.useState(false);
+  const [invoiceDate, setInvoiceDate] = useState("");
+  const [invoiceDueDate, setInvoiceDueDate] = useState("");
+  const [openIssueDate, setOpenIssueDate] = React.useState(false);
+  const [customerId, setCustomerId] = useState("");
   const [openCreateItemSheet, setOpenCreateItemSheet] = useState(false);
   const [selectedImage, setSelectedImage] = useState<
     string | ArrayBuffer | null
   >(null);
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+
+  const businessName =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
+      (business) => business?.businessName
+    ) || [];
+  const businessEmail =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
+      (business) => business?.businessEmail
+    ) || [];
+  const businessMobile =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
+      (business) => business?.businessMobile
+    ) || [];
+  const [createSaleEntryMutation, { loading }] = useCreateSaleEntryMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const handleOpenCustomerSheet = () => {
@@ -88,20 +145,43 @@ const CreateInvoice = () => {
   };
 
   const handleAddExpense = () => {
-    setExpenses([...expenses, { name: "", amount: "" }]);
+    const lastExpenseItem = expenses[expenses.length - 1];
+    const newExpenseItemIndex = lastExpenseItem ? lastExpenseItem.index + 1 : 1;
+    setExpenses([
+      ...expenses,
+      { description: "", amount: 0, index: newExpenseItemIndex },
+    ]);
   };
 
   const handleAddServiceExpense = () => {
-    setServiceExpenses([...serviceExpenses, { service: "", amount: "" }]);
+    const lastExpenseItem = serviceExpenses[serviceExpenses.length - 1];
+    const newExpenseItemIndex = lastExpenseItem ? lastExpenseItem.index + 1 : 1;
+    setServiceExpenses([
+      ...serviceExpenses,
+      { description: "", amount: 0, serviceId: "", index: newExpenseItemIndex },
+    ]);
   };
 
   const handleExpenseChange = (
     index: number,
     field: keyof Expense,
-    value: string
+    value: string | number
   ) => {
     const updatedExpenses = [...expenses];
-    updatedExpenses[index][field] = value;
+
+    // Ensure that the "amount" field is treated as a number
+    const parsedValue =
+      field === "amount"
+        ? typeof value === "string" && !isNaN(Number(value))
+          ? parseFloat(value)
+          : 0
+        : value;
+
+    updatedExpenses[index] = {
+      ...updatedExpenses[index],
+      [field]: parsedValue,
+    };
+
     setExpenses(updatedExpenses);
   };
 
@@ -111,7 +191,11 @@ const CreateInvoice = () => {
     value: string
   ) => {
     const updatedServiceExpenses = [...serviceExpenses];
-    updatedServiceExpenses[index][field] = value;
+    const parsedValue = field === "amount" ? parseFloat(value) || 0 : value;
+    updatedServiceExpenses[index] = {
+      ...updatedServiceExpenses[index],
+      [field]: parsedValue,
+    };
     setServiceExpenses(updatedServiceExpenses);
   };
 
@@ -132,7 +216,6 @@ const CreateInvoice = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        // Ensure that e.target?.result is not undefined
         setSelectedImage(e.target?.result || null);
       };
       reader.readAsDataURL(file);
@@ -145,6 +228,120 @@ const CreateInvoice = () => {
     }
   };
 
+  const handleCustomerChange = (id: string) => {
+    setCustomerId(id);
+  };
+
+  const subtotalFromItems = invoiceItems.reduce(
+    (acc, item) => acc + (item?.price || 0) * (item?.quantity || 0),
+    0
+  );
+
+  const saleExpenses = expenses.reduce(
+    (acc, expense) => acc + Number(expense.amount || 0),
+    0
+  );
+
+  const saleServiceExpenses = serviceExpenses.reduce(
+    (acc, expense) => acc + Number(expense.amount || 0),
+    0
+  );
+  const vatAmount = 0.075 * subtotalFromItems;
+  const amountDue = subtotalFromItems + saleExpenses + saleServiceExpenses;
+  const totalAmountDue = amountDue + vatAmount;
+
+  React.useEffect(() => {
+    if (date) {
+      const formattedDate = format(date, "yyyy-MM-dd").toString();
+      setInvoiceDate(formattedDate);
+    }
+  }, [date]);
+
+  React.useEffect(() => {
+    if (dueDate) {
+      const formattedDueDate = format(dueDate, "yyyy-MM-dd").toString();
+      setInvoiceDueDate(formattedDueDate);
+    }
+  }, [dueDate]);
+
+  const showSuccessToast = () => {
+    toast({
+      title: "Successful!",
+      description: "Your invoice has been successfully created",
+      duration: 3000,
+    });
+  };
+
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+
+  const showOtherFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      description: error,
+      duration: 3000,
+    });
+  };
+
+  const saleItemDetails = invoiceItems.map((item) => {
+    return {
+      id: item.id,
+      type: item.type,
+      index: item.index,
+      price: item.price,
+      quantity: item.quantity,
+    };
+  });
+
+  const invoiceInput = {
+    businessId: businessId,
+    customerId: customerId,
+    dateOfIssue: invoiceDate,
+    dueDate: invoiceDueDate,
+    VAT: 7.5,
+    item: saleItemDetails,
+  };
+
+  const onSubmitCreateSaleHandler = async (data: FormData) => {
+    if (!customerId) {
+      showOtherFailureToast(
+        "Please select a customer before saving the invoice."
+      );
+      return;
+    }
+    if (!invoiceDate || !invoiceDueDate) {
+      showOtherFailureToast("Please pick a date before saving the invoice.");
+      return;
+    }
+    try {
+      await createSaleEntryMutation({
+        variables: {
+          saleExpense: expenses.length > 0 ? expenses : null,
+          saleServiceExpense:
+            serviceExpenses.length > 0 ? serviceExpenses : null,
+          invoiceInput: invoiceInput,
+          ...data,
+        },
+        refetchQueries: [
+          GetSaleByBusinessDocument,
+          GetInvoicesByBusinessDocument,
+          GetSaleByIdDocument,
+        ],
+      });
+      showSuccessToast();
+      router.push("/dashboard/invoices");
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
+
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]">
       <div className=" flex justify-between w-full items-center relative">
@@ -152,7 +349,7 @@ const CreateInvoice = () => {
           className=" absolute top-0 text-primary-greytext "
           href="/dashboard/invoices"
         >
-          <button className=" flex items-center gap-x-2">
+          <button type="button" className=" flex items-center gap-x-2">
             <MoveLeft className=" w-5 h-5 " />
             Back to Invoices
           </button>
@@ -164,8 +361,10 @@ const CreateInvoice = () => {
           </p>
         </div>
         <button
+          type="button"
+          disabled
           onClick={() => setOpenViewInvoiceSheet(true)}
-          className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
+          className=" px-6 py-3 disabled:cursor-not-allowed rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
         >
           Preview
           <Eye className=" w-5 h-5 text-gray-500" />
@@ -203,7 +402,7 @@ const CreateInvoice = () => {
           <div className=" flex flex-col gap-y-6 text-primary-greytext text-lg">
             <p className=" flex gap-x-3 items-center">
               <BankIcon />
-              Verzo
+              {businessName}
             </p>
             <p className=" flex gap-x-3 items-center">
               <LocationIcon />
@@ -212,24 +411,93 @@ const CreateInvoice = () => {
           </div>
           <div className=" flex flex-col gap-y-6 text-primary-greytext text-lg">
             <p className=" flex gap-x-3 items-center ">
-              <Phone className=" w-5 h-5 text-[#C4C4C4]" />
-              +23410234790
+              <ProfileIcon />
+              {businessEmail}
             </p>
             <p className=" flex gap-x-3 items-center ">
-              <ProfileIcon />
-              femi@verzo.com
+              <Phone className=" w-5 h-5 text-[#C4C4C4]" />
+              {businessMobile}
             </p>
           </div>
         </div>
       </div>
-      <CustomerForm openCustomerSheet={handleOpenCustomerSheet} />
-      <div className=" w-full mt-5 flex flex-col gap-y-9">
+      <CustomerForm
+        onCustomerChange={handleCustomerChange}
+        openCustomerSheet={handleOpenCustomerSheet}
+      />
+      <div className=" flex flex-row gap-x-6">
+        <div className=" flex flex-col gap-y-[6px] w-1/2">
+          <label className="" htmlFor="issuedate">
+            Issue date
+          </label>
+          <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
+            <PopoverTrigger asChild>
+              <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                {date ? (
+                  format(date, "PPP")
+                ) : (
+                  <div className=" justify-between flex items-center w-full">
+                    <span className=" text-sm">Pick a date</span>
+                    <ChevronDown className=" w-4 h-4 text-primary-greytext" />
+                  </div>
+                )}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0 bg-white">
+              <Calendar
+                mode="single"
+                selected={date!}
+                onSelect={(date) => {
+                  setDate(date!);
+                  setOpenIssueDate(false);
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className=" flex flex-col gap-y-[6px] w-1/2">
+          <label className="" htmlFor="duedate">
+            Due date
+          </label>
+          <Popover open={openDueDate} onOpenChange={setOpenDueDate}>
+            <PopoverTrigger asChild>
+              <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                {dueDate ? (
+                  format(dueDate, "PPP")
+                ) : (
+                  <div className=" justify-between flex items-center w-full">
+                    <span className=" text-sm">Pick a date</span>
+                    <ChevronDown className=" w-4 h-4 text-primary-greytext" />
+                  </div>
+                )}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0 bg-white">
+              <Calendar
+                mode="single"
+                selected={dueDate!}
+                onSelect={(dueDate) => {
+                  setDueDate(dueDate!);
+                  setOpenDueDate(false);
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+      <form
+        onSubmit={handleSubmit(onSubmitCreateSaleHandler)}
+        className=" w-full mt-5 flex flex-col gap-y-9"
+      >
         <div className=" flex justify-between items-center w-full">
           <div className=" flex flex-col">
             <p className=" text-lg text-primary-black">Items</p>
             <p className=" text-primary-greytext">Describe the items sold</p>
           </div>
           <button
+            type="button"
             onClick={() => setOpenCreateItemSheet(true)}
             className=" text-primary-blue flex items-center gap-x-2"
           >
@@ -263,20 +531,37 @@ const CreateInvoice = () => {
           )}
           {invoiceItems.length > 0 && (
             <div className=" w-full flex flex-col items-end text-primary-black text-lg mt-[30px]">
-              <div className=" flex gap-x-[180px] p-4">
+              <div className=" flex gap-x-[180px] p-3">
                 <p className=" text-primary-greytext">Subtotal</p>
-                <p>₦3,000</p>
+                <p>₦{subtotalFromItems.toLocaleString("en-NG")}</p>
               </div>
-              <div className=" flex gap-x-[180px] p-4 border-t border-t-gray-100">
+              <div className=" flex gap-x-[200px] p-3">
+                <p className=" text-primary-greytext">VAT</p>
+                <p className=" text-green-600">+7.5%</p>
+              </div>
+              {saleExpenses > 1 && (
+                <div className=" flex gap-x-[180px] p-3">
+                  <p className=" text-primary-greytext">Sale expenses</p>
+                  <p>₦{saleExpenses.toLocaleString("en-NG")}</p>
+                </div>
+              )}
+              {saleServiceExpenses > 1 && (
+                <div className=" flex gap-x-[180px] p-3">
+                  <p className=" text-primary-greytext">Service expenses</p>
+                  <p>₦{saleServiceExpenses.toLocaleString("en-NG")}</p>
+                </div>
+              )}
+
+              <div className=" flex gap-x-[180px] p-3 border-t border-t-gray-100">
                 <p className=" text-primary-greytext">Amount due</p>
-                <p>₦3,000</p>
+                <p>₦{totalAmountDue.toLocaleString("en-NG")}</p>
               </div>
             </div>
           )}
         </div>
         <div className=" flex justify-between items-center w-full">
           <div className=" flex flex-col">
-            <p className=" text-lg text-primary-black items-center flex flex-row gap-x-2">
+            <div className=" text-lg text-primary-black items-center flex flex-row gap-x-2">
               Sale expense
               <HoverCard>
                 <HoverCardTrigger>
@@ -297,10 +582,11 @@ const CreateInvoice = () => {
                   </div>
                 </HoverCardContent>
               </HoverCard>
-            </p>
+            </div>
             <p className=" text-primary-greytext">Include extra expenses</p>
           </div>
           <button
+            type="button"
             onClick={handleAddExpense}
             className=" text-primary-blue flex items-center gap-x-2"
           >
@@ -347,6 +633,7 @@ const CreateInvoice = () => {
             </p>
           </div>
           <button
+            type="button"
             onClick={handleAddServiceExpense}
             className=" text-primary-blue flex items-center gap-x-2"
           >
@@ -367,27 +654,31 @@ const CreateInvoice = () => {
           <p className=" text-primary-greytext mt-[2px]">
             Say more to your customer
           </p>
-          <Textarea className=" mt-5" />
-        </div>
-        <div className=" flex flex-col">
-          <p className=" text-lg text-primary-black">Reference</p>
-          <p className=" text-primary-greytext mt-[2px]">
-            A unique identifier for this invoice
-          </p>
-          <input
-            className=" w-full rounded-lg border border-gray-200 p-[10px] text-[15px] focus:outline-none mt-5"
-            type="text"
+          <Textarea
+            {...register("description")}
+            id="description"
+            required
+            className=" mt-5"
           />
         </div>
         <div className=" flex flex-row items-center gap-x-5 mt-2">
-          <button className=" px-9 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
+          <button
+            type="button"
+            className=" px-9 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
+          >
             Cancel
           </button>
-          <button className=" bg-primary-blue text-white rounded-[10px] px-10 py-3">
-            Save
+          <button
+            type="submit"
+            disabled={loading}
+            className={`bg-primary-blue text-white rounded-[10px] px-10 py-3 ${
+              loading ? "opacity-50" : ""
+            }`}
+          >
+            {loading ? "Saving..." : "Save"}
           </button>
         </div>
-      </div>
+      </form>
       <CreateItemSheet
         open={openCreateItemSheet}
         onClose={handleCloseCreateItemSheet}

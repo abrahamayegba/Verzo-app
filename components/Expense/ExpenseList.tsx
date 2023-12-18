@@ -9,7 +9,10 @@ import ArchiveExpense from "../modals/expense/ArchiveExpenseModal";
 import UnarchiveExpense from "../modals/expense/UnarchiveExpenseModal";
 import DeleteExpense from "../modals/expense/DeleteExpenseModal";
 import localStorage from "local-storage-fallback";
-import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedExpensesByBusinessQuery,
+  useGetExpensesByBusinessQuery,
+} from "@/src/generated/graphql";
 
 const ExpenseList = () => {
   const storedBusinessId = JSON.parse(
@@ -63,12 +66,20 @@ const ExpenseList = () => {
       cursor: null,
     },
   });
+  const getArchivedExpensesByBusiness = useGetArchivedExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const archivedExpenses =
+    getArchivedExpensesByBusiness.data?.getArchivedExpenseByBusiness
+      ?.expenseByBusiness ?? [];
   const expenses =
     getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness ?? [];
   const allExpenses = expenses.length;
-  const archivedExpenses = expenses.filter(
-    (expense) => expense?.archived
-  ).length;
+  const allArchivedExpenses = archivedExpenses.length;
 
   return (
     <div className=" w-full flex flex-col">
@@ -89,7 +100,7 @@ const ExpenseList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                ({archivedExpenses})
+                ({allArchivedExpenses})
               </span>
             </TabsTrigger>
           </div>

@@ -1,0 +1,34 @@
+query GetArchivedExpensesByBusiness(
+  $businessId: String!
+  $sets: Float
+  $cursor: String
+) {
+  getArchivedExpenseByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    expenseByBusiness {
+      id
+      description
+      amount
+      paid
+      archived
+      businessId
+      expenseCategory {
+        name
+        id
+      }
+      expenseDate
+      business {
+        businessName
+      }
+      merchant {
+        name
+        id
+      }
+      recurring
+    }
+    cursorId
+  }
+}

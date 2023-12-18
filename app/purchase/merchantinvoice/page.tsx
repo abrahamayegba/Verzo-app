@@ -19,6 +19,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import * as filestack from "filestack-js";
 import {
   GetPurchaseByBusinessDocument,
+  GetPurchaseByIdDocument,
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
   useUploadMerchantInvoiceToPurchaseMutation,
@@ -55,7 +56,7 @@ const AddPurchaseMerchantInvoice = () => {
   });
   const purchase = getPurchaseById?.data?.getPurchaseById;
   const purchaseStatusId = purchase?.purchaseStatusId;
-  const itemsConfirmed = purchaseStatusId! >= 2;
+  const itemsConfirmed = true;
   const merchantInvoiceAdded = purchaseStatusId! >= 3;
   const paymentAdded = purchaseStatusId! >= 4;
   const amount = purchase?.total;
@@ -146,7 +147,10 @@ const AddPurchaseMerchantInvoice = () => {
           invoiceDate: formattedPurchaseDate,
           match: true,
         },
-        refetchQueries: [GetPurchaseByBusinessDocument],
+        refetchQueries: [
+          GetPurchaseByBusinessDocument,
+          GetPurchaseByIdDocument,
+        ],
       });
       router.push(`/purchase/addpayment?purchaseId=${purchaseId}`);
     } catch (error) {

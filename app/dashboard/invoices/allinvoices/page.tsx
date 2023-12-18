@@ -1,5 +1,5 @@
 import React from "react";
-import AllInvoicesList from "@/components/Allinvoices";
+import AllInvoicesList from "@/components/Invoice/Allinvoices";
 import { ArrowLeft, ListFilter, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import FilterDataDropdown from "@/components/FilterDataDropdown";

@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
@@ -62,8 +63,8 @@ const AddPurchasePayment = () => {
   });
   const purchase = getPurchaseById?.data?.getPurchaseById;
   const purchaseStatusId = purchase?.purchaseStatusId;
-  const itemsConfirmed = purchaseStatusId! >= 2;
-  const merchantInvoiceAdded = purchaseStatusId! >= 3;
+  const itemsConfirmed = true;
+  const merchantInvoiceAdded = true;
   const paymentAdded = purchaseStatusId! >= 4;
   const amount = purchase?.total;
   const apiKey = "Am510qpybQ3i95Kv17umgz";
@@ -160,7 +161,10 @@ const AddPurchasePayment = () => {
           total: amount!,
           description: getValues("description"),
         },
-        refetchQueries: [GetPurchaseByIdDocument],
+        refetchQueries: [
+          GetPurchaseByIdDocument,
+          GetPurchaseByBusinessDocument,
+        ],
       });
       showSuccessToast();
       router.push("/dashboard/purchases");
@@ -169,6 +173,7 @@ const AddPurchasePayment = () => {
       showFailureToast(error);
     }
   };
+  console.log(purchaseStatusId);
 
   return (
     <>
@@ -181,7 +186,7 @@ const AddPurchasePayment = () => {
             className=" absolute top-0 text-primary-greytext "
             href="/dashboard/purchases"
           >
-            <button className=" flex items-center gap-x-2">
+            <button type="button" className=" flex items-center gap-x-2">
               <MoveLeft className=" w-5 h-5 " />
               Back to Purchases
             </button>
@@ -232,6 +237,7 @@ const AddPurchasePayment = () => {
               </div>
             </div>
             <button
+              type="button"
               onClick={() => setOpenViewPurchaseSheet(true)}
               className="rounded-[10px] flex text-primary-blue items-center gap-x-[6px] justify-center"
             >

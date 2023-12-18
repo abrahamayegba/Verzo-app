@@ -2,8 +2,9 @@ import { Trash2 } from "lucide-react";
 import React from "react";
 
 interface Expense {
-  name: string;
-  amount: string;
+  description: string;
+  amount: number;
+  index: number;
 }
 
 interface ExpenseInputProps {
@@ -20,7 +21,7 @@ const SaleExpenseItem: React.FC<ExpenseInputProps> = ({
   onDeleteExpense,
 }) => {
   return (
-    <div className="flex w-full gap-x-6">
+    <div className="flex w-full gap-x-6 mt-[-10px]">
       <div className="flex flex-col w-1/2 gap-y-2">
         <label htmlFor={`expenseName${index}`}>Title</label>
         <input
@@ -28,9 +29,11 @@ const SaleExpenseItem: React.FC<ExpenseInputProps> = ({
           id={`expenseName${index}`}
           placeholder="Expense title"
           required
-          className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2"
-          value={expense.name}
-          onChange={(e) => onExpenseChange(index, "name", e.target.value)}
+          className="border border-gray-200 bg-transparent rounded-lg h-10 text-[15px] focus:outline-none px-3 py-2"
+          value={expense.description}
+          onChange={(e) =>
+            onExpenseChange(index, "description", e.target.value)
+          }
         />
       </div>
       <div className="flex flex-col w-1/2 gap-y-2">
@@ -38,11 +41,11 @@ const SaleExpenseItem: React.FC<ExpenseInputProps> = ({
         <div className="flex gap-x-3">
           <input
             type="number"
-            className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2 w-full"
+            className="border border-gray-200 bg-transparent rounded-lg h-10 text-[15px] focus:outline-none px-3 py-2 w-full"
             id={`expenseAmount${index}`}
             placeholder="Enter amount"
             required
-            value={expense.amount}
+            value={expense.amount || ""}
             onChange={(e) => onExpenseChange(index, "amount", e.target.value)}
           />
           <Trash2

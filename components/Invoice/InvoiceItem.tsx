@@ -4,8 +4,10 @@ import React from "react";
 interface InvoiceItemProps {
   item: {
     name: string;
+    id: string;
     quantity: number;
     price: number;
+    type: string;
   };
   index: number;
   onDelete: (index: number) => void;
