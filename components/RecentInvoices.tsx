@@ -52,23 +52,31 @@ const RecentInvoices = () => {
             </Link>
           </div>
           <div className=" flex flex-col bg-white h-full rounded-b-[16px]">
-            {sales.map((sale) => (
+            {sales.slice(0, 3).map((sale, index) => (
               <div
                 key={sale?.id}
-                className="border-t border-t-gray-100 min-h-[63px] flex justify-between text-sm items-center px-6"
+                className={`min-h-[62px] flex justify-between text-sm items-center px-6 ${
+                  index === 2 ? "" : "border-b border-b-gray-100"
+                }`}
               >
-                <p>#{sale?.id}</p>
-                <p className="text-primary-greytext">{sale?.transactionDate}</p>
-                <div
-                  className={`bg-${
-                    sale?.paid === true ? "green" : "yellow"
-                  }-100 h-[20px] text-xs text-${
-                    sale?.paid === true ? "green" : "yellow"
-                  }-800 flex items-baseline rounded-full px-2.5 py-0.5`}
-                >
-                  <Check className="-ml-1 mr-0.5 h-3 w-3 flex-shrink-0 self-center text-green-500" />
-                  {sale?.paid === true ? "Paid" : "Pending"}
-                </div>
+                <p>#INV{String(index + 1).padStart(3, "0")}</p>
+                <p className="text-primary-greytext">
+                  {" "}
+                  {sale?.transactionDate
+                    ? new Date(sale.transactionDate).toDateString()
+                    : ""}
+                </p>
+                {sale?.paid === true ? (
+                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                    <span className="mr-2 text-green-500">✔</span>
+                    Paid
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
+                    <span className="mr-2 text-yellow-500">⌛</span>
+                    Pending
+                  </span>
+                )}
                 <DropdownMenu>
                   <DropdownMenuTrigger className=" focus:outline-none">
                     <MoreHorizontal className=" text-[#c4c4c4]" />
