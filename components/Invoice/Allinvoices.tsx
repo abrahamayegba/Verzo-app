@@ -18,6 +18,11 @@ const AllInvoicesList = () => {
     openModal: openDeleteModal,
     closeModal: closeDeleteModal,
   } = useModal();
+  const {
+    isOpen: isEditModalOpen,
+    openModal: openEditModal,
+    closeModal: closeEditModal,
+  } = useModal();
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
@@ -73,6 +78,7 @@ const AllInvoicesList = () => {
           <InvoiceTabContentAll
             openArchiveModal={openModal}
             openDeleteModal={openDeleteModal}
+            openEditModal={openEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
           <CustomPagination
@@ -82,7 +88,12 @@ const AllInvoicesList = () => {
           />
         </TabsContent>
         <TabsContent value="archived">
-          <InvoiceTabContentArchived />
+          <InvoiceTabContentArchived
+            openDeleteModal={openDeleteModal}
+            openArchiveModal={openModal}
+            openEditModal={openEditModal}
+            onToggleSelectAll={handleToggleSelectAll}
+          />
         </TabsContent>
       </Tabs>
 
