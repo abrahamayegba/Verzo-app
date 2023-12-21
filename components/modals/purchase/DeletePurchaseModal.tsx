@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetArchivedPurchasesByBusinessDocument,
   GetPurchaseByBusinessDocument,
   GetPurchaseForMonthDocument,
   GetPurchaseForQuarterDocument,
@@ -51,6 +52,7 @@ const DeletePurchase: React.FC<DeletePurchaseProps> = ({
           GetPurchaseForMonthDocument,
           GetPurchaseForQuarterDocument,
           GetPurchaseForYearDocument,
+          GetArchivedPurchasesByBusinessDocument,
         ],
       });
       onClose();

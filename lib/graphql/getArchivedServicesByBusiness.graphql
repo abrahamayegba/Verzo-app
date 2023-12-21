@@ -1,0 +1,26 @@
+query GetArchivedServiceByBusiness(
+  $businessId: String!
+  $sets: Float
+  $cursor: String
+) {
+  getArchivedServicesByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    serviceByBusiness {
+      id
+      name
+      price
+      type
+      serviceUnit {
+        unitName
+      }
+      serviceUnitId
+      businessId
+      archived
+      createdAt
+    }
+    cursorId
+  }
+}

@@ -4433,6 +4433,7 @@ export type SaleServiceExpense = {
   createdAt?: Maybe<Scalars['Date']['output']>;
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   effected?: Maybe<Scalars['Boolean']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   index?: Maybe<Scalars['Float']['output']>;
@@ -5510,6 +5511,15 @@ export type GetAddOnOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAddOnOptionsQuery = { __typename?: 'Query', getAddOnOptions: Array<{ __typename?: 'AddOnOption', id?: string | null, addOnName?: string | null, addOnPrice?: number | null } | null> };
 
+export type GetArchivedCustomersByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  sets?: InputMaybe<Scalars['Float']['input']>;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetArchivedCustomersByBusinessQuery = { __typename?: 'Query', getArchivedCustomerByBusiness?: { __typename?: 'GetCustomerResponse', cursorId?: string | null, customerByBusiness: Array<{ __typename?: 'Customer', id: string, name: string, email: string, mobile: string, createdAt?: any | null, address?: string | null, invoices?: Array<{ __typename?: 'Invoice', totalAmount: number, createdAt?: any | null } | null> | null } | null> } | null };
+
 export type GetArchivedExpensesByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
   sets?: InputMaybe<Scalars['Float']['input']>;
@@ -5518,6 +5528,42 @@ export type GetArchivedExpensesByBusinessQueryVariables = Exact<{
 
 
 export type GetArchivedExpensesByBusinessQuery = { __typename?: 'Query', getArchivedExpenseByBusiness?: { __typename?: 'GetExpenseResponse', cursorId?: string | null, expenseByBusiness: Array<{ __typename?: 'Expense', id: string, description?: string | null, amount: number, paid?: boolean | null, archived?: boolean | null, businessId: string, expenseDate?: any | null, recurring?: boolean | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, business?: { __typename?: 'Business', businessName: string } | null, merchant?: { __typename?: 'Merchant', name: string, id?: string | null } | null } | null> } | null };
+
+export type GetArchivedProductsByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  sets?: InputMaybe<Scalars['Float']['input']>;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetArchivedProductsByBusinessQuery = { __typename?: 'Query', getArchivedProductByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, stockStatus?: string | null, price?: number | null, productUnitId?: string | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null> } | null };
+
+export type GetArchivedPurchasesByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  sets?: InputMaybe<Scalars['Float']['input']>;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetArchivedPurchasesByBusinessQuery = { __typename?: 'Query', getArchivedPurchaseByBusiness?: { __typename?: 'GetPurchaseByBusinessResponse', cursorId?: string | null, purchaseByBusiness: Array<{ __typename?: 'Purchase', id?: string | null, description?: string | null, total?: number | null, paid?: boolean | null, archived?: boolean | null, businessId?: string | null, deliveryDate?: any | null, createdAt?: any | null, transactionDate?: any | null, merchant?: { __typename?: 'Merchant', name: string, id?: string | null } | null } | null> } | null };
+
+export type GetArchivedSalesByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  sets?: InputMaybe<Scalars['Float']['input']>;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetArchivedSalesByBusinessQuery = { __typename?: 'Query', getArchivedSalesByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, archived?: boolean | null, saleAmount?: number | null, paid?: boolean | null, transactionDate?: any | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', amount?: number | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', amount?: number | null } | null> | null, business?: { __typename?: 'Business', businessName: string } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: number, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: number, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: number | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
+
+export type GetArchivedServiceByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  sets?: InputMaybe<Scalars['Float']['input']>;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetArchivedServiceByBusinessQuery = { __typename?: 'Query', getArchivedServicesByBusiness?: { __typename?: 'GetServiceResponse', cursorId?: string | null, serviceByBusiness: Array<{ __typename?: 'Service', id: string, name: string, price: number, type?: string | null, serviceUnitId?: string | null, businessId: string, archived?: boolean | null, createdAt?: any | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null } | null> } | null };
 
 export type GetBusinessCoaByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5821,7 +5867,7 @@ export type GetPurchaseByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetPurchaseByIdQuery = { __typename?: 'Query', getPurchaseById?: { __typename?: 'Purchase', id?: string | null, description?: string | null, reference?: string | null, transactionDate?: any | null, deliveryDate?: any | null, total?: number | null, paid?: boolean | null, createdAt?: any | null, purchaseStatusId?: number | null, businessId?: string | null, merchant?: { __typename?: 'Merchant', name: string, email?: string | null, id?: string | null } | null, purchaseItems?: Array<{ __typename?: 'PurchaseItem', id?: string | null, quantityReceived?: number | null, archived?: boolean | null, received?: boolean | null, productId?: string | null, description: string, quantity: number, unitPrice: number, index: number, price: number, purchase?: { __typename?: 'Purchase', createdAt?: any | null, updatedAt?: any | null } | null, product?: { __typename?: 'Product', productName: string, price?: number | null, id: string, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null } | null> | null, purchaseStatus?: { __typename?: 'PurchaseStatusRef', id?: number | null, purchaseStatus?: string | null } | null, purchaseLines?: Array<{ __typename?: 'PurchaseLine', id?: string | null, lineAmount: number, lineQuantity?: number | null, transactionDate: any } | null> | null } | null };
+export type GetPurchaseByIdQuery = { __typename?: 'Query', getPurchaseById?: { __typename?: 'Purchase', id?: string | null, description?: string | null, reference?: string | null, transactionDate?: any | null, deliveryDate?: any | null, total?: number | null, paid?: boolean | null, createdAt?: any | null, purchaseStatusId?: number | null, businessId?: string | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null } | null, merchant?: { __typename?: 'Merchant', name: string, email?: string | null, id?: string | null } | null, purchaseItems?: Array<{ __typename?: 'PurchaseItem', id?: string | null, quantityReceived?: number | null, archived?: boolean | null, received?: boolean | null, productId?: string | null, description: string, quantity: number, unitPrice: number, index: number, price: number, purchase?: { __typename?: 'Purchase', createdAt?: any | null, updatedAt?: any | null } | null, product?: { __typename?: 'Product', productName: string, price?: number | null, id: string, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null } | null> | null, purchaseStatus?: { __typename?: 'PurchaseStatusRef', id?: number | null, purchaseStatus?: string | null } | null, purchaseLines?: Array<{ __typename?: 'PurchaseLine', id?: string | null, lineAmount: number, lineQuantity?: number | null, transactionDate: any } | null> | null } | null };
 
 export type GetPurchaseForMonthQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5878,7 +5924,7 @@ export type GetSaleByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetSaleByIdQuery = { __typename?: 'Query', getSaleById?: { __typename?: 'Sale', id: string, description?: string | null, reference?: string | null, paid?: boolean | null, saleAmount?: number | null, transactionDate?: any | null, dueDate?: any | null, saleStatus?: { __typename?: 'SaleStatusRef', id?: number | null, saleStatus?: string | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', id?: string | null, index?: number | null, saleId?: string | null, description?: string | null, amount?: number | null, effected?: boolean | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', id?: string | null, effected?: boolean | null, amount?: number | null, index?: number | null, service?: { __typename?: 'Service', name: string, id: string } | null } | null> | null, invoice?: { __typename?: 'Invoice', totalAmount: number, VAT?: number | null, id: string, createdAt?: any | null, subtotal: number, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null, mobile: string } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null };
+export type GetSaleByIdQuery = { __typename?: 'Query', getSaleById?: { __typename?: 'Sale', id: string, description?: string | null, reference?: string | null, paid?: boolean | null, saleAmount?: number | null, transactionDate?: any | null, dueDate?: any | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, businessMobile?: string | null } | null, saleStatus?: { __typename?: 'SaleStatusRef', id?: number | null, saleStatus?: string | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', id?: string | null, index?: number | null, saleId?: string | null, description?: string | null, amount?: number | null, effected?: boolean | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', id?: string | null, effected?: boolean | null, amount?: number | null, index?: number | null, service?: { __typename?: 'Service', name: string, id: string } | null } | null> | null, invoice?: { __typename?: 'Invoice', totalAmount: number, VAT?: number | null, id: string, createdAt?: any | null, subtotal: number, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null, mobile: string } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null };
 
 export type GetSalesForMonthQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7749,6 +7795,64 @@ export type GetAddOnOptionsQueryHookResult = ReturnType<typeof useGetAddOnOption
 export type GetAddOnOptionsLazyQueryHookResult = ReturnType<typeof useGetAddOnOptionsLazyQuery>;
 export type GetAddOnOptionsSuspenseQueryHookResult = ReturnType<typeof useGetAddOnOptionsSuspenseQuery>;
 export type GetAddOnOptionsQueryResult = Apollo.QueryResult<GetAddOnOptionsQuery, GetAddOnOptionsQueryVariables>;
+export const GetArchivedCustomersByBusinessDocument = gql`
+    query GetArchivedCustomersByBusiness($businessId: String!, $sets: Float, $cursor: String) {
+  getArchivedCustomerByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    customerByBusiness {
+      id
+      name
+      email
+      mobile
+      createdAt
+      address
+      invoices {
+        totalAmount
+        createdAt
+      }
+    }
+    cursorId
+  }
+}
+    `;
+
+/**
+ * __useGetArchivedCustomersByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetArchivedCustomersByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivedCustomersByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivedCustomersByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      sets: // value for 'sets'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useGetArchivedCustomersByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetArchivedCustomersByBusinessQuery, GetArchivedCustomersByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArchivedCustomersByBusinessQuery, GetArchivedCustomersByBusinessQueryVariables>(GetArchivedCustomersByBusinessDocument, options);
+      }
+export function useGetArchivedCustomersByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArchivedCustomersByBusinessQuery, GetArchivedCustomersByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArchivedCustomersByBusinessQuery, GetArchivedCustomersByBusinessQueryVariables>(GetArchivedCustomersByBusinessDocument, options);
+        }
+export function useGetArchivedCustomersByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetArchivedCustomersByBusinessQuery, GetArchivedCustomersByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetArchivedCustomersByBusinessQuery, GetArchivedCustomersByBusinessQueryVariables>(GetArchivedCustomersByBusinessDocument, options);
+        }
+export type GetArchivedCustomersByBusinessQueryHookResult = ReturnType<typeof useGetArchivedCustomersByBusinessQuery>;
+export type GetArchivedCustomersByBusinessLazyQueryHookResult = ReturnType<typeof useGetArchivedCustomersByBusinessLazyQuery>;
+export type GetArchivedCustomersByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetArchivedCustomersByBusinessSuspenseQuery>;
+export type GetArchivedCustomersByBusinessQueryResult = Apollo.QueryResult<GetArchivedCustomersByBusinessQuery, GetArchivedCustomersByBusinessQueryVariables>;
 export const GetArchivedExpensesByBusinessDocument = gql`
     query GetArchivedExpensesByBusiness($businessId: String!, $sets: Float, $cursor: String) {
   getArchivedExpenseByBusiness(
@@ -7816,6 +7920,297 @@ export type GetArchivedExpensesByBusinessQueryHookResult = ReturnType<typeof use
 export type GetArchivedExpensesByBusinessLazyQueryHookResult = ReturnType<typeof useGetArchivedExpensesByBusinessLazyQuery>;
 export type GetArchivedExpensesByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetArchivedExpensesByBusinessSuspenseQuery>;
 export type GetArchivedExpensesByBusinessQueryResult = Apollo.QueryResult<GetArchivedExpensesByBusinessQuery, GetArchivedExpensesByBusinessQueryVariables>;
+export const GetArchivedProductsByBusinessDocument = gql`
+    query GetArchivedProductsByBusiness($businessId: String!, $sets: Float, $cursor: String) {
+  getArchivedProductByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    productByBusiness {
+      id
+      type
+      productName
+      stockStatus
+      price
+      productUnit {
+        unitName
+      }
+      productUnitId
+      businessId
+      createdAt
+    }
+    cursorId
+  }
+}
+    `;
+
+/**
+ * __useGetArchivedProductsByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetArchivedProductsByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivedProductsByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivedProductsByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      sets: // value for 'sets'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useGetArchivedProductsByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetArchivedProductsByBusinessQuery, GetArchivedProductsByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArchivedProductsByBusinessQuery, GetArchivedProductsByBusinessQueryVariables>(GetArchivedProductsByBusinessDocument, options);
+      }
+export function useGetArchivedProductsByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArchivedProductsByBusinessQuery, GetArchivedProductsByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArchivedProductsByBusinessQuery, GetArchivedProductsByBusinessQueryVariables>(GetArchivedProductsByBusinessDocument, options);
+        }
+export function useGetArchivedProductsByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetArchivedProductsByBusinessQuery, GetArchivedProductsByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetArchivedProductsByBusinessQuery, GetArchivedProductsByBusinessQueryVariables>(GetArchivedProductsByBusinessDocument, options);
+        }
+export type GetArchivedProductsByBusinessQueryHookResult = ReturnType<typeof useGetArchivedProductsByBusinessQuery>;
+export type GetArchivedProductsByBusinessLazyQueryHookResult = ReturnType<typeof useGetArchivedProductsByBusinessLazyQuery>;
+export type GetArchivedProductsByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetArchivedProductsByBusinessSuspenseQuery>;
+export type GetArchivedProductsByBusinessQueryResult = Apollo.QueryResult<GetArchivedProductsByBusinessQuery, GetArchivedProductsByBusinessQueryVariables>;
+export const GetArchivedPurchasesByBusinessDocument = gql`
+    query GetArchivedPurchasesByBusiness($businessId: String!, $sets: Float, $cursor: String) {
+  getArchivedPurchaseByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    purchaseByBusiness {
+      id
+      description
+      total
+      paid
+      archived
+      businessId
+      deliveryDate
+      createdAt
+      transactionDate
+      merchant {
+        name
+        id
+      }
+    }
+    cursorId
+  }
+}
+    `;
+
+/**
+ * __useGetArchivedPurchasesByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetArchivedPurchasesByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivedPurchasesByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivedPurchasesByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      sets: // value for 'sets'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useGetArchivedPurchasesByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetArchivedPurchasesByBusinessQuery, GetArchivedPurchasesByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArchivedPurchasesByBusinessQuery, GetArchivedPurchasesByBusinessQueryVariables>(GetArchivedPurchasesByBusinessDocument, options);
+      }
+export function useGetArchivedPurchasesByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArchivedPurchasesByBusinessQuery, GetArchivedPurchasesByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArchivedPurchasesByBusinessQuery, GetArchivedPurchasesByBusinessQueryVariables>(GetArchivedPurchasesByBusinessDocument, options);
+        }
+export function useGetArchivedPurchasesByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetArchivedPurchasesByBusinessQuery, GetArchivedPurchasesByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetArchivedPurchasesByBusinessQuery, GetArchivedPurchasesByBusinessQueryVariables>(GetArchivedPurchasesByBusinessDocument, options);
+        }
+export type GetArchivedPurchasesByBusinessQueryHookResult = ReturnType<typeof useGetArchivedPurchasesByBusinessQuery>;
+export type GetArchivedPurchasesByBusinessLazyQueryHookResult = ReturnType<typeof useGetArchivedPurchasesByBusinessLazyQuery>;
+export type GetArchivedPurchasesByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetArchivedPurchasesByBusinessSuspenseQuery>;
+export type GetArchivedPurchasesByBusinessQueryResult = Apollo.QueryResult<GetArchivedPurchasesByBusinessQuery, GetArchivedPurchasesByBusinessQueryVariables>;
+export const GetArchivedSalesByBusinessDocument = gql`
+    query GetArchivedSalesByBusiness($businessId: String!, $sets: Float, $cursor: String) {
+  getArchivedSalesByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    salesByBusiness {
+      id
+      description
+      archived
+      saleAmount
+      saleExpenses {
+        amount
+      }
+      saleServiceExpenses {
+        amount
+      }
+      paid
+      business {
+        businessName
+      }
+      transactionDate
+      invoice {
+        id
+        totalAmount
+        createdAt
+        VAT
+        paidFully
+        discount
+        dateOfIssue
+        dueDate
+        customer {
+          id
+          name
+          email
+          address
+        }
+        business {
+          id
+          businessName
+          businessEmail
+        }
+        invoiceDetails {
+          id
+          index
+          productInvoiceDetail {
+            unitPrice
+            quantity
+            product {
+              type
+              productName
+              productUnit {
+                id
+                unitName
+              }
+            }
+          }
+          serviceInvoiceDetail {
+            unitPrice
+            quantity
+            service {
+              type
+              name
+              serviceUnit {
+                id
+                unitName
+              }
+            }
+          }
+        }
+      }
+    }
+    cursorId
+  }
+}
+    `;
+
+/**
+ * __useGetArchivedSalesByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetArchivedSalesByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivedSalesByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivedSalesByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      sets: // value for 'sets'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useGetArchivedSalesByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetArchivedSalesByBusinessQuery, GetArchivedSalesByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArchivedSalesByBusinessQuery, GetArchivedSalesByBusinessQueryVariables>(GetArchivedSalesByBusinessDocument, options);
+      }
+export function useGetArchivedSalesByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArchivedSalesByBusinessQuery, GetArchivedSalesByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArchivedSalesByBusinessQuery, GetArchivedSalesByBusinessQueryVariables>(GetArchivedSalesByBusinessDocument, options);
+        }
+export function useGetArchivedSalesByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetArchivedSalesByBusinessQuery, GetArchivedSalesByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetArchivedSalesByBusinessQuery, GetArchivedSalesByBusinessQueryVariables>(GetArchivedSalesByBusinessDocument, options);
+        }
+export type GetArchivedSalesByBusinessQueryHookResult = ReturnType<typeof useGetArchivedSalesByBusinessQuery>;
+export type GetArchivedSalesByBusinessLazyQueryHookResult = ReturnType<typeof useGetArchivedSalesByBusinessLazyQuery>;
+export type GetArchivedSalesByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetArchivedSalesByBusinessSuspenseQuery>;
+export type GetArchivedSalesByBusinessQueryResult = Apollo.QueryResult<GetArchivedSalesByBusinessQuery, GetArchivedSalesByBusinessQueryVariables>;
+export const GetArchivedServiceByBusinessDocument = gql`
+    query GetArchivedServiceByBusiness($businessId: String!, $sets: Float, $cursor: String) {
+  getArchivedServicesByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    serviceByBusiness {
+      id
+      name
+      price
+      type
+      serviceUnit {
+        unitName
+      }
+      serviceUnitId
+      businessId
+      archived
+      createdAt
+    }
+    cursorId
+  }
+}
+    `;
+
+/**
+ * __useGetArchivedServiceByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetArchivedServiceByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArchivedServiceByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArchivedServiceByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      sets: // value for 'sets'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useGetArchivedServiceByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetArchivedServiceByBusinessQuery, GetArchivedServiceByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArchivedServiceByBusinessQuery, GetArchivedServiceByBusinessQueryVariables>(GetArchivedServiceByBusinessDocument, options);
+      }
+export function useGetArchivedServiceByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArchivedServiceByBusinessQuery, GetArchivedServiceByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArchivedServiceByBusinessQuery, GetArchivedServiceByBusinessQueryVariables>(GetArchivedServiceByBusinessDocument, options);
+        }
+export function useGetArchivedServiceByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetArchivedServiceByBusinessQuery, GetArchivedServiceByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetArchivedServiceByBusinessQuery, GetArchivedServiceByBusinessQueryVariables>(GetArchivedServiceByBusinessDocument, options);
+        }
+export type GetArchivedServiceByBusinessQueryHookResult = ReturnType<typeof useGetArchivedServiceByBusinessQuery>;
+export type GetArchivedServiceByBusinessLazyQueryHookResult = ReturnType<typeof useGetArchivedServiceByBusinessLazyQuery>;
+export type GetArchivedServiceByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetArchivedServiceByBusinessSuspenseQuery>;
+export type GetArchivedServiceByBusinessQueryResult = Apollo.QueryResult<GetArchivedServiceByBusinessQuery, GetArchivedServiceByBusinessQueryVariables>;
 export const GetBusinessCoaByBusinessDocument = gql`
     query GetBusinessCOAByBusiness($businessId: String!) {
   getBusinessCOAByBusiness(businessId: $businessId) {
@@ -9852,6 +10247,10 @@ export const GetPurchaseByIdDocument = gql`
     id
     description
     reference
+    business {
+      businessName
+      businessEmail
+    }
     transactionDate
     deliveryDate
     total
@@ -10275,6 +10674,11 @@ export const GetSaleByIdDocument = gql`
     id
     description
     reference
+    business {
+      businessName
+      businessEmail
+      businessMobile
+    }
     saleStatus {
       id
       saleStatus
@@ -10320,11 +10724,6 @@ export const GetSaleByIdDocument = gql`
         email
         address
         mobile
-      }
-      business {
-        id
-        businessName
-        businessEmail
       }
       invoiceDetails {
         id

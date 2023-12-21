@@ -32,7 +32,6 @@ const RecentInvoices = () => {
   });
   const sales =
     getSalesByBusiness.data?.getSaleByBusiness?.salesByBusiness ?? [];
-  console.log(sales?.length, sales);
   return (
     <>
       {sales?.length === 0 ? (
@@ -83,8 +82,13 @@ const RecentInvoices = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      View Invoice
+                      <Link
+                        className=" flex gap-x-2 items-center"
+                        href={`/invoice/viewinvoice?invoiceId=${sale?.id}`}
+                      >
+                        <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        View Invoice
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                       <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
@@ -93,14 +97,6 @@ const RecentInvoices = () => {
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                       <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Download Invoice
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Archive Invoice
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Delete Invoice
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

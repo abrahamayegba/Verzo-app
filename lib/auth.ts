@@ -16,7 +16,7 @@ export const getRefreshToken = (): string | null =>
   storage.getItem(REFRESH_TOKEN);
 export const clearRefreshToken = () => storage.removeItem(REFRESH_TOKEN);
 
-export const isAuthenticated = async (): Promise<boolean> => {
+export const isAuthenticated = (): boolean => {
   const token = getToken();
   if (!token) {
     return false;

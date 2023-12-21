@@ -465,10 +465,10 @@ const CreatePurchase = () => {
         onClose={handleCloseCreateItemSheet}
         onItemSelected={setSideSheetCallback}
       />
-      <ViewPurchaseSheet
+      {/* <ViewPurchaseSheet
         open={openViewPurchaseSheet}
         onClose={handleCloseViewPurchaseSheet}
-      />
+      /> */}
       <CreateMerchantSheet
         open={openMerchantSheet}
         onClose={handleCloseMerchantSheet}

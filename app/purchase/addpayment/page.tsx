@@ -86,7 +86,6 @@ const AddPurchasePayment = () => {
       duration: 3000,
     });
   };
-
   const showDateFailureToast = (error: any) => {
     toast({
       variant: "destructive",
@@ -94,7 +93,6 @@ const AddPurchasePayment = () => {
       duration: 3000,
     });
   };
-
   const showSuccessToast = () => {
     toast({
       title: "Successful!",
@@ -151,6 +149,10 @@ const AddPurchasePayment = () => {
   }
 
   const handleUploadReceiptClick = async () => {
+    if (!date) {
+      showDateFailureToast("Please pick a date and try again.");
+      return;
+    }
     try {
       await makePurchasePaymentMutation({
         variables: {
@@ -173,7 +175,6 @@ const AddPurchasePayment = () => {
       showFailureToast(error);
     }
   };
-  console.log(purchaseStatusId);
 
   return (
     <>
@@ -352,10 +353,10 @@ const AddPurchasePayment = () => {
           </div>
         </div>
       </form>
-      <ViewPurchaseSheet
+      {/* <ViewPurchaseSheet
         open={openViewPurchaseSheet}
         onClose={handleCloseViewPurchaseSheet}
-      />
+      /> */}
     </>
   );
 };

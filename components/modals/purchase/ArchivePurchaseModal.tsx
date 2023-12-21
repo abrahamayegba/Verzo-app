@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import {
+  GetArchivedPurchasesByBusinessDocument,
   GetPurchaseByBusinessDocument,
   useArchivePurchaseMutation,
 } from "@/src/generated/graphql";
@@ -45,7 +46,10 @@ const ArchivePurchase: React.FC<ArchivePurchaseProps> = ({
     try {
       await archivePurchaseMutation({
         variables: { purchaseId: purchaseId },
-        refetchQueries: [GetPurchaseByBusinessDocument],
+        refetchQueries: [
+          GetPurchaseByBusinessDocument,
+          GetArchivedPurchasesByBusinessDocument,
+        ],
       });
       onClose();
       showSuccessToast();

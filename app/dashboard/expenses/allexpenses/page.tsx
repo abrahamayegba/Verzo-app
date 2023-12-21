@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { ArrowLeft, ListFilter, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
@@ -11,6 +11,8 @@ import {
 import MainLoader from "@/components/loading/MainLoader";
 import localStorage from "local-storage-fallback";
 import Loader2 from "@/components/loading/Loader2";
+import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/auth";
 
 const AllExpenses = () => {
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
@@ -18,6 +20,12 @@ const AllExpenses = () => {
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/auth/signin");
+    }
+  });
   const getExpensesByBusiness = useGetExpensesByBusinessQuery({
     variables: {
       businessId: businessId,

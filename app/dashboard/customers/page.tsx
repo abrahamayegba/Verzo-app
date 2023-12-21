@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlusCircle } from "lucide-react";
 import CustomerList from "@/components/CustomerList";
 import CreateCustomerSheet from "@/components/sheets/customer/CreateCustomerSheet";
@@ -10,12 +10,20 @@ import {
 import MainLoader from "@/components/loading/MainLoader";
 import localStorage from "local-storage-fallback";
 import Loader2 from "@/components/loading/Loader2";
+import { isAuthenticated } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 const Customers = () => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/auth/signin");
+    }
+  }, [router]);
   const [openCustomerSheet, setOpenCustomerSheet] = useState(false);
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const getCustomerByBusiness = useGetCustomerByBusinessQuery({

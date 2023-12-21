@@ -1,28 +1,70 @@
+"use client";
 import InvoiceStepIndicator from "@/components/Invoice/InvoiceTimeline";
+import MainLoader from "@/components/loading/MainLoader";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
+import {
+  useGetBusinessesByUserIdQuery,
+  useGetSaleByIdQuery,
+} from "@/src/generated/graphql";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 
 const ViewInvoice = () => {
   const currentStep = 1;
-  const saleCompleted = false;
-  const paymentAdded = false;
-
-  interface TableData {
-    item: string;
-    qty: number;
-    amount: number;
+  const invoiceIdParams = useSearchParams();
+  const invoiceId = invoiceIdParams.get("invoiceId")?.toString();
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const getSaleById = useGetSaleByIdQuery({
+    variables: {
+      saleId: invoiceId!,
+    },
+  });
+  const sales = getSaleById.data?.getSaleById;
+  const saleStatusId = sales?.saleStatus?.id;
+  const saleItems = sales?.invoice?.invoiceDetails;
+  const saleItem = saleItems?.map((item) => ({
+    id: item?.id,
+    itemName:
+      item?.type === "P"
+        ? item?.productInvoiceDetail?.product?.productName
+        : item?.serviceInvoiceDetail?.service?.name,
+    quantity:
+      item?.type === "P"
+        ? item?.productInvoiceDetail?.quantity
+        : item?.serviceInvoiceDetail?.quantity,
+    price:
+      item?.type === "P"
+        ? item?.productInvoiceDetail?.price
+        : item?.serviceInvoiceDetail?.price,
+  }));
+  const saleExpenseRecorded = saleStatusId! >= 2;
+  const paymentAdded = saleStatusId! >= 3;
+  const hasStep2 =
+    (sales?.saleExpenses?.length ?? 0) > 0 ||
+    (sales?.saleServiceExpenses?.length ?? 0) > 0;
+  const businesses =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses;
+  const businessName = businesses?.map((business) => business?.businessName);
+  const businessEmail = businesses?.map((business) => business?.businessEmail);
+  const country = "Nigeria";
+  const customerName = sales?.invoice?.customer?.name;
+  const customerEmail = sales?.invoice?.customer?.email;
+  const transactionDate = sales?.transactionDate;
+  const dueDate = sales?.dueDate;
+  const subtotal = sales?.invoice?.subtotal;
+  const total = sales?.saleAmount;
+  let nextRoute = "";
+  if (!saleExpenseRecorded) {
+    nextRoute = `/invoice/recordsaleexpense?invoiceId=${invoiceId}`;
+  } else if (!paymentAdded) {
+    nextRoute = `/invoice/addpayment?invoiceId=${invoiceId}`;
   }
-
-  const sampleData: TableData[] = [
-    { item: "Item 1", qty: 3, amount: 100000 },
-    { item: "Item 2", qty: 2, amount: 5000 },
-    { item: "Item 3", qty: 1, amount: 300 },
-    { item: "Item 4", qty: 1, amount: 300 },
-    { item: "Item 5", qty: 1, amount: 300 },
-  ];
-
+  if (getBusinessesByUserId.loading || getSaleById.loading) {
+    return <MainLoader />;
+  }
+  console.log(hasStep2);
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[20px]">
       <div className=" flex justify-between w-full items-center relative">
@@ -41,15 +83,17 @@ const ViewInvoice = () => {
             Add extra information to the invoice
           </p>
         </div>
-        <Link href="/invoice/recordsaleexpense">
-          <button className=" px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
-            Next
-          </button>
-        </Link>
+        {nextRoute && (
+          <Link href={nextRoute}>
+            <button className="px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
+              Next
+            </button>
+          </Link>
+        )}
       </div>
       <InvoiceStepIndicator
-        saleRecorded={saleCompleted}
-        hasStep2={true}
+        saleRecorded={saleExpenseRecorded}
+        hasStep2={hasStep2}
         currentStep={currentStep}
         paymentAdded={paymentAdded}
       />
@@ -69,29 +113,32 @@ const ViewInvoice = () => {
               <p className=" text-primary-black font-normal">#001</p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-              <p>Issue date</p>
+              <p>Transaction date</p>
               <p className=" text-primary-black font-normal">
-                {" "}
-                January 10, 2023
+                {transactionDate
+                  ? new Date(transactionDate).toDateString()
+                  : ""}
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
               <p>Due date</p>
-              <p className=" text-primary-black font-normal">March 7, 2023</p>
+              <p className=" text-primary-black font-normal">
+                {dueDate ? new Date(dueDate).toDateString() : ""}
+              </p>
             </div>
           </div>
           <div className=" grid grid-cols-3 w-full pt-8">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>From</p>
-              <p className=" text-primary-black font-normal mb-2">Verzo Inc.</p>
-              <p className=" text-sm">Address</p>
-              <p className=" text-sm">Country</p>
+              <p className=" text-primary-black font-normal">{businessName}</p>
+              <p className=" text-[16px]">{businessEmail}</p>
+              <p className=" text-[16px]">{country}</p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>For</p>
-              <p className=" text-primary-black font-normal mb-2">Olivia Doe</p>
-              <p className=" text-sm">Address</p>
-              <p className=" text-sm">Country</p>
+              <p className=" text-primary-black font-normal">{customerName}</p>
+              <p className=" text-[16px]">{customerEmail}</p>
+              <p className=" text-[16px]">{country}</p>
             </div>
           </div>
           <div className=" w-full flex flex-col mt-[40px] gap-y-4">
@@ -105,12 +152,12 @@ const ViewInvoice = () => {
                 </tr>
               </thead>
               <tbody>
-                {sampleData.map((data, index) => (
-                  <tr key={index}>
-                    <td className=" py-4">{data.item}</td>
-                    <td className=" text-end py-4">{data.qty}</td>
+                {saleItem?.map((item) => (
+                  <tr key={item?.id}>
+                    <td className=" py-4">{item?.itemName}</td>
+                    <td className=" text-end py-4">{item?.quantity}</td>
                     <td className=" text-end py-4">
-                      ₦{data.amount.toLocaleString()}
+                      ₦{item?.price?.toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -131,11 +178,23 @@ const ViewInvoice = () => {
             <div className=" flex flex-col text-sm text-primary-black">
               <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                 <p className=" text-primary-greytext">Sub total</p>
-                <p className=" text-base">₦30,000</p>
+                <p className=" text-base">
+                  {subtotal?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
               <div className=" flex justify-between py-3 items-center">
                 <p className=" text-primary-greytext">Amount due</p>
-                <p className=" text-base">₦30,000</p>
+                <p className=" text-base">
+                  {total?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
               </div>
             </div>
           </div>

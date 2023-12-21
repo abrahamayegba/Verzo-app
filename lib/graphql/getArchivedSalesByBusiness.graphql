@@ -1,0 +1,79 @@
+query GetArchivedSalesByBusiness(
+  $businessId: String!
+  $sets: Float
+  $cursor: String
+) {
+  getArchivedSalesByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    salesByBusiness {
+      id
+      description
+      archived
+      saleAmount
+      saleExpenses {
+        amount
+      }
+      saleServiceExpenses {
+        amount
+      }
+      paid
+      business {
+        businessName
+      }
+      transactionDate
+      invoice {
+        id
+        totalAmount
+        createdAt
+        VAT
+        paidFully
+        discount
+        dateOfIssue
+        dueDate
+        customer {
+          id
+          name
+          email
+          address
+        }
+        business {
+          id
+          businessName
+          businessEmail
+        }
+        invoiceDetails {
+          id
+          index
+          productInvoiceDetail {
+            unitPrice
+            quantity
+            product {
+              type
+              productName
+              productUnit {
+                id
+                unitName
+              }
+            }
+          }
+          serviceInvoiceDetail {
+            unitPrice
+            quantity
+            service {
+              type
+              name
+              serviceUnit {
+                id
+                unitName
+              }
+            }
+          }
+        }
+      }
+    }
+    cursorId
+  }
+}

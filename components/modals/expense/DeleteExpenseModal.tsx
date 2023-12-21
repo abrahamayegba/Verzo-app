@@ -4,6 +4,8 @@ import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetArchivedExpensesByBusinessDocument,
+  GetExpenseByIdDocument,
   GetExpenseForMonthDocument,
   GetExpenseForQuarterDocument,
   GetExpenseForWeekDocument,
@@ -51,10 +53,12 @@ const DeleteExpense: React.FC<DeleteExpenseProps> = ({
         variables: { expenseId: expenseId },
         refetchQueries: [
           GetExpensesByBusinessDocument,
+          GetExpenseByIdDocument,
           GetExpenseForWeekDocument,
           GetExpenseForMonthDocument,
           GetExpenseForQuarterDocument,
           GetExpenseForYearDocument,
+          GetArchivedExpensesByBusinessDocument,
         ],
       });
       onClose();

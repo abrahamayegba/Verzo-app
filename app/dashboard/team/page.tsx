@@ -1,8 +1,26 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { PlusCircle } from "lucide-react";
 import TeamList from "@/components/TeamList";
+import { useGetBusinessesByUserIdQuery } from "@/src/generated/graphql";
+import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/auth";
+import MainLoader from "@/components/loading/MainLoader";
+import localStorage from "local-storage-fallback";
 
 const Team = () => {
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/auth/signin");
+    }
+  }, [router]);
+
+  if (getBusinessesByUserId.loading) {
+    return <MainLoader />;
+  }
+
   return (
     <div className=" px-[52px] bg-primary-whiteTint pt-[47px] pb-[20px] gap-y-[36px] flex flex-col">
       <div className=" flex flex-row justify-between items-center">

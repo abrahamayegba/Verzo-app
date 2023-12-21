@@ -12,7 +12,7 @@ export const GRAPHQL_URL = `${EXPRESS_URL}/graphql`;
 
 const refreshLink = new TokenRefreshLink({
   accessTokenField: "access_token",
-  isTokenValidOrUndefined: () => isAuthenticated(),
+  isTokenValidOrUndefined: () => Promise.resolve(isAuthenticated()),
   fetchAccessToken: () => {
     return fetch(`${EXPRESS_URL}/refresh`, {
       method: "POST",

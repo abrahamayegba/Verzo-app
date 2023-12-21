@@ -8,7 +8,6 @@ import {
   useTotalWeeklyInvoicesAmountQuery,
   useTotalYearlyInvoicesAmountQuery,
 } from "@/src/generated/graphql";
-import Link from "next/link";
 import ArrowUpIcon from "../ui/icons/ArrowUpIcon";
 
 interface MetricsProps {
@@ -98,11 +97,6 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
     <>
       <div className=" flex justify-between text-primary-black">
         <p className=" text-[20px] tracking-[-0.3px]">Overdue</p>
-        <Link href="/dashboard/invoices">
-          <button className=" text-primary-blue text-sm tracking-[-0.2px]">
-            See more
-          </button>
-        </Link>
       </div>
       <div className=" flex justify-between flex-wrap">
         <div className=" flex flex-col gap-y-1">

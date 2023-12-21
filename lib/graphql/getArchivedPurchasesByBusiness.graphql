@@ -1,0 +1,28 @@
+query GetArchivedPurchasesByBusiness(
+  $businessId: String!
+  $sets: Float
+  $cursor: String
+) {
+  getArchivedPurchaseByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    purchaseByBusiness {
+      id
+      description
+      total
+      paid
+      archived
+      businessId
+      deliveryDate
+      createdAt
+      transactionDate
+      merchant {
+        name
+        id
+      }
+    }
+    cursorId
+  }
+}

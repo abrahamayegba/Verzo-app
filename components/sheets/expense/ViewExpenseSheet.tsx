@@ -8,21 +8,6 @@ interface ViewExpenseProps {
   onClose: () => void;
   expenseId: string;
 }
-
-interface TableData {
-  item: string;
-  qty: number;
-  amount: number;
-}
-
-const sampleData: TableData[] = [
-  { item: "Expense 1", qty: 3, amount: 100000 },
-  { item: "Expense 2", qty: 2, amount: 5000 },
-  { item: "Expense 3", qty: 1, amount: 300 },
-  { item: "Expense 4", qty: 1, amount: 300 },
-  { item: "Expense 5", qty: 1, amount: 300 },
-];
-
 const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({
   open,
   onClose,
@@ -89,7 +74,7 @@ const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({
                   {merchantName}
                 </p>
                 <p className=" text-[16px]">{merchantEmail}</p>
-                <p className=" text-[16px]">{"Nigeria"}</p>
+                <p className=" text-[16px]">{country}</p>
               </div>
             </div>
             <div className=" w-full flex flex-col mt-[20px] gap-y-4 max-h-[250px] overflow-y-scroll">

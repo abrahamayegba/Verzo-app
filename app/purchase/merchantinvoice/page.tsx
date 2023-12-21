@@ -319,6 +319,7 @@ const AddPurchaseMerchantInvoice = () => {
       <ViewPurchaseSheet
         open={openViewPurchaseSheet}
         onClose={handleCloseViewPurchaseSheet}
+        purchaseId={purchaseId!}
       />
     </>
   );

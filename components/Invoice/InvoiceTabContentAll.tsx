@@ -162,7 +162,7 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                       <Link
                         className=" flex gap-x-2 items-center"
-                        href="/invoice/viewinvoice"
+                        href={`/invoice/viewinvoice?invoiceId=${invoice?.id}`}
                       >
                         <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                         View Invoice

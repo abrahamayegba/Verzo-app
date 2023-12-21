@@ -135,13 +135,13 @@ const AllExpenseList = () => {
             openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
-          {expenses.length > 0 && (
+          {/* {expenses.length > 0 && (
             <CustomPagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />
-          )}
+          )} */}
         </TabsContent>
         <TabsContent value="archived">
           <ExpenseTabContentArchived
@@ -150,13 +150,13 @@ const AllExpenseList = () => {
             openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
-          {expenses.length > 0 && (
+          {/* {archivedExpenses.length > 0 && (
             <CustomPagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />
-          )}
+          )} */}
         </TabsContent>
       </Tabs>
       <ArchiveExpense

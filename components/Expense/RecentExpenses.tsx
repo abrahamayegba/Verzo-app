@@ -1,10 +1,16 @@
-import { MoreHorizontal } from "lucide-react";
+import { Download, Eye, MoreHorizontal, Pen } from "lucide-react";
 import React from "react";
 import localStorage from "local-storage-fallback";
 import { useGetExpensesByBusinessQuery } from "@/src/generated/graphql";
 import RecentMetricEmptyState from "../emptystates/RecentMetricEmptyState";
 import RecentExpenseEmptyIcon from "../ui/icons/RecentExpenseEmptyIcon";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const RecentExpenses = () => {
   const storedBusinessId = JSON.parse(
@@ -53,7 +59,26 @@ const RecentExpenses = () => {
                 <div className="bg-green-100 h-[20px] text-xs text-green-800 flex items-baseline rounded-full px-2.5 py-0.5 ">
                   {expense?.expenseCategory?.name}
                 </div>
-                <MoreHorizontal className=" text-[#c4c4c4]" />
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" focus:outline-none">
+                    <MoreHorizontal className=" text-[#c4c4c4]" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
+                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                      <Link
+                        className=" flex gap-x-2 items-center"
+                        href={`/expense/viewexpense?expenseId=${expense?.id}`}
+                      >
+                        <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        View Expense
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                      <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Edit Expense
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ))}
           </div>

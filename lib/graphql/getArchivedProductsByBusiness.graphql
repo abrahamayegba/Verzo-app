@@ -1,0 +1,26 @@
+query GetArchivedProductsByBusiness(
+  $businessId: String!
+  $sets: Float
+  $cursor: String
+) {
+  getArchivedProductByBusiness(
+    businessId: $businessId
+    sets: $sets
+    cursor: $cursor
+  ) {
+    productByBusiness {
+      id
+      type
+      productName
+      stockStatus
+      price
+      productUnit {
+        unitName
+      }
+      productUnitId
+      businessId
+      createdAt
+    }
+    cursorId
+  }
+}

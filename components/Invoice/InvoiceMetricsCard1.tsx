@@ -9,8 +9,6 @@ import {
 } from "@/src/generated/graphql";
 import ArrowUpIcon from "../ui/icons/ArrowUpIcon";
 import Graphflat from "../ui/icons/Graphflat";
-import Link from "next/link";
-
 interface MetricsProps {
   filter: string;
 }
@@ -82,7 +80,7 @@ const InvoiceMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalInvoiceAmountThisYear:
         totalYearlyInvoicesAmountQuery.data?.totalYearlyInvoicesAmount
-          ?.percentageIncreaseInInvoiceThisYear,
+          ?.totalInvoiceAmountForYear,
       percentagePaidInvoicesThisYear:
         totalYearlyInvoicesAmountQuery.data?.totalYearlyInvoicesAmount
           ?.percentageIncreaseInInvoiceThisYear,
@@ -97,11 +95,6 @@ const InvoiceMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     <>
       <div className=" flex justify-between text-primary-black">
         <p className=" text-[20px] tracking-[-0.3px]">Paid</p>
-        <Link href="/dashboard/invoices">
-          <button className=" text-primary-blue text-sm tracking-[-0.2px]">
-            See more
-          </button>
-        </Link>
       </div>
       <div className=" flex justify-between flex-wrap">
         <div className=" flex flex-col gap-y-1">

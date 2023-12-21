@@ -1,28 +1,50 @@
 import React from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
+import { useGetSaleByIdQuery } from "@/src/generated/graphql";
 
 interface ViewInvoiceProps {
   open: boolean;
   onClose: () => void;
+  invoiceId: string;
 }
-
-interface TableData {
-  item: string;
-  qty: number;
-  amount: number;
-}
-
-const sampleData: TableData[] = [
-  { item: "Item 1", qty: 3, amount: 100000 },
-  { item: "Item 2", qty: 2, amount: 5000 },
-  { item: "Item 3", qty: 1, amount: 300 },
-  { item: "Item 4", qty: 1, amount: 300 },
-  { item: "Item 5", qty: 1, amount: 300 },
-  { item: "Item 6", qty: 1, amount: 300 },
-];
-
-const ViewInvoiceSheet: React.FC<ViewInvoiceProps> = ({ open, onClose }) => {
+const ViewInvoiceSheet: React.FC<ViewInvoiceProps> = ({
+  open,
+  onClose,
+  invoiceId,
+}) => {
+  const getSaleById = useGetSaleByIdQuery({
+    variables: {
+      saleId: invoiceId!,
+    },
+  });
+  const sales = getSaleById.data?.getSaleById;
+  const saleItems = sales?.invoice?.invoiceDetails;
+  const saleItem = saleItems?.map((item) => ({
+    id: item?.id,
+    itemName:
+      item?.type === "P"
+        ? item?.productInvoiceDetail?.product?.productName
+        : item?.serviceInvoiceDetail?.service?.name,
+    quantity:
+      item?.type === "P"
+        ? item?.productInvoiceDetail?.quantity
+        : item?.serviceInvoiceDetail?.quantity,
+    price:
+      item?.type === "P"
+        ? item?.productInvoiceDetail?.price
+        : item?.serviceInvoiceDetail?.price,
+  }));
+  const country = "Nigeria";
+  const customerName = sales?.invoice?.customer?.name;
+  const customerEmail = sales?.invoice?.customer?.email;
+  const transactionDate = sales?.transactionDate;
+  const dueDate = sales?.dueDate;
+  const subtotal = sales?.invoice?.subtotal;
+  const total = sales?.saleAmount;
+  const business = getSaleById.data?.getSaleById?.business;
+  const businessName = business?.businessName;
+  const businessEmail = business?.businessEmail;
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
@@ -40,33 +62,36 @@ const ViewInvoiceSheet: React.FC<ViewInvoiceProps> = ({ open, onClose }) => {
                 <p className=" text-primary-black font-normal">#001</p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-                <p>Issue date</p>
+                <p>Transaction date</p>
                 <p className=" text-primary-black font-normal">
-                  {" "}
-                  January 10, 2023
+                  {transactionDate
+                    ? new Date(transactionDate).toDateString()
+                    : ""}
                 </p>
               </div>
               <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
                 <p>Due date</p>
-                <p className=" text-primary-black font-normal">March 7, 2023</p>
+                <p className=" text-primary-black font-normal">
+                  {dueDate ? new Date(dueDate).toDateString() : ""}
+                </p>
               </div>
             </div>
-            <div className=" grid grid-cols-3 w-full pt-5">
+            <div className=" grid grid-cols-3 w-full pt-8">
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>From</p>
-                <p className=" text-primary-black font-normal mb-2">
-                  Verzo Inc.
+                <p className=" text-primary-black font-normal">
+                  {businessName}
                 </p>
-                <p className=" text-sm">Address</p>
-                <p className=" text-sm">Country</p>
+                <p className=" text-[16px]">{businessEmail}</p>
+                <p className=" text-[16px]">{country}</p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>For</p>
-                <p className=" text-primary-black font-normal mb-2">
-                  Olivia Doe
+                <p className=" text-primary-black font-normal">
+                  {customerName}
                 </p>
-                <p className=" text-sm">Address</p>
-                <p className=" text-sm">Country</p>
+                <p className=" text-[16px]">{customerEmail}</p>
+                <p className=" text-[16px]">{country}</p>
               </div>
             </div>
             <div className=" w-full flex flex-col mt-[20px] gap-y-4 max-h-[250px] overflow-y-scroll">
@@ -79,17 +104,15 @@ const ViewInvoiceSheet: React.FC<ViewInvoiceProps> = ({ open, onClose }) => {
                     <th className=" text-end font-normal py-3">Amount</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {sampleData.map((data, index) => (
-                    <tr key={index}>
-                      <td className=" py-4">{data.item}</td>
-                      <td className=" text-end py-4">{data.qty}</td>
-                      <td className=" text-end py-4">
-                        ₦{data.amount.toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+                {saleItem?.map((item) => (
+                  <tr key={item?.id}>
+                    <td className=" py-4">{item?.itemName}</td>
+                    <td className=" text-end py-4">{item?.quantity}</td>
+                    <td className=" text-end py-4">
+                      ₦{item?.price?.toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
               </table>
             </div>
             <div className=" flex justify-between items-center mt-3">
@@ -106,11 +129,23 @@ const ViewInvoiceSheet: React.FC<ViewInvoiceProps> = ({ open, onClose }) => {
               <div className=" flex flex-col text-sm text-primary-black">
                 <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                   <p className=" text-primary-greytext">Sub total</p>
-                  <p className=" text-base">₦30,000</p>
+                  <p className=" text-base">
+                    {subtotal?.toLocaleString("en-NG", {
+                      style: "currency",
+                      currency: "NGN",
+                      minimumFractionDigits: 0,
+                    })}
+                  </p>
                 </div>
                 <div className=" flex justify-between py-3 items-center">
                   <p className=" text-primary-greytext">Amount due</p>
-                  <p className=" text-base">₦30,000</p>
+                  <p className=" text-base">
+                    {total?.toLocaleString("en-NG", {
+                      style: "currency",
+                      currency: "NGN",
+                      minimumFractionDigits: 0,
+                    })}
+                  </p>
                 </div>
               </div>
             </div>

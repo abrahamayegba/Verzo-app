@@ -156,17 +156,6 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
                       More
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className=" bg-white mt-1 mr-2 text-primary-greytext shadow1 w-[170px]">
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                        <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        View Expense
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => openEditModal(expense?.id!)}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Edit Expense
-                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => openUnarchiveModal(expense?.id!)}
                         className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"

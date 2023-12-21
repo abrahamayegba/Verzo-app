@@ -12,9 +12,6 @@ import ExpenseIcon from "./ui/icons/ExpenseIcon";
 import PurchaseIcon from "./ui/icons/PurchaseIcon";
 import ServiceIcon from "./ui/icons/ServiceIcon";
 import Logout from "./ui/icons/Logout";
-import TeamIcon from "./ui/icons/TeamIcon";
-import AccountsIcon from "./ui/icons/AccountsIcon";
-import AddBusinessIcon from "./ui/icons/AddBusinessIcon";
 import ActiveInvoiceIcon from "./ui/icons/ActiveInvoiceIcon";
 import ActiveCustomerIcon from "./ui/icons/ActiveCustomerIcon";
 import ActiveExpenseIcon from "./ui/icons/ActiveExpenseIcon";
@@ -133,29 +130,6 @@ const Sidebar = () => {
                 </li>
               ))}
             </ul>
-            {/* <ul className=" relative">
-              <p className=" text-[13px] mt-[-3px] absolute text-primary-mainGrey group hidden group-hover:block px-7">
-                BUSINESS
-              </p>
-              <li key={11} className="min-w-max mt-6">
-                <Link href={"/logout"}>
-                  <div
-                    className={`relative flex items-center px-6 text-white group-hover:w-[284px]`}
-                  >
-                    <div
-                      className={`group flex flex-row items-center px-3 rounded-lg py-2 gap-x-[14px] hover:bg-gray-50 text-primary-greytext`}
-                    >
-                      <span className="py-[2px] rounded-full w-[30px] h-[30px] bg-[#F9FCFF] flex items-center justify-center">
-                        <AddBusinessIcon />
-                      </span>
-                      <span className="hidden tracking-[-0.3px] group-hover:block text-[17px] w-[170px]">
-                        {"Add Business"}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            </ul> */}
             <ul className="">
               <li key={12} className="min-w-max">
                 <button

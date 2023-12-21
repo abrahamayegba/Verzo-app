@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import useModal from "@/app/hooks/useModal";
-import DeleteService from "./modals/service/DeleteServiceModal";
 import TeamTabContentAll from "./TeamTabContent";
 
 const TeamList = () => {

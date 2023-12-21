@@ -19,7 +19,10 @@ import { Archive, Download, Eye, Pen, Trash2 } from "lucide-react";
 import TableEmptyState from "../emptystates/TableEmptyState";
 import InvoiceTableEmptyIcon from "../ui/icons/InvoiceTableEmptyIcon";
 import localStorage from "local-storage-fallback";
-import { useGetSaleByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedSalesByBusinessQuery,
+  useGetSaleByBusinessQuery,
+} from "@/src/generated/graphql";
 import Link from "next/link";
 
 interface InvoiceTabContentArchivedProps {
@@ -42,14 +45,16 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const getSalesByBusiness = useGetSaleByBusinessQuery({
+  const getArchivedSalesByBusiness = useGetArchivedSalesByBusinessQuery({
     variables: {
       businessId: businessId,
+      sets: 1,
+      cursor: null,
     },
   });
-  const invoices =
-    getSalesByBusiness.data?.getSaleByBusiness?.salesByBusiness ?? [];
-
+  const archivedSales =
+    getArchivedSalesByBusiness.data?.getArchivedSalesByBusiness
+      ?.salesByBusiness ?? [];
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
@@ -59,10 +64,10 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== invoices?.length;
+    const isChecked = selectedRows.length !== archivedSales?.length;
     if (isChecked) {
       setSelectedRows(
-        invoices?.map((invoice) => String(invoice?.id) || "") || []
+        archivedSales?.map((invoice) => String(invoice?.id) || "") || []
       );
     } else {
       setSelectedRows([]);
@@ -78,9 +83,10 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
               checked={
-                selectedRows.length === invoices?.length && invoices.length > 0
+                selectedRows.length === archivedSales?.length &&
+                archivedSales.length > 0
               }
-              disabled={invoices?.length === 0}
+              disabled={archivedSales?.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Invoice
@@ -103,7 +109,7 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {invoices?.length === 0 ? (
+        {archivedSales?.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -116,8 +122,7 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          invoices
-            .filter((invoice) => invoice?.archived)
+          archivedSales
             .slice(0, numberOfInvoicesToShow)
             .map((invoice, index) => (
               <TableRow key={invoice?.id}>
@@ -151,7 +156,10 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
                   {invoice?.invoice?.customer?.name}
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
-                  {invoice?.invoice?.totalAmount}
+                  {invoice?.invoice?.totalAmount.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
                 </TableCell>
                 <TableCell className="text-right text-primary-blue">
                   <DropdownMenu>
@@ -159,32 +167,12 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
                       More
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                        <Link
-                          className=" flex gap-x-2 items-center"
-                          href="/invoice/viewinvoice"
-                        >
-                          <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                          View Invoice
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => openEditModal(invoice?.id!)}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Edit Invoice
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                        <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Download Invoice
-                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => openArchiveModal(invoice?.id!)}
                         className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                       >
                         <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Archive Invoice
+                        Unarchive Invoice
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => openDeleteModal(invoice?.id!)}

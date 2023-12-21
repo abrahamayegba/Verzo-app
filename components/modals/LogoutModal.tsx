@@ -1,8 +1,10 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import { LogOut } from "lucide-react";
 import Logout from "../ui/icons/Logout";
+import { useLogOutMutation } from "@/src/generated/graphql";
+import { clearToken } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 interface LogoutProps {
   open: boolean;
@@ -10,6 +12,18 @@ interface LogoutProps {
   onClose: () => void;
 }
 const LogoutModal: React.FC<LogoutProps> = ({ open, openModal, onClose }) => {
+  const router = useRouter();
+  const [logOutMutation, { loading }] = useLogOutMutation();
+  const handleLogout = async () => {
+    try {
+      await logOutMutation();
+      clearToken();
+      localStorage.removeItem("businessId");
+      router.push("/auth/signin");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -53,8 +67,14 @@ const LogoutModal: React.FC<LogoutProps> = ({ open, openModal, onClose }) => {
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white">
-                      Proceed
+                    <button
+                      onClick={() => handleLogout()}
+                      disabled={loading}
+                      className={`px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white ${
+                        loading ? " opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading" : "Log out"}
                     </button>
                   </div>
                 </div>

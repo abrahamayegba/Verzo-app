@@ -72,6 +72,13 @@ const ConfirmPurchaseItems = () => {
       duration: 3000,
     });
   };
+  const showDateFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      description: error,
+      duration: 3000,
+    });
+  };
 
   const showFailureToast = (error: any) => {
     toast({
@@ -99,6 +106,10 @@ const ConfirmPurchaseItems = () => {
   };
 
   const handleMarkAsReceived = async (itemId: string) => {
+    if (!date) {
+      showDateFailureToast("Please pick a date and try again.");
+      return;
+    }
     try {
       const receivedQuantity = receivedQuantities[itemId];
       if (!receivedQuantity) {

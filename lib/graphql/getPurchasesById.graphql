@@ -3,6 +3,10 @@ query GetPurchaseById($purchaseId: String!) {
     id
     description
     reference
+    business {
+      businessName
+      businessEmail
+    }
     transactionDate
     deliveryDate
     total

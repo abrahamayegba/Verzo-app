@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ImportDataDropdown from "@/components/ImportDataDropdown";
 import Metrics from "@/components/Metrics";
 import RecentMetrics from "@/components/RecentMetrics";
@@ -19,6 +19,7 @@ import {
   useGetPurchaseForQuarterQuery,
   useGetPurchaseForWeekQuery,
   useGetPurchaseForYearQuery,
+  useGetSaleByBusinessQuery,
   useTotalMonthlyInvoicesAmountQuery,
   useTotalQuarterlyInvoicesAmountQuery,
   useTotalWeeklyInvoicesAmountQuery,
@@ -27,6 +28,8 @@ import {
 import localStorage from "local-storage-fallback";
 import MainLoader from "@/components/loading/MainLoader";
 import Loader2 from "@/components/loading/Loader2";
+import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/auth";
 
 const Dashboard = () => {
   const { isOpen, openModal, closeModal } = useModal();
@@ -35,6 +38,12 @@ const Dashboard = () => {
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/auth/signin");
+    }
+  });
   const [selectedFilter, setSelectedFilter] = useState("weekly");
   const handleFilterChange = (filter: any) => {
     setSelectedFilter(filter);
@@ -128,9 +137,10 @@ const Dashboard = () => {
     },
   });
 
-  const getInvoicesByBusiness = useGetInvoicesByBusinessQuery({
+  const getSalesByBusiness = useGetSaleByBusinessQuery({
     variables: {
       businessId: businessId,
+      sets: 3,
     },
   });
 
@@ -139,9 +149,12 @@ const Dashboard = () => {
     return <MainLoader />;
   }
 
+  console.log(!isAuthenticated);
+
   const metricsLoading =
     getExpenseForWeek.loading ||
     getPurchaseForWeek.loading ||
+    getSalesByBusiness.loading ||
     totalWeeklyInvoicesAmountQuery.loading ||
     totalMonthlyInvoicesAmount.loading ||
     getExpenseForMonth.loading ||
@@ -153,8 +166,7 @@ const Dashboard = () => {
     getExpenseForYear.loading ||
     getPurchaseForYear.loading ||
     getExpensesByBusiness.loading ||
-    getPurchasesByBusiness.loading ||
-    getInvoicesByBusiness.loading;
+    getPurchasesByBusiness.loading;
 
   return (
     <>

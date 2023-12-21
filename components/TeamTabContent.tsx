@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Trash2 } from "lucide-react";
+import { useGetBusinessesByUserIdQuery } from "@/src/generated/graphql";
 
 interface TeamTabContentAllProps {
   openDeleteModal: () => void;
@@ -24,17 +25,14 @@ interface TeamTabContentAllProps {
 const TeamTabContentAll: React.FC<TeamTabContentAllProps> = ({
   openDeleteModal,
 }) => {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const data = Array.from({ length: 1 }, (_, index) => ({
-    id: index + 1,
-    name: `John Doe`,
-    email: `user${index + 1}@example.com`,
-    role: "Owner",
-  }));
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+
+  const user = getBusinessesByUserId?.data?.getBusinessesByUserId?.user;
 
   // Function to handle individual row selection
-  const handleRowSelect = (rowId: number) => {
+  const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
     } else {
@@ -65,42 +63,41 @@ const TeamTabContentAll: React.FC<TeamTabContentAllProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {data.map((row) => (
-          <TableRow className="" key={row.id}>
-            <TableCell className="flex gap-x-3 items-center py-[22px]">
-              <Checkbox
-                className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                checked={selectedRows.includes(row.id)}
-                onCheckedChange={() => handleRowSelect(row.id)}
-              />
+        <TableRow key={user?.id}>
+          <TableCell className="flex gap-x-3 items-center py-[22px]">
+            <Checkbox
+              className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+              checked={selectedRows.includes(user?.id!)}
+              onCheckedChange={() => handleRowSelect(user?.id!)}
+            />
 
-              {row.name}
-              <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                You
-              </span>
-            </TableCell>
-            <TableCell className=" text-primary-greytext">
-              {row.email}
-            </TableCell>
-            <TableCell className=" text-primary-greytext">{row.role}</TableCell>
-            <TableCell className="text-right text-primary-blue">
-              <DropdownMenu>
-                <DropdownMenuTrigger className=" focus:outline-none">
-                  More
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
-                  <DropdownMenuItem
-                    onClick={openDeleteModal}
-                    className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                  >
-                    <Trash2 className=" w-4 h-4 text-opacity-80" />
-                    Delete Member
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
-          </TableRow>
-        ))}
+            {user?.fullname}
+            <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+              You
+            </span>
+          </TableCell>
+          <TableCell className=" text-primary-greytext">
+            {user?.email}
+          </TableCell>
+          <TableCell className=" text-primary-greytext">Owner</TableCell>
+          <TableCell className="text-right text-primary-blue">
+            <DropdownMenu>
+              <DropdownMenuTrigger className=" focus:outline-none">
+                More
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
+                <DropdownMenuItem
+                  onClick={openDeleteModal}
+                  disabled
+                  className=" hover:cursor-pointer disabled:opacity-50 text-primary-red hover:bg-gray-100 gap-x-2 py-2"
+                >
+                  <Trash2 className=" w-4 h-4 text-opacity-80" />
+                  Delete Member
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </TableCell>
+        </TableRow>
       </TableBody>
     </Table>
   );

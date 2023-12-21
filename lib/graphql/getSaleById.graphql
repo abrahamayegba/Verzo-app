@@ -3,6 +3,11 @@ query GetSaleById($saleId: String!) {
     id
     description
     reference
+    business {
+      businessName
+      businessEmail
+      businessMobile
+    }
     saleStatus {
       id
       saleStatus
@@ -48,11 +53,6 @@ query GetSaleById($saleId: String!) {
         email
         address
         mobile
-      }
-      business {
-        id
-        businessName
-        businessEmail
       }
       invoiceDetails {
         id

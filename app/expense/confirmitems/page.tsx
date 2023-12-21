@@ -119,7 +119,6 @@ const ConfirmItems = () => {
         },
         refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
       });
-      // setExpenseStatus(response.data.markExpenseItemAsReceived.expenseStatus);
       showSuccessToast();
     } catch (error) {
       console.error(error);

@@ -19,7 +19,7 @@ const SignIn = () => {
   const [type, setType] = useState("password");
   const [error, setError] = useState<string | null>(null);
   const togglePasswordVisibility = () => {
-    setType((prevType) => (prevType === "password" ? "text" : "password"));
+    setType((prevType) => (prevType === "text" ? "password" : "text"));
   };
 
   const handleInputChange = () => {
@@ -103,9 +103,9 @@ const SignIn = () => {
                 className="absolute cursor-pointer mt-[48px] ml-[360px]"
               >
                 {type === "password" ? (
-                  <Eye className="w-4 h-4 text-primary-greytext" />
-                ) : (
                   <EyeOff className="w-4 h-4 text-primary-greytext" />
+                ) : (
+                  <Eye className="w-4 h-4 text-primary-greytext" />
                 )}
               </span>
             </div>

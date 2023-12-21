@@ -8,7 +8,11 @@ import useModal from "@/app/hooks/useModal";
 import DeleteInvoice from "../modals/invoice/DeleteInvoiceModal";
 import Link from "next/link";
 import localStorage from "local-storage-fallback";
-import { useGetSaleByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedSalesByBusinessQuery,
+  useGetSaleByBusinessQuery,
+} from "@/src/generated/graphql";
+import BulkArchiveInvoice from "../modals/invoice/BulkArchiveInvoiceModal";
 
 const InvoiceList = () => {
   const storedBusinessId = JSON.parse(
@@ -60,12 +64,20 @@ const InvoiceList = () => {
       businessId: businessId,
     },
   });
+  const getArchivedSalesByBusiness = useGetArchivedSalesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const archivedSales =
+    getArchivedSalesByBusiness.data?.getArchivedSalesByBusiness
+      ?.salesByBusiness ?? [];
   const invoices =
     getSalesByBusiness.data?.getSaleByBusiness?.salesByBusiness ?? [];
   const allInvoices = invoices.length;
-  const archivedInvoices = invoices.filter(
-    (invoice) => invoice?.archived
-  ).length;
+  const allArchivedSales = archivedSales.length;
 
   return (
     <div className=" w-full flex flex-col">
@@ -86,11 +98,11 @@ const InvoiceList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                ({archivedInvoices})
+                ({allArchivedSales})
               </span>
             </TabsTrigger>
           </div>
-          {isChecked ? (
+          {/* {isChecked ? (
             <div className=" flex gap-x-4">
               <button
                 onClick={openModal}
@@ -106,10 +118,11 @@ const InvoiceList = () => {
               </button>
             </div>
           ) : (
-            <Link href="/dashboard/invoices/allinvoices">
-              <button className=" text-primary-blue ">See all invoices</button>
-            </Link>
-          )}
+            
+          )} */}
+          <Link href="/dashboard/invoices/allinvoices">
+            <button className=" text-primary-blue ">See all invoices</button>
+          </Link>
         </TabsList>
         <TabsContent value="all">
           <InvoiceTabContentAll
@@ -134,11 +147,19 @@ const InvoiceList = () => {
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
+        invoiceId={selectedId}
       />
       <DeleteInvoice
         open={isDeleteInvoiceOpen}
         openModal={openDeleteInvoiceModal}
         onClose={closeDeleteInvoiceModal}
+        invoiceId={selectedId}
+      />
+      <BulkArchiveInvoice
+        open={isOpen}
+        openModal={openModal}
+        onClose={closeModal}
+        invoiceId={selectedId}
       />
     </div>
   );

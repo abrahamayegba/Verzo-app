@@ -4,34 +4,31 @@ import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import {
-  GetArchivedExpensesByBusinessDocument,
-  GetExpensesByBusinessDocument,
-  useArchiveExpenseMutation,
+  GetArchivedSalesByBusinessDocument,
+  GetSaleByBusinessDocument,
+  GetSaleByIdDocument,
+  useArchiveSaleMutation,
 } from "@/src/generated/graphql";
 
-interface ArchiveExpenseProps {
+interface ArchiveInvoiceProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
-  expenseId: string;
+  invoiceId: string;
 }
 
-const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
+const BulkArchiveInvoice: React.FC<ArchiveInvoiceProps> = ({
   open,
   openModal,
   onClose,
-  expenseId,
+  invoiceId,
 }) => {
   const { toast } = useToast();
-  const [archiveExpenseMutation, { loading }] = useArchiveExpenseMutation({
-    variables: {
-      expenseId: expenseId,
-    },
-  });
+  const [archiveSaleMutation, { loading }] = useArchiveSaleMutation();
   const showSuccessToast = () => {
     toast({
       title: "Archived!",
-      description: "Your expense has been successfully archived",
+      description: "Your invoice has been successfully archived",
       duration: 3500,
     });
   };
@@ -45,11 +42,12 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
   };
   const handleArchiveClick = async () => {
     try {
-      await archiveExpenseMutation({
-        variables: { expenseId: expenseId },
+      await archiveSaleMutation({
+        variables: { saleId: invoiceId },
         refetchQueries: [
-          GetExpensesByBusinessDocument,
-          GetArchivedExpensesByBusinessDocument,
+          GetSaleByBusinessDocument,
+          GetSaleByIdDocument,
+          GetArchivedSalesByBusinessDocument,
         ],
       });
       onClose();
@@ -92,10 +90,12 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
                       <ArchiveInvoiceIcon />
                     </span>
                   </div>
-                  <p className=" text-lg text-[#121212]">Archive expense</p>
+                  <p className=" text-lg text-[#121212]">
+                    Archive selected invoices
+                  </p>
                   <p className=" text-primary-greytext">
-                    Are you sure you want to archive this expense? It won’t be
-                    visible till unarchive
+                    Are you sure you want to archive these invoices? They won’t
+                    be visible till unarchive
                   </p>
                   <div className=" flex justify-between mt-6">
                     <button
@@ -126,4 +126,4 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
   );
 };
 
-export default ArchiveExpense;
+export default BulkArchiveInvoice;

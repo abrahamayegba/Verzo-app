@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlusCircle } from "lucide-react";
 import localStorage from "local-storage-fallback";
 import ServiceList from "@/components/ServiceList";
@@ -10,12 +10,20 @@ import {
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
 import Loader2 from "@/components/loading/Loader2";
+import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/auth";
 
 const Services = () => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/auth/signin");
+    }
+  }, [router]);
   const [openCreateServiceSheet, setOpenCreateServiceSheet] = useState(false);
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const getServicesByBusiness = useGetServiceByBusinessQuery({

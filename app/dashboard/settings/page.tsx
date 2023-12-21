@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SettingsContent from "@/components/SettingsContent";
 import Banner from "@/components/SettingsBanner";
+import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/auth";
 
 const Settings = () => {
   const [showBillingBanner, setShowBillingBanner] = useState(true);
@@ -9,6 +11,12 @@ const Settings = () => {
   const handleBillingBannerClick = () => {
     setShowBillingBanner(false);
   };
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/auth/signin");
+    }
+  }, [router]);
 
   return (
     <>

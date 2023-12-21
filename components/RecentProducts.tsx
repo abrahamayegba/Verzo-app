@@ -1,4 +1,3 @@
-import { MoreHorizontal } from "lucide-react";
 import React from "react";
 import localStorage from "local-storage-fallback";
 import RecentMetricEmptyState from "./emptystates/RecentMetricEmptyState";
@@ -49,7 +48,7 @@ const RecentProducts = () => {
                 <p className=" text-primary-greytext">
                   {product?.productUnit?.unitName}
                 </p>
-                <MoreHorizontal className=" text-[#c4c4c4]" />
+                {/* <MoreHorizontal className=" text-[#c4c4c4]" /> */}
               </div>
             ))}
           </div>

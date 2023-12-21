@@ -9,7 +9,10 @@ import ArchivePurchase from "../modals/purchase/ArchivePurchaseModal";
 import UnarchivePurchase from "../modals/purchase/UnarchivePurchaseModal";
 import DeletePurchase from "../modals/purchase/DeletePurchaseModal";
 import localStorage from "local-storage-fallback";
-import { useGetPurchaseByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedPurchasesByBusinessQuery,
+  useGetPurchaseByBusinessQuery,
+} from "@/src/generated/graphql";
 
 const PurchaseList = () => {
   const storedBusinessId = JSON.parse(
@@ -63,13 +66,23 @@ const PurchaseList = () => {
       cursor: null,
     },
   });
+  const getArchivedPurchasesByBusiness = useGetArchivedPurchasesByBusinessQuery(
+    {
+      variables: {
+        businessId: businessId,
+        sets: 1,
+        cursor: null,
+      },
+    }
+  );
+  const archivedPurchases =
+    getArchivedPurchasesByBusiness.data?.getArchivedPurchaseByBusiness
+      ?.purchaseByBusiness ?? [];
   const purchases =
     getPurchasesByBusiness.data?.getPurchaseByBusiness?.purchaseByBusiness ??
     [];
   const allPurchases = purchases.length;
-  const archivedPurchases = purchases.filter(
-    (purchase) => purchase?.archived
-  ).length;
+  const allArchivedPurchases = archivedPurchases.length;
 
   return (
     <div className=" w-full flex flex-col">
@@ -90,7 +103,7 @@ const PurchaseList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                ({archivedPurchases})
+                ({allArchivedPurchases})
               </span>
             </TabsTrigger>
           </div>

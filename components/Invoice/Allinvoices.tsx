@@ -6,12 +6,21 @@ import InvoiceTabContentArchived from "./InvoiceTabContentArchived";
 import ArchiveInvoice from "../modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
 import DeleteInvoice from "../modals/invoice/DeleteInvoiceModal";
+import localStorage from "local-storage-fallback";
 import CustomPagination from "../InvoiceListPagination";
+import {
+  useGetArchivedSalesByBusinessQuery,
+  useGetSaleByBusinessQuery,
+} from "@/src/generated/graphql";
+import Pagination from "../Pagination";
 
 const AllInvoicesList = () => {
-  const allInvoices = "(15)";
-  const archivedInvoices = "(0)";
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
   const [isChecked, setIsChecked] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const { isOpen, openModal, closeModal } = useModal();
   const {
     isOpen: isDeleteModalOpen,
@@ -28,12 +37,48 @@ const AllInvoicesList = () => {
     setIsChecked(isChecked);
   };
 
+  const handleOpenArchiveModal = (invoiceId: string) => {
+    setSelectedId(invoiceId);
+    openModal();
+  };
+
+  const handleOpenDeleteModal = (invoiceId: string) => {
+    setSelectedId(invoiceId);
+    openDeleteModal();
+  };
+
+  const handleOpenEditModal = (invoiceId: string) => {
+    setSelectedId(invoiceId);
+    openEditModal();
+  };
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPages: number = 5;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  const getSalesByBusiness = useGetSaleByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 3,
+    },
+  });
+  const invoices =
+    getSalesByBusiness.data?.getSaleByBusiness?.salesByBusiness ?? [];
+  const getArchivedSalesByBusiness = useGetArchivedSalesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const archivedSales =
+    getArchivedSalesByBusiness.data?.getArchivedSalesByBusiness
+      ?.salesByBusiness ?? [];
+  const allInvoices = invoices.length;
+  const allArchivedSales = archivedSales.length;
 
   return (
     <div className=" w-full flex flex-col">
@@ -44,7 +89,8 @@ const AllInvoicesList = () => {
               className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
               value="all"
             >
-              All <span className=" text-primary-mainGrey">{allInvoices}</span>
+              All{" "}
+              <span className=" text-primary-mainGrey">({allInvoices})</span>
             </TabsTrigger>
             <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
@@ -53,7 +99,7 @@ const AllInvoicesList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                {archivedInvoices}
+                ({allArchivedSales})
               </span>
             </TabsTrigger>
           </div>
@@ -76,36 +122,39 @@ const AllInvoicesList = () => {
         </TabsList>
         <TabsContent value="all">
           <InvoiceTabContentAll
-            openArchiveModal={openModal}
-            openDeleteModal={openDeleteModal}
-            openEditModal={openEditModal}
+            openArchiveModal={handleOpenArchiveModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
-          />
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
           />
         </TabsContent>
         <TabsContent value="archived">
           <InvoiceTabContentArchived
-            openDeleteModal={openDeleteModal}
-            openArchiveModal={openModal}
-            openEditModal={openEditModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openArchiveModal={handleOpenArchiveModal}
+            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
+          {/* {archivedSales.length > 0 && (
+            <CustomPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )} */}
         </TabsContent>
       </Tabs>
-
       <ArchiveInvoice
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
+        invoiceId={selectedId}
       />
       <DeleteInvoice
         open={isDeleteModalOpen}
         openModal={openDeleteModal}
         onClose={closeDeleteModal}
+        invoiceId={selectedId}
       />
     </div>
   );

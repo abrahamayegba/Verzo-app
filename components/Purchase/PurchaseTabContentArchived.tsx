@@ -19,7 +19,10 @@ import { ArchiveRestore, Eye, Pen, Trash2 } from "lucide-react";
 import TableEmptyState from "../emptystates/TableEmptyState";
 import localStorage from "local-storage-fallback";
 import PurchaseTableEmptyIcon from "../ui/icons/PurchaseTableEmptyIcon";
-import { useGetPurchaseByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedPurchasesByBusinessQuery,
+  useGetPurchaseByBusinessQuery,
+} from "@/src/generated/graphql";
 
 interface PurchaseTabContentArchivedProps {
   openUnarchiveModal: (purchaseId: string) => void;
@@ -41,18 +44,18 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-
-  const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
-    variables: {
-      businessId: businessId,
-      sets: 1,
-      cursor: null,
-    },
-  });
-  const purchases =
-    getPurchasesByBusiness.data?.getPurchaseByBusiness?.purchaseByBusiness ??
-    [];
-
+  const getArchivedPurchasesByBusiness = useGetArchivedPurchasesByBusinessQuery(
+    {
+      variables: {
+        businessId: businessId,
+        sets: 1,
+        cursor: null,
+      },
+    }
+  );
+  const archivedPurchases =
+    getArchivedPurchasesByBusiness.data?.getArchivedPurchaseByBusiness
+      ?.purchaseByBusiness ?? [];
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
@@ -62,10 +65,10 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== purchases?.length;
+    const isChecked = selectedRows.length !== archivedPurchases?.length;
     if (isChecked) {
       setSelectedRows(
-        purchases?.map((purchase) => String(purchase?.id) || "") || []
+        archivedPurchases?.map((purchase) => String(purchase?.id) || "") || []
       );
     } else {
       setSelectedRows([]);
@@ -81,10 +84,10 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
               checked={
-                selectedRows.length === purchases?.length &&
-                purchases.length > 0
+                selectedRows.length === archivedPurchases?.length &&
+                archivedPurchases.length > 0
               }
-              disabled={purchases?.length === 0}
+              disabled={archivedPurchases?.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Purchase
@@ -108,7 +111,7 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {purchases?.length === 0 ? (
+        {archivedPurchases?.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -121,8 +124,7 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          purchases
-            .filter((purchase) => purchase?.archived)
+          archivedPurchases
             .slice(0, numberOfPurchasesToShow)
             .map((purchase, index) => (
               <TableRow key={purchase?.id}>
@@ -167,17 +169,6 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
                       More
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className=" bg-white mt-1 mr-2 text-primary-greytext shadow1 w-[180px]">
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                        <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        View Purchase
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => openEditModal(purchase?.id!)}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Edit Purchase
-                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => openUnarchiveModal(purchase?.id!)}
                         className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"

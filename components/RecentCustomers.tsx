@@ -67,7 +67,7 @@ const RecentCustomers = () => {
                     : ""}
                 </p>
                 <p className="text-primary-greytext">{customer?.email}</p>
-                <DropdownMenu>
+                {/* <DropdownMenu>
                   <DropdownMenuTrigger className=" focus:outline-none">
                     <MoreHorizontal className=" text-[#c4c4c4]" />
                   </DropdownMenuTrigger>
@@ -76,16 +76,8 @@ const RecentCustomers = () => {
                       <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       View Customer
                     </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Archive Customer
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Delete Customer
-                    </DropdownMenuItem>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
               </div>
             ))}
           </div>

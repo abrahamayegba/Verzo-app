@@ -684,10 +684,11 @@ const CreateInvoice = () => {
         onClose={handleCloseCreateItemSheet}
         onItemSelected={setSideSheetCallback}
       />
-      <ViewInvoiceSheet
+      {/* <ViewInvoiceSheet
         open={openViewInvoiceSheet}
         onClose={handleCloseViewInvoiceSheet}
-      />
+        invoiceId={sele}
+      /> */}
       <CreateCustomerSheet
         open={openCustomerSheet}
         onClose={handleCloseCustomerSheet}

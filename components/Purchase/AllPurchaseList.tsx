@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import ArchiveInvoice from "../modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
 import CustomPagination from "../InvoiceListPagination";
 import DeletePurchase from "../modals/purchase/DeletePurchaseModal";
@@ -10,7 +9,10 @@ import PurchaseTabContentAll from "./PurchaseTabContentAll";
 import PurchaseTabContentArchived from "./PurchaseTabContentArchived";
 import ArchivePurchase from "../modals/purchase/ArchivePurchaseModal";
 import localStorage from "local-storage-fallback";
-import { useGetPurchaseByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedPurchasesByBusinessQuery,
+  useGetPurchaseByBusinessQuery,
+} from "@/src/generated/graphql";
 
 const AllPurchaseList = () => {
   const storedBusinessId = JSON.parse(
@@ -42,18 +44,18 @@ const AllPurchaseList = () => {
     setIsChecked(isChecked);
   };
 
-  const handleOpenArchiveModal = (expenseId: string) => {
-    setSelectedId(expenseId);
+  const handleOpenArchiveModal = (purchaseId: string) => {
+    setSelectedId(purchaseId);
     openModal();
   };
 
-  const handleOpenDeleteModal = (expenseId: string) => {
-    setSelectedId(expenseId);
+  const handleOpenDeleteModal = (purchaseId: string) => {
+    setSelectedId(purchaseId);
     openDeletePurchaseModal();
   };
 
-  const handleOpenEditModal = (expenseId: string) => {
-    setSelectedId(expenseId);
+  const handleOpenEditModal = (purchaseId: string) => {
+    setSelectedId(purchaseId);
     openEditModal();
   };
 
@@ -64,13 +66,23 @@ const AllPurchaseList = () => {
       sets: 1,
     },
   });
+  const getArchivedPurchasesByBusiness = useGetArchivedPurchasesByBusinessQuery(
+    {
+      variables: {
+        businessId: businessId,
+        sets: 1,
+        cursor: null,
+      },
+    }
+  );
+  const archivedPurchases =
+    getArchivedPurchasesByBusiness.data?.getArchivedPurchaseByBusiness
+      ?.purchaseByBusiness ?? [];
   const purchases =
     getPurchasesByBusiness.data?.getPurchaseByBusiness?.purchaseByBusiness ??
     [];
   const allPurchases = purchases.length;
-  const archivedPurchases = purchases.filter(
-    (purchase) => purchase?.archived
-  ).length;
+  const allArchivedPurchases = archivedPurchases.length;
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPages: number = 5;
@@ -98,7 +110,7 @@ const AllPurchaseList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                ({archivedPurchases})
+                ({allArchivedPurchases})
               </span>
             </TabsTrigger>
           </div>
@@ -126,11 +138,13 @@ const AllPurchaseList = () => {
             onToggleSelectAll={handleToggleSelectAll}
             openEditModal={handleOpenEditModal}
           />
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          {/* {purchases.length > 0 && (
+            <CustomPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )} */}
         </TabsContent>
         <TabsContent value="archived">
           <PurchaseTabContentArchived
@@ -139,6 +153,13 @@ const AllPurchaseList = () => {
             onToggleSelectAll={handleToggleSelectAll}
             openEditModal={handleOpenEditModal}
           />
+          {/* {archivedPurchases.length > 0 && (
+            <CustomPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )} */}
         </TabsContent>
       </Tabs>
       <ArchivePurchase

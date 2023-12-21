@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InvoiceList from "@/components/Invoice/InvoiceList";
 import InvoiceMetrics from "@/components/Invoice/InvoiceMetrics";
 import { PlusCircle } from "lucide-react";
@@ -16,6 +16,8 @@ import {
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
 import Loader2 from "@/components/loading/Loader2";
+import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/auth";
 
 const Invoices = () => {
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
@@ -23,11 +25,17 @@ const Invoices = () => {
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/auth/signin");
+    }
+  }, [router]);
+
   const [selectedFilter, setSelectedFilter] = useState("weekly");
   const handleFilterChange = (filter: any) => {
     setSelectedFilter(filter);
   };
-
   const getSalesByBusiness = useGetSaleByBusinessQuery({
     variables: {
       businessId: businessId,
