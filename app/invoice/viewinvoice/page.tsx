@@ -36,8 +36,8 @@ const ViewInvoice = () => {
         : item?.serviceInvoiceDetail?.quantity,
     price:
       item?.type === "P"
-        ? item?.productInvoiceDetail?.price
-        : item?.serviceInvoiceDetail?.price,
+        ? item?.productInvoiceDetail?.unitPrice
+        : item?.serviceInvoiceDetail?.unitPrice,
   }));
   const saleExpenseRecorded = saleStatusId! >= 2;
   const paymentAdded = saleStatusId! >= 3;
@@ -148,7 +148,7 @@ const ViewInvoice = () => {
                 <tr className=" text-sm text-primary-greytext border-y border-y-gray-100">
                   <th className=" text-start font-normal py-3">Item</th>
                   <th className=" text-end font-normal py-3">Qty</th>
-                  <th className=" text-end font-normal py-3">Amount</th>
+                  <th className=" text-end font-normal py-3">Unit price</th>
                 </tr>
               </thead>
               <tbody>

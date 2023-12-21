@@ -1,11 +1,13 @@
 query GetBusinessById($businessId: String!) {
   getBusinessById(businessId: $businessId) {
     id
+    logo
     businessName
     businessEmail
     businessMobile
     businessCategory {
       categoryName
+      id
     }
     createdAt
   }

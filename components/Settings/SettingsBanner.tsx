@@ -7,19 +7,23 @@ interface Bannerprops {
 
 const Banner: React.FC<Bannerprops> = ({ onClose }) => {
   return (
-    <div className=" h-[50px] purplegradient flex w-full items-center px-[54px]">
+    <div className=" h-[50px] purplegradient flex w-full items-center px-[60px]">
       <div
         id="discountBanner"
         className="flex items-center text-white font-normal justify-between w-full"
-        onClick={onClose}
       >
-        <div className=" flex flex-row gap-x-[60px]">
-          <p>Verzo Plus plan will renew in 21 days</p>
+        <div className=" flex flex-row gap-x-[50px]">
+          <p>
+            Verzo Free plan expires in 30 days. Upgrade to continue using Verzo.
+          </p>
           <span className="underline underline-offset-[3px] cursor-pointer">
             Update billing
           </span>
         </div>
-        <X className=" w-4 h-4 text-white cursor-pointer hidden md:block " />
+        <X
+          onClick={onClose}
+          className=" w-4 h-4 text-white cursor-pointer hidden md:block "
+        />
       </div>
     </div>
   );

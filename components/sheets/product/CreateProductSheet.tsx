@@ -244,6 +244,7 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
               </div>
               <button
                 type="submit"
+                disabled={loading}
                 className={` bg-primary-blue text-white rounded-[10px] py-[10px] mt-[10px] ${
                   unitLoading ? " opacity-50" : ""
                 }`}

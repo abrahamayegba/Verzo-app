@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import AddonSheet from "./sheets/AddonSheet";
+import AddonSheet from "../sheets/AddonSheet";
 
 const AddonsContent = () => {
   const [openAddonSheet, setOpenAddonSheet] = useState(false);
@@ -37,7 +37,10 @@ const AddonsContent = () => {
                 Sync account applications
               </p>
             </div>
-            <button className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border">
+            <button
+              disabled
+              className=" px-6 py-3 rounded-[10px] text-sm disabled:cursor-not-allowed disabled:opacity-50 text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
+            >
               Purchase
             </button>
           </div>
@@ -48,7 +51,10 @@ const AddonsContent = () => {
                 Get detailed insights
               </p>
             </div>
-            <button className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border">
+            <button
+              disabled
+              className=" px-6 py-3 rounded-[10px] text-sm disabled:cursor-not-allowed disabled:opacity-50 text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
+            >
               Purchase
             </button>
           </div>

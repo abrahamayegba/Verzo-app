@@ -30,7 +30,7 @@ const ViewExpense = () => {
     id: item?.id,
     itemName: item?.description,
     quantity: item?.quantity,
-    price: item?.price,
+    price: item?.unitPrice,
   }));
 
   const itemsConfirmed = expenseStatusId! >= 2;
@@ -147,7 +147,7 @@ const ViewExpense = () => {
                 <tr className=" text-sm text-primary-greytext border-y border-y-gray-100">
                   <th className=" text-start font-normal py-3">Item</th>
                   <th className=" text-end font-normal py-3">Qty</th>
-                  <th className=" text-end font-normal py-3">Amount</th>
+                  <th className=" text-end font-normal py-3">Unit price</th>
                 </tr>
               </thead>
               <tbody>

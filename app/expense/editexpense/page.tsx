@@ -1,11 +1,7 @@
 "use client";
 import ExpenseItem from "@/components/Expense/ExpenseItem";
-import MerchantForm from "@/components/MerchantForm";
-import CreateCategorySheet from "@/components/sheets/expense/CreateCategorySheet";
 import CreateMerchantSheet from "@/components/sheets/expense/CreateMerchantSheet";
-import ViewExpenseSheet from "@/components/sheets/expense/ViewExpenseSheet";
 import { Calendar } from "@/components/ui/calendar";
-import ActiveExpenseIcon from "@/components/ui/icons/ActiveExpenseIcon";
 import {
   Popover,
   PopoverContent,
@@ -20,20 +16,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import localStorage from "local-storage-fallback";
 import { format } from "date-fns";
 import { ChevronDown, Eye, MoveLeft, Plus } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import {
   GetExpenseByIdDocument,
   GetExpensesByBusinessDocument,
-  useCreateExpenseMutation,
+  useGetExpenseByIdQuery,
   useGetExpenseCategoryWithSetsQuery,
+  useUpdateExpenseMutation,
 } from "@/src/generated/graphql";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import EditExpenseMerchantForm from "@/components/EditExpenseMerchantForm";
 
 interface ExpenseItemProp {
   description: string;
@@ -47,40 +44,62 @@ type FormData = {
   description: string;
 };
 
-const CreateExpense = () => {
+const EditExpense = () => {
   const { toast } = useToast();
-  const { register, reset, handleSubmit } = useForm<FormData>();
+  const expenseIdParams = useSearchParams();
+  const expenseId = expenseIdParams.get("expenseId")?.toString();
+  const [expenseDate, setExpenseDate] = useState("");
+  const { register, reset, handleSubmit, getValues } = useForm<FormData>();
   const router = useRouter();
-  const [expenseItems, setExpenseItems] = useState<ExpenseItemProp[]>([]);
   const [expenseCategoryId, setExpenseCategoryId] = useState("");
   const [merchantId, setMerchantId] = useState("");
   const [openMerchantSheet, setOpenMerchantSheet] = useState(false);
   const [openViewExpenseSheet, setOpenViewExpenseSheet] = useState(false);
-  const [openCreateCategorySheet, setOpenCreateCategorySheet] = useState(false);
   const [date, setDate] = React.useState<Date | null>(null);
-  const [expenseDate, setExpenseDate] = useState("");
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
-  const storedBusinessId = JSON.parse(
-    localStorage.getItem("businessId") || "[]"
-  );
-  const businessId = storedBusinessId[0] || "";
-
-  const [createExpenseMutation, { loading }] = useCreateExpenseMutation();
+  const [updateExpenseMutation, { loading }] = useUpdateExpenseMutation();
   const getExpenseCategories = useGetExpenseCategoryWithSetsQuery();
   const expenseCategories =
     getExpenseCategories?.data?.getExpenseCategoryWithSets?.expenseCategories ??
     [];
+  const getExpenseById = useGetExpenseByIdQuery({
+    variables: {
+      expenseId: expenseId!,
+    },
+  });
+  const expense = getExpenseById?.data?.getExpenseById;
+  const initialExpenseCategoryId = expense?.expenseCategory?.id!;
+  const initialExpenseItems = expense?.expenseItems;
+  const initialMerchantId = expense?.merchant?.id!;
+
+  const mappedExpenseItems = useMemo(() => {
+    return initialExpenseItems
+      ? initialExpenseItems.map((item) => ({
+          description: item?.description!,
+          quantity: item?.quantity!,
+          unitPrice: item?.unitPrice!,
+          index: item?.index!,
+          creditAccountId: item?.chartOfAccount?.id!,
+        }))
+      : [];
+  }, [initialExpenseItems]);
+
+  const [expenseItems, setExpenseItems] =
+    useState<ExpenseItemProp[]>(mappedExpenseItems);
+
+  useEffect(() => {
+    setExpenseItems(mappedExpenseItems);
+  }, [mappedExpenseItems]);
+
+  const initialExpenseDate = expense?.expenseDate;
+  const initialSubtotal = expense?.amount;
+  const initialTotal = initialSubtotal;
 
   const handleMerchantChange = (id: string) => {
     setMerchantId(id);
   };
-
   const handleCloseMerchantSheet = () => {
     setOpenMerchantSheet(false);
-  };
-
-  const handleCloseCreateCategorySheet = () => {
-    setOpenCreateCategorySheet(false);
   };
 
   const handleCloseViewExpenseSheet = () => {
@@ -139,9 +158,9 @@ const CreateExpense = () => {
 
   const showSuccessToast = () => {
     toast({
-      title: "Expense Successfully Created!",
-      description: "Your expense has been successfully created",
-      duration: 3000,
+      title: "Successful!",
+      description: "Your expense has been successfully updated",
+      duration: 2500,
     });
   };
 
@@ -150,6 +169,14 @@ const CreateExpense = () => {
       variant: "destructive",
       title: "Uh oh! Something went wrong.",
       description: error?.message,
+      duration: 3000,
+    });
+  };
+
+  const showDateFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      description: error,
       duration: 3000,
     });
   };
@@ -168,19 +195,29 @@ const CreateExpense = () => {
     (acc, items) => acc + items?.unitPrice * items?.quantity,
     0
   );
-
   const amountDue = subtotal;
-
-  const onCreateExpenseHandler = async (data: FormData) => {
+  const onUpdateExpenseHandler = async (data: FormData) => {
+    if (!date && !initialExpenseDate) {
+      showDateFailureToast("Please pick a date and try again.");
+      return;
+    }
+    if (!merchantId && !initialMerchantId) {
+      showDateFailureToast("Please pick a merchant and try again.");
+      return;
+    }
     try {
-      await createExpenseMutation({
+      await updateExpenseMutation({
         variables: {
-          businessId: businessId,
-          expenseCategoryId: expenseCategoryId,
-          expenseDate: expenseDate,
-          merchantId: merchantId,
+          expenseId: expenseId!,
+          expenseCategoryId: expenseCategoryId
+            ? expenseCategoryId
+            : initialExpenseCategoryId,
+          expenseDate: expenseDate ? expenseDate : initialExpenseDate,
+          merchantId: merchantId ? merchantId : initialMerchantId,
           expenseItem: expenseItems,
-          ...data,
+          description: getValues("description")
+            ? getValues("description")
+            : expense?.description,
         },
         refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
       });
@@ -192,10 +229,9 @@ const CreateExpense = () => {
       showFailureToast(error);
     }
   };
-
   return (
     <form
-      onSubmit={handleSubmit(onCreateExpenseHandler)}
+      onSubmit={handleSubmit(onUpdateExpenseHandler)}
       className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]"
     >
       <div className=" flex justify-between w-full items-center relative">
@@ -209,16 +245,16 @@ const CreateExpense = () => {
           </button>
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-12">
-          <p className=" text-[30px] text-primary-black ">Record expense </p>
+          <p className=" text-[30px] text-primary-black ">Edit expense </p>
           <p className=" text-primary-greytext font-light text-lg">
-            Fill out the information below to record an expense
+            Fill out the information below to edit this expense
           </p>
         </div>
         <button
           type="button"
           disabled
           onClick={() => setOpenViewExpenseSheet(true)}
-          className=" px-6 py-3 cursor-not-allowed rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
+          className=" px-6 py-3 cursor-not-allowed disabled:opacity-50 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
         >
           Preview
           <Eye className=" w-5 h-5 text-gray-500" />
@@ -235,7 +271,11 @@ const CreateExpense = () => {
                 Category
               </label>
               <Select
-                value={expenseCategoryId}
+                value={
+                  expenseCategoryId
+                    ? expenseCategoryId
+                    : initialExpenseCategoryId
+                }
                 onValueChange={setExpenseCategoryId}
               >
                 <SelectTrigger className=" w-full rounded-lg border text-primary-black border-gray-200">
@@ -265,14 +305,7 @@ const CreateExpense = () => {
               <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
                 <PopoverTrigger asChild>
                   <button className=" text-left text-sm font-normal text-primary-black flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
-                    {date ? (
-                      format(date, "PPP")
-                    ) : (
-                      <div className=" justify-between flex items-center w-full">
-                        <span className=" text-sm">Pick a date</span>
-                        <ChevronDown className=" w-4 h-4 text-primary-greytext" />
-                      </div>
-                    )}
+                    {expenseDate ? expenseDate : initialExpenseDate}
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-full p-0 bg-white">
@@ -291,7 +324,8 @@ const CreateExpense = () => {
           </div>
         </div>
       </div>
-      <MerchantForm
+      <EditExpenseMerchantForm
+        expenseId={expenseId!}
         onMerchantChange={handleMerchantChange}
         openMerchantSheet={handleOpenMerchantSheet}
       />
@@ -316,36 +350,35 @@ const CreateExpense = () => {
             <p className="col-span-1 ml-[-20px]">Qty</p>
             <p className="col-span-2 text-center ml-[-30px]">Account</p>
           </div>
-          {expenseItems.length === 0 ? (
-            <div className=" h-[150px] bg-white flex flex-col justify-center gap-y-4 items-center text-primary-greytext">
-              <span className=" p-3 bg-[#F9FCFF] rounded-full">
-                <ActiveExpenseIcon />
-              </span>
-              No expenses added
+          {expenseItems.map((expense, index) => (
+            <ExpenseItem
+              key={index}
+              expense={expense}
+              index={index}
+              onDeleteExpense={deleteItem}
+              onExpenseChange={handleExpenseChange}
+            />
+          ))}
+          <div className=" w-full flex flex-col items-end text-primary-black text-lg mt-[30px]">
+            <div className=" flex gap-x-[180px] p-4">
+              <p className=" text-primary-greytext">Subtotal</p>
+              <p>
+                ₦
+                {subtotal
+                  ? subtotal.toLocaleString("en-NG")
+                  : initialSubtotal?.toLocaleString("en-NG")}
+              </p>
             </div>
-          ) : (
-            expenseItems.map((expense, index) => (
-              <ExpenseItem
-                key={index}
-                expense={expense}
-                index={index}
-                onDeleteExpense={deleteItem}
-                onExpenseChange={handleExpenseChange}
-              />
-            ))
-          )}
-          {expenseItems.length > 0 && (
-            <div className=" w-full flex flex-col items-end text-primary-black text-lg mt-[30px]">
-              <div className=" flex gap-x-[180px] p-4">
-                <p className=" text-primary-greytext">Subtotal</p>
-                <p>₦{subtotal.toLocaleString("en-NG")}</p>
-              </div>
-              <div className=" flex gap-x-[180px] p-4 border-t border-t-gray-100">
-                <p className=" text-primary-greytext">Amount due</p>
-                <p>₦{amountDue.toLocaleString("en-NG")}</p>
-              </div>
+            <div className=" flex gap-x-[180px] p-4 border-t border-t-gray-100">
+              <p className=" text-primary-greytext">Amount due</p>
+              <p>
+                ₦
+                {amountDue
+                  ? amountDue.toLocaleString("en-NG")
+                  : initialTotal?.toLocaleString("en-NG")}
+              </p>
             </div>
-          )}
+          </div>
         </div>
         <div className=" flex flex-col mt-2">
           <p className=" text-lg text-primary-black">Description</p>
@@ -355,6 +388,7 @@ const CreateExpense = () => {
           <Textarea
             {...register("description")}
             required
+            defaultValue={expense?.description!}
             id="description"
             className=" mt-5"
           />
@@ -377,10 +411,6 @@ const CreateExpense = () => {
           </button>
         </div>
       </div>
-      <CreateCategorySheet
-        open={openCreateCategorySheet}
-        onClose={handleCloseCreateCategorySheet}
-      />
       {/* <ViewExpenseSheet
         open={openViewExpenseSheet}
         onClose={handleCloseViewExpenseSheet}
@@ -393,4 +423,4 @@ const CreateExpense = () => {
   );
 };
 
-export default CreateExpense;
+export default EditExpense;

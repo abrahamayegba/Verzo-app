@@ -163,6 +163,7 @@ const AddPayment = () => {
       showFailureToast(error);
     }
   };
+  console.log(uploadedFiles[0]?.url);
 
   const handleCloseViewInvoiceSheet = () => {
     setOpenViewInvoiceSheet(false);

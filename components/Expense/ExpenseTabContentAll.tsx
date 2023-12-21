@@ -27,14 +27,12 @@ interface ExpenseTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
   openArchiveModal: (expenseId: string) => void;
   openDeleteModal: (expenseId: string) => void;
-  openEditModal: (expenseId: string) => void;
 }
 
 const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
   onToggleSelectAll,
   openArchiveModal,
   openDeleteModal,
-  openEditModal,
   numberOfExpensesToShow,
 }) => {
   const storedBusinessId = JSON.parse(
@@ -161,13 +159,14 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                         View Expense
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => openEditModal(expense?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    <Link
+                      href={`/expense/editexpense?expenseId=${expense?.id}`}
                     >
-                      <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Edit Expense
-                    </DropdownMenuItem>
+                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Edit Expense
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem
                       onClick={() => openArchiveModal(expense?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"

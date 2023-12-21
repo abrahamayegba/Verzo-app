@@ -25,7 +25,6 @@ interface ExpenseTabContentArchivedProps {
   onToggleSelectAll: (isChecked: boolean) => void;
   openUnarchiveModal: (expenseId: string) => void;
   openDeleteModal: (expenseId: string) => void;
-  openEditModal: (expenseId: string) => void;
   numberOfExpensesToShow?: number; // Make the prop optional
 }
 
@@ -33,7 +32,6 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
   onToggleSelectAll,
   openUnarchiveModal,
   openDeleteModal,
-  openEditModal,
   numberOfExpensesToShow,
 }) => {
   const storedBusinessId = JSON.parse(

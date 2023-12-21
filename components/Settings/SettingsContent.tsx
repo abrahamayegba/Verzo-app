@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import ProductTabContentAll from "./ProductTabContentAll";
-import ProductTabContentArchived from "./ProductTabContentArchived";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import ProductTabContentAll from "../ProductTabContentAll";
+import ProductTabContentArchived from "../ProductTabContentArchived";
 import ProfileContent from "./ProfileContent";
 import BusinessProfileContent from "./BusinessProfileContent";
 import PlanContent from "./PlanContent";

@@ -233,6 +233,7 @@ const EditProductSheet: React.FC<EditProductProps> = ({
             </div>
             <button
               type="submit"
+              disabled={loading}
               className={` bg-primary-blue text-white rounded-[10px] py-[10px] mt-[10px] ${
                 loading ? " opacity-50" : ""
               }`}

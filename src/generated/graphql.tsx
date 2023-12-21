@@ -5577,7 +5577,7 @@ export type GetBusinessByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetBusinessByIdQuery = { __typename?: 'Query', getBusinessById?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null, businessMobile?: string | null, createdAt?: any | null, businessCategory?: { __typename?: 'BusinessCategory', categoryName: string } | null } | null };
+export type GetBusinessByIdQuery = { __typename?: 'Query', getBusinessById?: { __typename?: 'Business', id: string, logo?: string | null, businessName: string, businessEmail?: string | null, businessMobile?: string | null, createdAt?: any | null, businessCategory?: { __typename?: 'BusinessCategory', categoryName: string, id: string } | null } | null };
 
 export type GetBusinessesByUserIdQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6161,6 +6161,15 @@ export type ResendVerificationMutationVariables = Exact<{ [key: string]: never; 
 
 export type ResendVerificationMutation = { __typename?: 'Mutation', resendVerification?: boolean | null };
 
+export type ResetPasswordMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+  oldPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+}>;
+
+
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword?: boolean | null };
+
 export type SearchCustomerByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
   search: Scalars['String']['input'];
@@ -6224,11 +6233,12 @@ export type UpdateBusinessMutationVariables = Exact<{
   businessName?: InputMaybe<Scalars['String']['input']>;
   businessEmail?: InputMaybe<Scalars['String']['input']>;
   businessMobile?: InputMaybe<Scalars['String']['input']>;
+  logo?: InputMaybe<Scalars['String']['input']>;
   businessCategoryId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type UpdateBusinessMutation = { __typename?: 'Mutation', updateBusiness?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null, businessMobile?: string | null, businessCategoryId: string } | null };
+export type UpdateBusinessMutation = { __typename?: 'Mutation', updateBusiness?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null, businessMobile?: string | null, businessCategoryId: string, logo?: string | null } | null };
 
 export type UpdateBusinessCoaMutationVariables = Exact<{
   businessCoaId: Scalars['String']['input'];
@@ -8257,11 +8267,13 @@ export const GetBusinessByIdDocument = gql`
     query GetBusinessById($businessId: String!) {
   getBusinessById(businessId: $businessId) {
     id
+    logo
     businessName
     businessEmail
     businessMobile
     businessCategory {
       categoryName
+      id
     }
     createdAt
   }
@@ -12124,6 +12136,42 @@ export function useResendVerificationMutation(baseOptions?: Apollo.MutationHookO
 export type ResendVerificationMutationHookResult = ReturnType<typeof useResendVerificationMutation>;
 export type ResendVerificationMutationResult = Apollo.MutationResult<ResendVerificationMutation>;
 export type ResendVerificationMutationOptions = Apollo.BaseMutationOptions<ResendVerificationMutation, ResendVerificationMutationVariables>;
+export const ResetPasswordDocument = gql`
+    mutation ResetPassword($userId: String!, $oldPassword: String!, $newPassword: String!) {
+  resetPassword(
+    userId: $userId
+    input: {oldPassword: $oldPassword, newPassword: $newPassword}
+  )
+}
+    `;
+export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
+
+/**
+ * __useResetPasswordMutation__
+ *
+ * To run a mutation, you first call `useResetPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetPasswordMutation, { data, loading, error }] = useResetPasswordMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      oldPassword: // value for 'oldPassword'
+ *      newPassword: // value for 'newPassword'
+ *   },
+ * });
+ */
+export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, options);
+      }
+export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
+export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
 export const SearchCustomerByBusinessDocument = gql`
     query SearchCustomerByBusiness($businessId: String!, $search: String!) {
   searchCustomerByBusiness(businessId: $businessId, search: $search) {
@@ -12406,16 +12454,17 @@ export type UpdateAddOnOptionMutationHookResult = ReturnType<typeof useUpdateAdd
 export type UpdateAddOnOptionMutationResult = Apollo.MutationResult<UpdateAddOnOptionMutation>;
 export type UpdateAddOnOptionMutationOptions = Apollo.BaseMutationOptions<UpdateAddOnOptionMutation, UpdateAddOnOptionMutationVariables>;
 export const UpdateBusinessDocument = gql`
-    mutation UpdateBusiness($businessId: String!, $businessName: String, $businessEmail: String, $businessMobile: String, $businessCategoryId: String) {
+    mutation UpdateBusiness($businessId: String!, $businessName: String, $businessEmail: String, $businessMobile: String, $logo: String, $businessCategoryId: String) {
   updateBusiness(
     businessId: $businessId
-    input: {businessName: $businessName, businessEmail: $businessEmail, businessMobile: $businessMobile, businessCategoryId: $businessCategoryId}
+    input: {businessName: $businessName, businessEmail: $businessEmail, logo: $logo, businessMobile: $businessMobile, businessCategoryId: $businessCategoryId}
   ) {
     id
     businessName
     businessEmail
     businessMobile
     businessCategoryId
+    logo
   }
 }
     `;
@@ -12438,6 +12487,7 @@ export type UpdateBusinessMutationFn = Apollo.MutationFunction<UpdateBusinessMut
  *      businessName: // value for 'businessName'
  *      businessEmail: // value for 'businessEmail'
  *      businessMobile: // value for 'businessMobile'
+ *      logo: // value for 'logo'
  *      businessCategoryId: // value for 'businessCategoryId'
  *   },
  * });

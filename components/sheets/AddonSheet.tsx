@@ -23,7 +23,7 @@ const AddonSheet: React.FC<AddonProps> = ({ open, onClose }) => {
         <SheetContent className=" pt-[112px]">
           <button
             onClick={onClose}
-            className=" flex gap-x-2 text-primary-greytext items-center text-sm"
+            className=" flex gap-x-2 focus:outline-none text-primary-greytext items-center text-sm"
           >
             <ChevronLeft className=" w-4 h-4" />
             Back
@@ -47,11 +47,12 @@ const AddonSheet: React.FC<AddonProps> = ({ open, onClose }) => {
               be used as a placeholder before final copy is available.
             </p>
             <button
+              disabled
               onClick={() => {
                 onClose();
                 openAddonsModal();
               }}
-              className=" bg-primary-blue text-white rounded-[10px] py-[10px] mt-[18px]"
+              className=" bg-primary-blue disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[10px] py-[10px] mt-[18px]"
             >
               Purchase add on for ₦2,500 monthly
             </button>

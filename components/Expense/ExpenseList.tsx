@@ -34,12 +34,6 @@ const ExpenseList = () => {
     closeModal: closeUnarchiveModal,
   } = useModal();
 
-  const {
-    isOpen: isEditModalOpen,
-    openModal: openEditModal,
-    closeModal: closeEditModal,
-  } = useModal();
-
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
   };
@@ -52,11 +46,6 @@ const ExpenseList = () => {
   const handleOpenDeleteModal = (expenseId: string) => {
     setSelectedId(expenseId);
     openDeleteExpenseModal();
-  };
-
-  const handleOpenEditModal = (expenseId: string) => {
-    setSelectedId(expenseId);
-    openEditModal();
   };
 
   const getExpensesByBusiness = useGetExpensesByBusinessQuery({
@@ -129,7 +118,6 @@ const ExpenseList = () => {
           <ExpenseTabContentAll
             openDeleteModal={handleOpenDeleteModal}
             openArchiveModal={handleOpenArchiveModal}
-            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
             numberOfExpensesToShow={10}
           />
@@ -138,7 +126,6 @@ const ExpenseList = () => {
           <ExpenseTabContentArchived
             openDeleteModal={handleOpenDeleteModal}
             openUnarchiveModal={handleOpenArchiveModal}
-            openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
             numberOfExpensesToShow={10}
           />

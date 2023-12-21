@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ProfileSheet from "./sheets/settings/profile/ProfileSheet";
-import SecuritySheet from "./sheets/settings/profile/SecuritySheet";
+import ProfileSheet from "../sheets/settings/profile/ProfileSheet";
+import SecuritySheet from "../sheets/settings/profile/SecuritySheet";
 
 const ProfileContent = () => {
   const [openProfileSheet, setOpenProfileSheet] = useState(false);
@@ -53,7 +53,10 @@ const ProfileContent = () => {
               <p className=" text-primary-black">Authentication</p>
               <p className=" text-sm text-primary-greytext">2FA</p>
             </div>
-            <button className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border">
+            <button
+              disabled
+              className=" px-6 py-3 rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
+            >
               Set up
             </button>
           </div>
@@ -64,7 +67,10 @@ const ProfileContent = () => {
                 Choose preference
               </p>
             </div>
-            <button className=" px-6 py-3 text-sm text-primary-black rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
+            <button
+              disabled
+              className=" px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed text-sm text-primary-black rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
+            >
               Set up
             </button>
           </div>

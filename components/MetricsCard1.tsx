@@ -230,7 +230,7 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
               <span className="text-[#4BB543] mx-1">
                 {weeklyData?.percentageWeeklyRevenue}%
               </span>{" "}
-              since last month
+              since last week
             </div>
           )}
           {filter === "monthly" &&
@@ -254,7 +254,7 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
                 <span className="text-[#4BB543] mx-1">
                   {quarterlyData?.percentageQuarterlyRevenue}%
                 </span>{" "}
-                since last month
+                since last quarter
               </div>
             )}
           {filter === "yearly" && yearlyData?.percentageYearlyRevenue! > 0 && (
@@ -265,7 +265,7 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
               <span className="text-[#4BB543] mx-1">
                 {yearlyData?.percentageYearlyRevenue}%
               </span>{" "}
-              since last month
+              since last year
             </div>
           )}
         </div>

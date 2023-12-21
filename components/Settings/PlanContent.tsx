@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import PlanSheet from "./sheets/settings/planandbilling/PlanSheet";
-import ConfirmPlanModal from "./modals/settings/ConfirmPlan";
+import PlanSheet from "../sheets/settings/planandbilling/PlanSheet";
+import ConfirmPlanModal from "../modals/settings/ConfirmPlan";
 import useModal from "@/app/hooks/useModal";
-import CardSheet from "./sheets/settings/planandbilling/CardSheet";
-import DeleteCard from "./modals/settings/DeleteCardModal";
-import DefaultCardModal from "./modals/settings/DefaultCardModal";
+import CardSheet from "../sheets/settings/planandbilling/CardSheet";
+import DeleteCard from "../modals/settings/DeleteCardModal";
+import DefaultCardModal from "../modals/settings/DefaultCardModal";
 
 const PlanContent = () => {
   const {

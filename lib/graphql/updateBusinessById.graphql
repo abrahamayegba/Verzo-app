@@ -3,6 +3,7 @@ mutation UpdateBusiness(
   $businessName: String
   $businessEmail: String
   $businessMobile: String
+  $logo: String
   $businessCategoryId: String
 ) {
   updateBusiness(
@@ -10,6 +11,7 @@ mutation UpdateBusiness(
     input: {
       businessName: $businessName
       businessEmail: $businessEmail
+      logo: $logo
       businessMobile: $businessMobile
       businessCategoryId: $businessCategoryId
     }
@@ -19,5 +21,6 @@ mutation UpdateBusiness(
     businessEmail
     businessMobile
     businessCategoryId
+    logo
   }
 }

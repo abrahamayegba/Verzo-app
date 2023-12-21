@@ -233,8 +233,7 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                 <span>
                   <ArrowUpIcon />
                 </span>
-                <span className="text-[#4BB543] mx-1">20%</span> since last
-                month
+                <span className="text-[#4BB543] mx-1">20%</span> since last week
               </div>
             )}
           {filter === "monthly" &&
@@ -254,7 +253,7 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                   <ArrowUpIcon />
                 </span>
                 <span className="text-[#4BB543] mx-1">20%</span> since last
-                month
+                quarter
               </div>
             )}
           {filter === "yearly" &&
@@ -263,8 +262,7 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                 <span>
                   <ArrowUpIcon />
                 </span>
-                <span className="text-[#4BB543] mx-1">20%</span> since last
-                month
+                <span className="text-[#4BB543] mx-1">20%</span> since last year
               </div>
             )}
         </div>
