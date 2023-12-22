@@ -44,6 +44,12 @@ const Dashboard = () => {
       router.push("/auth/signin");
     }
   });
+  useEffect(() => {
+    if (getBusinessesByUserId.data && !businessId) {
+      router.push("/auth/businesssetup");
+    }
+  }, [getBusinessesByUserId.data, businessId, router]);
+
   const [selectedFilter, setSelectedFilter] = useState("weekly");
   const handleFilterChange = (filter: any) => {
     setSelectedFilter(filter);
@@ -140,16 +146,12 @@ const Dashboard = () => {
   const getSalesByBusiness = useGetSaleByBusinessQuery({
     variables: {
       businessId: businessId,
-      sets: 3,
     },
   });
 
-  console.log(businessId);
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
   }
-
-  console.log(!isAuthenticated);
 
   const metricsLoading =
     getExpenseForWeek.loading ||

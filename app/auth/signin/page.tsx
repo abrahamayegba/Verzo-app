@@ -26,13 +26,20 @@ const SignIn = () => {
     setError(null);
   };
   const [signInMutation, { loading }] = useSignInMutation();
+
   const SignInHandler = async (form: FormData) => {
     try {
       const response = await signInMutation({
         variables: form,
       });
-      saveToken(response.data?.signIn.token.access_token!);
-      router.push("/dashboard");
+      if (response.data?.signIn.token.access_token) {
+        saveToken(response.data.signIn.token.access_token);
+        if (response.data.signIn.verified) {
+          router.push("/dashboard");
+        } else {
+          router.push("/auth/verifyemail");
+        }
+      }
     } catch (error) {
       setError("Incorrect email or password");
     }
@@ -52,14 +59,14 @@ const SignIn = () => {
             </button>
           </Link>
         </div>
-        <div className=" flex flex-col pl-[140px] pr-[60px] mt-[30px]">
+        <div className=" flex flex-col pl-[140px] pr-[60px] mt-[70px]">
           <div className=" flex flex-col gap-y-2">
             <p className=" text-primary-black text-[32px]">Sign in to Verzo</p>
             <p className=" text-primary-greytext text-lg">Welcome back</p>
           </div>
           <form
             onSubmit={handleSubmit(SignInHandler)}
-            className=" flex flex-col mt-[30px] gap-y-5"
+            className=" flex flex-col mt-[30px] gap-y-6"
           >
             <div className=" flex flex-col gap-y-2">
               <label className=" text-primary-black" htmlFor="email">
@@ -119,7 +126,7 @@ const SignIn = () => {
               >
                 {loading ? "Loading..." : "Sign in"}
               </button>
-              <div className="flex space-x-[11px] py-6 items-center">
+              {/* <div className="flex space-x-[11px] py-6 items-center">
                 <hr className="w-[182px] h-[1px] bg-primary-borderGrey" />
                 <span className="text-sm text-primary-greytext">Or</span>
                 <hr className="w-[182px] h-[1px] bg-primary-borderGrey" />
@@ -127,7 +134,7 @@ const SignIn = () => {
               <button className="w-[400px] py-[10px] rounded-[10px] border  border-gray-300 bg-white text-lg flex items-center justify-center gap-x-3">
                 <GoogleIcon />
                 Sign in with Google
-              </button>
+              </button> */}
             </div>
           </form>
         </div>

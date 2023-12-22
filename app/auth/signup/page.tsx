@@ -56,7 +56,7 @@ const Signup = () => {
   return (
     <div className=" w-full flex flex-row h-screen">
       <AuthSidebar />
-      <div className=" flex-1 ml-[34%] h-full pt-[40px]">
+      <div className=" flex-1 ml-[34%] h-full pt-[50px]">
         <div className=" w-full flex justify-end items-center gap-x-9 pl-[140px] pr-[60px]">
           <p className=" text-primary-greytext text-lg">
             Already have an account?
@@ -67,7 +67,7 @@ const Signup = () => {
             </button>
           </Link>
         </div>
-        <div className=" flex flex-col pl-[140px] pr-[60px] mt-[10px]">
+        <div className=" flex flex-col pl-[140px] pr-[60px] mt-[50px]">
           <div className=" flex flex-col gap-y-2">
             <p className=" text-primary-black text-[32px]">Sign up on Verzo</p>
             <p className=" text-primary-greytext text-lg">
@@ -76,7 +76,7 @@ const Signup = () => {
           </div>
           <form
             onSubmit={handleSubmit(SignUpHandler)}
-            className=" flex flex-col mt-[20px] gap-y-5"
+            className=" flex flex-col mt-[25px] gap-y-6"
           >
             <div className=" flex flex-col gap-y-2">
               <label className=" text-primary-black" htmlFor="fullname">
@@ -128,11 +128,6 @@ const Signup = () => {
                   {errors.password.message}
                 </p>
               )}
-              {/* {error && (
-                <p className="text-red-500 text-sm pl-1 max-w-[400px]">
-                  {errors.password.message}
-                </p>
-              )} */}
               <span
                 onClick={togglePasswordVisibility}
                 className="absolute cursor-pointer mt-[48px] ml-[360px]"
@@ -144,7 +139,7 @@ const Signup = () => {
                 )}
               </span>
             </div>
-            <div className=" flex flex-col mt-2">
+            <div className=" flex flex-col mt-3">
               <button
                 type="submit"
                 disabled={loading}
@@ -154,7 +149,7 @@ const Signup = () => {
               >
                 {loading ? "Loading..." : "Create account"}
               </button>
-              <div className="flex space-x-[11px] py-5 items-center">
+              {/* <div className="flex space-x-[11px] py-5 items-center">
                 <hr className="w-[182px] h-[1px] bg-primary-borderGrey" />
                 <span className="text-sm text-primary-greytext">Or</span>
                 <hr className="w-[182px] h-[1px] bg-primary-borderGrey" />
@@ -162,7 +157,7 @@ const Signup = () => {
               <button className="w-[400px] py-[10px] rounded-[10px] border  border-gray-300 bg-white text-lg flex items-center justify-center gap-x-3">
                 <GoogleIcon />
                 Sign up with Google
-              </button>
+              </button> */}
             </div>
           </form>
         </div>

@@ -238,7 +238,7 @@ const AddPayment = () => {
           <div className=" flex flex-col mt-[20px] gap-y-9">
             <div className=" flex flex-col gap-y-1 ">
               <p className=" text-lg text-primary-black">
-                Upload merchant invoice
+                Upload payment receipt
               </p>
               <p className=" text-sm text-primary-greytext">
                 Supported formats: PNG, JPG & JPEG
