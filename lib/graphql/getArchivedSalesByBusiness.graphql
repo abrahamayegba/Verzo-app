@@ -12,6 +12,7 @@ query GetArchivedSalesByBusiness(
       id
       description
       archived
+      reference
       saleAmount
       saleExpenses {
         amount

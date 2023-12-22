@@ -5,6 +5,7 @@ query GetSaleByBusiness($businessId: String!, $cursor: String, $sets: Float) {
       description
       saleAmount
       paid
+      reference
       archived
       business {
         businessName

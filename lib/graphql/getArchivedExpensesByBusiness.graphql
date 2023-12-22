@@ -12,6 +12,7 @@ query GetArchivedExpensesByBusiness(
       id
       description
       amount
+      reference
       paid
       archived
       businessId

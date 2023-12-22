@@ -9,6 +9,7 @@ query GetPurchaseByBusiness(
       description
       transactionDate
       total
+      reference
       businessId
       archived
       merchant {

@@ -115,7 +115,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          expenses.slice(0, numberOfExpensesToShow).map((expense, index) => (
+          expenses.slice(0, numberOfExpensesToShow).map((expense) => (
             <TableRow key={expense?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
@@ -123,7 +123,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                   checked={selectedRows.includes(expense?.id!)}
                   onCheckedChange={() => handleRowSelect(expense?.id!)}
                 />
-                #{String(index + 1).padStart(3, "0")}
+                #{expense?.reference}
               </TableCell>
               <TableCell>
                 <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">

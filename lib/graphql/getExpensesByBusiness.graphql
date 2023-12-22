@@ -8,6 +8,7 @@ query GetExpensesByBusiness(
       id
       description
       amount
+      reference
       paid
       archived
       expenseCategory {

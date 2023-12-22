@@ -122,70 +122,68 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          archivedSales
-            .slice(0, numberOfInvoicesToShow)
-            .map((invoice, index) => (
-              <TableRow key={invoice?.id}>
-                <TableCell className="flex gap-x-3 items-center py-[22px]">
-                  <Checkbox
-                    className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                    checked={selectedRows.includes(invoice?.id!)}
-                    onCheckedChange={() => handleRowSelect(invoice?.id!)}
-                  />
-                  #INV{String(index + 1).padStart(3, "0")}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {invoice?.transactionDate
-                    ? new Date(invoice.transactionDate).toDateString()
-                    : ""}
-                </TableCell>
-                <TableCell>
-                  {invoice?.paid === true ? (
-                    <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                      <span className="mr-2 text-green-500">✔</span>
-                      Paid
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
-                      <span className="mr-2 text-yellow-500">⌛</span>
-                      Pending
-                    </span>
-                  )}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {invoice?.invoice?.customer?.name}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {invoice?.invoice?.totalAmount.toLocaleString("en-NG", {
-                    style: "currency",
-                    currency: "NGN",
-                  })}
-                </TableCell>
-                <TableCell className="text-right text-primary-blue">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className=" focus:outline-none">
-                      More
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
-                      <DropdownMenuItem
-                        onClick={() => openArchiveModal(invoice?.id!)}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Unarchive Invoice
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => openDeleteModal(invoice?.id!)}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Delete Invoice
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))
+          archivedSales.slice(0, numberOfInvoicesToShow).map((invoice) => (
+            <TableRow key={invoice?.id}>
+              <TableCell className="flex gap-x-3 items-center py-[22px]">
+                <Checkbox
+                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                  checked={selectedRows.includes(invoice?.id!)}
+                  onCheckedChange={() => handleRowSelect(invoice?.id!)}
+                />
+                #{invoice?.reference}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {invoice?.transactionDate
+                  ? new Date(invoice.transactionDate).toDateString()
+                  : ""}
+              </TableCell>
+              <TableCell>
+                {invoice?.paid === true ? (
+                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                    <span className="mr-2 text-green-500">✔</span>
+                    Paid
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
+                    <span className="mr-2 text-yellow-500">⌛</span>
+                    Pending
+                  </span>
+                )}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {invoice?.invoice?.customer?.name}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {invoice?.invoice?.totalAmount.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
+              </TableCell>
+              <TableCell className="text-right text-primary-blue">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" focus:outline-none">
+                    More
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
+                    <DropdownMenuItem
+                      onClick={() => openArchiveModal(invoice?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Unarchive Invoice
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openDeleteModal(invoice?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Delete Invoice
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))
         )}
       </TableBody>
     </Table>

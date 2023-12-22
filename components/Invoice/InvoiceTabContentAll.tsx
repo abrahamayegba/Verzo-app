@@ -116,7 +116,7 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          invoices.slice(0, numberOfInvoicesToShow).map((invoice, index) => (
+          invoices.slice(0, numberOfInvoicesToShow).map((invoice) => (
             <TableRow key={invoice?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
@@ -124,7 +124,7 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
                   checked={selectedRows.includes(invoice?.id!)}
                   onCheckedChange={() => handleRowSelect(invoice?.id!)}
                 />
-                #INV{String(index + 1).padStart(3, "0")}
+                #{invoice?.reference}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {invoice?.transactionDate

@@ -116,63 +116,60 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          archivedExpenses
-            .slice(0, numberOfExpensesToShow)
-            .map((expense, index) => (
-              <TableRow className="" key={expense?.id}>
-                <TableCell className="flex gap-x-3 items-center py-[22px]">
-                  <Checkbox
-                    className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                    checked={selectedRows.includes(expense?.id!)}
-                    onCheckedChange={() => handleRowSelect(expense?.id!)}
-                  />
-                  {/* {expense?.description} */}#
-                  {String(index + 1).padStart(3, "0")}
-                </TableCell>
-                <TableCell>
-                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    {expense?.expenseCategory?.name}
-                  </span>
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {expense?.expenseDate
-                    ? new Date(expense.expenseDate).toDateString()
-                    : ""}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {expense?.merchant?.name}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {expense?.amount?.toLocaleString("en-NG", {
-                    style: "currency",
-                    currency: "NGN",
-                  })}
-                </TableCell>
-                <TableCell className="text-right text-primary-blue">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className=" focus:outline-none">
-                      More
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className=" bg-white mt-1 mr-2 text-primary-greytext shadow1 w-[170px]">
-                      <DropdownMenuItem
-                        onClick={() => openUnarchiveModal(expense?.id!)}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Unarchive Expense
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => openDeleteModal(expense?.id!)}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Delete Expense
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))
+          archivedExpenses.slice(0, numberOfExpensesToShow).map((expense) => (
+            <TableRow className="" key={expense?.id}>
+              <TableCell className="flex gap-x-3 items-center py-[22px]">
+                <Checkbox
+                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                  checked={selectedRows.includes(expense?.id!)}
+                  onCheckedChange={() => handleRowSelect(expense?.id!)}
+                />
+                #{expense?.reference}
+              </TableCell>
+              <TableCell>
+                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                  {expense?.expenseCategory?.name}
+                </span>
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {expense?.expenseDate
+                  ? new Date(expense.expenseDate).toDateString()
+                  : ""}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {expense?.merchant?.name}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {expense?.amount?.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
+              </TableCell>
+              <TableCell className="text-right text-primary-blue">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" focus:outline-none">
+                    More
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-white mt-1 mr-2 text-primary-greytext shadow1 w-[170px]">
+                    <DropdownMenuItem
+                      onClick={() => openUnarchiveModal(expense?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Unarchive Expense
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openDeleteModal(expense?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Trash2 className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Delete Expense
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))
         )}
       </TableBody>
     </Table>

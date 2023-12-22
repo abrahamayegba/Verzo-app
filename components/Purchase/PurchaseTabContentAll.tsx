@@ -121,7 +121,7 @@ const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          purchases.slice(0, numberOfPurchasesToShow).map((purchase, index) => (
+          purchases.slice(0, numberOfPurchasesToShow).map((purchase) => (
             <TableRow key={purchase?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
@@ -129,7 +129,7 @@ const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
                   checked={selectedRows.includes(purchase?.id!)}
                   onCheckedChange={() => handleRowSelect(purchase?.id!)}
                 />
-                #PUR{String(index + 1).padStart(3, "0")}
+                #{purchase?.reference}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {purchase?.transactionDate

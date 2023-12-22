@@ -242,12 +242,8 @@ const CreateInvoice = () => {
     0
   );
 
-  const saleServiceExpenses = serviceExpenses.reduce(
-    (acc, expense) => acc + Number(expense.amount || 0),
-    0
-  );
   const vatAmount = 0.075 * subtotalFromItems;
-  const amountDue = subtotalFromItems + saleExpenses + saleServiceExpenses;
+  const amountDue = subtotalFromItems + saleExpenses;
   const totalAmountDue = amountDue + vatAmount;
 
   React.useEffect(() => {
@@ -545,13 +541,6 @@ const CreateInvoice = () => {
                   <p>₦{saleExpenses.toLocaleString("en-NG")}</p>
                 </div>
               )}
-              {saleServiceExpenses > 1 && (
-                <div className=" flex gap-x-[180px] p-3">
-                  <p className=" text-primary-greytext">Service expenses</p>
-                  <p>₦{saleServiceExpenses.toLocaleString("en-NG")}</p>
-                </div>
-              )}
-
               <div className=" flex gap-x-[180px] p-3 border-t border-t-gray-100">
                 <p className=" text-primary-greytext">Amount due</p>
                 <p>₦{totalAmountDue.toLocaleString("en-NG")}</p>
