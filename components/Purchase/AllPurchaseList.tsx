@@ -34,12 +34,6 @@ const AllPurchaseList = () => {
     closeModal: closeUnarchivePurchaseModal,
   } = useModal();
 
-  const {
-    isOpen: isEditModalOpen,
-    openModal: openEditModal,
-    closeModal: closeEditModal,
-  } = useModal();
-
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
   };
@@ -52,11 +46,6 @@ const AllPurchaseList = () => {
   const handleOpenDeleteModal = (purchaseId: string) => {
     setSelectedId(purchaseId);
     openDeletePurchaseModal();
-  };
-
-  const handleOpenEditModal = (purchaseId: string) => {
-    setSelectedId(purchaseId);
-    openEditModal();
   };
 
   const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
@@ -136,7 +125,6 @@ const AllPurchaseList = () => {
             openDeleteModal={handleOpenDeleteModal}
             openArchiveModal={handleOpenArchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
-            openEditModal={handleOpenEditModal}
           />
           {/* {purchases.length > 0 && (
             <CustomPagination
@@ -151,7 +139,6 @@ const AllPurchaseList = () => {
             openDeleteModal={handleOpenDeleteModal}
             openUnarchiveModal={handleOpenArchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
-            openEditModal={handleOpenEditModal}
           />
           {/* {archivedPurchases.length > 0 && (
             <CustomPagination

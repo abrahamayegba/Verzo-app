@@ -110,6 +110,10 @@ const RecordSaleExpense = () => {
       showDateFailureToast("Please pick a date and try again.");
       return;
     }
+    if (!description) {
+      showDateFailureToast("Please add a description and try again.");
+      return;
+    }
     try {
       setLoading((prevLoading) => ({
         ...prevLoading,

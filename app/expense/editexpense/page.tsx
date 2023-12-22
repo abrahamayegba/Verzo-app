@@ -181,16 +181,6 @@ const EditExpense = () => {
     });
   };
 
-  const resetFormState = () => {
-    reset();
-    setDate(null);
-    setMerchantId("");
-    setExpenseCategoryId("");
-    setExpenseDate("");
-    setExpenseItems([]);
-    expenseItems.length = 0;
-  };
-
   const subtotal = expenseItems.reduce(
     (acc, items) => acc + items?.unitPrice * items?.quantity,
     0
@@ -223,7 +213,6 @@ const EditExpense = () => {
       });
       showSuccessToast();
       router.push("/dashboard/expenses");
-      resetFormState();
     } catch (error) {
       console.error(error);
       showFailureToast(error);

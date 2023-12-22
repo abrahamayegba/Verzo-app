@@ -19,17 +19,13 @@ import { ArchiveRestore, Eye, Pen, Trash2 } from "lucide-react";
 import TableEmptyState from "../emptystates/TableEmptyState";
 import localStorage from "local-storage-fallback";
 import PurchaseTableEmptyIcon from "../ui/icons/PurchaseTableEmptyIcon";
-import {
-  useGetArchivedPurchasesByBusinessQuery,
-  useGetPurchaseByBusinessQuery,
-} from "@/src/generated/graphql";
+import { useGetArchivedPurchasesByBusinessQuery } from "@/src/generated/graphql";
 
 interface PurchaseTabContentArchivedProps {
   openUnarchiveModal: (purchaseId: string) => void;
   numberOfPurchasesToShow?: number; // Make the prop optional
   onToggleSelectAll: (isChecked: boolean) => void;
   openDeleteModal: (purchaseId: string) => void;
-  openEditModal: (purchaseId: string) => void;
 }
 
 const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
@@ -37,7 +33,6 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
   openUnarchiveModal,
   openDeleteModal,
   numberOfPurchasesToShow,
-  openEditModal,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"

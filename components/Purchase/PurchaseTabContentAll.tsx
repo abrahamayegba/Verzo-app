@@ -27,14 +27,12 @@ interface PurchaseTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
   openArchiveModal: (purchaseId: string) => void;
   openDeleteModal: (purchaseId: string) => void;
-  openEditModal: (purchaseId: string) => void;
 }
 
 const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
   onToggleSelectAll,
   openArchiveModal,
   openDeleteModal,
-  openEditModal,
   numberOfPurchasesToShow,
 }) => {
   const storedBusinessId = JSON.parse(
@@ -179,13 +177,14 @@ const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
                         View Purchase
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => openEditModal(purchase?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    <Link
+                      href={`/purchase/editpurchase?purchaseId=${purchase?.id}`}
                     >
-                      <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Edit Purchase
-                    </DropdownMenuItem>
+                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Edit Purchase
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem
                       onClick={() => openArchiveModal(purchase?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"

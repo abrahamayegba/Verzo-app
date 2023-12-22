@@ -22,7 +22,7 @@ const ViewPurchase = () => {
     },
   });
   const purchase = getPurchaseById?.data?.getPurchaseById;
-  const purchaseStatusId = purchase?.purchaseStatusId;
+  const purchaseStatusId = purchase?.purchaseStatusId!;
 
   const purchaseItems = purchase?.purchaseItems;
 
@@ -100,9 +100,14 @@ const ViewPurchase = () => {
           <span>
             <Verzologoblue />
           </span>
-          <button className=" px-8 py-3 rounded-[10px] flex border border-gray-200 items-center justify-center">
-            Edit purchase
-          </button>
+          <Link href={`/purchase/editpurchase?purchaseId=${purchaseId}`}>
+            <button
+              disabled={purchaseStatusId >= 2}
+              className=" px-8 py-3 rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed flex border border-gray-200 items-center justify-center"
+            >
+              Edit purchase
+            </button>
+          </Link>
         </div>
         <div className=" flex flex-col border-t border-t-[#f4f4f4] mt-[40px]">
           <div className="grid grid-cols-3 pt-8">
