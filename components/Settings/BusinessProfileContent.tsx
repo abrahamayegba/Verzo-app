@@ -70,7 +70,7 @@ const BusinessProfileContent = () => {
               onClick={handleOpenUpdateExpenseCategorySheet}
               className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
             >
-              Update
+              View
             </button>
           </div>
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
