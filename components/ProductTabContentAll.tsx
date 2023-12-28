@@ -129,7 +129,9 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
                 })}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {product?.stockStatus}
+                {product?.stockStatus === "outOfStock"
+                  ? "Out of stock"
+                  : product?.stockStatus}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {product?.productUnit?.unitName}

@@ -168,12 +168,14 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
                         View Invoice
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => openEditModal(invoice?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Edit Invoice
+                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                      <Link
+                        className=" flex gap-x-2 items-center"
+                        href={`/invoice/editinvoice?invoiceId=${invoice?.id}`}
+                      >
+                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Edit Invoice
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                       <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />

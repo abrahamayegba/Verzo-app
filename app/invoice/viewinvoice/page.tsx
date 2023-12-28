@@ -22,10 +22,13 @@ const ViewInvoice = () => {
     },
   });
   const sales = getSaleById.data?.getSaleById;
-  const saleStatusId = sales?.saleStatus?.id;
+  const saleStatusId = sales?.saleStatus?.id!;
   const saleItems = sales?.invoice?.invoiceDetails;
   const saleItem = saleItems?.map((item) => ({
-    id: item?.id,
+    id:
+      item?.type === "P"
+        ? item?.productInvoiceDetail?.product?.id
+        : item?.serviceInvoiceDetail?.service?.id,
     itemName:
       item?.type === "P"
         ? item?.productInvoiceDetail?.product?.productName
@@ -102,9 +105,14 @@ const ViewInvoice = () => {
           <span>
             <Verzologoblue />
           </span>
-          <button className=" px-8 py-3 rounded-[10px] flex border border-gray-200 items-center justify-center">
-            Edit invoice
-          </button>
+          <Link href={`/invoice/editinvoice?invoiceId=${invoiceId}`}>
+            <button
+              disabled={saleStatusId >= 2}
+              className=" px-8 py-3 rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed flex border border-gray-200 items-center justify-center"
+            >
+              Edit invoice
+            </button>
+          </Link>
         </div>
         <div className=" flex flex-col border-t border-t-[#f4f4f4] mt-[40px]">
           <div className="grid grid-cols-3 pt-8">

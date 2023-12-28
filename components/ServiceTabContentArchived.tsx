@@ -19,12 +19,12 @@ import localStorage from "local-storage-fallback";
 import { Archive, Pen, Trash2 } from "lucide-react";
 import TableEmptyState from "./emptystates/TableEmptyState";
 import ServiceTableEmptyIcon from "./ui/icons/ServiceTableEmptyIcon";
-import { useGetServiceByBusinessQuery } from "@/src/generated/graphql";
+import { useGetArchivedServiceByBusinessQuery } from "@/src/generated/graphql";
 
 interface ServiceTabContentArchivedProps {
   onToggleSelectAll: (isChecked: boolean) => void;
-  openUnarchiveModal: () => void;
-  openDeleteModal: () => void;
+  openUnarchiveModal: (serviceId: string) => void;
+  openDeleteModal: (serviceId: string) => void;
 }
 
 const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
@@ -37,8 +37,7 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-
-  const getServicesByBusiness = useGetServiceByBusinessQuery({
+  const getArchivedServicesByBusiness = useGetArchivedServiceByBusinessQuery({
     variables: {
       businessId: businessId,
       cursor: null,
@@ -46,8 +45,9 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
     },
   });
 
-  const services =
-    getServicesByBusiness.data?.getServiceByBusiness?.serviceByBusiness ?? [];
+  const archivedServices =
+    getArchivedServicesByBusiness.data?.getArchivedServicesByBusiness
+      ?.serviceByBusiness ?? [];
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
@@ -56,10 +56,10 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
     }
   };
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== services?.length;
+    const isChecked = selectedRows.length !== archivedServices?.length;
     if (isChecked) {
       setSelectedRows(
-        services?.map((service) => String(service?.id) || "") || []
+        archivedServices?.map((service) => String(service?.id) || "") || []
       );
     } else {
       setSelectedRows([]);
@@ -74,9 +74,10 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
               checked={
-                selectedRows.length === services.length && services.length > 0
+                selectedRows.length === archivedServices.length &&
+                archivedServices.length > 0
               }
-              disabled={services.length === 0}
+              disabled={archivedServices.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Name
@@ -93,7 +94,7 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {services?.filter((service) => service?.archived).length === 0 ? (
+        {archivedServices?.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -106,57 +107,51 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          services
-            .filter((service) => service?.archived) // Filter only archived customers
-            .map((service) => (
-              <TableRow className="" key={service?.id}>
-                <TableCell className="flex gap-x-3 items-center py-[22px]">
-                  <Checkbox
-                    className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                    checked={selectedRows.includes(service?.id!)}
-                    onCheckedChange={() => handleRowSelect(service?.id!)}
-                  />
+          archivedServices.map((service) => (
+            <TableRow className="" key={service?.id}>
+              <TableCell className="flex gap-x-3 items-center py-[22px]">
+                <Checkbox
+                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                  checked={selectedRows.includes(service?.id!)}
+                  onCheckedChange={() => handleRowSelect(service?.id!)}
+                />
 
-                  {service?.name}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {service?.price.toLocaleString("en-NG", {
-                    style: "currency",
-                    currency: "NGN",
-                  })}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {service?.serviceUnit?.unitName}
-                </TableCell>
-                <TableCell className="text-right text-primary-blue">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className=" focus:outline-none">
-                      More
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className=" bg-white mt-1 mr-1 text-primary-greytext shadow1 w-[170px]">
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Edit Service
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={openUnarchiveModal}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Unarchive Service
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={openDeleteModal}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Trash2 className=" w-4 h-4 text-opacity-80" />
-                        Delete Service
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))
+                {service?.name}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {service?.price.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {service?.serviceUnit?.unitName}
+              </TableCell>
+              <TableCell className="text-right text-primary-blue">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" focus:outline-none">
+                    More
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-white mt-1 mr-1 text-primary-greytext shadow1 w-[170px]">
+                    <DropdownMenuItem
+                      onClick={() => openUnarchiveModal(service?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Unarchive Service
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openDeleteModal(service?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Trash2 className=" w-4 h-4 text-opacity-80" />
+                      Delete Service
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))
         )}
       </TableBody>
     </Table>

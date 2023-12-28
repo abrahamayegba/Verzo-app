@@ -8,7 +8,10 @@ import ArchiveProduct from "./modals/product/ArchiveProductModal";
 import ProductTabContentAll from "./ProductTabContentAll";
 import localStorage from "local-storage-fallback";
 import ProductTabContentArchived from "./ProductTabContentArchived";
-import { useGetProductsByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedProductsByBusinessQuery,
+  useGetProductsByBusinessQuery,
+} from "@/src/generated/graphql";
 import EditProductSheet from "./sheets/product/EditProductSheet";
 
 const ProductList = () => {
@@ -45,13 +48,23 @@ const ProductList = () => {
     },
   });
 
+  const getArchivedProductsByBusiness = useGetArchivedProductsByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+
+  const archivedProducts =
+    getArchivedProductsByBusiness.data?.getArchivedProductByBusiness
+      ?.productByBusiness ?? [];
+
   const products =
     getProductsByBusiness.data?.getProductsByBusiness?.productByBusiness ?? [];
 
   const allProducts = products.length;
-  const archivedProducts = products.filter(
-    (product) => product?.archived
-  ).length;
+  const allArchivedProducts = archivedProducts.length;
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
@@ -60,6 +73,11 @@ const ProductList = () => {
   const handleOpenArchiveModal = (customerId: string) => {
     setSelectedId(customerId);
     openModal();
+  };
+
+  const handleOpenUnarchiveModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openUnarchiveModal();
   };
 
   const handleOpenDeleteModal = (customerId: string) => {
@@ -91,7 +109,7 @@ const ProductList = () => {
               Archived{" "}
               <span className=" text-primary-mainGrey">
                 {" "}
-                ({archivedProducts})
+                ({allArchivedProducts})
               </span>
             </TabsTrigger>
           </div>
@@ -122,8 +140,8 @@ const ProductList = () => {
         </TabsContent>
         <TabsContent value="archived">
           <ProductTabContentArchived
-            openDeleteModal={openDeleteProductModal}
-            openUnarchiveModal={openUnarchiveModal}
+            openDeleteModal={handleOpenDeleteModal}
+            openUnarchiveModal={handleOpenUnarchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
         </TabsContent>

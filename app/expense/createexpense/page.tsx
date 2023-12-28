@@ -139,7 +139,7 @@ const CreateExpense = () => {
 
   const showSuccessToast = () => {
     toast({
-      title: "Expense Successfully Created!",
+      title: "Successful!",
       description: "Your expense has been successfully created",
       duration: 3000,
     });

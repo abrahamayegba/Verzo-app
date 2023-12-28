@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetArchivedCustomersByBusinessDocument,
   GetCustomerByBusinessDocument,
   useArchiveCustomerByBusinessMutation,
 } from "@/src/generated/graphql";
@@ -26,7 +27,7 @@ const ArchiveCustomer: React.FC<ArchiveCustomerProps> = ({
     useArchiveCustomerByBusinessMutation();
   const showSuccessToast = () => {
     toast({
-      title: "Customer archive successful",
+      title: "Successful!",
       description: "Your customer has been successfully archived",
       duration: 3500,
     });
@@ -43,7 +44,10 @@ const ArchiveCustomer: React.FC<ArchiveCustomerProps> = ({
     try {
       await archiveCustomerByBusinessMutation({
         variables: { customerId: customerId },
-        refetchQueries: [GetCustomerByBusinessDocument],
+        refetchQueries: [
+          GetCustomerByBusinessDocument,
+          GetArchivedCustomersByBusinessDocument,
+        ],
       });
       client.refetchQueries({
         include: "active",

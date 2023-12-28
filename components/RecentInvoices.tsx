@@ -91,8 +91,13 @@ const RecentInvoices = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Edit Invoice
+                      <Link
+                        className=" flex gap-x-2 items-center"
+                        href={`/invoice/editinvoice?invoiceId=${sale?.id}`}
+                      >
+                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Edit Invoice
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                       <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />

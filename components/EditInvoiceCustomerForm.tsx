@@ -9,113 +9,115 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import localStorage from "local-storage-fallback";
 import {
   useGetBusinessesByUserIdQuery,
-  useGetMerchantsByBusinessQuery,
-  useGetPurchaseByIdQuery,
+  useGetCustomerByBusinessQuery,
+  useGetSaleByIdQuery,
 } from "@/src/generated/graphql";
-import localStorage from "local-storage-fallback";
 import MainLoader from "./loading/MainLoader";
 
-interface MerchantFormProps {
-  purchaseId: string;
-  openMerchantSheet: () => void;
-  onMerchantChange: (id: string) => void;
+interface CustomerFormProps {
+  openCustomerSheet: () => void;
+  invoiceId: string;
+  onCustomerChange: (id: string) => void;
 }
 
-const EditPurchaseMerchantForm: React.FC<MerchantFormProps> = ({
-  purchaseId,
-  openMerchantSheet,
-  onMerchantChange,
+const EditInvoiceCustomerForm: React.FC<CustomerFormProps> = ({
+  openCustomerSheet,
+  invoiceId,
+  onCustomerChange,
 }) => {
+  const [customerId, setCustomerId] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
-  const getMerchants = useGetMerchantsByBusinessQuery({
+
+  const getCustomers = useGetCustomerByBusinessQuery({
     variables: { businessId: businessId },
   });
-  const getPurchaseById = useGetPurchaseByIdQuery({
+  const getSaleById = useGetSaleByIdQuery({
     variables: {
-      purchaseId: purchaseId!,
+      saleId: invoiceId!,
     },
   });
-  const purchase = getPurchaseById?.data?.getPurchaseById;
-  const merchants = useMemo(
-    () => getMerchants.data?.getMerchantsByBusiness ?? [],
-    [getMerchants.data?.getMerchantsByBusiness]
+  const sale = getSaleById?.data?.getSaleById;
+  const customers = useMemo(
+    () => getCustomers.data?.getCustomerByBusiness?.customerByBusiness ?? [],
+    [getCustomers.data?.getCustomerByBusiness]
   );
-  const [merchantId, setMerchantId] = useState("");
-  const [merchantEmail, setMerchantEmail] = useState("");
+
   useEffect(() => {
-    if (merchantId) {
-      const foundMerchant = merchants.find(
-        (merchant) => merchant?.id === merchantId
+    if (customerId) {
+      const foundCustomer = customers.find(
+        (customer) => customer?.id === customerId
       );
-      if (foundMerchant) {
-        setMerchantEmail(foundMerchant?.email!);
+      if (foundCustomer) {
+        setCustomerEmail(foundCustomer?.email!);
       }
     }
-  }, [merchantId, merchants]);
+  }, [customerId, customers]);
 
   useEffect(() => {
-    onMerchantChange(merchantId);
-  }, [merchantId, onMerchantChange]);
+    onCustomerChange(customerId);
+  }, [customerId, onCustomerChange]);
 
-  const initialMerchantId = purchase?.merchant?.id!;
-  const initialMerchantEmail = purchase?.merchant?.email!;
+  const initialCustomerId = sale?.invoice?.customer?.id;
+  const initialCustomerEmail = sale?.invoice?.customer?.email;
 
   if (
     getBusinessesByUserId.loading ||
-    getMerchants.loading ||
-    getPurchaseById.loading
+    getCustomers.loading ||
+    getSaleById.loading
   ) {
     return <MainLoader />;
   }
 
   return (
-    <div className=" flex w-full justify-between flex-col gap-y-5">
+    <div className=" flex w-full justify-between flex-col gap-y-7">
       <div className=" flex flex-row w-full justify-between">
-        <p className=" text-primary-black text-lg">Merchant details</p>
+        <p className=" text-primary-black text-lg">Customer details</p>
         <button
           type="button"
-          onClick={openMerchantSheet}
+          onClick={openCustomerSheet}
           className=" text-primary-blue flex items-center gap-x-2"
         >
-          Add merchant <Plus className=" w-5 h-5" />
+          Add customer <Plus className=" w-5 h-5" />
         </button>
       </div>
-      <div className=" flex flex-col gap-y-[50px]">
+      <form className=" flex flex-col gap-y-[50px]">
         <div className=" flex flex-row gap-x-6">
           <div className=" flex flex-col gap-y-[6px] w-1/2">
-            <label className="" htmlFor="merchant">
-              Merchant
+            <label className="" htmlFor="customer">
+              Customer
             </label>
             <Select
-              value={merchantId ? merchantId : initialMerchantId}
-              onValueChange={setMerchantId}
+              value={customerId ? customerId : initialCustomerId}
+              onValueChange={setCustomerId}
             >
               <SelectTrigger className=" w-full rounded-lg border border-gray-200">
                 <SelectValue
                   className=" text-primary-greytext"
-                  placeholder="Select a merchant"
+                  placeholder="Select a customer"
                 />
               </SelectTrigger>
               <SelectContent className=" bg-white w-full">
                 <SelectGroup>
-                  {merchants.map((merchant) => (
+                  {customers.map((customer) => (
                     <SelectItem
-                      key={merchant?.id}
+                      key={customer?.id}
                       className=" hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
-                      value={merchant?.id!}
+                      value={customer?.id!}
                     >
-                      {merchant?.name}
+                      {customer?.name}
                     </SelectItem>
                   ))}
-                  {merchants.length === 0 && (
+                  {customers.length === 0 && (
                     <button
-                      onClick={openMerchantSheet}
+                      onClick={openCustomerSheet}
                       className="hover:bg-gray-100 cursor-pointer py-2 px-2 text-[15px] w-full flex items-start"
                     >
                       Create merchant
@@ -127,16 +129,16 @@ const EditPurchaseMerchantForm: React.FC<MerchantFormProps> = ({
           </div>
           <div className=" flex flex-col gap-y-[6px] w-1/2">
             <label className="" htmlFor="customer">
-              Merchant email
+              Customer email
             </label>
             <p className="border border-gray-200 rounded-lg h-10 text-sm focus:outline-none px-3 py-2">
-              {merchantEmail ? merchantEmail : initialMerchantEmail}
+              {customerEmail ? customerEmail : initialCustomerEmail}
             </p>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
 
-export default EditPurchaseMerchantForm;
+export default EditInvoiceCustomerForm;

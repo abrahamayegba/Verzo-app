@@ -28,7 +28,7 @@ const DeleteInvoice: React.FC<DeleteInvoiceProps> = ({
   const showSuccessToast = () => {
     toast({
       title: "Deleted!",
-      description: "Your sale has been successfully deleted",
+      description: "Your invoice has been successfully deleted",
       duration: 3500,
     });
   };

@@ -23,6 +23,7 @@ query GetSaleById($saleId: String!) {
     saleServiceExpenses {
       id
       effected
+      description
       amount
       index
       service {

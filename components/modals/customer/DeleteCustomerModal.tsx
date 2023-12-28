@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetArchivedCustomersByBusinessDocument,
   GetCustomerByBusinessDocument,
   useDeleteCustomerMutation,
 } from "@/src/generated/graphql";
@@ -24,7 +25,7 @@ const DeleteCustomer: React.FC<DeleteCustomerProps> = ({
   const [deleteCustomerMutation, { loading }] = useDeleteCustomerMutation();
   const showSuccessToast = () => {
     toast({
-      title: "Customer delete successful",
+      title: "Deleted!",
       description: "Your customer has been successfully deleted",
       duration: 3500,
     });
@@ -41,7 +42,10 @@ const DeleteCustomer: React.FC<DeleteCustomerProps> = ({
     try {
       await deleteCustomerMutation({
         variables: { customerId: customerId },
-        refetchQueries: [GetCustomerByBusinessDocument],
+        refetchQueries: [
+          GetCustomerByBusinessDocument,
+          GetArchivedCustomersByBusinessDocument,
+        ],
       });
       onClose();
       showSuccessToast();

@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetArchivedServiceByBusinessDocument,
   GetServiceByBusinessDocument,
   useDeleteServiceMutation,
 } from "@/src/generated/graphql";
@@ -24,7 +25,7 @@ const DeleteService: React.FC<DeleteServiceProps> = ({
   const [deleteServiceMutation, { loading }] = useDeleteServiceMutation();
   const showSuccessToast = () => {
     toast({
-      title: "Service delete successful",
+      title: "Deleted!",
       description: "Your service has been successfully deleted",
       duration: 3500,
     });
@@ -41,7 +42,10 @@ const DeleteService: React.FC<DeleteServiceProps> = ({
     try {
       await deleteServiceMutation({
         variables: { serviceId: serviceId },
-        refetchQueries: [GetServiceByBusinessDocument],
+        refetchQueries: [
+          GetServiceByBusinessDocument,
+          GetArchivedServiceByBusinessDocument,
+        ],
       });
       onClose();
       showSuccessToast();

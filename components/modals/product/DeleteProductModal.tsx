@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetArchivedProductsByBusinessDocument,
   GetProductsByBusinessDocument,
   useDeleteProductMutation,
 } from "@/src/generated/graphql";
@@ -24,7 +25,7 @@ const DeleteProduct: React.FC<DeleteProductProps> = ({
   const [deleteProductMutation, { loading }] = useDeleteProductMutation();
   const showSuccessToast = () => {
     toast({
-      title: "Product delete successful",
+      title: "Deleted!",
       description: "Your product has been successfully deleted",
       duration: 3500,
     });
@@ -41,7 +42,10 @@ const DeleteProduct: React.FC<DeleteProductProps> = ({
     try {
       await deleteProductMutation({
         variables: { productId: productId },
-        refetchQueries: [GetProductsByBusinessDocument],
+        refetchQueries: [
+          GetProductsByBusinessDocument,
+          GetArchivedProductsByBusinessDocument,
+        ],
       });
       onClose();
       showSuccessToast();

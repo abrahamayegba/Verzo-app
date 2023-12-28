@@ -2,7 +2,6 @@
 import PurchaseItem from "@/components/Purchase/PurchaseItem";
 import CreateCategorySheet from "@/components/sheets/expense/CreateCategorySheet";
 import CreateMerchantSheet from "@/components/sheets/expense/CreateMerchantSheet";
-import ViewPurchaseSheet from "@/components/sheets/purchase/ViewPurchaseSheet";
 import ActivePurchaseIcon from "@/components/ui/icons/ActivePurchaseIcon";
 import BankIcon from "@/components/ui/icons/BankIcon";
 import LocationIcon from "@/components/ui/icons/LocationIcon";
@@ -19,7 +18,6 @@ import React, {
   useState,
 } from "react";
 import localStorage from "local-storage-fallback";
-import MerchantForm from "@/components/MerchantForm";
 import {
   Popover,
   PopoverContent,
@@ -28,9 +26,9 @@ import {
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import {
+  GetArchivedPurchasesByBusinessDocument,
   GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
-  useCreatePurchaseEntryMutation,
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
   useUpdatePurchaseMutation,
@@ -260,6 +258,7 @@ const EditPurchase = () => {
         refetchQueries: [
           GetPurchaseByIdDocument,
           GetPurchaseByBusinessDocument,
+          GetArchivedPurchasesByBusinessDocument,
         ],
       });
       client.refetchQueries({
@@ -501,10 +500,6 @@ const EditPurchase = () => {
         onClose={handleCloseCreateItemSheet}
         onItemSelected={setSideSheetCallback}
       />
-      {/* <ViewPurchaseSheet
-        open={openViewPurchaseSheet}
-        onClose={handleCloseViewPurchaseSheet}
-      /> */}
       <CreateMerchantSheet
         open={openMerchantSheet}
         onClose={handleCloseMerchantSheet}

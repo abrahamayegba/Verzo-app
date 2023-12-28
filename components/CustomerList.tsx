@@ -8,7 +8,10 @@ import ArchiveCustomer from "./modals/customer/ArchiveCustomerModal";
 import CustomerTabContentAll from "./CustomerTabContentAll";
 import localStorage from "local-storage-fallback";
 import CustomerTabContentArchived from "./CustomerTabContentArchived";
-import { useGetCustomerByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedCustomersByBusinessQuery,
+  useGetCustomerByBusinessQuery,
+} from "@/src/generated/graphql";
 import EditCustomerSheet from "./sheets/customer/EditCustomerSheet";
 
 const CustomerList = () => {
@@ -63,13 +66,23 @@ const CustomerList = () => {
       cursor: null,
     },
   });
+  const getArchivedCustomersByBusiness = useGetArchivedCustomersByBusinessQuery(
+    {
+      variables: {
+        businessId: businessId,
+        sets: 1,
+        cursor: null,
+      },
+    }
+  );
+  const archivedCustomers =
+    getArchivedCustomersByBusiness.data?.getArchivedCustomerByBusiness
+      ?.customerByBusiness ?? [];
   const customers =
     getCustomersByBusiness.data?.getCustomerByBusiness?.customerByBusiness ??
     [];
   const allCustomers = customers.length;
-  const archivedCustomers = customers.filter(
-    (customer) => customer?.archived
-  ).length;
+  const allArchivedCustomers = archivedCustomers.length;
 
   return (
     <>
@@ -91,7 +104,7 @@ const CustomerList = () => {
                 Archived{" "}
                 <span className=" text-primary-mainGrey">
                   {" "}
-                  ({archivedCustomers})
+                  ({allArchivedCustomers})
                 </span>
               </TabsTrigger>
             </div>

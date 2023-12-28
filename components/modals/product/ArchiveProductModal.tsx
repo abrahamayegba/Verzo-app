@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetArchivedProductsByBusinessDocument,
   GetProductsByBusinessDocument,
   useArchiveProductByBusinessMutation,
 } from "@/src/generated/graphql";
@@ -26,7 +27,7 @@ const ArchiveProduct: React.FC<ArchiveProductProps> = ({
     useArchiveProductByBusinessMutation();
   const showSuccessToast = () => {
     toast({
-      title: "Product archive successful",
+      title: "Successful!",
       description: "Your product has been successfully archived",
       duration: 3500,
     });
@@ -43,7 +44,10 @@ const ArchiveProduct: React.FC<ArchiveProductProps> = ({
     try {
       await archiveProductByBusinessMutation({
         variables: { productId: productId },
-        refetchQueries: [GetProductsByBusinessDocument],
+        refetchQueries: [
+          GetProductsByBusinessDocument,
+          GetArchivedProductsByBusinessDocument,
+        ],
       });
       onClose();
       showSuccessToast();

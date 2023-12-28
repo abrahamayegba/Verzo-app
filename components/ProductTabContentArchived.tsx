@@ -16,15 +16,15 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import localStorage from "local-storage-fallback";
-import { Archive, Eye, Pen, Trash2 } from "lucide-react";
+import { Archive, Trash2 } from "lucide-react";
 import TableEmptyState from "./emptystates/TableEmptyState";
 import ProductTableEmptyIcon from "./ui/icons/ProductTableEmptyIcon";
-import { useGetProductsByBusinessQuery } from "@/src/generated/graphql";
+import { useGetArchivedProductsByBusinessQuery } from "@/src/generated/graphql";
 
 interface ProductTabContentArchivedProps {
   onToggleSelectAll: (isChecked: boolean) => void;
-  openUnarchiveModal: () => void;
-  openDeleteModal: () => void;
+  openUnarchiveModal: (productId: string) => void;
+  openDeleteModal: (productId: string) => void;
 }
 
 const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
@@ -37,7 +37,7 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const getProductsByBusiness = useGetProductsByBusinessQuery({
+  const getArchivedProductsByBusiness = useGetArchivedProductsByBusinessQuery({
     variables: {
       businessId: businessId,
       cursor: null,
@@ -45,8 +45,9 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
     },
   });
 
-  const products =
-    getProductsByBusiness.data?.getProductsByBusiness?.productByBusiness ?? [];
+  const archivedProducts =
+    getArchivedProductsByBusiness.data?.getArchivedProductByBusiness
+      ?.productByBusiness ?? [];
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
@@ -56,10 +57,10 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== products?.length;
+    const isChecked = selectedRows.length !== archivedProducts?.length;
     if (isChecked) {
       setSelectedRows(
-        products?.map((product) => String(product?.id) || "") || []
+        archivedProducts?.map((product) => String(product?.id) || "") || []
       );
     } else {
       setSelectedRows([]);
@@ -75,9 +76,10 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
               checked={
-                selectedRows.length === products.length && products.length > 0
+                selectedRows.length === archivedProducts.length &&
+                archivedProducts.length > 0
               }
-              disabled={products.length === 0}
+              disabled={archivedProducts.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Name
@@ -97,7 +99,7 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {products?.filter((product) => product?.archived).length === 0 ? (
+        {archivedProducts.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -110,60 +112,56 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          products
-            .filter((product) => product?.archived) // Filter only archived customers
-            .map((product) => (
-              <TableRow className="" key={product?.id}>
-                <TableCell className="flex gap-x-3 items-center py-[22px]">
-                  <Checkbox
-                    className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                    checked={selectedRows.includes(product?.id!)}
-                    onCheckedChange={() => handleRowSelect(product?.id!)}
-                  />
+          archivedProducts.map((product) => (
+            <TableRow className="" key={product?.id}>
+              <TableCell className="flex gap-x-3 items-center py-[22px]">
+                <Checkbox
+                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                  checked={selectedRows.includes(product?.id!)}
+                  onCheckedChange={() => handleRowSelect(product?.id!)}
+                />
 
-                  {product?.productName}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {product?.price?.toLocaleString("en-NG", {
-                    style: "currency",
-                    currency: "NGN",
-                  })}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {product?.stockStatus}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {product?.productUnit?.unitName}
-                </TableCell>
-                <TableCell className="text-right text-primary-blue">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className=" focus:outline-none">
-                      More
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext mr-1 shadow1 w-[170px]">
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Edit Product
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={openUnarchiveModal}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Unarchive Product
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={openDeleteModal}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Trash2 className=" w-4 h-4 text-opacity-80" />
-                        Delete Product
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))
+                {product?.productName}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {product?.price?.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {product?.stockStatus === "outOfStock"
+                  ? "Out of stock"
+                  : product?.stockStatus}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {product?.productUnit?.unitName}
+              </TableCell>
+              <TableCell className="text-right text-primary-blue">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" focus:outline-none">
+                    More
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext mr-1 shadow1 w-[170px]">
+                    <DropdownMenuItem
+                      onClick={() => openUnarchiveModal(product?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Unarchive Product
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openDeleteModal(product?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Trash2 className=" w-4 h-4 text-opacity-80" />
+                      Delete Product
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))
         )}
       </TableBody>
     </Table>

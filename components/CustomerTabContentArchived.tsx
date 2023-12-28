@@ -19,7 +19,7 @@ import localStorage from "local-storage-fallback";
 import { Archive, Eye, Pen, Trash2 } from "lucide-react";
 import TableEmptyState from "./emptystates/TableEmptyState";
 import CustomerTableEmptyIcon from "./ui/icons/CustomerTableEmptyIcon";
-import { useGetCustomerByBusinessQuery } from "@/src/generated/graphql";
+import { useGetArchivedCustomersByBusinessQuery } from "@/src/generated/graphql";
 
 interface CustomerTabContentArchivedProps {
   onToggleSelectAll: (isChecked: boolean) => void;
@@ -37,16 +37,18 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const getCustomersByBusiness = useGetCustomerByBusinessQuery({
-    variables: {
-      businessId: businessId,
-      sets: 1,
-      cursor: null,
-    },
-  });
-  const customers =
-    getCustomersByBusiness.data?.getCustomerByBusiness?.customerByBusiness ??
-    [];
+  const getArchivedCustomersByBusiness = useGetArchivedCustomersByBusinessQuery(
+    {
+      variables: {
+        businessId: businessId,
+        sets: 1,
+        cursor: null,
+      },
+    }
+  );
+  const archivedCustomers =
+    getArchivedCustomersByBusiness.data?.getArchivedCustomerByBusiness
+      ?.customerByBusiness ?? [];
 
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
@@ -57,10 +59,10 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
   };
 
   const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== customers?.length;
+    const isChecked = selectedRows.length !== archivedCustomers?.length;
     if (isChecked) {
       setSelectedRows(
-        customers?.map((customer) => String(customer?.id) || "") || []
+        archivedCustomers?.map((customer) => String(customer?.id) || "") || []
       );
     } else {
       setSelectedRows([]);
@@ -76,10 +78,10 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
               checked={
-                selectedRows.length === customers?.length &&
-                customers.length > 0
+                selectedRows.length === archivedCustomers?.length &&
+                archivedCustomers.length > 0
               }
-              disabled={customers?.length === 0}
+              disabled={archivedCustomers?.length === 0}
               onCheckedChange={handleSelectAll}
             />
             Name
@@ -99,7 +101,7 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {customers?.filter((customer) => customer?.archived).length === 0 ? (
+        {archivedCustomers?.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -112,58 +114,52 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          customers
-            .filter((customer) => customer?.archived) // Filter only archived customers
-            .map((customer) => (
-              <TableRow key={customer?.id}>
-                <TableCell className="flex gap-x-3 items-center py-[22px]">
-                  <Checkbox
-                    className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                    checked={selectedRows.includes(customer?.id!)}
-                    onCheckedChange={() => handleRowSelect(customer?.id!)}
-                  />
-                  {customer?.name}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {customer?.createdAt
-                    ? new Date(customer.createdAt).toDateString()
-                    : ""}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {customer?.email}
-                </TableCell>
-                <TableCell className=" text-primary-greytext">
-                  {customer?.mobile}
-                </TableCell>
-                <TableCell className="text-right text-primary-blue">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className=" focus:outline-none">
-                      More
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Edit Customer
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={openUnarchiveModal}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                        Archive Customer
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={openDeleteModal}
-                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                      >
-                        <Trash2 className=" w-4 h-4 text-opacity-80" />
-                        Delete Customer
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))
+          archivedCustomers.map((customer) => (
+            <TableRow key={customer?.id}>
+              <TableCell className="flex gap-x-3 items-center py-[22px]">
+                <Checkbox
+                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                  checked={selectedRows.includes(customer?.id!)}
+                  onCheckedChange={() => handleRowSelect(customer?.id!)}
+                />
+                {customer?.name}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {customer?.createdAt
+                  ? new Date(customer.createdAt).toDateString()
+                  : ""}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {customer?.email}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {customer?.mobile}
+              </TableCell>
+              <TableCell className="text-right text-primary-blue">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className=" focus:outline-none">
+                    More
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[180px]">
+                    <DropdownMenuItem
+                      onClick={openUnarchiveModal}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Unarchive Customer
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={openDeleteModal}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Trash2 className=" w-4 h-4 text-opacity-80" />
+                      Delete Customer
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))
         )}
       </TableBody>
     </Table>
