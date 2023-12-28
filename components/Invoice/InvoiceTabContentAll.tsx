@@ -25,9 +25,9 @@ import TableEmptyState from "../emptystates/TableEmptyState";
 interface InvoiceTabContentAllProps {
   numberOfInvoicesToShow?: number; // Make the prop optional
   onToggleSelectAll: (isChecked: boolean) => void;
-  openArchiveModal: (purchaseId: string) => void;
-  openDeleteModal: (purchaseId: string) => void;
-  openEditModal: (purchaseId: string) => void;
+  openArchiveModal: (invoiceId: string) => void;
+  openDeleteModal: (invoiceId: string) => void;
+  openEditModal: (invoiceId: string) => void;
 }
 
 const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({

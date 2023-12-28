@@ -2,6 +2,13 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
+import { useToast } from "@/app/hooks/use-toast";
+import {
+  GetArchivedServiceByBusinessDocument,
+  GetServiceByBusinessDocument,
+  GetServiceByIdDocument,
+  useUnarchiveServiceByBusinessMutation,
+} from "@/src/generated/graphql";
 
 interface UnarchiveServiceProps {
   open: boolean;
@@ -16,6 +23,41 @@ const UnarchiveService: React.FC<UnarchiveServiceProps> = ({
   onClose,
   serviceId,
 }) => {
+  const { toast } = useToast();
+  const [unarchiveServiceByBusinessMutation, { loading }] =
+    useUnarchiveServiceByBusinessMutation();
+  const showSuccessToast = () => {
+    toast({
+      title: "Unarchived!",
+      description: "Your service has been successfully unarchived",
+      duration: 3500,
+    });
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+  const handleUnarchiveServiceClick = async () => {
+    try {
+      await unarchiveServiceByBusinessMutation({
+        variables: { serviceId: serviceId },
+        refetchQueries: [
+          GetServiceByBusinessDocument,
+          GetArchivedServiceByBusinessDocument,
+          GetServiceByIdDocument,
+        ],
+      });
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      console.error(error);
+      showFailureToast(error);
+    }
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -60,8 +102,14 @@ const UnarchiveService: React.FC<UnarchiveServiceProps> = ({
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-                      Unarchive
+                    <button
+                      type="button"
+                      onClick={handleUnarchiveServiceClick}
+                      className={` px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                        loading ? " opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading..." : "Unarchive"}
                     </button>
                   </div>
                 </div>

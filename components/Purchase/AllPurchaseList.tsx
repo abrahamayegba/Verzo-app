@@ -43,6 +43,11 @@ const AllPurchaseList = () => {
     openModal();
   };
 
+  const handleOpenUnarchiveModal = (purchaseId: string) => {
+    setSelectedId(purchaseId);
+    openUnarchivePurchaseModal();
+  };
+
   const handleOpenDeleteModal = (purchaseId: string) => {
     setSelectedId(purchaseId);
     openDeletePurchaseModal();
@@ -137,7 +142,7 @@ const AllPurchaseList = () => {
         <TabsContent value="archived">
           <PurchaseTabContentArchived
             openDeleteModal={handleOpenDeleteModal}
-            openUnarchiveModal={handleOpenArchiveModal}
+            openUnarchiveModal={handleOpenUnarchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
           {/* {archivedPurchases.length > 0 && (
@@ -159,6 +164,7 @@ const AllPurchaseList = () => {
         open={isUnarchivePurchaseOpen}
         openModal={openUnarchivePurchaseModal}
         onClose={closeUnarchivePurchaseModal}
+        purchaseId={selectedId}
       />
       <DeletePurchase
         open={isDeletePurchaseOpen}

@@ -4,6 +4,7 @@ import { PlusCircle } from "lucide-react";
 import CustomerList from "@/components/CustomerList";
 import CreateCustomerSheet from "@/components/sheets/customer/CreateCustomerSheet";
 import {
+  useGetArchivedCustomersByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetCustomerByBusinessQuery,
 } from "@/src/generated/graphql";
@@ -33,6 +34,13 @@ const Customers = () => {
       cursor: null,
     },
   });
+  const getArchivedCustomer = useGetArchivedCustomersByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
   const handleCloseCustomerSheet = () => {
     setOpenCustomerSheet(false);
   };
@@ -40,7 +48,8 @@ const Customers = () => {
     return <MainLoader />;
   }
 
-  const customersLoading = getCustomerByBusiness.loading;
+  const customersLoading =
+    getCustomerByBusiness.loading || getArchivedCustomer.loading;
 
   return (
     <>

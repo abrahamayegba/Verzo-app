@@ -3,6 +3,7 @@ import FilterDataDropdown from "@/components/FilterDataDropdown";
 import PurchaseList from "@/components/Purchase/PurchaseList";
 import PurchaseMetrics from "@/components/Purchase/PurchaseMetrics";
 import {
+  useGetArchivedPurchasesByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByBusinessQuery,
   useGetPurchaseForMonthQuery,
@@ -37,6 +38,14 @@ const Purchases = () => {
   };
 
   const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+
+  const getArchivedPurchases = useGetArchivedPurchasesByBusinessQuery({
     variables: {
       businessId: businessId,
       cursor: null,
@@ -81,7 +90,8 @@ const Purchases = () => {
     getPurchaseForMonth.loading ||
     getPurchaseForQuarter.loading ||
     getPurchaseForYear.loading ||
-    getPurchasesByBusiness.loading;
+    getPurchasesByBusiness.loading ||
+    getArchivedPurchases.loading;
 
   return (
     <>

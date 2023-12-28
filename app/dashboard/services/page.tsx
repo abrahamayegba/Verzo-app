@@ -5,6 +5,7 @@ import localStorage from "local-storage-fallback";
 import ServiceList from "@/components/ServiceList";
 import CreateServiceSheet from "@/components/sheets/service/CreateServiceSheet";
 import {
+  useGetArchivedServiceByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetServiceByBusinessQuery,
 } from "@/src/generated/graphql";
@@ -33,13 +34,21 @@ const Services = () => {
       sets: 1,
     },
   });
+  const getArchivedServices = useGetArchivedServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
   const handleCloseServiceSheet = () => {
     setOpenCreateServiceSheet(false);
   };
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
   }
-  const servicesLoading = getServicesByBusiness.loading;
+  const servicesLoading =
+    getServicesByBusiness.loading || getArchivedServices.loading;
   return (
     <>
       {servicesLoading ? (

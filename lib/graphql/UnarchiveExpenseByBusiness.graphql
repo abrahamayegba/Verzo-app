@@ -1,0 +1,3 @@
+mutation UnarchiveExpense($expenseId: String!) {
+  unarchiveExpense(expenseId: $expenseId)
+}

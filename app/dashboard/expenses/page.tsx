@@ -3,6 +3,7 @@ import ExpenseList from "@/components/Expense/ExpenseList";
 import ExpenseMetrics from "@/components/Expense/ExpenseMetrics";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
 import {
+  useGetArchivedExpensesByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetExpenseForMonthQuery,
   useGetExpenseForQuarterQuery,
@@ -37,6 +38,14 @@ const Expenses = () => {
   };
 
   const getExpensesByBusiness = useGetExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+
+  const getArchivedExpenses = useGetArchivedExpensesByBusinessQuery({
     variables: {
       businessId: businessId,
       cursor: null,
@@ -83,7 +92,8 @@ const Expenses = () => {
     getExpenseForMonth.loading ||
     getExpenseForQuarter.loading ||
     getExpenseForYear.loading ||
-    getExpensesByBusiness.loading;
+    getExpensesByBusiness.loading ||
+    getArchivedExpenses.loading;
 
   return (
     <>

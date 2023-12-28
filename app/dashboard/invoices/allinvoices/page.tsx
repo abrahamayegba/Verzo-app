@@ -6,6 +6,7 @@ import Link from "next/link";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
 import MainLoader from "@/components/loading/MainLoader";
 import {
+  useGetArchivedSalesByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetSaleByBusinessQuery,
 } from "@/src/generated/graphql";
@@ -31,10 +32,15 @@ const AllInvoices = () => {
       businessId: businessId,
     },
   });
+  const getArchivedSales = useGetArchivedSalesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
   }
-  const salesLoading = getSalesByBusiness.loading;
+  const salesLoading = getSalesByBusiness.loading || getArchivedSales.loading;
   return (
     <>
       {salesLoading ? (

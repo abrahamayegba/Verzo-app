@@ -44,6 +44,11 @@ const AllExpenseList = () => {
     openModal();
   };
 
+  const handleOpenUnarchiveModal = (expenseId: string) => {
+    setSelectedId(expenseId);
+    openUnarchiveExpenseModal();
+  };
+
   const handleOpenDeleteModal = (expenseId: string) => {
     setSelectedId(expenseId);
     openDeleteExpenseModal();
@@ -133,7 +138,7 @@ const AllExpenseList = () => {
         <TabsContent value="archived">
           <ExpenseTabContentArchived
             openDeleteModal={handleOpenDeleteModal}
-            openUnarchiveModal={handleOpenArchiveModal}
+            openUnarchiveModal={handleOpenUnarchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
           {/* {archivedExpenses.length > 0 && (
@@ -155,6 +160,7 @@ const AllExpenseList = () => {
         open={isUnarchiveExpenseOpen}
         openModal={openUnarchiveExpenseModal}
         onClose={closeUnarchiveExpenseModal}
+        expenseId={selectedId}
       />
       <DeleteExpense
         open={isDeleteExpenseOpen}

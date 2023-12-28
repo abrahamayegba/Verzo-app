@@ -4,34 +4,32 @@ import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import {
-  GetArchivedPurchasesByBusinessDocument,
-  GetPurchaseByBusinessDocument,
-  GetPurchaseByIdDocument,
-  useUnarchivePurchaseMutation,
+  GetArchivedSalesByBusinessDocument,
+  GetSaleByBusinessDocument,
+  GetSaleByIdDocument,
+  useUnarchiveSaleMutation,
 } from "@/src/generated/graphql";
 
-interface UnarchivePurchaseProps {
+interface UnarchiveInvoiceProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
-  purchaseId: string;
+  invoiceId: string;
 }
 
-const UnarchivePurchase: React.FC<UnarchivePurchaseProps> = ({
+const UnarchiveInvoice: React.FC<UnarchiveInvoiceProps> = ({
   open,
   openModal,
   onClose,
-  purchaseId,
+  invoiceId,
 }) => {
   const { toast } = useToast();
-
-  const [unarchivePurchaseMutation, { loading }] =
-    useUnarchivePurchaseMutation();
+  const [unarchiveSaleMutation, { loading }] = useUnarchiveSaleMutation();
   const showSuccessToast = () => {
     toast({
       title: "Unarchived!",
-      description: "Your purchase order has been successfully unarchived",
-      duration: 3000,
+      description: "Your invoice has been successfully unarchived",
+      duration: 3500,
     });
   };
   const showFailureToast = (error: any) => {
@@ -42,15 +40,14 @@ const UnarchivePurchase: React.FC<UnarchivePurchaseProps> = ({
       duration: 3000,
     });
   };
-
   const handleUnarchiveClick = async () => {
     try {
-      await unarchivePurchaseMutation({
-        variables: { purchaseId: purchaseId },
+      await unarchiveSaleMutation({
+        variables: { saleId: invoiceId },
         refetchQueries: [
-          GetPurchaseByBusinessDocument,
-          GetArchivedPurchasesByBusinessDocument,
-          GetPurchaseByIdDocument,
+          GetSaleByBusinessDocument,
+          GetSaleByIdDocument,
+          GetArchivedSalesByBusinessDocument,
         ],
       });
       onClose();
@@ -60,6 +57,7 @@ const UnarchivePurchase: React.FC<UnarchivePurchaseProps> = ({
       showFailureToast(error);
     }
   };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -92,15 +90,14 @@ const UnarchivePurchase: React.FC<UnarchivePurchaseProps> = ({
                       <ArchiveInvoiceIcon />
                     </span>
                   </div>
-                  <p className=" text-lg text-[#121212]">
-                    Unarchive purchase order
-                  </p>
+                  <p className=" text-lg text-[#121212]">Unarchive invoice</p>
                   <p className=" text-primary-greytext">
-                    Are you sure you want to unarchive this purchase order? It
-                    will be visible
+                    Are you sure you want to unarchive this invoice? It will be
+                    visible
                   </p>
                   <div className=" flex justify-between mt-6">
                     <button
+                      type="button"
                       onClick={onClose}
                       className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border text-gray-800"
                     >
@@ -127,4 +124,4 @@ const UnarchivePurchase: React.FC<UnarchivePurchaseProps> = ({
   );
 };
 
-export default UnarchivePurchase;
+export default UnarchiveInvoice;

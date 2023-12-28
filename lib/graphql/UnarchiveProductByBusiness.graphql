@@ -1,0 +1,3 @@
+mutation UnarchiveProductByBusiness($productId: String!) {
+  unarchiveProductByBusiness(productId: $productId)
+}

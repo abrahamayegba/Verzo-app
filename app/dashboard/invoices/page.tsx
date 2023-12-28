@@ -7,6 +7,7 @@ import FilterDataDropdown from "@/components/FilterDataDropdown";
 import Link from "next/link";
 import localStorage from "local-storage-fallback";
 import {
+  useGetArchivedSalesByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetSaleByBusinessQuery,
   useTotalMonthlyInvoicesAmountQuery,
@@ -37,6 +38,12 @@ const Invoices = () => {
     setSelectedFilter(filter);
   };
   const getSalesByBusiness = useGetSaleByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
+  const getArchivedSales = useGetArchivedSalesByBusinessQuery({
     variables: {
       businessId: businessId,
     },
@@ -79,7 +86,8 @@ const Invoices = () => {
     totalWeeklyInvoicesAmountQuery.loading ||
     totalMonthlyInvoicesAmountQuery.loading ||
     totalQuarterlyInvoicesAmountQuery.loading ||
-    totalYearlyInvoicesAmountQuery.loading;
+    totalYearlyInvoicesAmountQuery.loading ||
+    getArchivedSales.loading;
 
   return (
     <>

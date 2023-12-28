@@ -23,11 +23,7 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
   expenseId,
 }) => {
   const { toast } = useToast();
-  const [archiveExpenseMutation, { loading }] = useArchiveExpenseMutation({
-    variables: {
-      expenseId: expenseId,
-    },
-  });
+  const [archiveExpenseMutation, { loading }] = useArchiveExpenseMutation();
   const showSuccessToast = () => {
     toast({
       title: "Archived!",

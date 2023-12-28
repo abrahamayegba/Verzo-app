@@ -5207,6 +5207,48 @@ export type GetCombinesServiceUnitsQueryVariables = Exact<{
 
 export type GetCombinesServiceUnitsQuery = { __typename?: 'Query', getCombinedServiceUnits?: Array<{ __typename?: 'CombinedServiceUnit', id?: string | null, unitName?: string | null } | null> | null };
 
+export type UnarchiveCustomerByBusinessMutationVariables = Exact<{
+  customerId: Scalars['String']['input'];
+}>;
+
+
+export type UnarchiveCustomerByBusinessMutation = { __typename?: 'Mutation', unarchiveCustomerByBusiness?: boolean | null };
+
+export type UnarchiveExpenseMutationVariables = Exact<{
+  expenseId: Scalars['String']['input'];
+}>;
+
+
+export type UnarchiveExpenseMutation = { __typename?: 'Mutation', unarchiveExpense?: boolean | null };
+
+export type UnarchiveProductByBusinessMutationVariables = Exact<{
+  productId: Scalars['String']['input'];
+}>;
+
+
+export type UnarchiveProductByBusinessMutation = { __typename?: 'Mutation', unarchiveProductByBusiness?: boolean | null };
+
+export type UnarchivePurchaseMutationVariables = Exact<{
+  purchaseId: Scalars['String']['input'];
+}>;
+
+
+export type UnarchivePurchaseMutation = { __typename?: 'Mutation', unarchivePurchase?: boolean | null };
+
+export type UnarchiveSaleMutationVariables = Exact<{
+  saleId: Scalars['String']['input'];
+}>;
+
+
+export type UnarchiveSaleMutation = { __typename?: 'Mutation', unarchiveSale?: boolean | null };
+
+export type UnarchiveServiceByBusinessMutationVariables = Exact<{
+  serviceId: Scalars['String']['input'];
+}>;
+
+
+export type UnarchiveServiceByBusinessMutation = { __typename?: 'Mutation', unarchiveServiceByBusiness?: boolean | null };
+
 export type ArchiveCustomerByBusinessMutationVariables = Exact<{
   customerId: Scalars['String']['input'];
 }>;
@@ -6507,6 +6549,192 @@ export type GetCombinesServiceUnitsQueryHookResult = ReturnType<typeof useGetCom
 export type GetCombinesServiceUnitsLazyQueryHookResult = ReturnType<typeof useGetCombinesServiceUnitsLazyQuery>;
 export type GetCombinesServiceUnitsSuspenseQueryHookResult = ReturnType<typeof useGetCombinesServiceUnitsSuspenseQuery>;
 export type GetCombinesServiceUnitsQueryResult = Apollo.QueryResult<GetCombinesServiceUnitsQuery, GetCombinesServiceUnitsQueryVariables>;
+export const UnarchiveCustomerByBusinessDocument = gql`
+    mutation UnarchiveCustomerByBusiness($customerId: String!) {
+  unarchiveCustomerByBusiness(customerId: $customerId)
+}
+    `;
+export type UnarchiveCustomerByBusinessMutationFn = Apollo.MutationFunction<UnarchiveCustomerByBusinessMutation, UnarchiveCustomerByBusinessMutationVariables>;
+
+/**
+ * __useUnarchiveCustomerByBusinessMutation__
+ *
+ * To run a mutation, you first call `useUnarchiveCustomerByBusinessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnarchiveCustomerByBusinessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unarchiveCustomerByBusinessMutation, { data, loading, error }] = useUnarchiveCustomerByBusinessMutation({
+ *   variables: {
+ *      customerId: // value for 'customerId'
+ *   },
+ * });
+ */
+export function useUnarchiveCustomerByBusinessMutation(baseOptions?: Apollo.MutationHookOptions<UnarchiveCustomerByBusinessMutation, UnarchiveCustomerByBusinessMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnarchiveCustomerByBusinessMutation, UnarchiveCustomerByBusinessMutationVariables>(UnarchiveCustomerByBusinessDocument, options);
+      }
+export type UnarchiveCustomerByBusinessMutationHookResult = ReturnType<typeof useUnarchiveCustomerByBusinessMutation>;
+export type UnarchiveCustomerByBusinessMutationResult = Apollo.MutationResult<UnarchiveCustomerByBusinessMutation>;
+export type UnarchiveCustomerByBusinessMutationOptions = Apollo.BaseMutationOptions<UnarchiveCustomerByBusinessMutation, UnarchiveCustomerByBusinessMutationVariables>;
+export const UnarchiveExpenseDocument = gql`
+    mutation UnarchiveExpense($expenseId: String!) {
+  unarchiveExpense(expenseId: $expenseId)
+}
+    `;
+export type UnarchiveExpenseMutationFn = Apollo.MutationFunction<UnarchiveExpenseMutation, UnarchiveExpenseMutationVariables>;
+
+/**
+ * __useUnarchiveExpenseMutation__
+ *
+ * To run a mutation, you first call `useUnarchiveExpenseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnarchiveExpenseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unarchiveExpenseMutation, { data, loading, error }] = useUnarchiveExpenseMutation({
+ *   variables: {
+ *      expenseId: // value for 'expenseId'
+ *   },
+ * });
+ */
+export function useUnarchiveExpenseMutation(baseOptions?: Apollo.MutationHookOptions<UnarchiveExpenseMutation, UnarchiveExpenseMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnarchiveExpenseMutation, UnarchiveExpenseMutationVariables>(UnarchiveExpenseDocument, options);
+      }
+export type UnarchiveExpenseMutationHookResult = ReturnType<typeof useUnarchiveExpenseMutation>;
+export type UnarchiveExpenseMutationResult = Apollo.MutationResult<UnarchiveExpenseMutation>;
+export type UnarchiveExpenseMutationOptions = Apollo.BaseMutationOptions<UnarchiveExpenseMutation, UnarchiveExpenseMutationVariables>;
+export const UnarchiveProductByBusinessDocument = gql`
+    mutation UnarchiveProductByBusiness($productId: String!) {
+  unarchiveProductByBusiness(productId: $productId)
+}
+    `;
+export type UnarchiveProductByBusinessMutationFn = Apollo.MutationFunction<UnarchiveProductByBusinessMutation, UnarchiveProductByBusinessMutationVariables>;
+
+/**
+ * __useUnarchiveProductByBusinessMutation__
+ *
+ * To run a mutation, you first call `useUnarchiveProductByBusinessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnarchiveProductByBusinessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unarchiveProductByBusinessMutation, { data, loading, error }] = useUnarchiveProductByBusinessMutation({
+ *   variables: {
+ *      productId: // value for 'productId'
+ *   },
+ * });
+ */
+export function useUnarchiveProductByBusinessMutation(baseOptions?: Apollo.MutationHookOptions<UnarchiveProductByBusinessMutation, UnarchiveProductByBusinessMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnarchiveProductByBusinessMutation, UnarchiveProductByBusinessMutationVariables>(UnarchiveProductByBusinessDocument, options);
+      }
+export type UnarchiveProductByBusinessMutationHookResult = ReturnType<typeof useUnarchiveProductByBusinessMutation>;
+export type UnarchiveProductByBusinessMutationResult = Apollo.MutationResult<UnarchiveProductByBusinessMutation>;
+export type UnarchiveProductByBusinessMutationOptions = Apollo.BaseMutationOptions<UnarchiveProductByBusinessMutation, UnarchiveProductByBusinessMutationVariables>;
+export const UnarchivePurchaseDocument = gql`
+    mutation UnarchivePurchase($purchaseId: String!) {
+  unarchivePurchase(purchaseId: $purchaseId)
+}
+    `;
+export type UnarchivePurchaseMutationFn = Apollo.MutationFunction<UnarchivePurchaseMutation, UnarchivePurchaseMutationVariables>;
+
+/**
+ * __useUnarchivePurchaseMutation__
+ *
+ * To run a mutation, you first call `useUnarchivePurchaseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnarchivePurchaseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unarchivePurchaseMutation, { data, loading, error }] = useUnarchivePurchaseMutation({
+ *   variables: {
+ *      purchaseId: // value for 'purchaseId'
+ *   },
+ * });
+ */
+export function useUnarchivePurchaseMutation(baseOptions?: Apollo.MutationHookOptions<UnarchivePurchaseMutation, UnarchivePurchaseMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnarchivePurchaseMutation, UnarchivePurchaseMutationVariables>(UnarchivePurchaseDocument, options);
+      }
+export type UnarchivePurchaseMutationHookResult = ReturnType<typeof useUnarchivePurchaseMutation>;
+export type UnarchivePurchaseMutationResult = Apollo.MutationResult<UnarchivePurchaseMutation>;
+export type UnarchivePurchaseMutationOptions = Apollo.BaseMutationOptions<UnarchivePurchaseMutation, UnarchivePurchaseMutationVariables>;
+export const UnarchiveSaleDocument = gql`
+    mutation UnarchiveSale($saleId: String!) {
+  unarchiveSale(saleId: $saleId)
+}
+    `;
+export type UnarchiveSaleMutationFn = Apollo.MutationFunction<UnarchiveSaleMutation, UnarchiveSaleMutationVariables>;
+
+/**
+ * __useUnarchiveSaleMutation__
+ *
+ * To run a mutation, you first call `useUnarchiveSaleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnarchiveSaleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unarchiveSaleMutation, { data, loading, error }] = useUnarchiveSaleMutation({
+ *   variables: {
+ *      saleId: // value for 'saleId'
+ *   },
+ * });
+ */
+export function useUnarchiveSaleMutation(baseOptions?: Apollo.MutationHookOptions<UnarchiveSaleMutation, UnarchiveSaleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnarchiveSaleMutation, UnarchiveSaleMutationVariables>(UnarchiveSaleDocument, options);
+      }
+export type UnarchiveSaleMutationHookResult = ReturnType<typeof useUnarchiveSaleMutation>;
+export type UnarchiveSaleMutationResult = Apollo.MutationResult<UnarchiveSaleMutation>;
+export type UnarchiveSaleMutationOptions = Apollo.BaseMutationOptions<UnarchiveSaleMutation, UnarchiveSaleMutationVariables>;
+export const UnarchiveServiceByBusinessDocument = gql`
+    mutation UnarchiveServiceByBusiness($serviceId: String!) {
+  unarchiveServiceByBusiness(serviceId: $serviceId)
+}
+    `;
+export type UnarchiveServiceByBusinessMutationFn = Apollo.MutationFunction<UnarchiveServiceByBusinessMutation, UnarchiveServiceByBusinessMutationVariables>;
+
+/**
+ * __useUnarchiveServiceByBusinessMutation__
+ *
+ * To run a mutation, you first call `useUnarchiveServiceByBusinessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnarchiveServiceByBusinessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unarchiveServiceByBusinessMutation, { data, loading, error }] = useUnarchiveServiceByBusinessMutation({
+ *   variables: {
+ *      serviceId: // value for 'serviceId'
+ *   },
+ * });
+ */
+export function useUnarchiveServiceByBusinessMutation(baseOptions?: Apollo.MutationHookOptions<UnarchiveServiceByBusinessMutation, UnarchiveServiceByBusinessMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnarchiveServiceByBusinessMutation, UnarchiveServiceByBusinessMutationVariables>(UnarchiveServiceByBusinessDocument, options);
+      }
+export type UnarchiveServiceByBusinessMutationHookResult = ReturnType<typeof useUnarchiveServiceByBusinessMutation>;
+export type UnarchiveServiceByBusinessMutationResult = Apollo.MutationResult<UnarchiveServiceByBusinessMutation>;
+export type UnarchiveServiceByBusinessMutationOptions = Apollo.BaseMutationOptions<UnarchiveServiceByBusinessMutation, UnarchiveServiceByBusinessMutationVariables>;
 export const ArchiveCustomerByBusinessDocument = gql`
     mutation ArchiveCustomerByBusiness($customerId: String!) {
   archiveCustomerByBusiness(customerId: $customerId)

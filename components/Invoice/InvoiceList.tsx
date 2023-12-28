@@ -13,6 +13,7 @@ import {
   useGetSaleByBusinessQuery,
 } from "@/src/generated/graphql";
 import BulkArchiveInvoice from "../modals/invoice/BulkArchiveInvoiceModal";
+import UnarchiveInvoice from "../modals/invoice/UnarchiveInvoice";
 
 const InvoiceList = () => {
   const storedBusinessId = JSON.parse(
@@ -47,6 +48,11 @@ const InvoiceList = () => {
   const handleOpenArchiveModal = (saleId: string) => {
     setSelectedId(saleId);
     openModal();
+  };
+
+  const handleOpenUnarchiveModal = (saleId: string) => {
+    setSelectedId(saleId);
+    openUnarchiveModal();
   };
 
   const handleOpenDeleteModal = (saleId: string) => {
@@ -135,9 +141,8 @@ const InvoiceList = () => {
         </TabsContent>
         <TabsContent value="archived">
           <InvoiceTabContentArchived
-            openArchiveModal={handleOpenArchiveModal}
             openDeleteModal={handleOpenDeleteModal}
-            openEditModal={handleOpenEditModal}
+            openUnarchiveModal={handleOpenUnarchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
             numberOfInvoicesToShow={10}
           />
@@ -147,6 +152,12 @@ const InvoiceList = () => {
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
+        invoiceId={selectedId}
+      />
+      <UnarchiveInvoice
+        open={isUnarchiveOpen}
+        openModal={openUnarchiveModal}
+        onClose={closeUnarchiveModal}
         invoiceId={selectedId}
       />
       <DeleteInvoice

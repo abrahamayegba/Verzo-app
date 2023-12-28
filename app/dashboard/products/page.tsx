@@ -5,6 +5,7 @@ import ProductList from "@/components/ProductList";
 import localStorage from "local-storage-fallback";
 import CreateProductSheet from "@/components/sheets/product/CreateProductSheet";
 import {
+  useGetArchivedProductsByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetProductsByBusinessQuery,
 } from "@/src/generated/graphql";
@@ -33,6 +34,13 @@ const Products = () => {
       sets: 1,
     },
   });
+  const getArchivedProducts = useGetArchivedProductsByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
 
   const handleCloseProductSheet = () => {
     setOpenCreateProductSheet(false);
@@ -41,7 +49,8 @@ const Products = () => {
     return <MainLoader />;
   }
 
-  const productsLoading = getProductsByBusiness.loading;
+  const productsLoading =
+    getProductsByBusiness.loading || getArchivedProducts.loading;
 
   return (
     <>

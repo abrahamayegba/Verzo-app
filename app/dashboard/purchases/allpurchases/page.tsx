@@ -5,6 +5,7 @@ import Link from "next/link";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
 import AllPurchaseList from "@/components/Purchase/AllPurchaseList";
 import {
+  useGetArchivedPurchasesByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByBusinessQuery,
 } from "@/src/generated/graphql";
@@ -33,10 +34,18 @@ const AllPurchases = () => {
       sets: 1,
     },
   });
+  const getArchivedPurchases = useGetArchivedPurchasesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
   }
-  const purchaseLoading = getPurchasesByBusiness.loading;
+  const purchaseLoading =
+    getPurchasesByBusiness.loading || getArchivedPurchases.loading;
   return (
     <>
       {purchaseLoading ? (

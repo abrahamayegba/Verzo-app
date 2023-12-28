@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import localStorage from "local-storage-fallback";
-import { Archive, Trash2 } from "lucide-react";
+import { ArchiveRestore, Trash2 } from "lucide-react";
 import TableEmptyState from "./emptystates/TableEmptyState";
 import ProductTableEmptyIcon from "./ui/icons/ProductTableEmptyIcon";
 import { useGetArchivedProductsByBusinessQuery } from "@/src/generated/graphql";
@@ -147,7 +147,7 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
                       onClick={() => openUnarchiveModal(product?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
-                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Unarchive Product
                     </DropdownMenuItem>
                     <DropdownMenuItem

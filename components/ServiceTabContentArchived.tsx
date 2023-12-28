@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import localStorage from "local-storage-fallback";
-import { Archive, Pen, Trash2 } from "lucide-react";
+import { ArchiveRestore, Pen, Trash2 } from "lucide-react";
 import TableEmptyState from "./emptystates/TableEmptyState";
 import ServiceTableEmptyIcon from "./ui/icons/ServiceTableEmptyIcon";
 import { useGetArchivedServiceByBusinessQuery } from "@/src/generated/graphql";
@@ -137,7 +137,7 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
                       onClick={() => openUnarchiveModal(service?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
-                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Unarchive Service
                     </DropdownMenuItem>
                     <DropdownMenuItem

@@ -5,6 +5,7 @@ import Link from "next/link";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
 import AllExpenseList from "@/components/Expense/AllExpenseList";
 import {
+  useGetArchivedExpensesByBusinessQuery,
   useGetBusinessesByUserIdQuery,
   useGetExpensesByBusinessQuery,
 } from "@/src/generated/graphql";
@@ -33,10 +34,18 @@ const AllExpenses = () => {
       sets: 1,
     },
   });
+  const getArchivedExpenses = useGetArchivedExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
   }
-  const expenseLoading = getExpensesByBusiness.loading;
+  const expenseLoading =
+    getExpensesByBusiness.loading || getArchivedExpenses.loading;
   return (
     <>
       {expenseLoading ? (

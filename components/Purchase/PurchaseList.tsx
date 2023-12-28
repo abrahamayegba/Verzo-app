@@ -144,6 +144,7 @@ const PurchaseList = () => {
         open={isUnarchiveOpen}
         openModal={openUnarchiveModal}
         onClose={closeUnarchiveModal}
+        purchaseId={selectedId}
       />
       <DeletePurchase
         open={isDeletePurchaseOpen}

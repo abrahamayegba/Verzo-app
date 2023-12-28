@@ -7,12 +7,11 @@ import ArchiveInvoice from "../modals/invoice/ArchiveInvoice";
 import useModal from "@/app/hooks/useModal";
 import DeleteInvoice from "../modals/invoice/DeleteInvoiceModal";
 import localStorage from "local-storage-fallback";
-import CustomPagination from "../InvoiceListPagination";
 import {
   useGetArchivedSalesByBusinessQuery,
   useGetSaleByBusinessQuery,
 } from "@/src/generated/graphql";
-import Pagination from "../Pagination";
+import UnarchiveInvoice from "../modals/invoice/UnarchiveInvoice";
 
 const AllInvoicesList = () => {
   const storedBusinessId = JSON.parse(
@@ -33,6 +32,12 @@ const AllInvoicesList = () => {
     closeModal: closeEditModal,
   } = useModal();
 
+  const {
+    isOpen: isUnarchiveOpen,
+    openModal: openUnarchiveModal,
+    closeModal: closeUnarchiveModal,
+  } = useModal();
+
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
   };
@@ -40,6 +45,11 @@ const AllInvoicesList = () => {
   const handleOpenArchiveModal = (invoiceId: string) => {
     setSelectedId(invoiceId);
     openModal();
+  };
+
+  const handleOpenUnarchiveModal = (invoiceId: string) => {
+    setSelectedId(invoiceId);
+    openUnarchiveModal();
   };
 
   const handleOpenDeleteModal = (invoiceId: string) => {
@@ -131,23 +141,21 @@ const AllInvoicesList = () => {
         <TabsContent value="archived">
           <InvoiceTabContentArchived
             openDeleteModal={handleOpenDeleteModal}
-            openArchiveModal={handleOpenArchiveModal}
-            openEditModal={handleOpenEditModal}
+            openUnarchiveModal={handleOpenUnarchiveModal}
             onToggleSelectAll={handleToggleSelectAll}
           />
-          {/* {archivedSales.length > 0 && (
-            <CustomPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          )} */}
         </TabsContent>
       </Tabs>
       <ArchiveInvoice
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
+        invoiceId={selectedId}
+      />
+      <UnarchiveInvoice
+        open={isUnarchiveOpen}
+        openModal={openUnarchiveModal}
+        onClose={closeUnarchiveModal}
         invoiceId={selectedId}
       />
       <DeleteInvoice

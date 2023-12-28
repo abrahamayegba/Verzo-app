@@ -15,30 +15,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Archive, Download, Eye, Pen, Trash2 } from "lucide-react";
+import { ArchiveRestore, Download, Eye, Pen, Trash2 } from "lucide-react";
 import TableEmptyState from "../emptystates/TableEmptyState";
 import InvoiceTableEmptyIcon from "../ui/icons/InvoiceTableEmptyIcon";
 import localStorage from "local-storage-fallback";
-import {
-  useGetArchivedSalesByBusinessQuery,
-  useGetSaleByBusinessQuery,
-} from "@/src/generated/graphql";
-import Link from "next/link";
+import { useGetArchivedSalesByBusinessQuery } from "@/src/generated/graphql";
 
 interface InvoiceTabContentArchivedProps {
   numberOfInvoicesToShow?: number; // Make the prop optional
   onToggleSelectAll: (isChecked: boolean) => void;
-  openArchiveModal: (purchaseId: string) => void;
-  openDeleteModal: (purchaseId: string) => void;
-  openEditModal: (purchaseId: string) => void;
+  openUnarchiveModal: (invoiceId: string) => void;
+  openDeleteModal: (invoiceId: string) => void;
 }
 
 const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
   onToggleSelectAll,
   openDeleteModal,
-  openArchiveModal,
   numberOfInvoicesToShow,
-  openEditModal,
+  openUnarchiveModal,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -166,10 +160,10 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
                     <DropdownMenuItem
-                      onClick={() => openArchiveModal(invoice?.id!)}
+                      onClick={() => openUnarchiveModal(invoice?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
-                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Unarchive Invoice
                     </DropdownMenuItem>
                     <DropdownMenuItem
