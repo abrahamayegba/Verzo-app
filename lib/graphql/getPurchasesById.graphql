@@ -6,6 +6,7 @@ query GetPurchaseById($purchaseId: String!) {
     business {
       businessName
       businessEmail
+      logo
     }
     transactionDate
     deliveryDate

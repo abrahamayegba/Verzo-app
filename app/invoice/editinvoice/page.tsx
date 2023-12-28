@@ -47,6 +47,7 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import EditInvoiceCustomerForm from "@/components/EditInvoiceCustomerForm";
+import UpdateBusinessSheet from "@/components/sheets/settings/businessprofile/UpdateBusinessSheet";
 
 interface InvoiceItem {
   id: string;
@@ -83,14 +84,12 @@ const EditInvoice = () => {
   const [date, setDate] = React.useState<Date | null>(null);
   const [dueDate, setDueDate] = React.useState<Date | null>(null);
   const [openDueDate, setOpenDueDate] = React.useState(false);
+  const [openUpdateBusinessSheet, setOpenUpdateBusinessSheet] = useState(false);
   const [invoiceDate, setInvoiceDate] = useState("");
   const [invoiceDueDate, setInvoiceDueDate] = useState("");
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
   const [customerId, setCustomerId] = useState("");
   const [openCreateItemSheet, setOpenCreateItemSheet] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<
-    string | ArrayBuffer | null
-  >(null);
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
@@ -111,8 +110,6 @@ const EditInvoice = () => {
     ) || [];
   const [updateSaleMutation, { loading }] = useUpdateSaleMutation();
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const invoiceIdParams = useSearchParams();
   const invoiceId = invoiceIdParams.get("invoiceId")?.toString();
   const getSaleById = useGetSaleByIdQuery({
@@ -120,6 +117,7 @@ const EditInvoice = () => {
       saleId: invoiceId!,
     },
   });
+  const businessLogo = getSaleById?.data?.getSaleById?.business?.logo;
   const sale = getSaleById?.data?.getSaleById;
   const initialInvoiceItems = sale?.invoice?.invoiceDetails;
   const initialSaleExpenses = sale?.saleExpenses!;
@@ -266,6 +264,13 @@ const EditInvoice = () => {
     setExpenses(updatedExpenses);
   };
 
+  const handleCloseUpdateBusinessSheet = () => {
+    setOpenUpdateBusinessSheet(false);
+  };
+  const handleOpenUpdateBusinessSheet = () => {
+    setOpenUpdateBusinessSheet(true);
+  };
+
   const handleServiceExpenseChange = (
     index: number,
     field: keyof ServiceExpense,
@@ -290,23 +295,6 @@ const EditInvoice = () => {
     const updatedServiceExpenses = [...serviceExpenses];
     updatedServiceExpenses.splice(index, 1);
     setServiceExpenses(updatedServiceExpenses);
-  };
-
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target?.result || null);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
   };
 
   const handleCustomerChange = (id: string) => {
@@ -457,32 +445,24 @@ const EditInvoice = () => {
       <div className=" flex flex-col gap-y-5">
         <p className=" text-primary-black text-lg">Business details</p>
         <div className=" flex flex-row gap-x-9 items-center">
-          <div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-              ref={fileInputRef}
+          {businessLogo ? (
+            <Image
+              alt="Logo"
+              className="rounded-full border border-gray-300 border-dashed"
+              src={businessLogo}
+              width={134}
+              height={132}
             />
-            {selectedImage ? (
-              <div>
-                <Image
-                  alt="Preview"
-                  width={134}
-                  height={132}
-                  src={selectedImage as string}
-                />
-              </div>
-            ) : (
+          ) : (
+            <div className=" flex items-center justify-center flex-col gap-y-2 w-[134px] h-[132px] rounded-full border border-gray-300 border-dashed">
               <button
-                className="h-[132px] border border-dashed border-primary-border rounded-md px-6 text-primary-greytext cursor-pointer"
-                onClick={handleClick}
+                onClick={handleOpenUpdateBusinessSheet}
+                className=" text-primary-greytext"
               >
-                Drag or <br /> upload logo
+                ADD LOGO
               </button>
-            )}
-          </div>
+            </div>
+          )}
           <div className=" flex flex-col gap-y-6 text-primary-greytext text-lg">
             <p className=" flex gap-x-3 items-center">
               <BankIcon />
@@ -752,6 +732,11 @@ const EditInvoice = () => {
       <CreateCustomerSheet
         open={openCustomerSheet}
         onClose={handleCloseCustomerSheet}
+      />
+      <UpdateBusinessSheet
+        open={openUpdateBusinessSheet}
+        onClose={handleCloseUpdateBusinessSheet}
+        openSheet={handleOpenUpdateBusinessSheet}
       />
     </div>
   );

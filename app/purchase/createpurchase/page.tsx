@@ -25,6 +25,7 @@ import {
   GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
   useCreatePurchaseEntryMutation,
+  useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
 } from "@/src/generated/graphql";
 import CreatePurchaseItemSheet from "@/components/sheets/purchase/CreatePurchaseItemSheet";
@@ -32,6 +33,7 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { client } from "@/src/apollo/ApolloClient";
+import UpdateBusinessSheet from "@/components/sheets/settings/businessprofile/UpdateBusinessSheet";
 
 interface PurchaseItemProp {
   productId: string;
@@ -52,6 +54,7 @@ const CreatePurchase = () => {
   const [purchaseItems, setPurchaseItems] = useState<PurchaseItemProp[]>([]);
   const [openMerchantSheet, setOpenMerchantSheet] = useState(false);
   const [openCreateItemSheet, setOpenCreateItemSheet] = useState(false);
+  const [openUpdateBusinessSheet, setOpenUpdateBusinessSheet] = useState(false);
   const [merchantId, setMerchantId] = useState("");
   const [openViewPurchaseSheet, setOpenViewPurchaseSheet] = useState(false);
   const [openCreateCategorySheet, setOpenCreateCategorySheet] = useState(false);
@@ -69,6 +72,11 @@ const CreatePurchase = () => {
   );
   const businessId = storedBusinessId[0] || "";
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const getBusinessById = useGetBusinessByIdQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
   const [createPurchaseEntryMutation, { loading }] =
     useCreatePurchaseEntryMutation();
   const businessName =
@@ -84,25 +92,7 @@ const CreatePurchase = () => {
       (business) => business?.businessMobile
     ) || [];
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // Ensure that e.target?.result is not undefined
-        setSelectedImage(e.target?.result || null);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
+  const businessLogo = getBusinessById.data?.getBusinessById?.logo;
 
   const handleCloseMerchantSheet = () => {
     setOpenMerchantSheet(false);
@@ -118,6 +108,13 @@ const CreatePurchase = () => {
 
   const handleOpenMerchantSheet = () => {
     setOpenMerchantSheet(true);
+  };
+
+  const handleCloseUpdateBusinessSheet = () => {
+    setOpenUpdateBusinessSheet(false);
+  };
+  const handleOpenUpdateBusinessSheet = () => {
+    setOpenUpdateBusinessSheet(true);
   };
 
   const handleMerchantChange = (id: string) => {
@@ -258,32 +255,24 @@ const CreatePurchase = () => {
       <div className=" flex flex-col gap-y-5">
         <p className=" text-primary-black text-lg">Business details</p>
         <div className=" flex flex-row gap-x-9 items-center">
-          <div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-              ref={fileInputRef}
+          {businessLogo ? (
+            <Image
+              alt="Logo"
+              className="rounded-full border border-gray-300 border-dashed"
+              src={businessLogo}
+              width={134}
+              height={132}
             />
-            {selectedImage ? (
-              <div>
-                <Image
-                  alt="Preview"
-                  width={134}
-                  height={132}
-                  src={selectedImage as string}
-                />
-              </div>
-            ) : (
+          ) : (
+            <div className=" flex items-center justify-center flex-col gap-y-2 w-[134px] h-[132px] rounded-full border border-gray-300 border-dashed">
               <button
-                className="h-[132px] border border-dashed border-primary-border rounded-md px-6 text-primary-greytext cursor-pointer"
-                onClick={handleClick}
+                onClick={handleOpenUpdateBusinessSheet}
+                className=" text-primary-greytext"
               >
-                Drag or <br /> upload logo
+                ADD LOGO
               </button>
-            )}
-          </div>
+            </div>
+          )}
           <div className=" flex flex-col gap-y-6 text-primary-greytext text-lg">
             <p className=" flex gap-x-3 items-center">
               <BankIcon />
@@ -472,6 +461,11 @@ const CreatePurchase = () => {
       <CreateMerchantSheet
         open={openMerchantSheet}
         onClose={handleCloseMerchantSheet}
+      />
+      <UpdateBusinessSheet
+        open={openUpdateBusinessSheet}
+        onClose={handleCloseUpdateBusinessSheet}
+        openSheet={handleOpenUpdateBusinessSheet}
       />
     </div>
   );

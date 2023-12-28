@@ -7,13 +7,10 @@ import {
   useGetBusinessCategoriesQuery,
   useUpdateBusinessMutation,
 } from "@/src/generated/graphql";
-import { client } from "@/src/apollo/ApolloClient";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/app/hooks/use-toast";
 import ActiveBankIcon from "@/components/ui/icons/ActiveBankIcon";
 import localStorage from "local-storage-fallback";
-import Image from "next/image";
-import * as filestack from "filestack-js";
 import {
   Select,
   SelectContent,

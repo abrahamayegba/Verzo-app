@@ -29,6 +29,7 @@ import {
   GetArchivedPurchasesByBusinessDocument,
   GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
+  useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
   useUpdatePurchaseMutation,
@@ -39,6 +40,7 @@ import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { client } from "@/src/apollo/ApolloClient";
 import EditPurchaseMerchantForm from "@/components/EditPurchaseMerchantForm";
+import UpdateBusinessSheet from "@/components/sheets/settings/businessprofile/UpdateBusinessSheet";
 
 interface PurchaseItemProp {
   productId: string;
@@ -62,19 +64,22 @@ const EditPurchase = () => {
   const [openViewPurchaseSheet, setOpenViewPurchaseSheet] = useState(false);
   const [openCreateCategorySheet, setOpenCreateCategorySheet] = useState(false);
   const [purchaseDate, setPurchaseDate] = useState("");
+  const [openUpdateBusinessSheet, setOpenUpdateBusinessSheet] = useState(false);
   const [purchaseDueDate, setPurchaseDueDate] = useState("");
   const [date, setDate] = React.useState<Date | null>(null);
   const [dueDate, setDueDate] = React.useState<Date | null>(null);
   const [openDueDate, setOpenDueDate] = React.useState(false);
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
-  const [selectedImage, setSelectedImage] = useState<
-    string | ArrayBuffer | null
-  >(null);
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const getBusinessById = useGetBusinessByIdQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
   const [updatePurchaseMutation, { loading }] = useUpdatePurchaseMutation();
   const businessName =
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
@@ -88,18 +93,7 @@ const EditPurchase = () => {
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
       (business) => business?.businessMobile
     ) || [];
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // Ensure that e.target?.result is not undefined
-        setSelectedImage(e.target?.result || null);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+
   const purchaseIdParams = useSearchParams();
   const purchaseId = purchaseIdParams.get("purchaseId")?.toString();
   const getPurchaseById = useGetPurchaseByIdQuery({
@@ -108,6 +102,7 @@ const EditPurchase = () => {
     },
   });
   const purchase = getPurchaseById?.data?.getPurchaseById;
+  const businessLogo = getBusinessById.data?.getBusinessById?.logo;
   const initialPurchaseItems = purchase?.purchaseItems;
   const initialMerchantId = purchase?.merchant?.id!;
 
@@ -132,12 +127,6 @@ const EditPurchase = () => {
 
   const createdDate = purchase?.createdAt;
   const transactionDate = purchase?.transactionDate;
-
-  const handleClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
 
   const handleCloseMerchantSheet = () => {
     setOpenMerchantSheet(false);
@@ -189,6 +178,13 @@ const EditPurchase = () => {
     const updatedItems = [...purchaseItems];
     updatedItems[index].unitPrice = price;
     setPurchaseItems(updatedItems);
+  };
+
+  const handleCloseUpdateBusinessSheet = () => {
+    setOpenUpdateBusinessSheet(false);
+  };
+  const handleOpenUpdateBusinessSheet = () => {
+    setOpenUpdateBusinessSheet(true);
   };
 
   const setSideSheetCallback = (selectedItem: PurchaseItemProp) => {
@@ -305,32 +301,24 @@ const EditPurchase = () => {
       <div className=" flex flex-col gap-y-5">
         <p className=" text-primary-black text-lg">Business details</p>
         <div className=" flex flex-row gap-x-9 items-center">
-          <div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-              ref={fileInputRef}
+          {businessLogo ? (
+            <Image
+              alt="Logo"
+              className="rounded-full border border-gray-300 border-dashed"
+              src={businessLogo}
+              width={134}
+              height={132}
             />
-            {selectedImage ? (
-              <div>
-                <Image
-                  alt="Preview"
-                  width={134}
-                  height={132}
-                  src={selectedImage as string}
-                />
-              </div>
-            ) : (
+          ) : (
+            <div className=" flex items-center justify-center flex-col gap-y-2 w-[134px] h-[132px] rounded-full border border-gray-300 border-dashed">
               <button
-                className="h-[132px] border border-dashed border-primary-border rounded-md px-6 text-primary-greytext cursor-pointer"
-                onClick={handleClick}
+                onClick={handleOpenUpdateBusinessSheet}
+                className=" text-primary-greytext"
               >
-                Drag or <br /> upload logo
+                ADD LOGO
               </button>
-            )}
-          </div>
+            </div>
+          )}
           <div className=" flex flex-col gap-y-6 text-primary-greytext text-lg">
             <p className=" flex gap-x-3 items-center">
               <BankIcon />
@@ -503,6 +491,11 @@ const EditPurchase = () => {
       <CreateMerchantSheet
         open={openMerchantSheet}
         onClose={handleCloseMerchantSheet}
+      />
+      <UpdateBusinessSheet
+        open={openUpdateBusinessSheet}
+        onClose={handleCloseUpdateBusinessSheet}
+        openSheet={handleOpenUpdateBusinessSheet}
       />
     </div>
   );

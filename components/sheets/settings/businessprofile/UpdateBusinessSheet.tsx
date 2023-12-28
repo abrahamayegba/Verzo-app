@@ -3,10 +3,10 @@ import { ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   GetBusinessByIdDocument,
+  GetBusinessesByUserIdDocument,
   useGetBusinessByIdQuery,
   useUpdateBusinessMutation,
 } from "@/src/generated/graphql";
-import { client } from "@/src/apollo/ApolloClient";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/app/hooks/use-toast";
 import ActiveBankIcon from "@/components/ui/icons/ActiveBankIcon";
@@ -117,10 +117,13 @@ const UpdateBusinessSheet: React.FC<UpdateBusinessProps> = ({
       await updateBusinessMutation({
         variables: {
           businessId: businessId,
-          logo: uploadedFiles[0]?.url || null,
+          logo: uploadedFiles[0]?.url ? uploadedFiles[0]?.url : businessLogo,
           ...data,
         },
-        refetchQueries: [GetBusinessByIdDocument],
+        refetchQueries: [
+          GetBusinessByIdDocument,
+          GetBusinessesByUserIdDocument,
+        ],
       });
       onClose();
       showSuccessToast();

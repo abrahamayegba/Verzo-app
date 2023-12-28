@@ -5624,7 +5624,7 @@ export type GetBusinessByIdQuery = { __typename?: 'Query', getBusinessById?: { _
 export type GetBusinessesByUserIdQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBusinessesByUserIdQuery = { __typename?: 'Query', getBusinessesByUserId?: { __typename?: 'GetBusinessByUser', user?: { __typename?: 'User', id: string, email: string, fullname: string, verified?: boolean | null } | null, businesses?: Array<{ __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null, businessMobile?: string | null } | null> | null } | null };
+export type GetBusinessesByUserIdQuery = { __typename?: 'Query', getBusinessesByUserId?: { __typename?: 'GetBusinessByUser', user?: { __typename?: 'User', id: string, email: string, fullname: string, verified?: boolean | null } | null, businesses?: Array<{ __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null, businessMobile?: string | null, logo?: string | null } | null> | null } | null };
 
 export type GetBusinessCoAsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5909,7 +5909,7 @@ export type GetPurchaseByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetPurchaseByIdQuery = { __typename?: 'Query', getPurchaseById?: { __typename?: 'Purchase', id?: string | null, description?: string | null, reference?: string | null, transactionDate?: any | null, deliveryDate?: any | null, total?: number | null, paid?: boolean | null, createdAt?: any | null, purchaseStatusId?: number | null, businessId?: string | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null } | null, merchant?: { __typename?: 'Merchant', name: string, email?: string | null, id?: string | null } | null, purchaseItems?: Array<{ __typename?: 'PurchaseItem', id?: string | null, quantityReceived?: number | null, archived?: boolean | null, received?: boolean | null, productId?: string | null, description: string, quantity: number, unitPrice: number, index: number, price: number, purchase?: { __typename?: 'Purchase', createdAt?: any | null, updatedAt?: any | null } | null, product?: { __typename?: 'Product', productName: string, price?: number | null, id: string, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null } | null> | null, purchaseStatus?: { __typename?: 'PurchaseStatusRef', id?: number | null, purchaseStatus?: string | null } | null, purchaseLines?: Array<{ __typename?: 'PurchaseLine', id?: string | null, lineAmount: number, lineQuantity?: number | null, transactionDate: any } | null> | null } | null };
+export type GetPurchaseByIdQuery = { __typename?: 'Query', getPurchaseById?: { __typename?: 'Purchase', id?: string | null, description?: string | null, reference?: string | null, transactionDate?: any | null, deliveryDate?: any | null, total?: number | null, paid?: boolean | null, createdAt?: any | null, purchaseStatusId?: number | null, businessId?: string | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, logo?: string | null } | null, merchant?: { __typename?: 'Merchant', name: string, email?: string | null, id?: string | null } | null, purchaseItems?: Array<{ __typename?: 'PurchaseItem', id?: string | null, quantityReceived?: number | null, archived?: boolean | null, received?: boolean | null, productId?: string | null, description: string, quantity: number, unitPrice: number, index: number, price: number, purchase?: { __typename?: 'Purchase', createdAt?: any | null, updatedAt?: any | null } | null, product?: { __typename?: 'Product', productName: string, price?: number | null, id: string, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null } | null> | null, purchaseStatus?: { __typename?: 'PurchaseStatusRef', id?: number | null, purchaseStatus?: string | null } | null, purchaseLines?: Array<{ __typename?: 'PurchaseLine', id?: string | null, lineAmount: number, lineQuantity?: number | null, transactionDate: any } | null> | null } | null };
 
 export type GetPurchaseForMonthQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5966,7 +5966,7 @@ export type GetSaleByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetSaleByIdQuery = { __typename?: 'Query', getSaleById?: { __typename?: 'Sale', id: string, description?: string | null, reference?: string | null, paid?: boolean | null, saleAmount?: number | null, transactionDate?: any | null, dueDate?: any | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, businessMobile?: string | null } | null, saleStatus?: { __typename?: 'SaleStatusRef', id?: number | null, saleStatus?: string | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', id?: string | null, index?: number | null, saleId?: string | null, description?: string | null, amount?: number | null, effected?: boolean | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', id?: string | null, effected?: boolean | null, description?: string | null, amount?: number | null, index?: number | null, service?: { __typename?: 'Service', name: string, id: string } | null } | null> | null, invoice?: { __typename?: 'Invoice', totalAmount: number, VAT?: number | null, id: string, createdAt?: any | null, subtotal: number, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null, mobile: string } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null };
+export type GetSaleByIdQuery = { __typename?: 'Query', getSaleById?: { __typename?: 'Sale', id: string, description?: string | null, reference?: string | null, paid?: boolean | null, saleAmount?: number | null, transactionDate?: any | null, dueDate?: any | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, businessMobile?: string | null, logo?: string | null } | null, saleStatus?: { __typename?: 'SaleStatusRef', id?: number | null, saleStatus?: string | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', id?: string | null, index?: number | null, saleId?: string | null, description?: string | null, amount?: number | null, effected?: boolean | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', id?: string | null, effected?: boolean | null, description?: string | null, amount?: number | null, index?: number | null, service?: { __typename?: 'Service', name: string, id: string } | null } | null> | null, invoice?: { __typename?: 'Invoice', totalAmount: number, VAT?: number | null, id: string, createdAt?: any | null, subtotal: number, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null, mobile: string } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: number, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: number, quantity: number, price: number, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: number | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: number | null, quantity?: number | null, price: number, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: number, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null };
 
 export type GetSalesForMonthQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -8557,6 +8557,7 @@ export const GetBusinessesByUserIdDocument = gql`
       businessName
       businessEmail
       businessMobile
+      logo
     }
   }
 }
@@ -10495,6 +10496,7 @@ export const GetPurchaseByIdDocument = gql`
     business {
       businessName
       businessEmail
+      logo
     }
     transactionDate
     deliveryDate
@@ -10924,6 +10926,7 @@ export const GetSaleByIdDocument = gql`
       businessName
       businessEmail
       businessMobile
+      logo
     }
     saleStatus {
       id
