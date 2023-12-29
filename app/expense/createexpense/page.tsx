@@ -65,7 +65,8 @@ const CreateExpense = () => {
   );
   const businessId = storedBusinessId[0] || "";
 
-  const [createExpenseMutation, { loading }] = useCreateExpenseMutation();
+  const [createExpenseMutation, { loading: createexpenseloading }] =
+    useCreateExpenseMutation();
   const getExpenseCategories = useGetExpenseCategoryWithSetsQuery();
   const expenseCategories =
     getExpenseCategories?.data?.getExpenseCategoryWithSets?.expenseCategories ??
@@ -368,12 +369,12 @@ const CreateExpense = () => {
           </button>
           <button
             type="submit"
-            disabled={loading}
+            disabled={createexpenseloading}
             className={`bg-primary-blue text-white rounded-[10px] px-10 py-3 ${
-              loading ? "opacity-50" : ""
+              createexpenseloading ? "opacity-50" : ""
             }`}
           >
-            {loading ? "Saving..." : "Save"}
+            {createexpenseloading ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
@@ -381,10 +382,6 @@ const CreateExpense = () => {
         open={openCreateCategorySheet}
         onClose={handleCloseCreateCategorySheet}
       />
-      {/* <ViewExpenseSheet
-        open={openViewExpenseSheet}
-        onClose={handleCloseViewExpenseSheet}
-      /> */}
       <CreateMerchantSheet
         open={openMerchantSheet}
         onClose={handleCloseMerchantSheet}

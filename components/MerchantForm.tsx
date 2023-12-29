@@ -29,7 +29,6 @@ const MerchantForm: React.FC<MerchantFormProps> = ({
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
-  console.log(businessId);
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
 
   const getMerchants = useGetMerchantsByBusinessQuery({

@@ -5,6 +5,11 @@ import { Fragment } from "react";
 import { useToast } from "../../../app/hooks/use-toast";
 import UploadCSVIcon from "../../ui/icons/UploadCSVIcon";
 import DragDropIcon from "../../ui/icons/DragDropIcon";
+import {
+  GetServiceByBusinessDocument,
+  GetServiceForWeekDocument,
+  useCreateServiceWithCsvMutation,
+} from "@/src/generated/graphql";
 
 interface UploadCSVProps {
   open: boolean;
@@ -12,8 +17,14 @@ interface UploadCSVProps {
   onClose: () => void;
 }
 
-const UploadInvoiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
+const UploadServiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
   const { toast } = useToast();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const [createServiceWithCsvMutation, { data, loading, error }] =
+    useCreateServiceWithCsvMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -22,6 +33,17 @@ const UploadInvoiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
+  };
+
+  const handleDownload = () => {
+    const sampleFileName = "SAMPLE_DATA_EXCEL.xlsx";
+    const sampleFileUrl = `/SAMPLE_DATA_EXCEL.xlsx`;
+    const anchor = document.createElement("a");
+    anchor.href = sampleFileUrl;
+    anchor.target = "_blank";
+    anchor.download = sampleFileName;
+    anchor.click();
+    onClose();
   };
 
   const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +59,47 @@ const UploadInvoiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     setSelectedFile(file);
+  };
+
+  const showSuccessToast = () => {
+    toast({
+      title: "Imported!",
+      description: "Your services have been successfully imported",
+      duration: 3500,
+    });
+  };
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+
+  const handleImportConfirm = async () => {
+    try {
+      const { data } = await createServiceWithCsvMutation({
+        variables: {
+          businessId: businessId,
+          csvFile: selectedFile,
+        },
+        refetchQueries: [
+          GetServiceByBusinessDocument,
+          GetServiceForWeekDocument,
+        ],
+      });
+      if (data?.createServicesWithCsv === true) {
+        onClose();
+        setSelectedFile(null);
+        showSuccessToast();
+      }
+    } catch (error) {
+      console.error("Error during import:", error);
+      showFailureToast(error);
+      onClose();
+      setSelectedFile(null);
+    }
   };
 
   return (
@@ -73,11 +136,14 @@ const UploadInvoiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
                   </div>
                   <p className=" text-lg text-[#121212]">Upload file</p>
                   <p className=" text-primary-greytext">
-                    Upload a CSV file to help us import your invoices. Supported
+                    Upload a CSV file to help us import your services. Supported
                     formats: CSV <br />
-                    <span className=" text-primary-blue underline underline-offset-2 cursor-pointer">
+                    <button
+                      onClick={handleDownload}
+                      className=" text-primary-blue underline underline-offset-2 cursor-pointer"
+                    >
                       Download
-                    </span>{" "}
+                    </button>{" "}
                     sample template
                   </p>
                   <div
@@ -96,8 +162,8 @@ const UploadInvoiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
                     <p>
                       {selectedFile ? (
                         <>
-                          <div className=" flex gap-x-2">
-                            <p>{selectedFile.name}</p>
+                          <div className=" flex flex-col items-center gap-y-1">
+                            <p className=" flex">{selectedFile.name}</p>
                             <span className="underline underline-offset-2 text-primary-blue">
                               Choose another file
                             </span>{" "}
@@ -123,8 +189,14 @@ const UploadInvoiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-                      Upload
+                    <button
+                      disabled={loading || !selectedFile}
+                      onClick={handleImportConfirm}
+                      className={`px-7 py-[10px] disabled:opacity-50 disabled:cursor-not-allowed rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                        loading ? "opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Importing..." : "Import"}
                     </button>
                   </div>
                 </div>
@@ -137,4 +209,4 @@ const UploadInvoiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
   );
 };
 
-export default UploadInvoiceCSV;
+export default UploadServiceCSV;

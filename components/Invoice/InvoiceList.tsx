@@ -14,6 +14,7 @@ import {
 } from "@/src/generated/graphql";
 import BulkArchiveInvoice from "../modals/invoice/BulkArchiveInvoiceModal";
 import UnarchiveInvoice from "../modals/invoice/UnarchiveInvoice";
+import SendInvoice from "../modals/invoice/SendInvoice";
 
 const InvoiceList = () => {
   const storedBusinessId = JSON.parse(
@@ -41,6 +42,12 @@ const InvoiceList = () => {
     closeModal: closeEditModal,
   } = useModal();
 
+  // const {
+  //   isOpen: isSendModalOpen,
+  //   openModal: openSendModal,
+  //   closeModal: closeSendModal,
+  // } = useModal();
+
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
   };
@@ -65,11 +72,17 @@ const InvoiceList = () => {
     openEditModal();
   };
 
+  // const handleOpenSendModal = (saleId: string) => {
+  //   setSelectedId(saleId);
+  //   openSendModal();
+  // };
+
   const getSalesByBusiness = useGetSaleByBusinessQuery({
     variables: {
       businessId: businessId,
     },
   });
+
   const getArchivedSalesByBusiness = useGetArchivedSalesByBusinessQuery({
     variables: {
       businessId: businessId,
@@ -108,24 +121,6 @@ const InvoiceList = () => {
               </span>
             </TabsTrigger>
           </div>
-          {/* {isChecked ? (
-            <div className=" flex gap-x-4">
-              <button
-                onClick={openModal}
-                className=" px-6 py-[10px] rounded-[10px] flex gap-x-2 items-center text-sm justify-center border border-primary-border"
-              >
-                Archive
-              </button>
-              <button
-                onClick={openDeleteInvoiceModal}
-                className=" px-6 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-sm text-white"
-              >
-                Delete
-              </button>
-            </div>
-          ) : (
-            
-          )} */}
           <Link href="/dashboard/invoices/allinvoices">
             <button className=" text-primary-blue ">See all invoices</button>
           </Link>
@@ -166,6 +161,14 @@ const InvoiceList = () => {
         onClose={closeDeleteInvoiceModal}
         invoiceId={selectedId}
       />
+      {/* <SendInvoice
+        open={isSendModalOpen}
+        openModal={openSendModal}
+        onClose={closeSendModal}
+        invoiceId={selectedId}
+        customerName={customerName}
+        customerEmail={customerEmail}
+      /> */}
       <BulkArchiveInvoice
         open={isOpen}
         openModal={openModal}

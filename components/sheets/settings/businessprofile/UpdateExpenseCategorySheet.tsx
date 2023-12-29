@@ -1,11 +1,7 @@
 import React from "react";
 import { ChevronLeft, Trash2 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import {
-  useGetBusinessByIdQuery,
-  useGetExpenseCategoryWithSetsQuery,
-} from "@/src/generated/graphql";
-import localStorage from "local-storage-fallback";
+import { useGetExpenseCategoryWithSetsQuery } from "@/src/generated/graphql";
 import ActiveExpenseIcon from "@/components/ui/icons/ActiveExpenseIcon";
 
 interface UpdateProps {
@@ -19,16 +15,6 @@ const UpdateExpenseCategorySheet: React.FC<UpdateProps> = ({
   onClose,
   openSheet,
 }) => {
-  const storedBusinessId = JSON.parse(
-    localStorage.getItem("businessId") || "[]"
-  );
-  const businessId = storedBusinessId[0] || "";
-  const getBusinessById = useGetBusinessByIdQuery({
-    variables: {
-      businessId: businessId,
-    },
-  });
-
   const getExpenseCategories = useGetExpenseCategoryWithSetsQuery();
   const expenseCategories =
     getExpenseCategories?.data?.getExpenseCategoryWithSets?.expenseCategories ??
@@ -68,10 +54,6 @@ const UpdateExpenseCategorySheet: React.FC<UpdateProps> = ({
                   <Trash2 className=" text-primary-red w-5 h-5 hover:cursor-pointer opacity-50" />
                 </li>
               ))}
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
             </ul>
             <button
               disabled

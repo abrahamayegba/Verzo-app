@@ -6,10 +6,12 @@ query GetExpenseById($expenseId: String!) {
     createdAt
     expenseDate
     businessId
+    reference
     business {
       businessName
       businessEmail
       businessMobile
+      logo
     }
     merchant {
       name

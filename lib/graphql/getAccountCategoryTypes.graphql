@@ -1,0 +1,6 @@
+query GetAccountCategoryTypes {
+  getAccountCategoryTypes {
+    id
+    name
+  }
+}

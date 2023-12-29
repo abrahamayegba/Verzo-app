@@ -1,137 +1,88 @@
 "use client";
-import ExpenseStepIndicator from "@/components/Expense/ExpenseTimeline";
-import MainLoader from "@/components/loading/MainLoader";
-import Verzologoblue from "@/components/ui/icons/Verzologoblue";
 import {
   useGetBusinessesByUserIdQuery,
-  useGetExpenseByIdQuery,
+  useGetPurchaseByIdQuery,
 } from "@/src/generated/graphql";
-import { MoveLeft } from "lucide-react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import React from "react";
 import Image from "next/image";
+import MainLoader from "@/components/loading/MainLoader";
+import Verzologoblue from "@/components/ui/icons/Verzologoblue";
+import Link from "next/link";
 
-const ViewExpense = () => {
-  const currentStep = 1;
-  const expenseIdParams = useSearchParams();
-  const expenseId = expenseIdParams.get("expenseId")?.toString();
-  const getExpenseById = useGetExpenseByIdQuery({
+const PurchaseDetailPage = () => {
+  const { purchaseId } = useParams();
+  const purchaseIdString = Array.isArray(purchaseId)
+    ? purchaseId[0]
+    : purchaseId;
+  const getPurchaseById = useGetPurchaseByIdQuery({
     variables: {
-      expenseId: expenseId!,
+      purchaseId: purchaseIdString,
     },
   });
-  const expense = getExpenseById?.data?.getExpenseById;
-  const expenseStatusId = expense?.expenseStatusId!;
-
-  const expenseItems = expense?.expenseItems;
-
-  const expenseItem = expenseItems?.map((item) => ({
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const purchase = getPurchaseById?.data?.getPurchaseById;
+  console.log(purchaseId);
+  const purchaseItems = purchase?.purchaseItems;
+  const purchaseItem = purchaseItems?.map((item) => ({
     id: item?.id,
     itemName: item?.description,
     quantity: item?.quantity,
     price: item?.unitPrice,
   }));
-
-  const itemsConfirmed = expenseStatusId! >= 2;
-  const merchantInvoiceAdded = expenseStatusId! >= 3;
-  const paymentAdded = expenseStatusId! >= 4;
-
-  const businessLogo = expense?.business?.logo;
-  const businessName = expense?.business?.businessName;
-  const businessEmail = expense?.business?.businessEmail;
+  const businesses =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses;
+  const businessName = businesses?.map((business) => business?.businessName);
+  const businessEmail = businesses?.map((business) => business?.businessEmail);
+  const businessLogo = businesses?.[0]?.logo || "";
   const country = "Nigeria";
-
-  const merchantName = expense?.merchant?.name;
-  const merchantEmail = expense?.merchant?.email;
-  const issueDate = expense?.createdAt;
-  const expenseDate = expense?.expenseDate;
-  const subtotal = expense?.amount;
+  const merchantName = purchase?.merchant?.name;
+  const merchantEmail = purchase?.merchant?.email;
+  const createdDate = purchase?.createdAt;
+  const transactionDate = purchase?.transactionDate;
+  const subtotal = purchase?.total;
   const total = subtotal;
 
-  let nextRoute = "";
-
-  if (!itemsConfirmed) {
-    nextRoute = `/expense/confirmitems?expenseId=${expenseId}`;
-  } else if (!merchantInvoiceAdded) {
-    nextRoute = `/expense/merchantinvoice?expenseId=${expenseId}`;
-  } else if (!paymentAdded) {
-    nextRoute = `/expense/addpayment?expenseId=${expenseId}`;
-  }
-  if (getExpenseById.loading) {
+  if (getBusinessesByUserId.loading || getPurchaseById.loading) {
     return <MainLoader />;
   }
-
   return (
-    <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[20px]">
-      <div className=" flex justify-between w-full items-center relative">
-        <Link
-          className=" absolute top-0 text-primary-greytext "
-          href="/dashboard/expenses"
-        >
-          <button className=" flex items-center gap-x-2">
-            <MoveLeft className=" w-5 h-5 " />
-            Back to Expenses
-          </button>
-        </Link>
-        <div className=" flex flex-col gap-y-[4px] mt-9">
-          <p className=" text-[30px] text-primary-black ">
-            #{expense?.reference}
-          </p>
-          <p className=" text-primary-greytext font-light text-lg">
-            Add extra information to the expense
-          </p>
-        </div>
-        {nextRoute && (
-          <Link href={nextRoute}>
-            <button className="px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
-              Next
-            </button>
-          </Link>
-        )}
-      </div>
-      <ExpenseStepIndicator
-        merchantInvoiceAdded={merchantInvoiceAdded}
-        currentStep={currentStep}
-        itemsConfirmed={itemsConfirmed}
-        paymentAdded={paymentAdded}
-      />
-      <div className=" w-full flex flex-col shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 py-[36px] px-[44px]">
-        <div className=" flex justify-between items-center">
-          <Image alt="Logo" src={businessLogo!} width={100} height={80} />
-          <div className=" flex flex-row gap-x-5">
-            <Link href={`/expense/editexpense?expenseId=${expenseId}`}>
-              <button
-                disabled={expenseStatusId >= 2}
-                className=" px-6 py-3 rounded-[10px] hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed flex border border-gray-200 items-center justify-center"
-              >
-                Edit expense
-              </button>
-            </Link>
-          </div>
+    <div className=" py-[40px] flex flex-col w-full justify-center items-center gap-y-[20px]">
+      <div className=" w-full flex flex-col max-w-[750px] bg-white shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 pt-[20px] pb-[36px] px-[44px]">
+        <div className=" flex flex-col">
+          <Image
+            className=" ml-[-15px]"
+            alt="Logo"
+            src={businessLogo!}
+            width={100}
+            height={80}
+          />
+          <p className=" text-xl">PURCHASE ORDER</p>
         </div>
         <div className=" flex flex-col border-t border-t-[#f4f4f4] mt-2">
-          <div className="grid grid-cols-3 pt-8">
+          <div className="grid grid-cols-3 pt-8 gap-4">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-              <p>Expense</p>
+              <p>Purchase</p>
               <p className=" text-primary-black font-normal">
-                #{expense?.reference}
+                #{purchase?.reference}
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-              <p>Issue date</p>
+              <p>Transaction date</p>
               <p className=" text-primary-black font-normal">
-                {issueDate ? new Date(issueDate).toDateString() : ""}
+                {createdDate ? new Date(createdDate).toDateString() : ""}
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
               <p>Due date</p>
               <p className=" text-primary-black font-normal">
-                {expenseDate ? new Date(expenseDate).toDateString() : ""}
+                {transactionDate
+                  ? new Date(transactionDate).toDateString()
+                  : ""}
               </p>
             </div>
           </div>
-          <div className=" grid grid-cols-3 w-full pt-8">
+          <div className=" grid grid-cols-3 gap-4 w-full pt-8">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>From</p>
               <p className=" text-primary-black font-normal">{businessName}</p>
@@ -146,7 +97,7 @@ const ViewExpense = () => {
             </div>
           </div>
           <div className=" w-full flex flex-col mt-[40px] gap-y-4">
-            <p className=" text-lg">Expense details</p>
+            <p className=" text-lg">Purchase details</p>
             <table className=" w-full ">
               <thead>
                 <tr className=" text-sm text-primary-greytext border-y border-y-gray-100">
@@ -156,7 +107,7 @@ const ViewExpense = () => {
                 </tr>
               </thead>
               <tbody>
-                {expenseItem?.map((item) => (
+                {purchaseItem?.map((item) => (
                   <tr key={item?.id}>
                     <td className=" py-4">{item?.itemName}</td>
                     <td className=" text-end py-4">{item?.quantity}</td>
@@ -171,16 +122,16 @@ const ViewExpense = () => {
           <div className=" flex justify-between items-center mt-3">
             <div className=" text-sm text-[#c4c4c4] max-w-[250px] flex flex-col gap-y-2">
               <p>Thanks for your patronage</p>
-              <p className=" flex flex-row">
+              <div className="flex">
                 Reach out to us{" "}
                 <Link href="mailto:technology@verzo.com">
                   <p className="text-primary-blue focus:underline underline-offset-2 ml-1 font-medium">
                     technology@verzo.com
                   </p>
                 </Link>
-              </p>
+              </div>
               <p>
-                Purchase created with{" "}
+                Invoice created with{" "}
                 <span className=" text-primary-blue">Verzo</span>{" "}
               </p>
             </div>
@@ -209,8 +160,19 @@ const ViewExpense = () => {
           </div>
         </div>
       </div>
+      <div className=" flex flex-col gap-y-3 mt-2">
+        <p className=" flex flex-row text-xl font-medium text-gray-700 items-center">
+          Powered by{" "}
+          <span className=" ml-2 mt-[-5px]">
+            <Verzologoblue />
+          </span>
+        </p>
+        <p className=" text-sm text-gray-500">
+          &copy; 2023 Verzo. All rights reserved.
+        </p>
+      </div>
     </div>
   );
 };
 
-export default ViewExpense;
+export default PurchaseDetailPage;

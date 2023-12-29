@@ -5391,6 +5391,14 @@ export type CreateMerchantMutationVariables = Exact<{
 
 export type CreateMerchantMutation = { __typename?: 'Mutation', createMerchant?: { __typename?: 'Merchant', id?: string | null, name: string, email?: string | null } | null };
 
+export type CreateMerchantWithCsvMutationVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  csvFile: Scalars['Any']['input'];
+}>;
+
+
+export type CreateMerchantWithCsvMutation = { __typename?: 'Mutation', createMerchantWithCsv?: boolean | null };
+
 export type CreateProductMutationVariables = Exact<{
   productName: Scalars['String']['input'];
   businessId: Scalars['String']['input'];
@@ -5548,6 +5556,16 @@ export type ForgotPasswordMutationVariables = Exact<{
 
 export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword?: boolean | null };
 
+export type GetAccountCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAccountCategoriesQuery = { __typename?: 'Query', getAccountCategories: Array<{ __typename?: 'AccountCategory', name?: string | null, id?: string | null } | null> };
+
+export type GetAccountCategoryTypesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAccountCategoryTypesQuery = { __typename?: 'Query', getAccountCategoryTypes: Array<{ __typename?: 'AccountCategoryType', id?: string | null, name?: string | null } | null> };
+
 export type GetAddOnOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -5646,7 +5664,7 @@ export type GetBusinessProductUnitsQuery = { __typename?: 'Query', getBusinessPr
 export type GetChartOfAccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetChartOfAccountsQuery = { __typename?: 'Query', getChartOfAccounts: Array<{ __typename?: 'ChartOfAccount', id?: string | null, name?: string | null, code?: string | null, createdAt?: any | null } | null> };
+export type GetChartOfAccountsQuery = { __typename?: 'Query', getChartOfAccounts: Array<{ __typename?: 'ChartOfAccount', id?: string | null, name?: string | null, code?: string | null, createdAt?: any | null, accountCategoryType?: { __typename?: 'AccountCategoryType', id?: string | null, name?: string | null } | null } | null> };
 
 export type GetCombinedCoAsQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5690,7 +5708,7 @@ export type GetExpenseByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetExpenseByIdQuery = { __typename?: 'Query', getExpenseById?: { __typename?: 'Expense', id: string, description?: string | null, amount: number, createdAt: any, expenseDate?: any | null, businessId: string, paid?: boolean | null, expenseStatusId?: number | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, businessMobile?: string | null } | null, merchant?: { __typename?: 'Merchant', name: string, email?: string | null, id?: string | null } | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, expenseItems?: Array<{ __typename?: 'ExpenseItem', id?: string | null, quantityReceived?: number | null, received?: boolean | null, description?: string | null, quantity?: number | null, unitPrice?: number | null, index?: number | null, price?: number | null, chartOfAccount?: { __typename?: 'ChartOfAccount', name?: string | null, id?: string | null } | null } | null> | null, expenseLines?: Array<{ __typename?: 'ExpenseLine', lineAmount: number, lineQuantity?: number | null, id?: string | null, chartOfAccount?: { __typename?: 'ChartOfAccount', name?: string | null } | null } | null> | null } | null };
+export type GetExpenseByIdQuery = { __typename?: 'Query', getExpenseById?: { __typename?: 'Expense', id: string, description?: string | null, amount: number, createdAt: any, expenseDate?: any | null, businessId: string, reference?: string | null, paid?: boolean | null, expenseStatusId?: number | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, businessMobile?: string | null, logo?: string | null } | null, merchant?: { __typename?: 'Merchant', name: string, email?: string | null, id?: string | null } | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, expenseItems?: Array<{ __typename?: 'ExpenseItem', id?: string | null, quantityReceived?: number | null, received?: boolean | null, description?: string | null, quantity?: number | null, unitPrice?: number | null, index?: number | null, price?: number | null, chartOfAccount?: { __typename?: 'ChartOfAccount', name?: string | null, id?: string | null } | null } | null> | null, expenseLines?: Array<{ __typename?: 'ExpenseLine', lineAmount: number, lineQuantity?: number | null, id?: string | null, chartOfAccount?: { __typename?: 'ChartOfAccount', name?: string | null } | null } | null> | null } | null };
 
 export type GetExpenseCategoryWithSetsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']['input']>;
@@ -7341,6 +7359,38 @@ export function useCreateMerchantMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateMerchantMutationHookResult = ReturnType<typeof useCreateMerchantMutation>;
 export type CreateMerchantMutationResult = Apollo.MutationResult<CreateMerchantMutation>;
 export type CreateMerchantMutationOptions = Apollo.BaseMutationOptions<CreateMerchantMutation, CreateMerchantMutationVariables>;
+export const CreateMerchantWithCsvDocument = gql`
+    mutation CreateMerchantWithCSV($businessId: String!, $csvFile: Any!) {
+  createMerchantWithCsv(businessId: $businessId, csvFile: $csvFile)
+}
+    `;
+export type CreateMerchantWithCsvMutationFn = Apollo.MutationFunction<CreateMerchantWithCsvMutation, CreateMerchantWithCsvMutationVariables>;
+
+/**
+ * __useCreateMerchantWithCsvMutation__
+ *
+ * To run a mutation, you first call `useCreateMerchantWithCsvMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMerchantWithCsvMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMerchantWithCsvMutation, { data, loading, error }] = useCreateMerchantWithCsvMutation({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      csvFile: // value for 'csvFile'
+ *   },
+ * });
+ */
+export function useCreateMerchantWithCsvMutation(baseOptions?: Apollo.MutationHookOptions<CreateMerchantWithCsvMutation, CreateMerchantWithCsvMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMerchantWithCsvMutation, CreateMerchantWithCsvMutationVariables>(CreateMerchantWithCsvDocument, options);
+      }
+export type CreateMerchantWithCsvMutationHookResult = ReturnType<typeof useCreateMerchantWithCsvMutation>;
+export type CreateMerchantWithCsvMutationResult = Apollo.MutationResult<CreateMerchantWithCsvMutation>;
+export type CreateMerchantWithCsvMutationOptions = Apollo.BaseMutationOptions<CreateMerchantWithCsvMutation, CreateMerchantWithCsvMutationVariables>;
 export const CreateProductDocument = gql`
     mutation CreateProduct($productName: String!, $businessId: String!, $price: Float!, $productUnitId: String!, $initialStockLevel: Float) {
   createProduct(
@@ -7992,6 +8042,86 @@ export function useForgotPasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ForgotPasswordMutationHookResult = ReturnType<typeof useForgotPasswordMutation>;
 export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
 export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
+export const GetAccountCategoriesDocument = gql`
+    query getAccountCategories {
+  getAccountCategories {
+    name
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetAccountCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetAccountCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAccountCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAccountCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAccountCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetAccountCategoriesQuery, GetAccountCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAccountCategoriesQuery, GetAccountCategoriesQueryVariables>(GetAccountCategoriesDocument, options);
+      }
+export function useGetAccountCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAccountCategoriesQuery, GetAccountCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAccountCategoriesQuery, GetAccountCategoriesQueryVariables>(GetAccountCategoriesDocument, options);
+        }
+export function useGetAccountCategoriesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAccountCategoriesQuery, GetAccountCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAccountCategoriesQuery, GetAccountCategoriesQueryVariables>(GetAccountCategoriesDocument, options);
+        }
+export type GetAccountCategoriesQueryHookResult = ReturnType<typeof useGetAccountCategoriesQuery>;
+export type GetAccountCategoriesLazyQueryHookResult = ReturnType<typeof useGetAccountCategoriesLazyQuery>;
+export type GetAccountCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetAccountCategoriesSuspenseQuery>;
+export type GetAccountCategoriesQueryResult = Apollo.QueryResult<GetAccountCategoriesQuery, GetAccountCategoriesQueryVariables>;
+export const GetAccountCategoryTypesDocument = gql`
+    query GetAccountCategoryTypes {
+  getAccountCategoryTypes {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetAccountCategoryTypesQuery__
+ *
+ * To run a query within a React component, call `useGetAccountCategoryTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAccountCategoryTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAccountCategoryTypesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAccountCategoryTypesQuery(baseOptions?: Apollo.QueryHookOptions<GetAccountCategoryTypesQuery, GetAccountCategoryTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAccountCategoryTypesQuery, GetAccountCategoryTypesQueryVariables>(GetAccountCategoryTypesDocument, options);
+      }
+export function useGetAccountCategoryTypesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAccountCategoryTypesQuery, GetAccountCategoryTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAccountCategoryTypesQuery, GetAccountCategoryTypesQueryVariables>(GetAccountCategoryTypesDocument, options);
+        }
+export function useGetAccountCategoryTypesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAccountCategoryTypesQuery, GetAccountCategoryTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAccountCategoryTypesQuery, GetAccountCategoryTypesQueryVariables>(GetAccountCategoryTypesDocument, options);
+        }
+export type GetAccountCategoryTypesQueryHookResult = ReturnType<typeof useGetAccountCategoryTypesQuery>;
+export type GetAccountCategoryTypesLazyQueryHookResult = ReturnType<typeof useGetAccountCategoryTypesLazyQuery>;
+export type GetAccountCategoryTypesSuspenseQueryHookResult = ReturnType<typeof useGetAccountCategoryTypesSuspenseQuery>;
+export type GetAccountCategoryTypesQueryResult = Apollo.QueryResult<GetAccountCategoryTypesQuery, GetAccountCategoryTypesQueryVariables>;
 export const GetAddOnOptionsDocument = gql`
     query GetAddOnOptions {
   getAddOnOptions {
@@ -8724,6 +8854,10 @@ export const GetChartOfAccountsDocument = gql`
     id
     name
     code
+    accountCategoryType {
+      id
+      name
+    }
     createdAt
   }
 }
@@ -8995,10 +9129,12 @@ export const GetExpenseByIdDocument = gql`
     createdAt
     expenseDate
     businessId
+    reference
     business {
       businessName
       businessEmail
       businessMobile
+      logo
     }
     merchant {
       name

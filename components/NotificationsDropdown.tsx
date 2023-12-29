@@ -22,7 +22,10 @@ const NotificationsDropdown = () => {
 
   return (
     <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
-      <DropdownMenuTrigger className=" focus:outline-none">
+      <DropdownMenuTrigger
+        disabled
+        className=" focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+      >
         <div className="relative rounded-full border p-[10px] text-gray-600 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-verzoblue focus:ring-offset-2">
           <span className="absolute -inset-1.5" />
           <span className="sr-only">View notifications</span>

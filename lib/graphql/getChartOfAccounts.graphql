@@ -3,6 +3,10 @@ query GetChartOfAccounts {
     id
     name
     code
+    accountCategoryType {
+      id
+      name
+    }
     createdAt
   }
 }

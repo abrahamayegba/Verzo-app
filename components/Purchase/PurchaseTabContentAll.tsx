@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Archive, Download, Eye, Pen, Trash2 } from "lucide-react";
+import { Archive, Download, Eye, Pen, Send, Trash2 } from "lucide-react";
 import Link from "next/link";
 import localStorage from "local-storage-fallback";
 import { useGetPurchaseByBusinessQuery } from "@/src/generated/graphql";
@@ -191,6 +191,10 @@ const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
                     >
                       <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Archive Purchase
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                      <Send className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Send Purchase
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => openDeleteModal(purchase?.id!)}

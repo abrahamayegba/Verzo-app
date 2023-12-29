@@ -35,9 +35,6 @@ const SearchBar = () => {
     }
   };
 
-  console.log(searchResults);
-  console.log(searchInput);
-
   return (
     <form className="relative flex flex-1 mt-1" action="#" method="GET">
       <label htmlFor="search-field" className="sr-only">
@@ -48,8 +45,9 @@ const SearchBar = () => {
         aria-hidden="true"
       />
       <input
+        disabled
         id="search-field"
-        className="block h-full w-[600px] rounded border-0 focus:outline-none py-3 pl-9 pr-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-[15px]"
+        className="block h-full w-[600px] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent rounded border-0 focus:outline-none py-3 pl-9 pr-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-[15px]"
         placeholder="Search..."
         type="search"
         name="search"

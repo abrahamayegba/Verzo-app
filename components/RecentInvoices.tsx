@@ -1,13 +1,6 @@
-import {
-  Archive,
-  Check,
-  Download,
-  Eye,
-  MoreHorizontal,
-  Pen,
-  Trash2,
-} from "lucide-react";
-import React from "react";
+"use client";
+import { Eye, MoreHorizontal, Pen, Send } from "lucide-react";
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,11 +12,20 @@ import RecentMetricEmptyState from "./emptystates/RecentMetricEmptyState";
 import RecentInvoiceEmptyIcon from "./ui/icons/RecentInvoiceEmptyIcon";
 import localStorage from "local-storage-fallback";
 import Link from "next/link";
+import SendInvoice from "./modals/invoice/SendInvoice";
+import useModal from "@/app/hooks/useModal";
 
 const RecentInvoices = () => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
+  const [selectedId, setSelectedId] = useState("");
+  const {
+    isOpen: isSendModalOpen,
+    openModal: openSendModal,
+    closeModal: closeSendModal,
+  } = useModal();
+
   const businessId = storedBusinessId[0] || "";
   const getSalesByBusiness = useGetSaleByBusinessQuery({
     variables: {
@@ -58,7 +60,7 @@ const RecentInvoices = () => {
                   index === 2 ? "" : "border-b border-b-gray-100"
                 }`}
               >
-                <p>#INV{String(index + 1).padStart(3, "0")}</p>
+                <p>#{sale?.reference}</p>
                 <p className="text-primary-greytext">
                   {" "}
                   {sale?.transactionDate
@@ -98,10 +100,6 @@ const RecentInvoices = () => {
                         <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                         Edit Invoice
                       </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Download className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Download Invoice
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

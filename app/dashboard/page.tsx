@@ -4,7 +4,6 @@ import ImportDataDropdown from "@/components/ImportDataDropdown";
 import Metrics from "@/components/Metrics";
 import RecentMetrics from "@/components/RecentMetrics";
 import useModal from "../hooks/useModal";
-import UploadInvoiceCSV from "@/components/modals/invoice/UploadInvoiceModal";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
 import {
   useGetBusinessesByUserIdQuery,
@@ -13,7 +12,6 @@ import {
   useGetExpenseForWeekQuery,
   useGetExpenseForYearQuery,
   useGetExpensesByBusinessQuery,
-  useGetInvoicesByBusinessQuery,
   useGetPurchaseByBusinessQuery,
   useGetPurchaseForMonthQuery,
   useGetPurchaseForQuarterQuery,
@@ -30,9 +28,32 @@ import MainLoader from "@/components/loading/MainLoader";
 import Loader2 from "@/components/loading/Loader2";
 import { useRouter } from "next/navigation";
 import { isAuthenticated } from "@/lib/auth";
+import UploadCustomerCSV from "@/components/modals/customer/UploadCustomerModal";
+import UploadMerchantCSV from "@/components/modals/UploadMerchantModal";
+import UploadProductCSV from "@/components/modals/product/UploadProductModal";
+import UploadServiceCSV from "@/components/modals/service/UploadServiceModal";
 
 const Dashboard = () => {
-  const { isOpen, openModal, closeModal } = useModal();
+  const {
+    isOpen: isImportMerchantModalOpen,
+    openModal: openImportMerchantModal,
+    closeModal: closeImportMerchantModal,
+  } = useModal();
+  const {
+    isOpen: isImportProductModalOpen,
+    openModal: openImportProductModal,
+    closeModal: closeImportProductModal,
+  } = useModal();
+  const {
+    isOpen: isImportServiceModalOpen,
+    openModal: openImportServiceModal,
+    closeModal: closeImportServiceModal,
+  } = useModal();
+  const {
+    isOpen: isImportCustomerModalOpen,
+    openModal: openImportCustomerModal,
+    closeModal: closeImportCustomerModal,
+  } = useModal();
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -186,7 +207,12 @@ const Dashboard = () => {
               </p>
             </div>
             <div className=" flex gap-x-[14px] max-h-[48px]">
-              <ImportDataDropdown openModal={openModal} />
+              <ImportDataDropdown
+                openImportCustomerModal={openImportCustomerModal}
+                openImportMerchantModal={openImportMerchantModal}
+                openImportProductModal={openImportProductModal}
+                openImportServiceModal={openImportServiceModal}
+              />
               <FilterDataDropdown
                 selectedFilter={selectedFilter}
                 onFilterChange={handleFilterChange}
@@ -195,10 +221,25 @@ const Dashboard = () => {
           </div>
           <Metrics filter={selectedFilter!} />
           <RecentMetrics />
-          <UploadInvoiceCSV
-            open={isOpen}
-            openModal={openModal}
-            onClose={closeModal}
+          <UploadCustomerCSV
+            open={isImportCustomerModalOpen}
+            openModal={openImportCustomerModal}
+            onClose={closeImportCustomerModal}
+          />
+          <UploadMerchantCSV
+            open={isImportMerchantModalOpen}
+            openModal={openImportMerchantModal}
+            onClose={closeImportMerchantModal}
+          />
+          <UploadProductCSV
+            open={isImportProductModalOpen}
+            openModal={openImportProductModal}
+            onClose={closeImportProductModal}
+          />
+          <UploadServiceCSV
+            open={isImportServiceModalOpen}
+            openModal={openImportServiceModal}
+            onClose={closeImportServiceModal}
           />
         </div>
       )}

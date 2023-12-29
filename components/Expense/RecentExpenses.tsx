@@ -50,7 +50,7 @@ const RecentExpenses = () => {
                   index === 2 ? "" : "border-b border-b-gray-100"
                 }`}
               >
-                <p>#EXP{String(index + 1).padStart(3, "0")}</p>
+                <p>#{expense?.reference}</p>
                 <p className=" text-primary-greytext">
                   {expense?.expenseDate
                     ? new Date(expense.expenseDate).toDateString()

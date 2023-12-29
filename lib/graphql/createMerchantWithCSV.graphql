@@ -1,0 +1,3 @@
+mutation CreateMerchantWithCSV($businessId: String!, $csvFile: Any!) {
+  createMerchantWithCsv(businessId: $businessId, csvFile: $csvFile)
+}
