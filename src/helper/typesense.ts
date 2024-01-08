@@ -1,8 +1,6 @@
 import * as Typesense from "typesense";
 import { MultiSearchRequestsSchema } from "typesense/lib/Typesense/MultiSearch";
 
-// const typesenseHost = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
-// const searchApiKey = process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY;
 export const client = new Typesense.Client({
   nodes: [
     {
@@ -11,19 +9,8 @@ export const client = new Typesense.Client({
       protocol: "http",
     },
   ],
-  apiKey: "VdetGahcpA1tjTCOa2HvtyYj1v5tECq8",
+  apiKey: "3qVI6BdGgGjpErkMJ4kQKiKZSHx9HglnEToPLQuVb7SSTrHx",
 });
-
-// export const client = new Typesense.Client({
-//   nodes: [
-//     {
-//       host: "157.230.122.176",
-//       port: 8108,
-//       protocol: "http",
-//     },
-//   ],
-//   apiKey: "YX6RtGwIUp1IvLdIil6BofusTQcQbCCy",
-// });
 
 export const searchAllCollections = async (
   search: string,
@@ -39,14 +26,14 @@ export const searchAllCollections = async (
           query_by: "productName", //to query by multiple columns
           prioritize_token_position: true,
           prioritize_exact_match: true,
-          filter_by: `businessId:${businessId} && createdById:${userId}`, //to filter data by condition e.g name
+          filter_by: `businessId: ${businessId} && createdById: ${userId}`,
         },
         {
           collection: "service",
           q: search,
           query_by: "name",
           prioritize_token_position: true,
-          filter_by: `businessId:${businessId}`,
+          filter_by: `businessId: ${businessId} && createdById: ${userId}`,
         },
         {
           collection: "customer",
