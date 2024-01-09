@@ -98,7 +98,8 @@ const SearchBar = () => {
           className="block h-full w-[600px] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent rounded focus:outline-none py-3 pl-9 pr-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-[15px]"
           placeholder="Search..."
           type="search"
-          name="search"
+          autoComplete="none" // or autoComplete="off"
+          // name="search"
           value={searchInput}
           onChange={(e) => {
             setSearchInput(e.target.value);
@@ -130,7 +131,10 @@ const SearchBar = () => {
             {serviceFields?.map((collectionResult: any[], index: number) => (
               <div className="" key={index}>
                 {collectionResult.map((hit) => (
-                  <div className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+                  <div
+                    key={hit.document.id}
+                    className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                  >
                     <p className=" text-sm font-light">Services</p>
                     <p className=" text-base">{hit.document.name}</p>
                   </div>
@@ -140,7 +144,7 @@ const SearchBar = () => {
             {saleFields?.map((collectionResult: any[], index: number) => (
               <div className="" key={index}>
                 {collectionResult.map((hit) => (
-                  <div className="flex w-full flex-col ">
+                  <div key={hit.document.id} className="flex w-full flex-col ">
                     {hit.document.description && (
                       <Link
                         href={`/invoice/viewinvoice?invoiceId=${hit.document.id}`}
@@ -172,7 +176,7 @@ const SearchBar = () => {
             {purchaseFields?.map((collectionResult: any[], index: number) => (
               <div className="" key={index}>
                 {collectionResult.map((hit) => (
-                  <div className="flex w-full flex-col ">
+                  <div key={hit.document.id} className="flex w-full flex-col ">
                     {hit.document.description && (
                       <Link
                         href={`/purchase/viewpurchase?purchaseId=${hit.document.id}`}
@@ -204,7 +208,7 @@ const SearchBar = () => {
             {expenseFields?.map((collectionResult: any[], index: number) => (
               <div className="" key={index}>
                 {collectionResult.map((hit) => (
-                  <div className="flex w-full flex-col ">
+                  <div key={hit.document.id} className="flex w-full flex-col ">
                     {hit.document.description && (
                       <Link
                         href={`/expense/viewexpense?expenseId=${hit.document.id}`}
@@ -236,7 +240,10 @@ const SearchBar = () => {
             {customerFields?.map((collectionResult: any[], index: number) => (
               <div className="" key={index}>
                 {collectionResult.map((hit) => (
-                  <div className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+                  <div
+                    key={hit.document.id}
+                    className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                  >
                     <p className=" text-xs font-light">Customers</p>
                     <p className=" text-base">{hit.document.name}</p>
                   </div>
@@ -246,7 +253,10 @@ const SearchBar = () => {
             {merchantFields?.map((collectionResult: any[], index: number) => (
               <div key={index}>
                 {collectionResult.map((hit) => (
-                  <div className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+                  <div
+                    key={hit.document.id}
+                    className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                  >
                     <p className=" text-sm font-light">Merchants</p>
                     <p className=" text-base">{hit.document.name}</p>
                   </div>
