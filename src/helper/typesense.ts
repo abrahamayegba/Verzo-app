@@ -4,12 +4,12 @@ import { MultiSearchRequestsSchema } from "typesense/lib/Typesense/MultiSearch";
 export const client = new Typesense.Client({
   nodes: [
     {
-      host: "167.99.142.132",
+      host: process.env.NEXT_PUBLIC_TYPESENSE_HOST!,
       port: 8108,
       protocol: "https",
     },
   ],
-  apiKey: "VdetGahcpA1tjTCOa2HvtyYj1v5tECq8",
+  apiKey: process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY!,
 });
 
 export const searchAllCollections = async (
