@@ -114,16 +114,18 @@ const SearchBar = () => {
           (expenseFields?.length > 0 && expenseFields[0]?.length > 0) ||
           (merchantFields?.length > 0 && merchantFields[0]?.length > 0) ||
           (customerFields?.length > 0 && customerFields[0]?.length > 0)) ? (
-          <div className=" absolute left-0 z-[150] mt-1 rounded-[6px] h-auto max-h-[400px] w-[600px] overflow-scroll bg-white text-sm shadow">
+          <div className=" absolute left-0 z-[150] mt-1 rounded-[5px] h-auto max-h-[400px] w-[600px] overflow-scroll bg-white text-sm shadow">
             {productFields?.map((collectionResult: any[], index: number) => (
               <div className=" border-t border-t-gray-100" key={index}>
                 {collectionResult.map((hit) => (
                   <div
-                    className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                    className="flex cursor-pointer justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                     key={hit.document.productName}
                   >
-                    <p className="text-sm font-light">Products</p>
                     <p className=" text-base">{hit.document.productName}</p>
+                    <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      In products
+                    </span>
                   </div>
                 ))}
               </div>
@@ -133,10 +135,12 @@ const SearchBar = () => {
                 {collectionResult.map((hit) => (
                   <div
                     key={hit.document.id}
-                    className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                    className="flex cursor-pointer flex-row justify-between items-center border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                   >
-                    <p className=" text-sm font-light">Services</p>
                     <p className=" text-base">{hit.document.name}</p>
+                    <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
+                      In services
+                    </span>
                   </div>
                 ))}
               </div>
@@ -149,11 +153,13 @@ const SearchBar = () => {
                       <Link
                         href={`/invoice/viewinvoice?invoiceId=${hit.document.id}`}
                       >
-                        <button className="flex w-full cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                          <p className=" text-sm font-light">Invoices</p>
+                        <button className="flex cursor-pointer w-full justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800">
                           <p className=" text-base capitalize">
                             {hit.document.description}
                           </p>
+                          <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                            In invoices
+                          </span>
                         </button>
                       </Link>
                     )}
@@ -161,11 +167,13 @@ const SearchBar = () => {
                       <Link
                         href={`/invoice/viewinvoice?invoiceId=${hit.document.id}`}
                       >
-                        <button className="flex w-full cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                          <p className=" text-sm font-light">Invoices</p>
+                        <button className="flex cursor-pointer w-full justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800">
                           <p className=" text-base capitalize">
                             {hit.document.reference}
                           </p>
+                          <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                            In invoices
+                          </span>
                         </button>
                       </Link>
                     )}
@@ -181,11 +189,13 @@ const SearchBar = () => {
                       <Link
                         href={`/purchase/viewpurchase?purchaseId=${hit.document.id}`}
                       >
-                        <button className="flex w-full cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                          <p className=" text-sm font-light">Purchases</p>
+                        <button className="flex cursor-pointer w-full justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800">
                           <p className=" capitalize text-base">
                             {hit.document.description}
                           </p>
+                          <span className="inline-flex items-center rounded-md bg-stone-50 px-2 py-1 text-xs font-medium text-stone-700 ring-1 ring-inset ring-stone-600/20">
+                            In purchases
+                          </span>
                         </button>
                       </Link>
                     )}
@@ -193,11 +203,13 @@ const SearchBar = () => {
                       <Link
                         href={`/purchase/viewpurchase?purchaseId=${hit.document.id}`}
                       >
-                        <button className="flex w-full cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                          <p className=" text-sm font-light">Purchases</p>
+                        <button className="flex cursor-pointer w-full justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800">
                           <p className=" capitalize text-base">
                             {hit.document.reference}
                           </p>
+                          <span className="inline-flex items-center rounded-md bg-stone-50 px-2 py-1 text-xs font-medium text-stone-700 ring-1 ring-inset ring-stone-600/20">
+                            In purchases
+                          </span>
                         </button>
                       </Link>
                     )}
@@ -213,11 +225,13 @@ const SearchBar = () => {
                       <Link
                         href={`/expense/viewexpense?expenseId=${hit.document.id}`}
                       >
-                        <button className="flex w-full cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                          <p className=" text-sm font-light">Expenses</p>
+                        <button className="flex cursor-pointer w-full justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800">
                           <p className=" capitalize text-base">
                             {hit.document.description}
                           </p>
+                          <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/20">
+                            In expenses
+                          </span>
                         </button>
                       </Link>
                     )}
@@ -225,11 +239,13 @@ const SearchBar = () => {
                       <Link
                         href={`/expense/viewexpense?expenseId=${hit.document.id}`}
                       >
-                        <button className="flex w-full cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                          <p className=" text-sm font-light">Expenses</p>
+                        <button className="flex cursor-pointer w-full justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800">
                           <p className=" capitalize text-base">
                             {hit.document.reference}
                           </p>
+                          <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/20">
+                            In expenses
+                          </span>
                         </button>
                       </Link>
                     )}
@@ -242,10 +258,12 @@ const SearchBar = () => {
                 {collectionResult.map((hit) => (
                   <div
                     key={hit.document.id}
-                    className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                    className="flex cursor-pointer justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                   >
-                    <p className=" text-xs font-light">Customers</p>
                     <p className=" text-base">{hit.document.name}</p>
+                    <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                      In customers
+                    </span>
                   </div>
                 ))}
               </div>
@@ -255,10 +273,12 @@ const SearchBar = () => {
                 {collectionResult.map((hit) => (
                   <div
                     key={hit.document.id}
-                    className="flex cursor-pointer flex-col gap-y-2 border-b border-b-gray-100 px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                    className="flex cursor-pointer justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                   >
-                    <p className=" text-sm font-light">Merchants</p>
                     <p className=" text-base">{hit.document.name}</p>
+                    <span className="inline-flex items-center rounded-md bg-cyan-50 px-2 py-1 text-xs font-medium text-cyan-700 ring-1 ring-inset ring-cyan-600/20">
+                      In merchants
+                    </span>
                   </div>
                 ))}
               </div>
