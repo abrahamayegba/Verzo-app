@@ -6,7 +6,7 @@ export const client = new Typesense.Client({
     {
       host: "167.99.142.132",
       port: 8108,
-      protocol: "http",
+      protocol: "https",
     },
   ],
   apiKey: "VdetGahcpA1tjTCOa2HvtyYj1v5tECq8",
