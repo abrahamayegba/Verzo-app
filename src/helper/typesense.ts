@@ -6,7 +6,7 @@ export const client = new Typesense.Client({
     {
       host: process.env.NEXT_PUBLIC_TYPESENSE_HOST!,
       port: 8108,
-      protocol: "http",
+      protocol: "https",
     },
   ],
   apiKey: process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY!,
