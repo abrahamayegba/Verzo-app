@@ -54,9 +54,9 @@ const Signup = () => {
   };
 
   return (
-    <div className=" w-full flex flex-row h-screen">
+    <div className="flex flex-col h-screen">
       <AuthSidebar />
-      <div className=" flex-1 ml-[34%] h-full pt-[50px]">
+      <div className="flex-1 ml-0 lg:ml-[34%] overflow-y-auto pt-[50px]">
         <div className=" w-full flex justify-end items-center gap-x-9 pl-[140px] pr-[60px]">
           <p className=" text-primary-greytext text-lg">
             Already have an account?
@@ -102,42 +102,46 @@ const Signup = () => {
                 {...register("email")}
               />
             </div>
-            <div className=" flex flex-col  gap-y-2">
+            <div className=" relative flex flex-col  gap-y-2">
               <label className=" text-primary-black " htmlFor="password">
                 Password
               </label>
-              <input
-                type={type}
-                required
-                className={`max-w-[400px] px-3 py-[10px] relative  rounded-[8px] border focus:outline-none ${
-                  errors.password ? " border border-red-500" : "border-gray-300"
-                }`}
-                placeholder="8+ characters"
-                {...register("password", {
-                  onChange: handleInputChange,
-                  pattern: {
-                    value:
-                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$#@!&*~])[A-Za-z\d$#@!&*~]{8,}$/,
-                    message:
-                      "Password must be at least 8 characters, contain at least one uppercase letter, one special character, one lowercase letter, and one number",
-                  },
-                })}
-              />
+              <div className={`relative max-w-[400px] group`}>
+                <input
+                  type={type}
+                  required
+                  className={`max-w-[400px] w-full px-3 py-[10px] relative  rounded-[8px] border focus:outline-none ${
+                    errors.password
+                      ? " border border-red-500"
+                      : "border-gray-300"
+                  }`}
+                  placeholder="8+ characters"
+                  {...register("password", {
+                    onChange: handleInputChange,
+                    pattern: {
+                      value:
+                        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$#@!&*~])[A-Za-z\d$#@!&*~]{8,}$/,
+                      message:
+                        "Password must be at least 8 characters, contain at least one uppercase letter, one special character, one lowercase letter, and one number",
+                    },
+                  })}
+                />
+                <span
+                  onClick={togglePasswordVisibility}
+                  className="absolute cursor-pointer top-[25px] right-[30px] transform translate-y-[-50%] -translate-x-[-100%] opacity-50 group-hover:opacity-100"
+                >
+                  {type === "password" ? (
+                    <EyeOff className="w-4 h-4 text-primary-greytext" />
+                  ) : (
+                    <Eye className="w-4 h-4 text-primary-greytext" />
+                  )}
+                </span>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-sm pl-1 max-w-[400px]">
                   {errors.password.message}
                 </p>
               )}
-              <span
-                onClick={togglePasswordVisibility}
-                className="absolute cursor-pointer mt-[48px] ml-[360px]"
-              >
-                {type === "password" ? (
-                  <EyeOff className="w-4 h-4 text-primary-greytext" />
-                ) : (
-                  <Eye className="w-4 h-4 text-primary-greytext" />
-                )}
-              </span>
             </div>
             <div className=" flex flex-col mt-3">
               <button
@@ -162,7 +166,7 @@ const Signup = () => {
           </form>
         </div>
       </div>
-      <div className=" border-t border-t-gray-100 bg-white w-full flex z-[15] absolute bottom-0 pl-[34%]">
+      <div className=" border-t border-t-gray-100 bg-white w-full pl-[34%]">
         <p className=" py-6 text-[15px] pl-[140px] text-primary-greytext">
           By using the platform you agree to{" "}
           <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
