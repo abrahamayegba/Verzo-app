@@ -76,7 +76,7 @@ const Resetpassword = () => {
       await changePasswordMutation({
         variables: { forgotPasswordId: forgotPasswordId!, ...data },
       });
-      router.push("/login");
+      router.push("/auth/signin");
       showSuccessToast();
       resetForm();
     } catch (error: any) {

@@ -27,7 +27,7 @@ import localStorage from "local-storage-fallback";
 import MainLoader from "@/components/loading/MainLoader";
 import Loader2 from "@/components/loading/Loader2";
 import { useRouter } from "next/navigation";
-import { isAuthenticated } from "@/lib/auth";
+import { getToken, isAuthenticated } from "@/lib/auth";
 import UploadCustomerCSV from "@/components/modals/customer/UploadCustomerModal";
 import UploadMerchantCSV from "@/components/modals/UploadMerchantModal";
 import UploadProductCSV from "@/components/modals/product/UploadProductModal";
@@ -54,6 +54,7 @@ const Dashboard = () => {
     openModal: openImportCustomerModal,
     closeModal: closeImportCustomerModal,
   } = useModal();
+  const token = getToken();
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -70,6 +71,12 @@ const Dashboard = () => {
       router.push("/auth/businesssetup");
     }
   }, [getBusinessesByUserId.data, businessId, router]);
+  useEffect(() => {
+    const fetchData = async () => {
+      await getBusinessesByUserId.refetch();
+    };
+    fetchData();
+  }, [token, getBusinessesByUserId]);
 
   const [selectedFilter, setSelectedFilter] = useState("weekly");
   const handleFilterChange = (filter: any) => {
