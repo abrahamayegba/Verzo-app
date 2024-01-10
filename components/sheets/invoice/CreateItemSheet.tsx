@@ -217,7 +217,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
             {currentStep === 1 ? (
               <>
                 <div className=" flex flex-col gap-y-6">
-                  <Popover open={openPopover} onOpenChange={setOpenPopover}>
+                  {/* <Popover open={openPopover} onOpenChange={setOpenPopover}>
                     <PopoverTrigger asChild>
                       <button
                         type="button"
@@ -228,7 +228,79 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                         <ChevronDown className=" w-5 h-5 text-primary-black text-opacity-70 mt-[2px]" />
                       </button>
                     </PopoverTrigger>
-                    <PopoverContent className="  w-[327px] p-0 bg-white z-[200]">
+                    <PopoverContent className=" w-[327px] h-[200px] p-0 bg-white z-[200]">
+                      <Command>
+                        {productsOrServices?.length > 0 && (
+                          <CommandInput placeholder="Search items..." />
+                        )}
+                        {productsOrServices?.length > 0 && (
+                          <CommandEmpty className=" p-3 px-5 text-[15px]">
+                            No item found
+                          </CommandEmpty>
+                        )}
+                        <CommandGroup>
+                          {productsOrServices?.map((item) => (
+                            <CommandItem
+                              key={item?.id}
+                              value={item?.title}
+                              className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800"
+                              onSelect={(currentItem) => {
+                                setItemName(currentItem);
+                                const newIndex = selectedItem
+                                  ? selectedItem.index
+                                  : lastIndex + 1;
+                                setLastIndex(newIndex);
+                                setSelectedItem({
+                                  id: item?.id!,
+                                  price: item?.price!,
+                                  name: item?.title!,
+                                  type: item?.type!,
+                                  index: newIndex,
+                                });
+                                setOpenPopover(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  itemName === item?.title
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {item?.title}
+                            </CommandItem>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => handleCategoryChange("product")}
+                            className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-6 w-full flex justify-start"
+                          >
+                            Create product
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleCategoryChange("service")}
+                            className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-6 w-full flex justify-start"
+                          >
+                            Create service
+                          </button>
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover> */}
+                  <Popover open={openPopover} onOpenChange={setOpenPopover}>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        aria-expanded={openPopover}
+                        className="w-full justify-between capitalize bg-gray-50 text-primary-black flex items-center border border-gray-200 py-2 px-3 rounded-[8px]"
+                      >
+                        {itemName ? itemName : "Select item..."}
+                        <ChevronDown className="w-5 h-5 text-primary-black text-opacity-70 mt-[2px]" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[327px] max-h-[400px] overflow-y-scroll p-0 bg-white z-[200]">
                       <Command>
                         {productsOrServices?.length > 0 && (
                           <CommandInput placeholder="Search items..." />
@@ -289,6 +361,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                       </Command>
                     </PopoverContent>
                   </Popover>
+
                   <button
                     onClick={handleItemSelect}
                     className=" bg-primary-blue text-white rounded-[10px] py-[9px] "
