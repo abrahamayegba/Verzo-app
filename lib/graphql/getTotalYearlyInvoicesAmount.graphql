@@ -7,7 +7,7 @@ query TotalYearlyInvoicesAmount($businessId: String!, $yearly: Boolean) {
       totalPaidInvoicesAmount
     }
     totalInvoiceAmountForYear
-    percentageOfInvoicesPaidForYear
+    totalPaidInvoiceAmountThisYear
     totalPendingInvoiceAmountThisYear
     percentageIncreaseInPendingInvoiceThisYear
     totalOverdueInvoiceAmountThisYear

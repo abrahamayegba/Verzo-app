@@ -30,7 +30,7 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalOverdueInvoicesAmountThisWeek:
         totalWeeklyInvoicesAmountQuery?.data?.totalWeeklyInvoicesAmount
-          ?.totalOverDueInvoiceAmountThisWeek,
+          ?.totalOverdueInvoiceAmountThisWeek,
       percentageOverdueInvoicesThisWeek:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
           ?.percentageIncreaseInOverdueInvoicesThisWeek,
