@@ -788,6 +788,14 @@ export type DailyInvoicePendingAndPaid = {
   totalInvoicePendingAmount: Scalars['Float']['output'];
 };
 
+export type DailyInvoiceTotalAmountForMonth = {
+  __typename?: 'DailyInvoiceTotalAmountForMonth';
+  date: Scalars['Date']['output'];
+  totalAmount: Scalars['Float']['output'];
+  totalPaidAmount: Scalars['Float']['output'];
+  totalPendingAmount: Scalars['Float']['output'];
+};
+
 export type DailyInvoiceTotalAmounts = {
   __typename?: 'DailyInvoiceTotalAmounts';
   date: Scalars['Date']['output'];
@@ -1100,6 +1108,48 @@ export type GeneralJournal = {
   transactionDate?: Maybe<Scalars['Date']['output']>;
   transactionType?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
+};
+
+export type GenerateBalanceSheetResponse = {
+  __typename?: 'GenerateBalanceSheetResponse';
+  accountReceivable?: Maybe<Scalars['Float']['output']>;
+  cashEquivalents?: Maybe<Scalars['Float']['output']>;
+  date?: Maybe<Scalars['String']['output']>;
+  inventory?: Maybe<Scalars['Float']['output']>;
+  nonCurrentAssets?: Maybe<Array<Maybe<NonCurrentAssets>>>;
+  otherCurrentAssets?: Maybe<Scalars['Float']['output']>;
+  totalAssets?: Maybe<Scalars['Float']['output']>;
+  totalCurrentAssets?: Maybe<Scalars['Float']['output']>;
+  totalLiabilities?: Maybe<Scalars['Float']['output']>;
+  totalNonCurrentAssets?: Maybe<Scalars['Float']['output']>;
+};
+
+export type GenerateCashFlowStatementResponse = {
+  __typename?: 'GenerateCashFlowStatementResponse';
+  cashPaymentsToSuppliersForPurchaseThisMonth?: Maybe<Scalars['Float']['output']>;
+  cashReceiptsFromSalesThisMonth?: Maybe<Scalars['Float']['output']>;
+  closingCashBalance?: Maybe<Scalars['Float']['output']>;
+  date?: Maybe<Scalars['String']['output']>;
+  netCashFlowfromInvestingActivitiesThisMonth?: Maybe<Scalars['Float']['output']>;
+  netIncreaseOrDecreaseInCashThisMonth?: Maybe<Scalars['Float']['output']>;
+  openingCashBalance?: Maybe<Scalars['Float']['output']>;
+  operatingExpenses?: Maybe<Array<Maybe<OperatingExpenses>>>;
+  otherOperatingIncomesThisMonth?: Maybe<Scalars['Float']['output']>;
+  purchaseOfPropertyPlantAndEquipmentThisMonth?: Maybe<Scalars['Float']['output']>;
+  totalCashInflowsFromOperatingActivitiesThisMonth?: Maybe<Scalars['Float']['output']>;
+  totalCashOutflowsFromOperatingActivitiesThisMonth?: Maybe<Scalars['Float']['output']>;
+};
+
+export type GenerateIncomeStatementResponse = {
+  __typename?: 'GenerateIncomeStatementResponse';
+  costOfGoodsSold?: Maybe<Scalars['Float']['output']>;
+  costOfServices?: Maybe<Scalars['Float']['output']>;
+  date?: Maybe<Scalars['String']['output']>;
+  grossProfit?: Maybe<Scalars['Float']['output']>;
+  operatingExpenses?: Maybe<Array<Maybe<OperatingExpenses>>>;
+  operatingIncome?: Maybe<Scalars['Float']['output']>;
+  salesRevenue?: Maybe<Scalars['Float']['output']>;
+  totalOperatingExpenses?: Maybe<Scalars['Float']['output']>;
 };
 
 export type GetBusinessByUser = {
@@ -2970,6 +3020,12 @@ export type MutationVerificationWithEmailLinkArgs = {
   userIdFromEmail: Scalars['String']['input'];
 };
 
+export type NonCurrentAssets = {
+  __typename?: 'NonCurrentAssets';
+  name?: Maybe<Scalars['String']['output']>;
+  total?: Maybe<Scalars['Float']['output']>;
+};
+
 export type Offer = {
   __typename?: 'Offer';
   createdAt?: Maybe<Scalars['Date']['output']>;
@@ -2980,6 +3036,12 @@ export type Offer = {
   offerEndDate?: Maybe<Scalars['Date']['output']>;
   offerName: Scalars['String']['output'];
   offerStartDate?: Maybe<Scalars['Date']['output']>;
+};
+
+export type OperatingExpenses = {
+  __typename?: 'OperatingExpenses';
+  category?: Maybe<Scalars['String']['output']>;
+  total?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Option = {
@@ -3325,6 +3387,11 @@ export type Query = {
   billingPlan?: Maybe<BillingPlan>;
   billingPlans: Array<BillingPlan>;
   checkIfNewBusiness?: Maybe<Scalars['Boolean']['output']>;
+  generateBalanceSheetStatementForAllTime?: Maybe<GenerateBalanceSheetResponse>;
+  generateBalanceSheetStatementForMonth?: Maybe<GenerateBalanceSheetResponse>;
+  generateCashFlowStatementForMonth?: Maybe<GenerateCashFlowStatementResponse>;
+  generateIncomeStatementForAllTime?: Maybe<GenerateIncomeStatementResponse>;
+  generateIncomeStatementForMonth?: Maybe<GenerateIncomeStatementResponse>;
   getAccountCategories: Array<Maybe<AccountCategory>>;
   getAccountCategoryById?: Maybe<AccountCategory>;
   getAccountCategoryTypeById?: Maybe<AccountCategoryType>;
@@ -3513,6 +3580,31 @@ export type QueryBillingPlanArgs = {
 
 
 export type QueryCheckIfNewBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGenerateBalanceSheetStatementForAllTimeArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGenerateBalanceSheetStatementForMonthArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGenerateCashFlowStatementForMonthArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGenerateIncomeStatementForAllTimeArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGenerateIncomeStatementForMonthArgs = {
   businessId: Scalars['String']['input'];
 };
 
@@ -4445,6 +4537,7 @@ export type SaleServiceExpense = {
   serviceId?: Maybe<Scalars['String']['output']>;
   serviceType?: Maybe<Scalars['String']['output']>;
   transactionDate?: Maybe<Scalars['Date']['output']>;
+  unitAmount?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
@@ -4730,25 +4823,27 @@ export type TotalMonthlyExpense = {
 
 export type TotalMonthlyInvoiceAmount = {
   __typename?: 'TotalMonthlyInvoiceAmount';
-  dailyTotalAmountsForMonth: Array<Maybe<DailyInvoiceTotalAmounts>>;
+  dailyTotalAmountsForMonth: Array<Maybe<DailyInvoiceTotalAmountForMonth>>;
   percentageIncreaseInInvoicesThisMonth?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInOverdueInvoicesThisMonth?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPaidInvoicesForMonth?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInPendingInvoiceThisMonth?: Maybe<Scalars['Float']['output']>;
-  percentageOfPaidInvoicesForMonth?: Maybe<Scalars['Float']['output']>;
   totalInvoiceAmountForMonth?: Maybe<Scalars['Float']['output']>;
   totalOverdueInvoiceAmountThisMonth?: Maybe<Scalars['Float']['output']>;
+  totalPaidInvoiceAmountThisMonth?: Maybe<Scalars['Float']['output']>;
   totalPendingInvoiceAmountThisMonth?: Maybe<Scalars['Float']['output']>;
 };
 
 export type TotalQuarterInvoiceAmounts = {
   __typename?: 'TotalQuarterInvoiceAmounts';
+  percentageIncreaseInInvoicePaidThisQuarter?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInInvoiceThisQuarter?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInOverdueInvoiceThisQuarter?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInPendingInvoiceThisQuarter?: Maybe<Scalars['Float']['output']>;
-  percentageOfInvoicePaidForQuarter?: Maybe<Scalars['Float']['output']>;
   quarterInvoiceAmounts: Array<Maybe<QuarterInvoiceAmounts>>;
   totalInvoiceAmountForQuarter?: Maybe<Scalars['Float']['output']>;
   totalOverdueInvoiceAmountThisQuarter?: Maybe<Scalars['Float']['output']>;
+  totalPaidInvoiceAmountThisQuarter?: Maybe<Scalars['Float']['output']>;
   totalPendingInvoiceAmountThisQuarter?: Maybe<Scalars['Float']['output']>;
 };
 
@@ -4770,11 +4865,12 @@ export type TotalWeeklyInvoiceAmount = {
   __typename?: 'TotalWeeklyInvoiceAmount';
   dailyTotalAmounts: Array<Maybe<DailyInvoiceTotalAmounts>>;
   percentageIncreaseInOverdueInvoicesThisWeek?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPaidInvoicesThisWeek?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInPendingInvoiceThisWeek?: Maybe<Scalars['Float']['output']>;
   percentageOfIncreaseInInvoicesThisWeek?: Maybe<Scalars['Float']['output']>;
-  percentageOfPaidInvoices?: Maybe<Scalars['Float']['output']>;
   totalInvoiceAmountForWeek?: Maybe<Scalars['Float']['output']>;
-  totalOverDueInvoiceAmountThisWeek?: Maybe<Scalars['Float']['output']>;
+  totalOverdueInvoiceAmountThisWeek?: Maybe<Scalars['Float']['output']>;
+  totalPaidInvoiceAmountThisWeek?: Maybe<Scalars['Float']['output']>;
   totalPendingInvoiceAmountThisWeek?: Maybe<Scalars['Float']['output']>;
 };
 
@@ -4782,11 +4878,12 @@ export type TotalYearInvoiceAmounts = {
   __typename?: 'TotalYearInvoiceAmounts';
   monthlyTotalAmounts: Array<Maybe<YearInvoiceAmounts>>;
   percentageIncreaseInInvoiceThisYear?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInInvoicesPaidThisYear?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInOverdueInvoicesThisYear?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInPendingInvoiceThisYear?: Maybe<Scalars['Float']['output']>;
-  percentageOfInvoicesPaidForYear?: Maybe<Scalars['Float']['output']>;
   totalInvoiceAmountForYear?: Maybe<Scalars['Float']['output']>;
   totalOverdueInvoiceAmountThisYear?: Maybe<Scalars['Float']['output']>;
+  totalPaidInvoiceAmountThisYear?: Maybe<Scalars['Float']['output']>;
   totalPendingInvoiceAmountThisYear?: Maybe<Scalars['Float']['output']>;
 };
 
@@ -6075,7 +6172,7 @@ export type TotalMonthlyInvoicesAmountQueryVariables = Exact<{
 }>;
 
 
-export type TotalMonthlyInvoicesAmountQuery = { __typename?: 'Query', totalMonthlyInvoicesAmount?: { __typename?: 'TotalMonthlyInvoiceAmount', totalInvoiceAmountForMonth?: number | null, percentageOfPaidInvoicesForMonth?: number | null, totalPendingInvoiceAmountThisMonth?: number | null, percentageIncreaseInPendingInvoiceThisMonth?: number | null, totalOverdueInvoiceAmountThisMonth?: number | null, percentageIncreaseInOverdueInvoicesThisMonth?: number | null, percentageIncreaseInInvoicesThisMonth?: number | null, dailyTotalAmountsForMonth: Array<{ __typename?: 'DailyInvoiceTotalAmounts', date: any, totalAmount: number, totalPendingAmount: number, totalPaidAmount: number } | null> } | null };
+export type TotalMonthlyInvoicesAmountQuery = { __typename?: 'Query', totalMonthlyInvoicesAmount?: { __typename?: 'TotalMonthlyInvoiceAmount', totalPaidInvoiceAmountThisMonth?: number | null, totalInvoiceAmountForMonth?: number | null, totalPendingInvoiceAmountThisMonth?: number | null, percentageIncreaseInPendingInvoiceThisMonth?: number | null, totalOverdueInvoiceAmountThisMonth?: number | null, percentageIncreaseInOverdueInvoicesThisMonth?: number | null, percentageIncreaseInInvoicesThisMonth?: number | null, dailyTotalAmountsForMonth: Array<{ __typename?: 'DailyInvoiceTotalAmountForMonth', date: any, totalAmount: number, totalPendingAmount: number, totalPaidAmount: number } | null> } | null };
 
 export type TotalQuarterlyInvoicesAmountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6083,7 +6180,7 @@ export type TotalQuarterlyInvoicesAmountQueryVariables = Exact<{
 }>;
 
 
-export type TotalQuarterlyInvoicesAmountQuery = { __typename?: 'Query', totalQuarterlyInvoicesAmount?: { __typename?: 'TotalQuarterInvoiceAmounts', totalInvoiceAmountForQuarter?: number | null, percentageOfInvoicePaidForQuarter?: number | null, totalPendingInvoiceAmountThisQuarter?: number | null, percentageIncreaseInPendingInvoiceThisQuarter?: number | null, totalOverdueInvoiceAmountThisQuarter?: number | null, percentageIncreaseInOverdueInvoiceThisQuarter?: number | null, percentageIncreaseInInvoiceThisQuarter?: number | null, quarterInvoiceAmounts: Array<{ __typename?: 'QuarterInvoiceAmounts', month?: string | null, invoiceAmount?: number | null, invoicePending?: number | null, invoicePaid?: number | null } | null> } | null };
+export type TotalQuarterlyInvoicesAmountQuery = { __typename?: 'Query', totalQuarterlyInvoicesAmount?: { __typename?: 'TotalQuarterInvoiceAmounts', totalPaidInvoiceAmountThisQuarter?: number | null, totalInvoiceAmountForQuarter?: number | null, totalPendingInvoiceAmountThisQuarter?: number | null, percentageIncreaseInPendingInvoiceThisQuarter?: number | null, totalOverdueInvoiceAmountThisQuarter?: number | null, percentageIncreaseInOverdueInvoiceThisQuarter?: number | null, percentageIncreaseInInvoiceThisQuarter?: number | null, quarterInvoiceAmounts: Array<{ __typename?: 'QuarterInvoiceAmounts', month?: string | null, invoiceAmount?: number | null, invoicePending?: number | null, invoicePaid?: number | null } | null> } | null };
 
 export type TotalWeeklyInvoicesAmountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6091,7 +6188,7 @@ export type TotalWeeklyInvoicesAmountQueryVariables = Exact<{
 }>;
 
 
-export type TotalWeeklyInvoicesAmountQuery = { __typename?: 'Query', totalWeeklyInvoicesAmount?: { __typename?: 'TotalWeeklyInvoiceAmount', totalInvoiceAmountForWeek?: number | null, percentageOfPaidInvoices?: number | null, totalPendingInvoiceAmountThisWeek?: number | null, percentageIncreaseInPendingInvoiceThisWeek?: number | null, totalOverDueInvoiceAmountThisWeek?: number | null, percentageIncreaseInOverdueInvoicesThisWeek?: number | null, percentageOfIncreaseInInvoicesThisWeek?: number | null, dailyTotalAmounts: Array<{ __typename?: 'DailyInvoiceTotalAmounts', date: any, dayOfWeek?: string | null, totalAmount: number, totalPendingAmount: number, totalPaidAmount: number } | null> } | null };
+export type TotalWeeklyInvoicesAmountQuery = { __typename?: 'Query', totalWeeklyInvoicesAmount?: { __typename?: 'TotalWeeklyInvoiceAmount', totalPaidInvoiceAmountThisWeek?: number | null, totalOverdueInvoiceAmountThisWeek?: number | null, totalInvoiceAmountForWeek?: number | null, totalPendingInvoiceAmountThisWeek?: number | null, percentageIncreaseInPendingInvoiceThisWeek?: number | null, percentageIncreaseInOverdueInvoicesThisWeek?: number | null, percentageOfIncreaseInInvoicesThisWeek?: number | null, dailyTotalAmounts: Array<{ __typename?: 'DailyInvoiceTotalAmounts', date: any, dayOfWeek?: string | null, totalAmount: number, totalPendingAmount: number, totalPaidAmount: number } | null> } | null };
 
 export type TotalYearlyInvoicesAmountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6099,7 +6196,7 @@ export type TotalYearlyInvoicesAmountQueryVariables = Exact<{
 }>;
 
 
-export type TotalYearlyInvoicesAmountQuery = { __typename?: 'Query', totalYearlyInvoicesAmount?: { __typename?: 'TotalYearInvoiceAmounts', totalInvoiceAmountForYear?: number | null, percentageOfInvoicesPaidForYear?: number | null, totalPendingInvoiceAmountThisYear?: number | null, percentageIncreaseInPendingInvoiceThisYear?: number | null, totalOverdueInvoiceAmountThisYear?: number | null, percentageIncreaseInOverdueInvoicesThisYear?: number | null, percentageIncreaseInInvoiceThisYear?: number | null, monthlyTotalAmounts: Array<{ __typename?: 'YearInvoiceAmounts', month: string, totalInvoicesAmount?: number | null, totalPendingInvoicesAmount?: number | null, totalPaidInvoicesAmount?: number | null } | null> } | null };
+export type TotalYearlyInvoicesAmountQuery = { __typename?: 'Query', totalYearlyInvoicesAmount?: { __typename?: 'TotalYearInvoiceAmounts', totalInvoiceAmountForYear?: number | null, totalPaidInvoiceAmountThisYear?: number | null, totalPendingInvoiceAmountThisYear?: number | null, percentageIncreaseInPendingInvoiceThisYear?: number | null, totalOverdueInvoiceAmountThisYear?: number | null, percentageIncreaseInOverdueInvoicesThisYear?: number | null, percentageIncreaseInInvoiceThisYear?: number | null, monthlyTotalAmounts: Array<{ __typename?: 'YearInvoiceAmounts', month: string, totalInvoicesAmount?: number | null, totalPendingInvoicesAmount?: number | null, totalPaidInvoicesAmount?: number | null } | null> } | null };
 
 export type GetUserByIdQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -11724,8 +11821,8 @@ export const TotalMonthlyInvoicesAmountDocument = gql`
       totalPendingAmount
       totalPaidAmount
     }
+    totalPaidInvoiceAmountThisMonth
     totalInvoiceAmountForMonth
-    percentageOfPaidInvoicesForMonth
     totalPendingInvoiceAmountThisMonth
     percentageIncreaseInPendingInvoiceThisMonth
     totalOverdueInvoiceAmountThisMonth
@@ -11777,8 +11874,8 @@ export const TotalQuarterlyInvoicesAmountDocument = gql`
       invoicePending
       invoicePaid
     }
+    totalPaidInvoiceAmountThisQuarter
     totalInvoiceAmountForQuarter
-    percentageOfInvoicePaidForQuarter
     totalPendingInvoiceAmountThisQuarter
     percentageIncreaseInPendingInvoiceThisQuarter
     totalOverdueInvoiceAmountThisQuarter
@@ -11831,11 +11928,11 @@ export const TotalWeeklyInvoicesAmountDocument = gql`
       totalPendingAmount
       totalPaidAmount
     }
+    totalPaidInvoiceAmountThisWeek
+    totalOverdueInvoiceAmountThisWeek
     totalInvoiceAmountForWeek
-    percentageOfPaidInvoices
     totalPendingInvoiceAmountThisWeek
     percentageIncreaseInPendingInvoiceThisWeek
-    totalOverDueInvoiceAmountThisWeek
     percentageIncreaseInOverdueInvoicesThisWeek
     percentageOfIncreaseInInvoicesThisWeek
   }
@@ -11885,7 +11982,7 @@ export const TotalYearlyInvoicesAmountDocument = gql`
       totalPaidInvoicesAmount
     }
     totalInvoiceAmountForYear
-    percentageOfInvoicesPaidForYear
+    totalPaidInvoiceAmountThisYear
     totalPendingInvoiceAmountThisYear
     percentageIncreaseInPendingInvoiceThisYear
     totalOverdueInvoiceAmountThisYear

@@ -51,7 +51,7 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       weeklyRevenue:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
-          ?.totalInvoiceAmountForWeek,
+          ?.totalPaidInvoiceAmountThisWeek,
       percentageWeeklyRevenue:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
           ?.percentageOfIncreaseInInvoicesThisWeek,
@@ -88,7 +88,7 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       monthlyRevenue:
         totalMonthlyInvoicesAmount.data?.totalMonthlyInvoicesAmount
-          ?.totalInvoiceAmountForMonth,
+          ?.totalPaidInvoiceAmountThisMonth,
       percentageMonthlyRevenue:
         totalMonthlyInvoicesAmount.data?.totalMonthlyInvoicesAmount
           ?.percentageIncreaseInInvoicesThisMonth,
@@ -126,7 +126,7 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       quarterlyRevenue:
         totalQuarterlyInvoicesAmount.data?.totalQuarterlyInvoicesAmount
-          ?.totalInvoiceAmountForQuarter,
+          ?.totalPaidInvoiceAmountThisQuarter,
       percentageQuarterlyRevenue:
         totalQuarterlyInvoicesAmount.data?.totalQuarterlyInvoicesAmount
           ?.percentageIncreaseInInvoiceThisQuarter,
@@ -164,7 +164,7 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       yearlyRevenue:
         totalYearlyInvoicesAmount.data?.totalYearlyInvoicesAmount
-          ?.totalInvoiceAmountForYear,
+          ?.totalPaidInvoiceAmountThisYear,
       percentageYearlyRevenue:
         totalYearlyInvoicesAmount.data?.totalYearlyInvoicesAmount
           ?.percentageIncreaseInInvoiceThisYear,
