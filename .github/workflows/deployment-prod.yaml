@@ -26,19 +26,19 @@ jobs:
           script: |
             # Commands to run on the remote server
             sudo apt-get update
-            cd verzo-new-app
-            git checkout main
-            sudo rm -rf .env
-            touch .env
-            sudo chmod 777 -R .env
-            sudo echo NEXT_PUBLIC_EXPRESS_URL="${{secrets.BETA_NEXT_PUBLIC_EXPRESS_URL}}" >> .env
-            sudo echo NEXT_GOOGLE_CLIENT_ID="${{secrets.BETA_NEXT_GOOGLE_CLIENT_ID}}" >> .env
-            sudo echo NEXT_GOOGLE_SECRET_ID="${{secrets.BETA_NEXT_GOOGLE_SECRET_ID}}" >> .env
-            sudo echo NEXT_PUBLIC_TYPESENSE_HOST="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_HOST}}" >> .env
-            sudo echo NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY}}" >> .env
-            pm2 stop verzo-new-app
-            git fetch
-            git merge
-            npm install
-            npm run build
-            pm2 restart verzo-new-app
+            # cd verzo-new-app
+            # git checkout main
+            # sudo rm -rf .env
+            # touch .env
+            # sudo chmod 777 -R .env
+            # sudo echo NEXT_PUBLIC_EXPRESS_URL="${{secrets.BETA_NEXT_PUBLIC_EXPRESS_URL}}" >> .env
+            # sudo echo NEXT_GOOGLE_CLIENT_ID="${{secrets.BETA_NEXT_GOOGLE_CLIENT_ID}}" >> .env
+            # sudo echo NEXT_GOOGLE_SECRET_ID="${{secrets.BETA_NEXT_GOOGLE_SECRET_ID}}" >> .env
+            # sudo echo NEXT_PUBLIC_TYPESENSE_HOST="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_HOST}}" >> .env
+            # sudo echo NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY}}" >> .env
+            # pm2 stop verzo-new-app
+            # git fetch
+            # git merge
+            # npm install
+            # npm run build
+            # pm2 restart verzo-new-app
