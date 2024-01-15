@@ -27,7 +27,7 @@ jobs:
             # Commands to run on the remote server
             # sudo apt-get update
             cd verzo-new-app
-            git checkout main
+            # git checkout main
             sudo rm -rf .env
             touch .env
             sudo chmod 777 -R .env
