@@ -40,6 +40,6 @@ jobs:
             git fetch
             git merge
             npm install
-            npm run build
-            pm2 restart verzo-new-app
+            # npm run build
+            # pm2 restart verzo-new-app
             # ls
