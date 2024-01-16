@@ -13,9 +13,9 @@ const MainLoader = () => {
       </div>
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 transform pb-8">
         <div className="flex items-center gap-7 text-[13px] text-slate-800">
-          <Link href="#">About Verzo</Link>
+          <Link href="https://verzo.app/about">About Verzo</Link>
           <div className="h-5 border-l border-gray-300"></div>
-          <Link href="#">Privacy Policy</Link>
+          <Link href="https://verzo.app/privacy">Privacy Policy</Link>
         </div>
       </div>
     </div>

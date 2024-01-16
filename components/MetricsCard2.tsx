@@ -194,7 +194,7 @@ const MetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
           </button>
         </Link>
       </div>
-      <div className=" flex justify-between flex-wrap">
+      <div className=" flex justify-between flex-wrap h-[70px]">
         <div className=" flex flex-col gap-y-1">
           <p className=" text-[30px]  font-medium">
             {filter === "weekly" &&
@@ -230,50 +230,50 @@ const MetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
           </p>
           {filter === "weekly" &&
             weeklyData?.percentageIncreaseInExpenseThisWeek! > 0 && (
-              <div className=" items-center text-primary-greytext flex ">
+              <div className=" items-center text-primary-greytext flex text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
-                <span className="text-[#4BB543] mx-1">
+                <span className="text-[#4BB543] mx-1 ">
                   {weeklyData?.percentageIncreaseInExpenseThisWeek}%
                 </span>{" "}
-                since last week
+                this week
               </div>
             )}
           {filter === "monthly" &&
             monthlyData?.percentageIncreaseInExpenseThisMonth! > 0 && (
-              <div className=" flex items-center text-primary-greytext">
+              <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
                 <span className="text-[#4BB543] mx-1">
                   {monthlyData?.percentageIncreaseInExpenseThisMonth}%
                 </span>{" "}
-                since last month
+                this month
               </div>
             )}
           {filter === "quarterly" &&
             quarterlyData?.percentageIncreaseInExpenseThisQuarter! > 0 && (
-              <div className=" flex items-center text-primary-greytext">
+              <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
                 <span className="text-[#4BB543] mx-1">
                   {quarterlyData?.percentageIncreaseInExpenseThisQuarter}%
                 </span>{" "}
-                since last quarter
+                this quarter
               </div>
             )}
           {filter === "yearly" &&
             yearlyData?.percentageIncreaseInExpenseThisYear! > 0 && (
-              <div className=" flex items-center text-primary-greytext">
+              <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
                 <span className="text-[#4BB543] mx-1">
                   {yearlyData?.percentageIncreaseInExpenseThisYear}%
                 </span>{" "}
-                since last year
+                this year
               </div>
             )}
         </div>

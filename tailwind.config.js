@@ -19,6 +19,7 @@ module.exports = {
       colors: {
         primary: {
           blue: "#027DFF",
+          verzobluehover: "#0065e5",
           bluetint: "#EDF6FF",
           background: "#FDFDFD",
           greytext: "#757575",

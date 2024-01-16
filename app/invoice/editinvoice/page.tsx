@@ -620,8 +620,7 @@ const EditInvoice = () => {
                     </div>
                     <p className=" text-lg text-primary-black">Sale expense</p>
                     <p className=" text-primary-greytext text-sm mt-[-4px]">
-                      A short text explaining this component of invoice creation
-                      to the user. It should be concise
+                      General expenses incurred when carrying out a sale.
                     </p>
                   </div>
                 </HoverCardContent>
@@ -665,8 +664,8 @@ const EditInvoice = () => {
                       Service expense
                     </p>
                     <p className=" text-primary-greytext text-sm mt-[-4px]">
-                      A short text explaining this component of invoice creation
-                      to the user. It should be concise
+                      Expenses to be incurred when carrying out a specific
+                      service.
                     </p>
                   </div>
                 </HoverCardContent>

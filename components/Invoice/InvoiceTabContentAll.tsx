@@ -80,8 +80,8 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
               checked={
                 selectedRows.length === invoices?.length && invoices.length > 0
               }
-              disabled={invoices?.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
+              // onCheckedChange={handleSelectAll}
             />
             Invoice
           </TableHead>

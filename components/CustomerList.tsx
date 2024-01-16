@@ -14,7 +14,11 @@ import {
 } from "@/src/generated/graphql";
 import EditCustomerSheet from "./sheets/customer/EditCustomerSheet";
 
-const CustomerList = () => {
+interface CustomerlistProps {
+  customerSearchId: string;
+}
+
+const CustomerList: React.FC<CustomerlistProps> = ({ customerSearchId }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
@@ -49,6 +53,11 @@ const CustomerList = () => {
     openModal();
   };
 
+  const handleOpenUnarchiveModal = (customerId: string) => {
+    setSelectedId(customerId);
+    openUnarchiveModal();
+  };
+
   const handleOpenDeleteModal = (customerId: string) => {
     setSelectedId(customerId);
     openDeleteCustomerModal();
@@ -81,13 +90,25 @@ const CustomerList = () => {
   const customers =
     getCustomersByBusiness.data?.getCustomerByBusiness?.customerByBusiness ??
     [];
+  const customerSearchResult = customers.find(
+    (customer) => customer?.id === customerSearchId
+  );
+  const archivedCustomerSearchResult = archivedCustomers.find(
+    (customer) => customer?.id === customerSearchId
+  );
+
+  const defaultValue = customerSearchResult
+    ? "all"
+    : archivedCustomerSearchResult
+    ? "archived"
+    : "all";
   const allCustomers = customers.length;
   const allArchivedCustomers = archivedCustomers.length;
 
   return (
     <>
       <div className=" w-full flex flex-col">
-        <Tabs defaultValue="all" className="w-full">
+        <Tabs defaultValue={defaultValue} className="w-full">
           <TabsList className=" mb-3 flex justify-between border-b border-b-gray-100">
             <div className=" gap-x-[30px] flex">
               <TabsTrigger
@@ -131,13 +152,14 @@ const CustomerList = () => {
               openArchiveModal={handleOpenArchiveModal}
               openEditModal={handleOpenEditModal}
               onToggleSelectAll={handleToggleSelectAll}
+              customerSearchId={customerSearchId}
             />
           </TabsContent>
           <TabsContent value="archived">
             <CustomerTabContentArchived
-              openDeleteModal={openDeleteCustomerModal}
-              openUnarchiveModal={openUnarchiveModal}
-              onToggleSelectAll={handleToggleSelectAll}
+              openDeleteModal={handleOpenDeleteModal}
+              openUnarchiveModal={handleOpenUnarchiveModal}
+              customerSearchId={customerSearchId}
             />
           </TabsContent>
         </Tabs>

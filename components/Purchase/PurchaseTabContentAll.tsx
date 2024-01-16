@@ -82,8 +82,8 @@ const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
                 selectedRows.length === purchases?.length &&
                 purchases.length > 0
               }
-              disabled={purchases?.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
+              // onCheckedChange={handleSelectAll}
             />
             Purchase
           </TableHead>

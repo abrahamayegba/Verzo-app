@@ -14,7 +14,11 @@ import {
 } from "@/src/generated/graphql";
 import EditServiceSheet from "./sheets/service/EditServiceSheet";
 
-const ServiceList = () => {
+interface ServicelistProps {
+  serviceSearchId: string;
+}
+
+const ServiceList: React.FC<ServicelistProps> = ({ serviceSearchId }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
@@ -63,6 +67,20 @@ const ServiceList = () => {
   const services =
     getServicesByBusiness.data?.getServiceByBusiness?.serviceByBusiness ?? [];
 
+  const serviceSearchResult = services.find(
+    (service) => service?.id === serviceSearchId
+  );
+
+  const archivedServiceSearchResult = archivedServices.find(
+    (service) => service?.id === serviceSearchId
+  );
+
+  const defaultValue = serviceSearchResult
+    ? "all"
+    : archivedServiceSearchResult
+    ? "archived"
+    : "all";
+
   const allServices = services.length;
   const allArchivedServices = archivedServices.length;
 
@@ -92,7 +110,7 @@ const ServiceList = () => {
 
   return (
     <div className=" w-full flex flex-col">
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue={defaultValue} className="w-full">
         <TabsList className=" mb-3 flex justify-between border-b border-b-gray-100">
           <div className=" gap-x-[30px] flex">
             <TabsTrigger
@@ -136,13 +154,14 @@ const ServiceList = () => {
             openArchiveModal={handleOpenArchiveModal}
             openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
+            serviceSearchId={serviceSearchId}
           />
         </TabsContent>
         <TabsContent value="archived">
           <ServiceTabContentArchived
             openDeleteModal={handleOpenDeleteModal}
             openUnarchiveModal={handleOpenUnarchiveModal}
-            onToggleSelectAll={handleToggleSelectAll}
+            serviceSearchId={serviceSearchId}
           />
         </TabsContent>
       </Tabs>

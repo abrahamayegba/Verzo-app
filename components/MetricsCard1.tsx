@@ -194,7 +194,7 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
           </button>
         </Link>
       </div>
-      <div className=" flex justify-between flex-wrap">
+      <div className=" flex justify-between flex-wrap h-[70px]">
         <div className=" flex flex-col gap-y-1">
           <p className=" text-[30px]  font-medium">
             {filter === "weekly" &&
@@ -223,49 +223,49 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
               })}
           </p>
           {filter === "weekly" && weeklyData?.percentageWeeklyRevenue! > 0 && (
-            <div className=" flex items-center text-primary-greytext">
+            <div className=" flex items-center text-primary-greytext text-[15px]">
               <span>
                 <ArrowUpIcon />
               </span>
               <span className="text-[#4BB543] mx-1">
                 {weeklyData?.percentageWeeklyRevenue}%
               </span>{" "}
-              since last week
+              this week
             </div>
           )}
           {filter === "monthly" &&
             monthlyData?.percentageMonthlyRevenue! > 0 && (
-              <div className=" flex items-center text-primary-greytext">
+              <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
                 <span className="text-[#4BB543] mx-1">
                   {monthlyData?.percentageMonthlyRevenue}%
                 </span>{" "}
-                since last month
+                this month
               </div>
             )}
           {filter === "quarterly" &&
             quarterlyData?.percentageQuarterlyRevenue! > 0 && (
-              <div className=" flex items-center text-primary-greytext">
+              <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
                 <span className="text-[#4BB543] mx-1">
                   {quarterlyData?.percentageQuarterlyRevenue}%
                 </span>{" "}
-                since last quarter
+                this quarter
               </div>
             )}
           {filter === "yearly" && yearlyData?.percentageYearlyRevenue! > 0 && (
-            <div className=" flex items-center text-primary-greytext">
+            <div className=" flex items-center text-primary-greytext text-[15px]">
               <span>
                 <ArrowUpIcon />
               </span>
               <span className="text-[#4BB543] mx-1">
                 {yearlyData?.percentageYearlyRevenue}%
               </span>{" "}
-              since last year
+              this year
             </div>
           )}
         </div>

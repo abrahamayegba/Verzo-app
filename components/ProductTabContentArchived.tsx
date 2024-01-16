@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,15 +22,15 @@ import ProductTableEmptyIcon from "./ui/icons/ProductTableEmptyIcon";
 import { useGetArchivedProductsByBusinessQuery } from "@/src/generated/graphql";
 
 interface ProductTabContentArchivedProps {
-  onToggleSelectAll: (isChecked: boolean) => void;
   openUnarchiveModal: (productId: string) => void;
   openDeleteModal: (productId: string) => void;
+  productSearchId: string;
 }
 
 const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
-  onToggleSelectAll,
   openUnarchiveModal,
   openDeleteModal,
+  productSearchId,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -44,29 +44,27 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
       sets: 1,
     },
   });
-
   const archivedProducts =
     getArchivedProductsByBusiness.data?.getArchivedProductByBusiness
       ?.productByBusiness ?? [];
+  const productSearchResult = archivedProducts.find(
+    (product) => product?.id === productSearchId
+  );
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
-      setSelectedRows(selectedRows.filter((id) => id !== rowId));
+      setSelectedRows((prevSelectedRows) =>
+        prevSelectedRows.filter((id) => id !== rowId)
+      );
     } else {
-      setSelectedRows([...selectedRows, rowId]);
+      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, rowId]);
     }
   };
 
-  const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== archivedProducts?.length;
-    if (isChecked) {
-      setSelectedRows(
-        archivedProducts?.map((product) => String(product?.id) || "") || []
-      );
-    } else {
-      setSelectedRows([]);
+  useEffect(() => {
+    if (productSearchResult) {
+      handleRowSelect(productSearchId);
     }
-    onToggleSelectAll(isChecked);
-  };
+  }, [productSearchResult, productSearchId]);
 
   return (
     <Table>
@@ -75,12 +73,7 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
           <TableHead className="w-[100px] flex gap-x-3 items-center font-normal text-sm text-primary-greytext">
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-              checked={
-                selectedRows.length === archivedProducts.length &&
-                archivedProducts.length > 0
-              }
-              disabled={archivedProducts.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
             />
             Name
           </TableHead>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import { searchAllCollections } from "@/src/helper/typesense";
 import localStorage from "local-storage-fallback";
@@ -10,6 +10,8 @@ const SearchBar = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState<any>(null);
   const { data } = useGetBusinessesByUserIdQuery();
+  const componentRef = useRef<HTMLDivElement>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
   const userId = data?.getBusinessesByUserId?.user?.id;
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -33,6 +35,22 @@ const SearchBar = () => {
       setSearchResults(null);
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (
+        componentRef.current &&
+        !componentRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false);
+        setSearchInput("");
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setShowDropdown, setSearchInput]);
 
   const productFields = searchResults?.results
     ?.filter(
@@ -98,15 +116,16 @@ const SearchBar = () => {
           className="block h-full w-[600px] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent rounded focus:outline-none py-3 pl-9 pr-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-[15px]"
           placeholder="Search..."
           type="search"
-          autoComplete="none" // or autoComplete="off"
-          // name="search"
+          autoComplete="none"
           value={searchInput}
           onChange={(e) => {
             setSearchInput(e.target.value);
             handleSearch(e.target.value);
+            setShowDropdown(true);
           }}
         />
-        {searchInput.trim() !== "" && // Check if trimmed searchInput is not empty
+        {showDropdown &&
+        searchInput.trim() !== "" && // Check if trimmed searchInput is not empty
         ((productFields?.length > 0 && productFields[0]?.length > 0) ||
           (serviceFields?.length > 0 && serviceFields[0]?.length > 0) ||
           (saleFields?.length > 0 && saleFields[0]?.length > 0) ||
@@ -114,34 +133,41 @@ const SearchBar = () => {
           (expenseFields?.length > 0 && expenseFields[0]?.length > 0) ||
           (merchantFields?.length > 0 && merchantFields[0]?.length > 0) ||
           (customerFields?.length > 0 && customerFields[0]?.length > 0)) ? (
-          <div className=" absolute left-0 z-[150] mt-1 rounded-[5px] h-auto max-h-[400px] w-[600px] overflow-scroll bg-white text-sm shadow">
+          <div
+            ref={componentRef}
+            className=" absolute left-0 z-[150] mt-1 rounded-[5px] h-auto max-h-[400px] w-[600px] overflow-scroll bg-white text-sm shadow"
+          >
             {productFields?.map((collectionResult: any[], index: number) => (
               <div className=" border-t border-t-gray-100" key={index}>
                 {collectionResult.map((hit) => (
-                  <div
+                  <Link
+                    href={`/dashboard/products?searchResult=${hit.document.id}`}
                     className="flex cursor-pointer justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                     key={hit.document.productName}
+                    onClick={() => setShowDropdown(false)}
                   >
                     <p className=" text-base">{hit.document.productName}</p>
                     <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                       In products
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ))}
             {serviceFields?.map((collectionResult: any[], index: number) => (
-              <div className="" key={index}>
+              <div key={index}>
                 {collectionResult.map((hit) => (
-                  <div
+                  <Link
+                    href={`/dashboard/services?searchResult=${hit.document.id}`}
                     key={hit.document.id}
                     className="flex cursor-pointer flex-row justify-between items-center border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800"
+                    onClick={() => setShowDropdown(false)}
                   >
                     <p className=" text-base">{hit.document.name}</p>
                     <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
                       In services
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ))}
@@ -254,17 +280,19 @@ const SearchBar = () => {
               </div>
             ))}
             {customerFields?.map((collectionResult: any[], index: number) => (
-              <div className="" key={index}>
+              <div key={index}>
                 {collectionResult.map((hit) => (
-                  <div
+                  <Link
+                    href={`/dashboard/customers?searchResult=${hit.document.id}`}
                     key={hit.document.id}
                     className="flex cursor-pointer justify-between items-center flex-row border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800"
+                    onClick={() => setShowDropdown(false)}
                   >
                     <p className=" text-base">{hit.document.name}</p>
                     <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
                       In customers
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ))}

@@ -195,14 +195,14 @@ const ViewInvoice = () => {
             <div className=" flex justify-between items-center mt-3">
               <div className=" text-sm text-[#c4c4c4] max-w-[250px] flex flex-col gap-y-2">
                 <p>Thanks for your patronage</p>
-                <p className=" flex flex-row">
+                <div className=" flex flex-row">
                   Reach out to us{" "}
                   <Link href="mailto:technology@verzo.com">
                     <p className="text-primary-blue focus:underline underline-offset-2 ml-1 font-medium">
                       technology@verzo.com
                     </p>
                   </Link>
-                </p>
+                </div>
                 <p>
                   Invoice created with{" "}
                   <span className=" text-primary-blue">Verzo</span>{" "}

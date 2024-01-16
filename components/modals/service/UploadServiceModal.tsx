@@ -134,7 +134,7 @@ const UploadServiceCSV: React.FC<UploadCSVProps> = ({ open, onClose }) => {
                       <UploadCSVIcon />
                     </span>
                   </div>
-                  <p className=" text-lg text-[#121212]">Upload file</p>
+                  <p className=" text-lg text-[#121212]">Upload Services</p>
                   <p className=" text-primary-greytext">
                     Upload a CSV file to help us import your services. Supported
                     formats: CSV <br />
