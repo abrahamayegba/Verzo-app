@@ -79,8 +79,8 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
               checked={
                 selectedRows.length === expenses?.length && expenses.length > 0
               }
-              disabled={expenses?.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
+              // onCheckedChange={handleSelectAll}
             />
             Expense
           </TableHead>

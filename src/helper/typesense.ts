@@ -42,13 +42,13 @@ export const searchAllCollections = async (
           prioritize_token_position: true,
           filter_by: `businessId:${businessId}`,
         },
-        {
-          collection: "merchant",
-          q: search,
-          query_by: "name, email",
-          prioritize_token_position: true,
-          filter_by: `businessId:${businessId}`,
-        },
+        // {
+        //   collection: "merchant",
+        //   q: search,
+        //   query_by: "name, email",
+        //   prioritize_token_position: true,
+        //   filter_by: `businessId:${businessId}`,
+        // },
         {
           collection: "expense",
           q: search,

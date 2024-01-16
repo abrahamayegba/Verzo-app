@@ -82,8 +82,8 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
                 selectedRows.length === archivedPurchases?.length &&
                 archivedPurchases.length > 0
               }
-              disabled={archivedPurchases?.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
+              // onCheckedChange={handleSelectAll}
             />
             Purchase
           </TableHead>

@@ -8,10 +8,10 @@ const AuthSidebar = () => {
       <div className="flex flex-col gap-y-20">
         <LogoIcon />
         <p className="text-white text-[32px] leading-[44px]">
-          Manage business <br /> activity in one place
+          Manage your business activities in one place
         </p>
       </div>
-      <div className="w-full rounded-[20px] p-6 bg-white">
+      <div className="w-full rounded-[20px] hidden p-6 bg-white">
         <Image
           src="/Img2.jpeg"
           alt=""

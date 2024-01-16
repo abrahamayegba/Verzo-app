@@ -80,8 +80,8 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
                 selectedRows.length === archivedExpenses?.length &&
                 archivedExpenses.length > 0
               }
-              disabled={archivedExpenses?.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
+              // onCheckedChange={handleSelectAll}
             />
             Expense
           </TableHead>

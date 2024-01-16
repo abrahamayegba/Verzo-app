@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,15 +22,15 @@ import ServiceTableEmptyIcon from "./ui/icons/ServiceTableEmptyIcon";
 import { useGetArchivedServiceByBusinessQuery } from "@/src/generated/graphql";
 
 interface ServiceTabContentArchivedProps {
-  onToggleSelectAll: (isChecked: boolean) => void;
   openUnarchiveModal: (serviceId: string) => void;
   openDeleteModal: (serviceId: string) => void;
+  serviceSearchId: string;
 }
 
 const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
-  onToggleSelectAll,
   openUnarchiveModal,
   openDeleteModal,
+  serviceSearchId,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -48,6 +48,9 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
   const archivedServices =
     getArchivedServicesByBusiness.data?.getArchivedServicesByBusiness
       ?.serviceByBusiness ?? [];
+  const serviceSearchResult = archivedServices.find(
+    (service) => service?.id === serviceSearchId
+  );
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
@@ -55,17 +58,12 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
       setSelectedRows([...selectedRows, rowId]);
     }
   };
-  const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== archivedServices?.length;
-    if (isChecked) {
-      setSelectedRows(
-        archivedServices?.map((service) => String(service?.id) || "") || []
-      );
-    } else {
-      setSelectedRows([]);
+  useEffect(() => {
+    if (serviceSearchResult) {
+      handleRowSelect(serviceSearchId);
     }
-    onToggleSelectAll(isChecked);
-  };
+  }, [serviceSearchResult, serviceSearchId]);
+
   return (
     <Table>
       <TableHeader>
@@ -73,12 +71,7 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
           <TableHead className="w-[100px] flex gap-x-3 items-center font-normal text-sm text-primary-greytext">
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-              checked={
-                selectedRows.length === archivedServices.length &&
-                archivedServices.length > 0
-              }
-              disabled={archivedServices.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
             />
             Name
           </TableHead>
@@ -115,7 +108,6 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
                   checked={selectedRows.includes(service?.id!)}
                   onCheckedChange={() => handleRowSelect(service?.id!)}
                 />
-
                 {service?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">

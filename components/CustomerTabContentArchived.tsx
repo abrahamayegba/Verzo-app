@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,15 +22,15 @@ import CustomerTableEmptyIcon from "./ui/icons/CustomerTableEmptyIcon";
 import { useGetArchivedCustomersByBusinessQuery } from "@/src/generated/graphql";
 
 interface CustomerTabContentArchivedProps {
-  onToggleSelectAll: (isChecked: boolean) => void;
-  openUnarchiveModal: () => void;
-  openDeleteModal: () => void;
+  openUnarchiveModal: (customerId: string) => void;
+  openDeleteModal: (customerId: string) => void;
+  customerSearchId: string;
 }
 
 const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
-  onToggleSelectAll,
   openUnarchiveModal,
   openDeleteModal,
+  customerSearchId,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -49,7 +49,9 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
   const archivedCustomers =
     getArchivedCustomersByBusiness.data?.getArchivedCustomerByBusiness
       ?.customerByBusiness ?? [];
-
+  const customerSearchResult = archivedCustomers.find(
+    (customer) => customer?.id === customerSearchId
+  );
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
       setSelectedRows(selectedRows.filter((id) => id !== rowId));
@@ -58,17 +60,11 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
     }
   };
 
-  const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== archivedCustomers?.length;
-    if (isChecked) {
-      setSelectedRows(
-        archivedCustomers?.map((customer) => String(customer?.id) || "") || []
-      );
-    } else {
-      setSelectedRows([]);
+  useEffect(() => {
+    if (customerSearchResult) {
+      handleRowSelect(customerSearchId);
     }
-    onToggleSelectAll(isChecked);
-  };
+  }, [customerSearchResult, customerSearchId]);
 
   return (
     <Table>
@@ -77,12 +73,7 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
           <TableHead className="w-[100px] flex gap-x-3 items-center font-normal text-sm text-primary-greytext">
             <Checkbox
               className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-              checked={
-                selectedRows.length === archivedCustomers?.length &&
-                archivedCustomers.length > 0
-              }
-              disabled={archivedCustomers?.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
             />
             Name
           </TableHead>
@@ -142,14 +133,14 @@ const CustomerTabContentArchived: React.FC<CustomerTabContentArchivedProps> = ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[180px]">
                     <DropdownMenuItem
-                      onClick={openUnarchiveModal}
+                      onClick={() => openUnarchiveModal(customer?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
                       <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Unarchive Customer
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={openDeleteModal}
+                      onClick={() => openDeleteModal(customer?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
                       <Trash2 className=" w-4 h-4 text-opacity-80" />

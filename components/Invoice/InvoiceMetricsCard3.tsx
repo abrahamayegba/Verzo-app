@@ -98,9 +98,9 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
       <div className=" flex justify-between text-primary-black">
         <p className=" text-[20px] tracking-[-0.3px]">Overdue</p>
       </div>
-      <div className=" flex justify-between flex-wrap">
+      <div className=" flex justify-between flex-wrap h-[70px]">
         <div className=" flex flex-col gap-y-1">
-          <p className=" text-[30px]  font-medium">
+          <p className=" text-[30px] font-medium">
             {filter === "weekly" &&
               weeklyData?.totalOverdueInvoicesAmountThisWeek?.toLocaleString(
                 "en-NG",
@@ -138,53 +138,53 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                 }
               )}
           </p>
-          <div className=" flex items-center text-primary-greytext">
+          <div className=" flex items-center text-primary-greytext ">
             {filter === "weekly" &&
               weeklyData?.percentageOverdueInvoicesThisWeek! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <span>
                     <ArrowUpIcon />
                   </span>
                   <span className="text-[#4BB543] mx-1">
                     {weeklyData?.percentageOverdueInvoicesThisWeek}%
                   </span>{" "}
-                  since last month
+                  this week
                 </div>
               )}
             {filter === "monthly" &&
               monthlyData?.percentageOverdueInvoicesThisMonth! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <span>
                     <ArrowUpIcon />
                   </span>
                   <span className="text-[#4BB543] mx-1">
                     {monthlyData?.percentageOverdueInvoicesThisMonth}%
                   </span>{" "}
-                  since last month
+                  this month
                 </div>
               )}
             {filter === "quarterly" &&
               quarterlyData?.percentageOverdueInvoicesThisQuarter! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <span>
                     <ArrowUpIcon />
                   </span>
                   <span className="text-[#4BB543] mx-1">
                     {quarterlyData?.percentageOverdueInvoicesThisQuarter}%
                   </span>{" "}
-                  since last month
+                  this quarter
                 </div>
               )}
             {filter === "yearly" &&
               yearlyData?.percentageOverdueInvoicesThisYear! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <span>
                     <ArrowUpIcon />
                   </span>
                   <span className="text-[#4BB543] mx-1">
                     {yearlyData?.percentageOverdueInvoicesThisYear}%
                   </span>{" "}
-                  since last month
+                  this year
                 </div>
               )}
           </div>

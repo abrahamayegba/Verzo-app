@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -26,6 +26,7 @@ interface CustomerTabContentAllProps {
   openArchiveModal: (customerId: string) => void;
   openEditModal: (customerId: string) => void;
   openDeleteModal: (customerId: string) => void;
+  customerSearchId: string;
 }
 
 const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
@@ -33,6 +34,7 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
   openArchiveModal,
   openDeleteModal,
   openEditModal,
+  customerSearchId,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -49,14 +51,24 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
   const customers =
     getCustomersByBusiness.data?.getCustomerByBusiness?.customerByBusiness ??
     [];
-
+  const customerSearchResult = customers.find(
+    (customer) => customer?.id === customerSearchId
+  );
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
-      setSelectedRows(selectedRows.filter((id) => id !== rowId));
+      setSelectedRows((prevSelectedRows) =>
+        prevSelectedRows.filter((id) => id !== rowId)
+      );
     } else {
-      setSelectedRows([...selectedRows, rowId]);
+      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, rowId]);
     }
   };
+
+  useEffect(() => {
+    if (customerSearchResult) {
+      handleRowSelect(customerSearchId);
+    }
+  }, [customerSearchResult, customerSearchId]);
 
   const handleSelectAll = () => {
     const isChecked = selectedRows.length !== customers?.length;
@@ -80,8 +92,8 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
                 selectedRows.length === customers?.length &&
                 customers.length > 0
               }
-              disabled={customers?.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
+              // onCheckedChange={handleSelectAll}
             />
             Name
           </TableHead>
@@ -114,7 +126,14 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
           </TableRow>
         ) : (
           customers?.map((customer) => (
-            <TableRow key={customer?.id}>
+            <TableRow
+              className={` ${
+                selectedRows.includes(customer?.id!)
+                  ? " bg-blue-50 bg-opacity-20"
+                  : ""
+              }`}
+              key={customer?.id}
+            >
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
                   className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"

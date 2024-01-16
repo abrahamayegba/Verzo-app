@@ -24,7 +24,7 @@ const FilterDataDropdown: React.FC<FilterDataDropdownProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className=" focus:outline-none">
-        <div className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
+        <div className=" px-8 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border">
           Filter
           <ListFilter className=" w-5 h-5" />
         </div>
