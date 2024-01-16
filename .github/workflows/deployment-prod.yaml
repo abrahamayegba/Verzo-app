@@ -39,7 +39,9 @@ jobs:
             # pm2 stop verzo-new-app
             git fetch
             git merge
-            npm install
+            # npm install
             # npm run build
             # pm2 restart verzo-new-app
             # ls
+            node -v
+            npm -v
