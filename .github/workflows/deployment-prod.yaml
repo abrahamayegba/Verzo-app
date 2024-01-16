@@ -37,18 +37,18 @@ jobs:
             sudo echo NEXT_PUBLIC_TYPESENSE_HOST="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_HOST}}" >> .env
             sudo echo NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY}}" >> .env
             # pm2 stop verzo-new-app
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-            echo "PATH: $PATH"
-            echo "NVM_DIR: $NVM_DIR"
+            # export NVM_DIR="$HOME/.nvm"
+            # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+            # echo "PATH: $PATH"
+            # echo "NVM_DIR: $NVM_DIR"
             which node
             which npm
             node -v
             npm -v
             git fetch
             git merge
-            # npm install
+            npm install
             # npm run build
             # pm2 restart verzo-new-app
             # ls
