@@ -43,5 +43,8 @@ jobs:
             # npm run build
             # pm2 restart verzo-new-app
             # ls
+            echo "PATH: $PATH"
+            which node
+            which npm
             node -v
             npm -v
