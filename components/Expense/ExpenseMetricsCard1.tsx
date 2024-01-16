@@ -34,7 +34,7 @@ const ExpenseMetricsCard1 = () => {
           </button>
         </Link>
       </div>
-      <div className=" flex justify-between flex-wrap">
+      <div className=" flex justify-between flex-wrap h-[70px]">
         <div className=" flex flex-col gap-y-1">
           <p className=" text-[30px]  font-medium">
             {totalExpenses?.toLocaleString("en-NG", {

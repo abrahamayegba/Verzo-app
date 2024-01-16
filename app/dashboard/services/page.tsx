@@ -11,7 +11,7 @@ import {
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
 import Loader2 from "@/components/loading/Loader2";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { isAuthenticated } from "@/lib/auth";
 
 const Services = () => {
@@ -20,6 +20,8 @@ const Services = () => {
   );
   const businessId = storedBusinessId[0] || "";
   const router = useRouter();
+  const searchResultsParams = useSearchParams();
+  const serviceSearchId = searchResultsParams.get("searchResult")?.toString();
   useEffect(() => {
     if (!isAuthenticated()) {
       router.push("/auth/signin");
@@ -74,7 +76,7 @@ const Services = () => {
               </button>
             </div>
           </div>
-          <ServiceList />
+          <ServiceList serviceSearchId={serviceSearchId!} />
         </div>
       )}
       <CreateServiceSheet

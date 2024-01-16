@@ -12,7 +12,7 @@ import MainLoader from "@/components/loading/MainLoader";
 import localStorage from "local-storage-fallback";
 import Loader2 from "@/components/loading/Loader2";
 import { isAuthenticated } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Customers = () => {
   const storedBusinessId = JSON.parse(
@@ -20,6 +20,8 @@ const Customers = () => {
   );
   const businessId = storedBusinessId[0] || "";
   const router = useRouter();
+  const searchResultsParams = useSearchParams();
+  const customerSearchId = searchResultsParams.get("searchResult")?.toString();
   useEffect(() => {
     if (!isAuthenticated()) {
       router.push("/auth/signin");
@@ -77,7 +79,7 @@ const Customers = () => {
                 </button>
               </div>
             </div>
-            <CustomerList />
+            <CustomerList customerSearchId={customerSearchId!} />
           </div>
           <CreateCustomerSheet
             open={openCustomerSheet}

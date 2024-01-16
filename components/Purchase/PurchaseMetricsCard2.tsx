@@ -101,7 +101,7 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
           </button>
         </Link>
       </div>
-      <div className=" flex justify-between flex-wrap">
+      <div className=" flex justify-between flex-wrap h-[70px]">
         <div className=" flex flex-col gap-y-1">
           <p className=" text-[30px]  font-medium">
             {filter === "weekly" &&
@@ -141,10 +141,10 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
                 }
               )}
           </p>
-          <div className=" items-center text-primary-greytext hidden">
+          <div className=" items-center text-primary-greytext">
             {filter === "weekly" &&
               weeklyData?.numberOfPaidPurchasesThisWeek! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <Plus className=" w-4 h-4" />
                   <span className=" ml-[2px] mr-1">
                     {weeklyData?.numberOfPaidPurchasesThisWeek}
@@ -154,7 +154,7 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
               )}
             {filter === "monthly" &&
               monthlyData?.numberOfPaidPurchasesThisMonth! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <Plus className=" w-4 h-4" />
                   <span className=" ml-[2px] mr-1">
                     {monthlyData?.numberOfPaidPurchasesThisMonth}
@@ -164,7 +164,7 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
               )}
             {filter === "quarterly" &&
               quarterlyData?.numberOfPaidPurchasesThisQuarter! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <Plus className=" w-4 h-4" />
                   <span className=" ml-[2px] mr-1">
                     {quarterlyData?.numberOfPaidPurchasesThisQuarter}%
@@ -174,7 +174,7 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
               )}
             {filter === "yearly" &&
               yearlyData?.numberOfPaidPurchasesThisYear! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <Plus className=" w-4 h-4" />
                   <span className=" ml-[2px] mr-1">
                     {yearlyData?.numberOfPaidPurchasesThisYear}%

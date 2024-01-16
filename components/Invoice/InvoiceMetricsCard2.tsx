@@ -98,9 +98,9 @@ const InvoiceMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
       <div className=" flex justify-between text-primary-black">
         <p className=" text-[20px] tracking-[-0.3px]">Pending</p>
       </div>
-      <div className=" flex justify-between flex-wrap">
+      <div className=" flex justify-between flex-wrap h-[70px]">
         <div className=" flex flex-col gap-y-1">
-          <p className=" text-[30px]  font-medium">
+          <p className=" text-[30px] font-medium">
             {filter === "weekly" &&
               weeklyData?.totalPendingInvoicesAmountThisWeek?.toLocaleString(
                 "en-NG",
@@ -141,50 +141,50 @@ const InvoiceMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
           <div className=" items-center text-primary-greytext">
             {filter === "weekly" &&
               weeklyData?.percentagePendingInvoicesThisWeek! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <span>
                     <ArrowUpIcon />
                   </span>
                   <span className="text-[#4BB543] mx-1">
                     {weeklyData?.percentagePendingInvoicesThisWeek}%
                   </span>{" "}
-                  since last month
+                  this week
                 </div>
               )}
             {filter === "monthly" &&
               monthlyData?.percentagePendingInvoicesThisMonth! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <span>
                     <ArrowUpIcon />
                   </span>
                   <span className="text-[#4BB543] mx-1">
                     {monthlyData?.percentagePendingInvoicesThisMonth}%
                   </span>{" "}
-                  since last month
+                  this month
                 </div>
               )}
             {filter === "quarterly" &&
               quarterlyData?.percentagePendingInvoicesThisQuarter! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <span>
                     <ArrowUpIcon />
                   </span>
                   <span className="text-[#4BB543] mx-1">
                     {quarterlyData?.percentagePendingInvoicesThisQuarter}%
                   </span>{" "}
-                  since last month
+                  this quarter
                 </div>
               )}
             {filter === "yearly" &&
               yearlyData?.percentagePendingInvoicesThisYear! > 0 && (
-                <div className=" flex items-center text-primary-greytext">
+                <div className=" flex items-center text-primary-greytext text-[15px]">
                   <span>
                     <ArrowUpIcon />
                   </span>
                   <span className="text-[#4BB543] mx-1">
                     {yearlyData?.percentagePendingInvoicesThisYear}%
                   </span>{" "}
-                  since last month
+                  this year
                 </div>
               )}
           </div>

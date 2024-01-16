@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -26,6 +26,7 @@ interface ProductTabContentAllProps {
   openArchiveModal: (productId: string) => void;
   openDeleteModal: (productId: string) => void;
   openEditModal: (productId: string) => void;
+  productSearchId: string;
 }
 
 const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
@@ -33,6 +34,7 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
   openArchiveModal,
   openDeleteModal,
   openEditModal,
+  productSearchId,
 }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -46,28 +48,38 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
       sets: 1,
     },
   });
-
   const products =
     getProductsByBusiness.data?.getProductsByBusiness?.productByBusiness ?? [];
+  const productSearchResult = products.find(
+    (product) => product?.id === productSearchId
+  );
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
-      setSelectedRows(selectedRows.filter((id) => id !== rowId));
+      setSelectedRows((prevSelectedRows) =>
+        prevSelectedRows.filter((id) => id !== rowId)
+      );
     } else {
-      setSelectedRows([...selectedRows, rowId]);
+      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, rowId]);
     }
   };
 
-  const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== products?.length;
-    if (isChecked) {
-      setSelectedRows(
-        products?.map((product) => String(product?.id) || "") || []
-      );
-    } else {
-      setSelectedRows([]);
+  useEffect(() => {
+    if (productSearchResult) {
+      handleRowSelect(productSearchId);
     }
-    onToggleSelectAll(isChecked);
-  };
+  }, [productSearchResult, productSearchId]);
+
+  // const handleSelectAll = () => {
+  //   const isChecked = selectedRows.length !== products?.length;
+  //   if (isChecked) {
+  //     setSelectedRows(
+  //       products?.map((product) => String(product?.id) || "") || []
+  //     );
+  //   } else {
+  //     setSelectedRows([]);
+  //   }
+  //   onToggleSelectAll(isChecked);
+  // };
 
   return (
     <Table>
@@ -79,8 +91,8 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
               checked={
                 selectedRows.length === products.length && products.length > 0
               }
-              disabled={products.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
+              // onCheckedChange={handleSelectAll}
             />
             Name
           </TableHead>
@@ -113,7 +125,14 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
           </TableRow>
         ) : (
           products.map((product) => (
-            <TableRow className="" key={product?.id}>
+            <TableRow
+              className={` ${
+                selectedRows.includes(product?.id!)
+                  ? " bg-blue-50 bg-opacity-20"
+                  : ""
+              }`}
+              key={product?.id}
+            >
               <TableCell className="flex gap-x-3 items-center py-[22px]">
                 <Checkbox
                   className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"

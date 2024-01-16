@@ -7,6 +7,7 @@ import ProfileContent from "./ProfileContent";
 import BusinessProfileContent from "./BusinessProfileContent";
 import PlanContent from "./PlanContent";
 import AddonsContent from "./AddonsContent";
+import BulkUploadContent from "./BulkUploadContent";
 
 const SettingsContent = () => {
   return (
@@ -38,6 +39,12 @@ const SettingsContent = () => {
             >
               Add-ons
             </TabsTrigger>
+            <TabsTrigger
+              className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
+              value="bulkuploads"
+            >
+              Upload data
+            </TabsTrigger>
           </div>
         </TabsList>
         <TabsContent value="profile">
@@ -51,6 +58,9 @@ const SettingsContent = () => {
         </TabsContent>
         <TabsContent value="addons">
           <AddonsContent />
+        </TabsContent>
+        <TabsContent value="bulkuploads">
+          <BulkUploadContent />
         </TabsContent>
       </Tabs>
     </div>

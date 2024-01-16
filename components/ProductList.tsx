@@ -14,7 +14,11 @@ import {
 } from "@/src/generated/graphql";
 import EditProductSheet from "./sheets/product/EditProductSheet";
 
-const ProductList = () => {
+interface ProductlistProps {
+  productSearchId: string;
+}
+
+const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
@@ -63,6 +67,20 @@ const ProductList = () => {
   const products =
     getProductsByBusiness.data?.getProductsByBusiness?.productByBusiness ?? [];
 
+  const productSearchResult = products.find(
+    (product) => product?.id === productSearchId
+  );
+
+  const archivedProductSearchResult = archivedProducts.find(
+    (product) => product?.id === productSearchId
+  );
+
+  const defaultValue = productSearchResult
+    ? "all"
+    : archivedProductSearchResult
+    ? "archived"
+    : "all";
+
   const allProducts = products.length;
   const allArchivedProducts = archivedProducts.length;
 
@@ -89,10 +107,9 @@ const ProductList = () => {
     setSelectedId(customerId);
     openEditModal();
   };
-
   return (
     <div className=" w-full flex flex-col">
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue={defaultValue} className="w-full">
         <TabsList className=" mb-3 flex justify-between border-b border-b-gray-100">
           <div className=" gap-x-[30px] flex">
             <TabsTrigger
@@ -136,13 +153,14 @@ const ProductList = () => {
             openArchiveModal={handleOpenArchiveModal}
             openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
+            productSearchId={productSearchId}
           />
         </TabsContent>
         <TabsContent value="archived">
           <ProductTabContentArchived
             openDeleteModal={handleOpenDeleteModal}
             openUnarchiveModal={handleOpenUnarchiveModal}
-            onToggleSelectAll={handleToggleSelectAll}
+            productSearchId={productSearchId}
           />
         </TabsContent>
       </Tabs>

@@ -80,8 +80,8 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
                 selectedRows.length === archivedSales?.length &&
                 archivedSales.length > 0
               }
-              disabled={archivedSales?.length === 0}
-              onCheckedChange={handleSelectAll}
+              disabled
+              // onCheckedChange={handleSelectAll}
             />
             Invoice
           </TableHead>
