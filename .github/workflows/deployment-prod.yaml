@@ -26,15 +26,6 @@ jobs:
           script: |
             # Commands to run on the remote server
             sudo apt-get update
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-            echo "PATH: $PATH"
-            echo "NVM_DIR: $NVM_DIR"
-            which node
-            which npm
-            node -v
-            npm -v
             cd verzo-new-app
             git checkout main
             sudo rm -rf .env
@@ -48,6 +39,15 @@ jobs:
             # pm2 stop verzo-new-app
             git fetch
             git merge
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+            echo "PATH: $PATH"
+            echo "NVM_DIR: $NVM_DIR"
+            which node
+            which npm
+            node -v
+            npm -v
             npm install
             # npm run build
             # pm2 restart verzo-new-app
