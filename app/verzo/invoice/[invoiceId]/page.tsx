@@ -53,13 +53,17 @@ const InvoiceDetailPage = () => {
     <div className=" py-[40px] flex flex-col w-full justify-center items-center gap-y-[20px]">
       <div className=" w-full flex flex-col max-w-[750px] bg-white shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 pt-[20px] pb-[36px] px-[44px]">
         <div className=" flex flex-col">
-          <Image
-            alt="Logo"
-            className=" ml-[-15px]"
-            src={businessLogo!}
-            width={100}
-            height={80}
-          />
+          {businessLogo ? (
+            <Image
+              alt="Logo"
+              className=" ml-[-15px]"
+              src={businessLogo!}
+              width={100}
+              height={80}
+            />
+          ) : (
+            <p className="">LOGO</p>
+          )}
           <p className=" text-xl">INVOICE</p>
         </div>
         <div className=" flex flex-col border-t border-t-[#f4f4f4] mt-2">

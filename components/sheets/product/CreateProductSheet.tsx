@@ -97,11 +97,16 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
         refetchQueries: [GetProductsByBusinessDocument],
       });
       onClose();
-      reset();
+      reset({
+        price: 0,
+        initialStockLevel: 0,
+        productName: "",
+      });
       setProductUnitId("");
       showSuccessToast();
     } catch (error) {
       console.error(error);
+      onClose();
       showFailureToast(error);
     }
   };
@@ -169,8 +174,9 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
                 <label htmlFor="price">Price</label>
                 <input
                   className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                  type="number"
+                  type="text"
                   required
+                  pattern="[0-9]*"
                   placeholder="Price"
                   {...register("price", {
                     valueAsNumber: true,
@@ -210,8 +216,9 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
                 <label htmlFor="basicunit">Initial stock level</label>
                 <input
                   className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                  type="number"
+                  type="text"
                   required
+                  pattern="[0-9]*"
                   placeholder="0"
                   {...register("initialStockLevel", {
                     valueAsNumber: true,

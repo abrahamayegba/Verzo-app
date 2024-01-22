@@ -98,7 +98,11 @@ const ViewExpense = () => {
       />
       <div className=" w-full flex flex-col shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 py-[36px] px-[44px]">
         <div className=" flex justify-between items-center">
-          <Image alt="Logo" src={businessLogo!} width={100} height={80} />
+          {businessLogo ? (
+            <Image alt="Logo" src={businessLogo} width={100} height={80} />
+          ) : (
+            <p className="">LOGO</p>
+          )}
           <div className=" flex flex-row gap-x-5">
             <Link href={`/expense/editexpense?expenseId=${expenseId}`}>
               <button
@@ -171,14 +175,14 @@ const ViewExpense = () => {
           <div className=" flex justify-between items-center mt-3">
             <div className=" text-sm text-[#c4c4c4] max-w-[250px] flex flex-col gap-y-2">
               <p>Thanks for your patronage</p>
-              <p className=" flex flex-row">
+              <div className=" flex flex-row">
                 Reach out to us{" "}
-                <Link href="mailto:technology@verzo.com">
+                <Link href="mailto:info@verzo.app">
                   <p className="text-primary-blue focus:underline underline-offset-2 ml-1 font-medium">
-                    technology@verzo.com
+                    info@verzo.app
                   </p>
                 </Link>
-              </p>
+              </div>
               <p>
                 Purchase created with{" "}
                 <span className=" text-primary-blue">Verzo</span>{" "}

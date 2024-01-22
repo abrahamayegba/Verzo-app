@@ -116,7 +116,11 @@ const ViewInvoice = () => {
         />
         <div className=" w-full flex flex-col shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 py-[36px] px-[44px]">
           <div className=" flex justify-between items-center">
-            <Image alt="Logo" src={businessLogo!} width={100} height={80} />
+            {businessLogo ? (
+              <Image alt="Logo" src={businessLogo} width={100} height={80} />
+            ) : (
+              <p className="">LOGO</p>
+            )}
             <div className=" flex flex-row gap-x-5">
               <Link href={`/invoice/editinvoice?invoiceId=${invoiceId}`}>
                 <button
@@ -197,9 +201,9 @@ const ViewInvoice = () => {
                 <p>Thanks for your patronage</p>
                 <div className=" flex flex-row">
                   Reach out to us{" "}
-                  <Link href="mailto:technology@verzo.com">
+                  <Link href="mailto:info@verzo.app">
                     <p className="text-primary-blue focus:underline underline-offset-2 ml-1 font-medium">
-                      technology@verzo.com
+                      info@verzo.app
                     </p>
                   </Link>
                 </div>
