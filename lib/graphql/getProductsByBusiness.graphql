@@ -12,6 +12,9 @@ query GetProductsByBusiness(
       productUnit {
         unitName
       }
+      productsInventory {
+        quantity
+      }
       stockStatus
       productUnitId
       archived

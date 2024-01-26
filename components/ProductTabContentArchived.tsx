@@ -81,7 +81,10 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
             Amount
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Basic unit
+            Stock status
+          </TableHead>
+          <TableHead className=" font-normal text-sm text-primary-greytext">
+            Stock count
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Product unit
@@ -123,9 +126,12 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
                 })}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {product?.stockStatus === "outOfStock"
-                  ? "Out of stock"
-                  : product?.stockStatus}
+                {product?.productsInventory?.quantity! > 0
+                  ? "In stock"
+                  : "Out of stock"}
+              </TableCell>
+              <TableCell className=" text-primary-greytext">
+                {product?.productsInventory?.quantity}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {product?.productUnit?.unitName}

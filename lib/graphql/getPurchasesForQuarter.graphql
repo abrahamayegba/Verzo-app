@@ -3,6 +3,7 @@ query GetPurchaseForQuarter($businessId: String!, $quarterly: Boolean) {
     purchasesThisQuarter
     totalPurchaseAmountThisQuarter
     pendingpurchasesThisQuarter
+    percentageIncreaseInPurchaseThisQuarter
     totalPendingPurchaseAmountThisQuarter
     paidPurchasesThisQuarter
     totalPaidPurchaseAmountThisQuarter
