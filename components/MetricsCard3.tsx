@@ -62,6 +62,9 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
       totalPurchaseAmountThisWeek:
         getPurchaseForWeek.data?.getPurchasesForWeek
           ?.totalPurchaseAmountThisWeek,
+      percentageIncreaseInPurchaseThisWeek:
+        getPurchaseForWeek.data?.getPurchasesForWeek
+          ?.percentageIncreaseInPurchaseThisWeek,
     };
   };
 
@@ -100,6 +103,9 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
       totalPurchaseAmountThisMonth:
         getPurchaseForMonth.data?.getPurchaseForMonth
           ?.totalPurchaseAmountThisMonth,
+      percentageIncreaseInPurchaseThisMonth:
+        getPurchaseForMonth.data?.getPurchaseForMonth
+          ?.percentageIncreaseInPurchaseThisMonth,
     };
   };
 
@@ -138,6 +144,9 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
       totalPurchaseAmountThisQuarter:
         getPurchaseForQuarter.data?.getPurchaseForQuarter
           ?.totalPurchaseAmountThisQuarter,
+      percentageIncreaseInPurchaseThisQuarter:
+        getPurchaseForQuarter.data?.getPurchaseForQuarter
+          ?.percentageIncreaseInPurchaseThisQuarter,
     };
   };
 
@@ -175,6 +184,9 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
       totalPurchaseAmountThisYear:
         getPurchaseForYear.data?.getPurchaseForYear
           ?.totalPurchaseAmountThisYear,
+      percentageIncreaseInPurchaseThisYear:
+        getPurchaseForYear.data?.getPurchaseForYear
+          ?.percentageIncreaseInPurchaseThisYear,
     };
   };
 
@@ -228,39 +240,51 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
               })}
           </p>
           {filter === "weekly" &&
-            weeklyData?.totalPurchaseAmountThisWeek! > 0 && (
+            weeklyData?.percentageIncreaseInPurchaseThisWeek! > 0 && (
               <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
-                <span className="text-[#4BB543] mx-1">20%</span> this week
+                <span className="text-[#4BB543] mx-1">
+                  {weeklyData?.percentageIncreaseInPurchaseThisWeek}%
+                </span>{" "}
+                this week
               </div>
             )}
           {filter === "monthly" &&
-            monthlyData?.totalPurchaseAmountThisMonth! > 0 && (
+            monthlyData?.percentageIncreaseInPurchaseThisMonth! > 0 && (
               <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
-                <span className="text-[#4BB543] mx-1">20%</span> this month
+                <span className="text-[#4BB543] mx-1">
+                  {monthlyData?.percentageIncreaseInPurchaseThisMonth}%
+                </span>{" "}
+                this month
               </div>
             )}
           {filter === "quarterly" &&
-            quarterlyData?.totalPurchaseAmountThisQuarter! > 0 && (
+            quarterlyData?.percentageIncreaseInPurchaseThisQuarter! > 0 && (
               <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
-                <span className="text-[#4BB543] mx-1">20%</span> this quarter
+                <span className="text-[#4BB543] mx-1">
+                  {quarterlyData?.percentageIncreaseInPurchaseThisQuarter}%
+                </span>{" "}
+                this quarter
               </div>
             )}
           {filter === "yearly" &&
-            yearlyData?.totalPurchaseAmountThisYear! > 0 && (
+            yearlyData?.percentageIncreaseInPurchaseThisYear! > 0 && (
               <div className=" flex items-center text-primary-greytext text-[15px]">
                 <span>
                   <ArrowUpIcon />
                 </span>
-                <span className="text-[#4BB543] mx-1">20%</span> this year
+                <span className="text-[#4BB543] mx-1">
+                  {yearlyData?.percentageIncreaseInPurchaseThisYear}%
+                </span>{" "}
+                this year
               </div>
             )}
         </div>

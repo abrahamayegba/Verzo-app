@@ -94,11 +94,15 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
         refetchQueries: [GetServiceByBusinessDocument],
       });
       onClose();
-      reset();
+      reset({
+        price: 0, // Default value for "price"
+        name: "",
+      });
       setServiceUnitId("");
       showSuccessToast();
     } catch (error) {
       console.error(error);
+      onClose();
       showFailureToast(error);
     }
   };
@@ -166,8 +170,9 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
                 <label htmlFor="price">Price</label>
                 <input
                   className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                  type="number"
+                  type="text"
                   required
+                  pattern="[0-9]*"
                   placeholder="Price"
                   {...register("price", {
                     valueAsNumber: true,

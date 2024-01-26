@@ -82,7 +82,6 @@ const Expenses = () => {
     },
   });
 
-  console.log(businessId);
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
   }

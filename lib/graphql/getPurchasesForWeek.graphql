@@ -2,6 +2,7 @@ query GetPurchaseForWeek($businessId: String!, $weekly: Boolean) {
   getPurchasesForWeek(businessId: $businessId, weekly: $weekly) {
     purchasesThisWeek
     totalPurchaseAmountThisWeek
+    percentageIncreaseInPurchaseThisWeek
     pendingPurchasesThisWeek
     totalPendingPurchaseAmountThisWeek
     paidPurchasesThisWeek

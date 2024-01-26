@@ -74,8 +74,6 @@ const SecuritySheet: React.FC<SecurityProps> = ({ open, onClose }) => {
       showFailureToast(error);
     }
   };
-
-  console.log(type);
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>

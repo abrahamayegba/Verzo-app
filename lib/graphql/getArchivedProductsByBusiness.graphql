@@ -17,6 +17,9 @@ query GetArchivedProductsByBusiness(
       productUnit {
         unitName
       }
+      productsInventory {
+        quantity
+      }
       productUnitId
       businessId
       createdAt
