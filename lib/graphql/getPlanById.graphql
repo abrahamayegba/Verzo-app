@@ -1,0 +1,7 @@
+query GetPlanById($planId: String!) {
+  getPlanById(planId: $planId) {
+    id
+    planName
+    currentPrice
+  }
+}

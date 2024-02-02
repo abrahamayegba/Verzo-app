@@ -1,0 +1,36 @@
+mutation CreateSubscriptionNewCardB(
+  $seerbitRef: String!
+  $businessId: String!
+  $currentPlanId: String!
+  $offerId: String
+  $addOnOptionId: String
+  $addOnQuantity: Float
+  $tax: Float!
+) {
+  createSubscriptionNewCardB(
+    seerbitRef: $seerbitRef
+    input: {
+      businessId: $businessId
+      currentPlanId: $currentPlanId
+      offerId: $offerId
+      addOnOptionId: $addOnOptionId
+      addOnQuantity: $addOnQuantity
+      tax: $tax
+    }
+  ) {
+    id
+    dateSubscribed
+    validTo
+    business {
+      businessName
+    }
+    subscriptionInvoice {
+      invoiceDescription
+      invoiceTotal
+      invoicePaid
+    }
+    subscriptionPayment {
+      amount
+    }
+  }
+}

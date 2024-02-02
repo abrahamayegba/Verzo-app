@@ -8,6 +8,7 @@ import localStorage from "local-storage-fallback";
 import {
   useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
+  useGetSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
 
@@ -22,6 +23,12 @@ const Settings = () => {
       businessId: businessId,
     },
   });
+  const subscription = useGetSubscriptionByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const handleBillingBannerClick = () => {
     setShowBillingBanner(false);
@@ -33,7 +40,11 @@ const Settings = () => {
     }
   }, [router]);
 
-  if (getBusinessesByUserId.loading || getBusinessById.loading) {
+  if (
+    getBusinessesByUserId.loading ||
+    getBusinessById.loading ||
+    subscription.loading
+  ) {
     return <MainLoader />;
   }
 

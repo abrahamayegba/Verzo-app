@@ -1,0 +1,6 @@
+mutation SignUpFromWaitlist($waitlistId: String!, $password: String!) {
+  signupFromWaitlist(waitlistId: $waitlistId, password: $password) {
+    access_token
+    refresh_token
+  }
+}

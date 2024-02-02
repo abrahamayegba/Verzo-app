@@ -1,18 +1,17 @@
 "use client";
 import { useGetSaleByIdQuery } from "@/src/generated/graphql";
-import { notFound, useParams } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import React from "react";
 import Image from "next/image";
 import MainLoader from "@/components/loading/MainLoader";
-import Verzologoblue from "@/components/ui/icons/Verzologoblue";
 import Link from "next/link";
 
-const InvoiceDetailPage = () => {
-  const { invoiceId } = useParams();
-  const saleId = Array.isArray(invoiceId) ? invoiceId[0] : invoiceId;
+const Pdf = () => {
+  const invoiceParams = useSearchParams();
+  const saleId = invoiceParams.get("invoiceId")?.toString();
   const getSaleById = useGetSaleByIdQuery({
     variables: {
-      saleId: saleId,
+      saleId: saleId!,
     },
   });
   const sales = getSaleById.data?.getSaleById;
@@ -48,34 +47,12 @@ const InvoiceDetailPage = () => {
   const dueDate = sales?.dueDate;
   const subtotal = sales?.invoice?.subtotal;
   const total = sales?.saleAmount;
-  const formattedTotal = total?.toLocaleString("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    currencyDisplay: "symbol",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
   if (getSaleById.loading) {
     return <MainLoader />;
   }
   return (
     <div className=" flex flex-col w-full justify-center items-center gap-y-[20px]">
-      <div className=" bg-primary-blue h-[9px] w-full"></div>
-      <div className=" flex flex-col items-center">
-        <p className=" font-bold text-[33px] mb-[14px]">Verzo</p>
-        <p className=" font-bold mb-2">Invoice {sales?.reference}</p>
-        <p className=" text-[33px]">{formattedTotal}</p>
-        <p className=" text-sm">
-          Due on{" "}
-          {new Date(dueDate).toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </p>
-      </div>
-      <div className=" w-full flex flex-col max-w-[790px] min-h-[1024px] bg-white shadow-xl border mt-[40px] border-gray-200 pt-[30px] pb-[36px] px-[44px]">
+      <div className=" w-full flex flex-col max-w-[790px] min-h-[1024px] bg-white border border-gray-200 pt-[30px] pb-[36px] px-[44px]">
         <div className=" flex flex-row justify-between items-center">
           <div>
             {businessLogo ? (
@@ -165,9 +142,7 @@ const InvoiceDetailPage = () => {
               </div>
               <p>
                 Invoice created with{" "}
-                <Link href="https://alpha.verzo.app/">
-                  <span className=" text-primary-blue">Verzo</span>{" "}
-                </Link>
+                <span className=" text-primary-blue">Verzo</span>{" "}
               </p>
             </div>
             <div className=" flex flex-col text-sm text-primary-black">
@@ -198,19 +173,8 @@ const InvoiceDetailPage = () => {
           Thank you for your business.
         </p>
       </div>
-      <div className=" flex flex-col gap-y-2 mt-[15px] mb-[40px]">
-        <p className=" flex flex-row text-xl font-medium text-gray-700 items-center">
-          Powered by{" "}
-          <span className=" ml-2 mt-[-5px]">
-            <Verzologoblue />
-          </span>
-        </p>
-        <p className=" text-sm text-gray-500">
-          &copy; 2023 Verzo. All rights reserved.
-        </p>
-      </div>
     </div>
   );
 };
 
-export default InvoiceDetailPage;
+export default Pdf;

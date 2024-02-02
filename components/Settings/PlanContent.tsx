@@ -6,8 +6,27 @@ import useModal from "@/app/hooks/useModal";
 import CardSheet from "../sheets/settings/planandbilling/CardSheet";
 import DeleteCard from "../modals/settings/DeleteCardModal";
 import DefaultCardModal from "../modals/settings/DefaultCardModal";
+import {
+  useCreateSubscriptionNewCardBMutation,
+  useGetPlanByIdQuery,
+  useGetSubscriptionByBusinessQuery,
+} from "@/src/generated/graphql";
+import localStorage from "local-storage-fallback";
+import { useToast } from "@/app/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
-const PlanContent = () => {
+interface PlanProps {
+  reference: string;
+}
+
+const PlanContent: React.FC<PlanProps> = ({ reference }) => {
+  const { toast } = useToast();
+  const router = useRouter();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const [selectedPlanId, setSelectedPlanId] = useState("");
   const {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
@@ -29,6 +48,23 @@ const PlanContent = () => {
   const [openPlanSheet, setOpenPlanSheet] = useState(false);
   const [openCardSheet, setOpenCardSheet] = useState(false);
 
+  const showSuccessToast = () => {
+    toast({
+      title: "Successful!",
+      description: "Your payment was successfully completed",
+      duration: 3000,
+    });
+  };
+
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 5000,
+    });
+  };
+
   const handleClosePlanSheet = () => {
     setOpenPlanSheet(false);
   };
@@ -37,9 +73,18 @@ const PlanContent = () => {
     setOpenCardSheet(false);
   };
 
-  const confirmPlan = () => {
+  const confirmPlan = (selectedOption: string) => {
+    setSelectedPlanId(selectedOption);
     openConfirmPlanModal();
   };
+
+  const getPlanById = useGetPlanByIdQuery({
+    variables: {
+      planId: selectedPlanId,
+    },
+  });
+
+  const selectedPlanName = getPlanById.data?.getPlanById?.planName!;
 
   const deleteCard = () => {
     openDeleteCardModal();
@@ -49,6 +94,49 @@ const PlanContent = () => {
     openDefaultCardModal();
   };
 
+  const { data } = useGetSubscriptionByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
+  const subscription = data?.getSubscriptionByBusiness[0];
+  const planName = subscription?.plan?.planName;
+
+  const [createSubscriptionNewCardBMutation] =
+    useCreateSubscriptionNewCardBMutation();
+
+  const handlePaymentVerification = async (reference: string) => {
+    try {
+      const storedPlanId = localStorage.getItem("planId")!;
+      const { data, errors } = await createSubscriptionNewCardBMutation({
+        variables: {
+          seerbitRef: reference,
+          businessId: businessId,
+          currentPlanId: storedPlanId,
+          tax: 0,
+        },
+      });
+      if (errors && errors.length > 0) {
+        throw new Error(errors[0].message);
+      }
+      if (data) {
+        showSuccessToast();
+      } else {
+        showFailureToast(errors);
+      }
+    } catch (error: any) {
+      console.error("Error verifying payment:", error.message);
+      showFailureToast(error);
+    }
+  };
+
+  if (reference) {
+    handlePaymentVerification(reference);
+    router.replace("/dashboard/settings");
+    return null;
+  }
+
   return (
     <>
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
@@ -57,10 +145,17 @@ const PlanContent = () => {
         </p>
         <div className=" bg-white min-h-[185px] flex flex-col rounded-b-[16px] w-full">
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
-            <div className=" flex flex-col gap-y-[6px]">
-              <p className=" text-primary-black">Plan</p>
+            <div className=" flex flex-col gap-y-[8px]">
+              <p className=" text-primary-black gap-x-3 flex items-center">
+                Plan
+                {planName && (
+                  <span className="inline-flex items-center mt-[2px] rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                    {planName}
+                  </span>
+                )}
+              </p>
               <p className=" text-sm text-primary-greytext">
-                Choose a Verzo plan
+                Update your Verzo plan
               </p>
             </div>
             <button
@@ -101,6 +196,8 @@ const PlanContent = () => {
         open={isConfirmPlanModalOpen}
         openModal={openConfirmPlanModal}
         onClose={closeConfirmPlanModal}
+        planId={selectedPlanId}
+        planName={selectedPlanName}
       />
       <DefaultCardModal
         open={isDefaultCardModalOpen}

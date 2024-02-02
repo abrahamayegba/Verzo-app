@@ -93,9 +93,9 @@ const Resetpassword = () => {
           <p className=" text-primary-greytext text-lg">
             Don’t have an account?
           </p>
-          <Link href="/auth/signup">
+          <Link href="https://verzo.app/waitlist">
             <button className="rounded-[10px] text-primary-black flex text-lg justify-center px-8 py-[9px] items-center border border-primary-border">
-              Sign up
+              Join waitlist
             </button>
           </Link>
         </div>
