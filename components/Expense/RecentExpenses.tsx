@@ -56,7 +56,7 @@ const RecentExpenses = () => {
                     ? new Date(expense.expenseDate).toDateString()
                     : ""}
                 </p>
-                <div className="bg-green-100 h-[20px] text-xs text-green-800 flex items-baseline rounded-full px-2.5 py-0.5 ">
+                <div className="bg-green-100 h-[20px] text-xs text-green-800 flex items-center rounded-full px-2.5 py-0.5 ">
                   {expense?.expenseCategory?.name}
                 </div>
                 <DropdownMenu>

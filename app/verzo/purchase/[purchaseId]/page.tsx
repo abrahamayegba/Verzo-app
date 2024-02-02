@@ -3,7 +3,7 @@ import {
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
 } from "@/src/generated/graphql";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import React from "react";
 import Image from "next/image";
 import MainLoader from "@/components/loading/MainLoader";
@@ -22,7 +22,9 @@ const PurchaseDetailPage = () => {
   });
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const purchase = getPurchaseById?.data?.getPurchaseById;
-  console.log(purchaseId);
+  if (getPurchaseById.loading == false && !purchase) {
+    notFound();
+  }
   const purchaseItems = purchase?.purchaseItems;
   const purchaseItem = purchaseItems?.map((item) => ({
     id: item?.id,
@@ -42,28 +44,51 @@ const PurchaseDetailPage = () => {
   const transactionDate = purchase?.transactionDate;
   const subtotal = purchase?.total;
   const total = subtotal;
+  const formattedTotal = total?.toLocaleString("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    currencyDisplay: "symbol",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   if (getBusinessesByUserId.loading || getPurchaseById.loading) {
     return <MainLoader />;
   }
   return (
-    <div className=" py-[40px] flex flex-col w-full justify-center items-center gap-y-[20px]">
-      <div className=" w-full flex flex-col max-w-[750px] bg-white shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 pt-[20px] pb-[36px] px-[44px]">
-        <div className=" flex flex-col">
-          {businessLogo ? (
-            <Image
-              alt="Logo"
-              className=" ml-[-15px]"
-              src={businessLogo!}
-              width={100}
-              height={80}
-            />
-          ) : (
-            <p className="">LOGO</p>
-          )}
-          <p className=" text-xl">PURCHASE ORDER</p>
+    <div className=" flex flex-col w-full justify-center items-center gap-y-[20px]">
+      <div className=" bg-primary-blue h-[9px] w-full"></div>
+      <div className=" flex flex-col items-center">
+        <p className=" font-bold text-[33px] mb-[14px]">Verzo</p>
+        <p className=" font-bold mb-2">Purchase {purchase?.reference}</p>
+        <p className=" text-[33px]">{formattedTotal}</p>
+        <p className=" text-sm">
+          Due on{" "}
+          {new Date(transactionDate).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
+      </div>
+      <div className=" w-full flex flex-col max-w-[790px] min-h-[1024px] bg-white shadow-xl border mt-[40px] border-gray-200 pt-[30px] pb-[36px] px-[44px]">
+        <div className=" flex flex-row justify-between items-center">
+          <div>
+            {businessLogo ? (
+              <Image
+                alt="Logo"
+                className=" ml-[-15px]"
+                src={businessLogo!}
+                width={120}
+                height={90}
+              />
+            ) : (
+              <p className="">LOGO</p>
+            )}
+          </div>
+          <p className=" text-3xl">PURCHASE</p>
         </div>
-        <div className=" flex flex-col border-t border-t-[#f4f4f4] mt-2">
+        <div className=" flex flex-col border-t border-t-gray-200 mt-2">
           <div className="grid grid-cols-3 pt-8 gap-4">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>Purchase</p>
@@ -104,7 +129,7 @@ const PurchaseDetailPage = () => {
             <p className=" text-lg">Purchase details</p>
             <table className=" w-full ">
               <thead>
-                <tr className=" text-sm text-primary-greytext border-y border-y-gray-100">
+                <tr className=" text-sm text-primary-greytext border-y border-y-gray-200">
                   <th className=" text-start font-normal py-3">Item</th>
                   <th className=" text-end font-normal py-3">Qty</th>
                   <th className=" text-end font-normal py-3">Unit price</th>
@@ -128,15 +153,17 @@ const PurchaseDetailPage = () => {
               <p>Thanks for your patronage</p>
               <div className="flex">
                 Reach out to us{" "}
-                <Link href="mailto:technology@verzo.com">
+                <Link href="mailto:info@verzo.com">
                   <p className="text-primary-blue focus:underline underline-offset-2 ml-1 font-medium">
-                    technology@verzo.com
+                    info@verzo.com
                   </p>
                 </Link>
               </div>
               <p>
                 Invoice created with{" "}
-                <span className=" text-primary-blue">Verzo</span>{" "}
+                <Link href="https://alpha.verzo.app/">
+                  <span className=" text-primary-blue">Verzo</span>{" "}
+                </Link>
               </p>
             </div>
             <div className=" flex flex-col text-sm text-primary-black">
@@ -163,8 +190,11 @@ const PurchaseDetailPage = () => {
             </div>
           </div>
         </div>
+        <p className=" mt-auto text-sm text-gray-500 text-center tracking-wide">
+          Thank you for your business.
+        </p>
       </div>
-      <div className=" flex flex-col gap-y-3 mt-2">
+      <div className=" flex flex-col gap-y-2 mt-[15px] mb-[40px]">
         <p className=" flex flex-row text-xl font-medium text-gray-700 items-center">
           Powered by{" "}
           <span className=" ml-2 mt-[-5px]">

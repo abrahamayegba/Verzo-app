@@ -2,18 +2,64 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
+import { useCreateSubscriptionNewCardAMutation } from "@/src/generated/graphql";
+import localStorage from "local-storage-fallback";
+import { useToast } from "@/app/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface ConfirmPlanProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  planName: string;
+  planId: string;
 }
 
 const ConfirmPlanModal: React.FC<ConfirmPlanProps> = ({
   open,
   openModal,
   onClose,
+  planName,
+  planId,
 }) => {
+  const { toast } = useToast();
+  const router = useRouter();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const [createSubscriptionNewCardAMutation, { loading }] =
+    useCreateSubscriptionNewCardAMutation();
+
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error.message,
+      duration: 3000,
+    });
+  };
+  const handleCreateSubscription = async () => {
+    try {
+      localStorage.setItem("planId", planId);
+      const { data } = await createSubscriptionNewCardAMutation({
+        variables: {
+          businessId: businessId,
+          currentPlanId: planId,
+          tax: 0,
+        },
+      });
+      const paymentLink = data?.createSubscriptionNewCardA?.paymentLink;
+      if (paymentLink) {
+        router.push(paymentLink);
+      }
+    } catch (error) {
+      console.error(error);
+      onClose();
+      showFailureToast(error);
+    }
+  };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -48,8 +94,9 @@ const ConfirmPlanModal: React.FC<ConfirmPlanProps> = ({
                   </div>
                   <p className=" text-lg text-[#121212]">Confirm plan</p>
                   <p className=" text-primary-greytext">
-                    Are you sure you want to switch to the Standard Monthly
-                    Plan? This will affect your access to features
+                    Are you sure you want to switch to the{" "}
+                    <span className=" text-primary-blue">{planName}</span> ?
+                    This will affect your access to features
                   </p>
                   <div className=" flex justify-between mt-6">
                     <button
@@ -58,7 +105,13 @@ const ConfirmPlanModal: React.FC<ConfirmPlanProps> = ({
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
+                    <button
+                      onClick={handleCreateSubscription}
+                      disabled={loading}
+                      className={`px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                        loading ? "opacity-50" : ""
+                      }`}
+                    >
                       Proceed
                     </button>
                   </div>
