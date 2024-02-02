@@ -73,6 +73,24 @@ export type AddWaitlist = {
   mobile?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Attributes = {
+  __typename?: 'Attributes';
+  Businessemail?: Maybe<Scalars['String']['output']>;
+  Businessname?: Maybe<Scalars['String']['output']>;
+  Email?: Maybe<Scalars['String']['output']>;
+  Employeenumberbeg?: Maybe<Scalars['Float']['output']>;
+  Employeenumberend?: Maybe<Scalars['Float']['output']>;
+  Firstname?: Maybe<Scalars['String']['output']>;
+  Industry?: Maybe<Scalars['String']['output']>;
+  Lastname?: Maybe<Scalars['String']['output']>;
+  Phone?: Maybe<Scalars['Float']['output']>;
+  Revenueend?: Maybe<Scalars['Float']['output']>;
+  Revenuestart?: Maybe<Scalars['Float']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  publishedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
 export type Authorization = {
   mode?: InputMaybe<Scalars['String']['input']>;
   pin?: InputMaybe<Scalars['String']['input']>;
@@ -728,8 +746,9 @@ export type CreateSubscriptionTokenizedInput = {
   addOnOptionId?: InputMaybe<Scalars['String']['input']>;
   addOnQuantity?: InputMaybe<Scalars['Float']['input']>;
   businessId: Scalars['String']['input'];
-  cardNumber: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
+  first6Digits: Scalars['String']['input'];
+  last4Digits: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
   tax: Scalars['Float']['input'];
 };
@@ -1638,6 +1657,7 @@ export type Mutation = {
   deleteChartOfAccount?: Maybe<Scalars['Boolean']['output']>;
   deleteCustomer?: Maybe<Scalars['Boolean']['output']>;
   deleteEmployee?: Maybe<Scalars['Boolean']['output']>;
+  deleteEmployeeByEmail?: Maybe<Scalars['Boolean']['output']>;
   deleteExpense?: Maybe<Scalars['Boolean']['output']>;
   deleteExpenseCategory?: Maybe<Scalars['Boolean']['output']>;
   deleteForgotPasswordEntries?: Maybe<Scalars['Boolean']['output']>;
@@ -1671,6 +1691,7 @@ export type Mutation = {
   deleteUserFromWaitlist?: Maybe<Scalars['Boolean']['output']>;
   deleteUserFromWaitlistById?: Maybe<Scalars['Boolean']['output']>;
   deleteUserInvite?: Maybe<Scalars['Boolean']['output']>;
+  downloadWaitlist?: Maybe<Scalars['Boolean']['output']>;
   effectSaleExpense: EffectSaleExpenseResponse;
   employeeChangePassword?: Maybe<Scalars['Boolean']['output']>;
   employeeForgotPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -1680,6 +1701,7 @@ export type Mutation = {
   employeeSignUpAfterInvite: Token;
   employeeSignin: EmployeeToken;
   endSubscription?: Maybe<Subscription>;
+  extendBetaTesting?: Maybe<Scalars['Boolean']['output']>;
   forgotPassword?: Maybe<Scalars['Boolean']['output']>;
   generateQrCodeDataURL?: Maybe<Scalars['String']['output']>;
   generateTwoFactorAuthSecret?: Maybe<TwoFactorAuthResponse>;
@@ -1698,6 +1720,7 @@ export type Mutation = {
   sendInvoice?: Maybe<Scalars['Boolean']['output']>;
   sendInvoiceB?: Maybe<Scalars['Boolean']['output']>;
   sendPurchase?: Maybe<Scalars['Boolean']['output']>;
+  sendWaitlistToMail?: Maybe<Scalars['Boolean']['output']>;
   setCardAsDefault?: Maybe<Scalars['Boolean']['output']>;
   signIn: TokenWithVerificationStatus;
   signInWithGoogle: Token;
@@ -2327,7 +2350,11 @@ export type MutationDeleteCustomerArgs = {
 
 export type MutationDeleteEmployeeArgs = {
   deleteEmployeeId: Scalars['String']['input'];
-  email: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteEmployeeByEmailArgs = {
+  email?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2546,6 +2573,11 @@ export type MutationEndSubscriptionArgs = {
 };
 
 
+export type MutationExtendBetaTestingArgs = {
+  validTo: Scalars['Date']['input'];
+};
+
+
 export type MutationForgotPasswordArgs = {
   email: Scalars['String']['input'];
 };
@@ -2640,6 +2672,11 @@ export type MutationSendInvoiceBArgs = {
 export type MutationSendPurchaseArgs = {
   copy?: InputMaybe<Scalars['Boolean']['input']>;
   purchaseId: Scalars['String']['input'];
+};
+
+
+export type MutationSendWaitlistToMailArgs = {
+  emailTo: Scalars['String']['input'];
 };
 
 
@@ -3387,6 +3424,7 @@ export type Query = {
   billingPlan?: Maybe<BillingPlan>;
   billingPlans: Array<BillingPlan>;
   checkIfNewBusiness?: Maybe<Scalars['Boolean']['output']>;
+  fetchWaitlist?: Maybe<Array<Maybe<WaitlistData>>>;
   generateBalanceSheetStatementForAllTime?: Maybe<GenerateBalanceSheetResponse>;
   generateBalanceSheetStatementForMonth?: Maybe<GenerateBalanceSheetResponse>;
   generateCashFlowStatementForMonth?: Maybe<GenerateCashFlowStatementResponse>;
@@ -3570,6 +3608,7 @@ export type Query = {
   totalQuarterlyInvoicesAmount?: Maybe<TotalQuarterInvoiceAmounts>;
   totalWeeklyInvoicesAmount?: Maybe<TotalWeeklyInvoiceAmount>;
   totalYearlyInvoicesAmount?: Maybe<TotalYearInvoiceAmounts>;
+  userJoinStrapiWaitlistEmail?: Maybe<Scalars['Boolean']['output']>;
   verzoPlusSubscriptionCheckerForFrontend?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -4380,6 +4419,11 @@ export type QueryTotalYearlyInvoicesAmountArgs = {
   yearly?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
+export type QueryUserJoinStrapiWaitlistEmailArgs = {
+  input: SendAfterWaitlistJoin;
+};
+
 export type ResetPassword = {
   newPassword: Scalars['String']['input'];
   oldPassword: Scalars['String']['input'];
@@ -4582,6 +4626,11 @@ export type SeerbitTokenizeChargeInput = {
   amount: Scalars['Float']['input'];
   token: Scalars['String']['input'];
   uuid: Scalars['String']['input'];
+};
+
+export type SendAfterWaitlistJoin = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type Service = {
@@ -5272,6 +5321,12 @@ export type VerificationResponse = {
   message?: Maybe<Scalars['Boolean']['output']>;
 };
 
+export type WaitlistData = {
+  __typename?: 'WaitlistData';
+  attributes?: Maybe<Attributes>;
+  id?: Maybe<Scalars['String']['output']>;
+};
+
 export type WeeklySales = {
   __typename?: 'WeeklySales';
   cursorId?: Maybe<Scalars['String']['output']>;
@@ -5581,6 +5636,31 @@ export type CreateServiceWithCsvMutationVariables = Exact<{
 
 
 export type CreateServiceWithCsvMutation = { __typename?: 'Mutation', createServicesWithCsv?: boolean | null };
+
+export type CreateSubscriptionNewCardAMutationVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  currentPlanId: Scalars['String']['input'];
+  offerId?: InputMaybe<Scalars['String']['input']>;
+  addOnOptionId?: InputMaybe<Scalars['String']['input']>;
+  addOnQuantity?: InputMaybe<Scalars['Float']['input']>;
+  tax: Scalars['Float']['input'];
+}>;
+
+
+export type CreateSubscriptionNewCardAMutation = { __typename?: 'Mutation', createSubscriptionNewCardA?: { __typename?: 'SeerbitStandardCheckoutResponse', status?: string | null, paymentReference?: string | null, paymentLink?: string | null } | null };
+
+export type CreateSubscriptionNewCardBMutationVariables = Exact<{
+  seerbitRef: Scalars['String']['input'];
+  businessId: Scalars['String']['input'];
+  currentPlanId: Scalars['String']['input'];
+  offerId?: InputMaybe<Scalars['String']['input']>;
+  addOnOptionId?: InputMaybe<Scalars['String']['input']>;
+  addOnQuantity?: InputMaybe<Scalars['Float']['input']>;
+  tax: Scalars['Float']['input'];
+}>;
+
+
+export type CreateSubscriptionNewCardBMutation = { __typename?: 'Mutation', createSubscriptionNewCardB?: { __typename?: 'Subscription', id: string, dateSubscribed: any, validTo: any, business?: { __typename?: 'Business', businessName: string } | null, subscriptionInvoice?: Array<{ __typename?: 'SubscriptionInvoice', invoiceDescription?: string | null, invoiceTotal?: number | null, invoicePaid?: any | null } | null> | null, subscriptionPayment?: { __typename?: 'SubscriptionPayment', amount?: number | null } | null } | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5971,6 +6051,13 @@ export type NumberOfInvoicesThisYearQueryVariables = Exact<{
 
 
 export type NumberOfInvoicesThisYearQuery = { __typename?: 'Query', numberOfInvoicesThisYear?: { __typename?: 'TotalInvoicesThisYear', invoicesThisYear: number, totalInvoices: number } | null };
+
+export type GetPlanByIdQueryVariables = Exact<{
+  planId: Scalars['String']['input'];
+}>;
+
+
+export type GetPlanByIdQuery = { __typename?: 'Query', getPlanById?: { __typename?: 'Plan', id: string, planName: string, currentPrice: number } | null };
 
 export type GetPlansQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6378,6 +6465,14 @@ export type SendPurchaseMutationVariables = Exact<{
 
 
 export type SendPurchaseMutation = { __typename?: 'Mutation', sendPurchase?: boolean | null };
+
+export type SignUpFromWaitlistMutationVariables = Exact<{
+  waitlistId: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type SignUpFromWaitlistMutation = { __typename?: 'Mutation', signupFromWaitlist: { __typename?: 'Token', access_token: string, refresh_token: string } };
 
 export type SignInMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -7785,6 +7880,103 @@ export function useCreateServiceWithCsvMutation(baseOptions?: Apollo.MutationHoo
 export type CreateServiceWithCsvMutationHookResult = ReturnType<typeof useCreateServiceWithCsvMutation>;
 export type CreateServiceWithCsvMutationResult = Apollo.MutationResult<CreateServiceWithCsvMutation>;
 export type CreateServiceWithCsvMutationOptions = Apollo.BaseMutationOptions<CreateServiceWithCsvMutation, CreateServiceWithCsvMutationVariables>;
+export const CreateSubscriptionNewCardADocument = gql`
+    mutation CreateSubscriptionNewCardA($businessId: String!, $currentPlanId: String!, $offerId: String, $addOnOptionId: String, $addOnQuantity: Float, $tax: Float!) {
+  createSubscriptionNewCardA(
+    input: {businessId: $businessId, currentPlanId: $currentPlanId, offerId: $offerId, addOnOptionId: $addOnOptionId, addOnQuantity: $addOnQuantity, tax: $tax}
+  ) {
+    status
+    paymentReference
+    paymentLink
+  }
+}
+    `;
+export type CreateSubscriptionNewCardAMutationFn = Apollo.MutationFunction<CreateSubscriptionNewCardAMutation, CreateSubscriptionNewCardAMutationVariables>;
+
+/**
+ * __useCreateSubscriptionNewCardAMutation__
+ *
+ * To run a mutation, you first call `useCreateSubscriptionNewCardAMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubscriptionNewCardAMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSubscriptionNewCardAMutation, { data, loading, error }] = useCreateSubscriptionNewCardAMutation({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      currentPlanId: // value for 'currentPlanId'
+ *      offerId: // value for 'offerId'
+ *      addOnOptionId: // value for 'addOnOptionId'
+ *      addOnQuantity: // value for 'addOnQuantity'
+ *      tax: // value for 'tax'
+ *   },
+ * });
+ */
+export function useCreateSubscriptionNewCardAMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionNewCardAMutation, CreateSubscriptionNewCardAMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSubscriptionNewCardAMutation, CreateSubscriptionNewCardAMutationVariables>(CreateSubscriptionNewCardADocument, options);
+      }
+export type CreateSubscriptionNewCardAMutationHookResult = ReturnType<typeof useCreateSubscriptionNewCardAMutation>;
+export type CreateSubscriptionNewCardAMutationResult = Apollo.MutationResult<CreateSubscriptionNewCardAMutation>;
+export type CreateSubscriptionNewCardAMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionNewCardAMutation, CreateSubscriptionNewCardAMutationVariables>;
+export const CreateSubscriptionNewCardBDocument = gql`
+    mutation CreateSubscriptionNewCardB($seerbitRef: String!, $businessId: String!, $currentPlanId: String!, $offerId: String, $addOnOptionId: String, $addOnQuantity: Float, $tax: Float!) {
+  createSubscriptionNewCardB(
+    seerbitRef: $seerbitRef
+    input: {businessId: $businessId, currentPlanId: $currentPlanId, offerId: $offerId, addOnOptionId: $addOnOptionId, addOnQuantity: $addOnQuantity, tax: $tax}
+  ) {
+    id
+    dateSubscribed
+    validTo
+    business {
+      businessName
+    }
+    subscriptionInvoice {
+      invoiceDescription
+      invoiceTotal
+      invoicePaid
+    }
+    subscriptionPayment {
+      amount
+    }
+  }
+}
+    `;
+export type CreateSubscriptionNewCardBMutationFn = Apollo.MutationFunction<CreateSubscriptionNewCardBMutation, CreateSubscriptionNewCardBMutationVariables>;
+
+/**
+ * __useCreateSubscriptionNewCardBMutation__
+ *
+ * To run a mutation, you first call `useCreateSubscriptionNewCardBMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubscriptionNewCardBMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSubscriptionNewCardBMutation, { data, loading, error }] = useCreateSubscriptionNewCardBMutation({
+ *   variables: {
+ *      seerbitRef: // value for 'seerbitRef'
+ *      businessId: // value for 'businessId'
+ *      currentPlanId: // value for 'currentPlanId'
+ *      offerId: // value for 'offerId'
+ *      addOnOptionId: // value for 'addOnOptionId'
+ *      addOnQuantity: // value for 'addOnQuantity'
+ *      tax: // value for 'tax'
+ *   },
+ * });
+ */
+export function useCreateSubscriptionNewCardBMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionNewCardBMutation, CreateSubscriptionNewCardBMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSubscriptionNewCardBMutation, CreateSubscriptionNewCardBMutationVariables>(CreateSubscriptionNewCardBDocument, options);
+      }
+export type CreateSubscriptionNewCardBMutationHookResult = ReturnType<typeof useCreateSubscriptionNewCardBMutation>;
+export type CreateSubscriptionNewCardBMutationResult = Apollo.MutationResult<CreateSubscriptionNewCardBMutation>;
+export type CreateSubscriptionNewCardBMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionNewCardBMutation, CreateSubscriptionNewCardBMutationVariables>;
 export const CreateSubscriptionDocument = gql`
     mutation CreateSubscription($businessId: String!, $currentPlanId: String!, $offerId: String, $addOnOptionId: String, $addOnQuantity: Float, $tax: Float!, $cardNumber: String!, $cardCVV: String!, $cardType: String, $cardExpiry: String!, $cardPin: String!, $billingAddress: String) {
   createSubscription(
@@ -10239,6 +10431,48 @@ export type NumberOfInvoicesThisYearQueryHookResult = ReturnType<typeof useNumbe
 export type NumberOfInvoicesThisYearLazyQueryHookResult = ReturnType<typeof useNumberOfInvoicesThisYearLazyQuery>;
 export type NumberOfInvoicesThisYearSuspenseQueryHookResult = ReturnType<typeof useNumberOfInvoicesThisYearSuspenseQuery>;
 export type NumberOfInvoicesThisYearQueryResult = Apollo.QueryResult<NumberOfInvoicesThisYearQuery, NumberOfInvoicesThisYearQueryVariables>;
+export const GetPlanByIdDocument = gql`
+    query GetPlanById($planId: String!) {
+  getPlanById(planId: $planId) {
+    id
+    planName
+    currentPrice
+  }
+}
+    `;
+
+/**
+ * __useGetPlanByIdQuery__
+ *
+ * To run a query within a React component, call `useGetPlanByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPlanByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPlanByIdQuery({
+ *   variables: {
+ *      planId: // value for 'planId'
+ *   },
+ * });
+ */
+export function useGetPlanByIdQuery(baseOptions: Apollo.QueryHookOptions<GetPlanByIdQuery, GetPlanByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPlanByIdQuery, GetPlanByIdQueryVariables>(GetPlanByIdDocument, options);
+      }
+export function useGetPlanByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPlanByIdQuery, GetPlanByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPlanByIdQuery, GetPlanByIdQueryVariables>(GetPlanByIdDocument, options);
+        }
+export function useGetPlanByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetPlanByIdQuery, GetPlanByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetPlanByIdQuery, GetPlanByIdQueryVariables>(GetPlanByIdDocument, options);
+        }
+export type GetPlanByIdQueryHookResult = ReturnType<typeof useGetPlanByIdQuery>;
+export type GetPlanByIdLazyQueryHookResult = ReturnType<typeof useGetPlanByIdLazyQuery>;
+export type GetPlanByIdSuspenseQueryHookResult = ReturnType<typeof useGetPlanByIdSuspenseQuery>;
+export type GetPlanByIdQueryResult = Apollo.QueryResult<GetPlanByIdQuery, GetPlanByIdQueryVariables>;
 export const GetPlansDocument = gql`
     query GetPlans {
   getPlans {
@@ -12839,6 +13073,41 @@ export function useSendPurchaseMutation(baseOptions?: Apollo.MutationHookOptions
 export type SendPurchaseMutationHookResult = ReturnType<typeof useSendPurchaseMutation>;
 export type SendPurchaseMutationResult = Apollo.MutationResult<SendPurchaseMutation>;
 export type SendPurchaseMutationOptions = Apollo.BaseMutationOptions<SendPurchaseMutation, SendPurchaseMutationVariables>;
+export const SignUpFromWaitlistDocument = gql`
+    mutation SignUpFromWaitlist($waitlistId: String!, $password: String!) {
+  signupFromWaitlist(waitlistId: $waitlistId, password: $password) {
+    access_token
+    refresh_token
+  }
+}
+    `;
+export type SignUpFromWaitlistMutationFn = Apollo.MutationFunction<SignUpFromWaitlistMutation, SignUpFromWaitlistMutationVariables>;
+
+/**
+ * __useSignUpFromWaitlistMutation__
+ *
+ * To run a mutation, you first call `useSignUpFromWaitlistMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignUpFromWaitlistMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signUpFromWaitlistMutation, { data, loading, error }] = useSignUpFromWaitlistMutation({
+ *   variables: {
+ *      waitlistId: // value for 'waitlistId'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useSignUpFromWaitlistMutation(baseOptions?: Apollo.MutationHookOptions<SignUpFromWaitlistMutation, SignUpFromWaitlistMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignUpFromWaitlistMutation, SignUpFromWaitlistMutationVariables>(SignUpFromWaitlistDocument, options);
+      }
+export type SignUpFromWaitlistMutationHookResult = ReturnType<typeof useSignUpFromWaitlistMutation>;
+export type SignUpFromWaitlistMutationResult = Apollo.MutationResult<SignUpFromWaitlistMutation>;
+export type SignUpFromWaitlistMutationOptions = Apollo.BaseMutationOptions<SignUpFromWaitlistMutation, SignUpFromWaitlistMutationVariables>;
 export const SignInDocument = gql`
     mutation SignIn($email: String!, $password: String!) {
   signIn(input: {email: $email, password: $password}) {

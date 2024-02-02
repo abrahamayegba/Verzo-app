@@ -1,18 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import ProductTabContentAll from "../ProductTabContentAll";
-import ProductTabContentArchived from "../ProductTabContentArchived";
 import ProfileContent from "./ProfileContent";
 import BusinessProfileContent from "./BusinessProfileContent";
 import PlanContent from "./PlanContent";
 import AddonsContent from "./AddonsContent";
 import BulkUploadContent from "./BulkUploadContent";
+import { useSearchParams } from "next/navigation";
 
 const SettingsContent = () => {
+  const referenceParams = useSearchParams();
+  const reference = referenceParams.get("reference");
   return (
     <div className=" w-full flex flex-col">
-      <Tabs defaultValue="profile" className="w-full">
+      <Tabs
+        defaultValue={reference ? "planandbillings" : "profile"}
+        className="w-full"
+      >
         <TabsList className=" mb-3 flex justify-between border-b border-b-gray-100">
           <div className=" gap-x-[30px] flex">
             <TabsTrigger
@@ -54,7 +58,7 @@ const SettingsContent = () => {
           <BusinessProfileContent />
         </TabsContent>
         <TabsContent value="planandbillings">
-          <PlanContent />
+          <PlanContent reference={reference!} />
         </TabsContent>
         <TabsContent value="addons">
           <AddonsContent />

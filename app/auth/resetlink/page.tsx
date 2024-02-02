@@ -4,6 +4,7 @@ import AuthSidebar from "@/components/AuthSidebar";
 import { useForgotPasswordMutation } from "@/src/generated/graphql";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/app/hooks/use-toast";
+import Link from "next/link";
 
 type FormData = {
   email: string;
@@ -51,9 +52,11 @@ const Resetlink = () => {
           <p className=" text-primary-greytext text-lg">
             Don’t have an account?
           </p>
-          <button className="rounded-[10px] text-primary-black flex text-lg justify-center px-8 py-[9px] items-center border border-primary-border">
-            Sign up
-          </button>
+          <Link href="https://verzo.app/waitlist">
+            <button className="rounded-[10px] text-primary-black flex text-lg justify-center px-8 py-[9px] items-center border border-primary-border">
+              Join waitlist
+            </button>
+          </Link>
         </div>
         <div className=" flex flex-col pl-[140px] pr-[60px] mt-[60px]">
           <div className=" flex flex-col gap-y-2">

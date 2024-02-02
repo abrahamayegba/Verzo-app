@@ -1,0 +1,23 @@
+mutation CreateSubscriptionNewCardA(
+  $businessId: String!
+  $currentPlanId: String!
+  $offerId: String
+  $addOnOptionId: String
+  $addOnQuantity: Float
+  $tax: Float!
+) {
+  createSubscriptionNewCardA(
+    input: {
+      businessId: $businessId
+      currentPlanId: $currentPlanId
+      offerId: $offerId
+      addOnOptionId: $addOnOptionId
+      addOnQuantity: $addOnQuantity
+      tax: $tax
+    }
+  ) {
+    status
+    paymentReference
+    paymentLink
+  }
+}
