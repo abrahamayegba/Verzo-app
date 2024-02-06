@@ -13,12 +13,10 @@ const Banner: React.FC<Bannerprops> = ({ onClose }) => {
         className="flex items-center text-white font-normal justify-between w-full"
       >
         <div className=" flex flex-row gap-x-[50px]">
-          <p>
-            Verzo Free plan expires in 30 days. Upgrade to continue using Verzo.
-          </p>
-          <span className="underline underline-offset-[3px] cursor-pointer">
+          <p>You are in Beta mode</p>
+          {/* <span className="underline underline-offset-[3px] cursor-pointer">
             Update billing
-          </span>
+          </span> */}
         </div>
         <X
           onClick={onClose}
