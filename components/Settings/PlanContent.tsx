@@ -204,7 +204,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
                   >
                     Close
                   </button>
-                  {/* <AlertDialogAction>Continue</AlertDialogAction> */}
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
