@@ -14,6 +14,16 @@ import {
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 interface PlanProps {
   reference: string;
@@ -47,6 +57,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
 
   const [openPlanSheet, setOpenPlanSheet] = useState(false);
   const [openCardSheet, setOpenCardSheet] = useState(false);
+  const [openBillingModal, setOpenBillingModal] = useState(false);
 
   const showSuccessToast = () => {
     toast({
@@ -158,12 +169,45 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
                 Update your Verzo plan
               </p>
             </div>
-            <button
+            {/* <button
               onClick={() => setOpenPlanSheet(true)}
               className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
             >
               Update
-            </button>
+            </button> */}
+            <AlertDialog
+              open={openBillingModal}
+              onOpenChange={() => setOpenBillingModal(true)}
+            >
+              <button
+                onClick={() => setOpenBillingModal(true)}
+                className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
+              >
+                Update
+              </button>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    You are on the Beta testing plan!
+                  </AlertDialogTitle>
+                  <p className=" text-sm text-gray-700 leading-6">
+                    Please be informed that our billing and payment
+                    functionalities are currently disabled as part of our
+                    ongoing beta testing phase. We appreciate your patience and
+                    understanding as we work to enhance our platform.
+                  </p>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <button
+                    className=" border border-gray-200 px-5 hover:border-gray-500 py-2 text-[15px] rounded-md"
+                    onClick={() => setOpenBillingModal(false)}
+                  >
+                    Close
+                  </button>
+                  {/* <AlertDialogAction>Continue</AlertDialogAction> */}
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[6px]">
@@ -173,7 +217,8 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
               </p>
             </div>
             <button
-              onClick={() => setOpenCardSheet(true)}
+              // onClick={() => setOpenCardSheet(true)}
+              onClick={() => setOpenBillingModal(true)}
               className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
             >
               Update

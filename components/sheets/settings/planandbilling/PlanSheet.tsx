@@ -91,97 +91,6 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                       Annually
                     </TabsTrigger>
                   </TabsList>
-                  {/* <TabsContent
-                    className=" flex flex-col gap-y-6"
-                    value="monthly"
-                  >
-                    <button
-                      onClick={() => handleOptionSelect("option-one")}
-                      className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
-                        selectedOption === "option-one"
-                          ? "bg-blue-50 bg-opacity-25"
-                          : ""
-                      }`}
-                    >
-                      <div className="flex flex-col gap-y-2">
-                        <p className="text-primary-black text-start">Basic</p>
-                        <p className="text-sm text-primary-greytext">
-                          ₦5,500 monthly
-                        </p>
-                      </div>
-                      <div className="relative">
-                        <div
-                          className={`${"border border-gray-300 w-5 h-5 rounded-full"}`}
-                        >
-                          <span
-                            className={`${
-                              selectedOption === "option-one"
-                                ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                            }`}
-                          ></span>
-                        </div>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleOptionSelect("option-two")}
-                      className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
-                        selectedOption === "option-two"
-                          ? " bg-blue-50 bg-opacity-25"
-                          : ""
-                      }`}
-                    >
-                      <div className="flex flex-col gap-y-2">
-                        <p className="text-primary-black text-start">
-                          Standard
-                        </p>
-                        <p className="text-sm text-primary-greytext">
-                          ₦5,500 monthly
-                        </p>
-                      </div>
-                      <div className="relative">
-                        <div
-                          className={`${"border border-gray-300 w-5 h-5 rounded-full"}`}
-                        >
-                          <span
-                            className={`${
-                              selectedOption === "option-two"
-                                ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                            }`}
-                          ></span>
-                        </div>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleOptionSelect("option-three")}
-                      className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
-                        selectedOption === "option-three"
-                          ? "bg-blue-50 bg-opacity-25"
-                          : ""
-                      }`}
-                    >
-                      <div className="flex flex-col gap-y-2">
-                        <p className="text-primary-black text-start">Premium</p>
-                        <p className="text-sm text-primary-greytext">
-                          ₦5,500 monthly
-                        </p>
-                      </div>
-                      <div className="relative">
-                        <div
-                          className={`${"border border-gray-300 w-5 h-5 rounded-full"}`}
-                        >
-                          <span
-                            className={`${
-                              selectedOption === "option-three"
-                                ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                            }`}
-                          ></span>
-                        </div>
-                      </div>
-                    </button>
-                  </TabsContent> */}
                   <TabsContent
                     className="flex flex-col gap-y-6"
                     value="monthly"
@@ -375,14 +284,6 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
               </>
             )}
             <button
-              // onClick={
-              //   currentStep === 1
-              //     ? handleNext
-              //     : () => {
-              //         onClose();
-              //         confirmPlan();
-              //       }
-              // }
               onClick={() => {
                 onClose();
                 confirmPlan(selectedOption);
