@@ -762,6 +762,16 @@ export type CreateSubscriptionWithCard = {
   tax: Scalars['Float']['input'];
 };
 
+export type CreateSubscriptionWithCardB = {
+  addOnOptionId?: InputMaybe<Scalars['String']['input']>;
+  addOnQuantity?: InputMaybe<Scalars['Float']['input']>;
+  businessId: Scalars['String']['input'];
+  currentPlanId: Scalars['String']['input'];
+  offerId?: InputMaybe<Scalars['String']['input']>;
+  reference: Scalars['String']['input'];
+  tax: Scalars['Float']['input'];
+};
+
 export type CreateUserInvite = {
   businessId: Scalars['String']['input'];
   email: Scalars['String']['input'];
@@ -793,6 +803,23 @@ export type DailyExpense = {
   totalExpenses: Scalars['Float']['output'];
 };
 
+export type DailyExpenseTotalAmountForMonth = {
+  __typename?: 'DailyExpenseTotalAmountForMonth';
+  date: Scalars['Date']['output'];
+  totalAmount: Scalars['Float']['output'];
+  totalPaidAmount: Scalars['Float']['output'];
+  totalPendingAmount: Scalars['Float']['output'];
+};
+
+export type DailyExpenseTotalAmounts = {
+  __typename?: 'DailyExpenseTotalAmounts';
+  date: Scalars['Date']['output'];
+  dayOfWeek?: Maybe<Scalars['String']['output']>;
+  totalAmount: Scalars['Float']['output'];
+  totalPaidAmount: Scalars['Float']['output'];
+  totalPendingAmount: Scalars['Float']['output'];
+};
+
 export type DailyInvoiceAndSale = {
   __typename?: 'DailyInvoiceAndSale';
   date: Scalars['Date']['output'];
@@ -817,6 +844,23 @@ export type DailyInvoiceTotalAmountForMonth = {
 
 export type DailyInvoiceTotalAmounts = {
   __typename?: 'DailyInvoiceTotalAmounts';
+  date: Scalars['Date']['output'];
+  dayOfWeek?: Maybe<Scalars['String']['output']>;
+  totalAmount: Scalars['Float']['output'];
+  totalPaidAmount: Scalars['Float']['output'];
+  totalPendingAmount: Scalars['Float']['output'];
+};
+
+export type DailyPurchaseTotalAmountForMonth = {
+  __typename?: 'DailyPurchaseTotalAmountForMonth';
+  date: Scalars['Date']['output'];
+  totalAmount: Scalars['Float']['output'];
+  totalPaidAmount: Scalars['Float']['output'];
+  totalPendingAmount: Scalars['Float']['output'];
+};
+
+export type DailyPurchaseTotalAmounts = {
+  __typename?: 'DailyPurchaseTotalAmounts';
   date: Scalars['Date']['output'];
   dayOfWeek?: Maybe<Scalars['String']['output']>;
   totalAmount: Scalars['Float']['output'];
@@ -1236,8 +1280,11 @@ export type GetPurchaseByBusinessResponse = {
 
 export type GetPurchaseForMonthResponse = {
   __typename?: 'GetPurchaseForMonthResponse';
+  dailyTotalAmountsForMonth?: Maybe<Array<Maybe<DailyPurchaseTotalAmountForMonth>>>;
   paidPurchasesThisMonth?: Maybe<Scalars['Float']['output']>;
   pendingPurchasesThisMonth?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPaidPurchasesThisMonth?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPendingPurchasesThisMonth?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInPurchaseThisMonth?: Maybe<Scalars['Float']['output']>;
   purchasesThisMonth?: Maybe<Scalars['Float']['output']>;
   totalPaidPurchaseAmountThisMonth?: Maybe<Scalars['Float']['output']>;
@@ -1249,8 +1296,11 @@ export type GetPurchaseForQuarterResponse = {
   __typename?: 'GetPurchaseForQuarterResponse';
   paidPurchasesThisQuarter?: Maybe<Scalars['Float']['output']>;
   pendingpurchasesThisQuarter?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPaidPurchasesThisQuarter?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPendingPurchasesThisQuarter?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInPurchaseThisQuarter?: Maybe<Scalars['Float']['output']>;
   purchasesThisQuarter?: Maybe<Scalars['Float']['output']>;
+  quarterPurchaseAmounts?: Maybe<Array<Maybe<QuarterPurchaseAmounts>>>;
   totalPaidPurchaseAmountThisQuarter?: Maybe<Scalars['Float']['output']>;
   totalPendingPurchaseAmountThisQuarter?: Maybe<Scalars['Float']['output']>;
   totalPurchaseAmountThisQuarter?: Maybe<Scalars['Float']['output']>;
@@ -1258,8 +1308,11 @@ export type GetPurchaseForQuarterResponse = {
 
 export type GetPurchaseForWeekResponse = {
   __typename?: 'GetPurchaseForWeekResponse';
+  dailyTotalAmounts?: Maybe<Array<Maybe<DailyPurchaseTotalAmounts>>>;
   paidPurchasesThisWeek?: Maybe<Scalars['Float']['output']>;
   pendingPurchasesThisWeek?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPaidPurchases?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPendingPurchaseThisWeek?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInPurchaseThisWeek?: Maybe<Scalars['Float']['output']>;
   purchasesThisWeek?: Maybe<Scalars['Float']['output']>;
   totalPaidPurchaseAmountThisWeek?: Maybe<Scalars['Float']['output']>;
@@ -1269,8 +1322,11 @@ export type GetPurchaseForWeekResponse = {
 
 export type GetPurchaseForYearResponse = {
   __typename?: 'GetPurchaseForYearResponse';
+  monthlyTotalAmounts?: Maybe<Array<Maybe<YearPurchaseAmounts>>>;
   paidPurchasesThisYear?: Maybe<Scalars['Float']['output']>;
   pendingPurchasesThisYear?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPaidPurchasesThisYear?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPendingPurchasesThisYear?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInPurchaseThisYear?: Maybe<Scalars['Float']['output']>;
   purchasesThisYear?: Maybe<Scalars['Float']['output']>;
   totalPaidPurchaseAmountThisYear?: Maybe<Scalars['Float']['output']>;
@@ -2234,8 +2290,7 @@ export type MutationCreateSubscriptionNewCardAArgs = {
 
 
 export type MutationCreateSubscriptionNewCardBArgs = {
-  input: CreateSubscriptionWithCard;
-  seerbitRef: Scalars['String']['input'];
+  input: CreateSubscriptionWithCardB;
 };
 
 
@@ -3121,6 +3176,19 @@ export type Payment = {
   updatedAt: Scalars['Date']['output'];
 };
 
+export type PaystackChargeAuthorizationInput = {
+  __typename?: 'PaystackChargeAuthorizationInput';
+  amount: Scalars['Float']['output'];
+  authorizationCode: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+};
+
+export type PaystackInitializeTransactionInput = {
+  __typename?: 'PaystackInitializeTransactionInput';
+  amount: Scalars['Float']['output'];
+  email: Scalars['String']['output'];
+};
+
 export type Plan = {
   __typename?: 'Plan';
   createdAt: Scalars['Date']['output'];
@@ -3404,12 +3472,28 @@ export type PurchaseStatusRef = {
   purchaseStatus?: Maybe<Scalars['String']['output']>;
 };
 
+export type QuarterExpenseAmounts = {
+  __typename?: 'QuarterExpenseAmounts';
+  expenseAmount?: Maybe<Scalars['Float']['output']>;
+  expensePaid?: Maybe<Scalars['Float']['output']>;
+  expensePending?: Maybe<Scalars['Float']['output']>;
+  month?: Maybe<Scalars['String']['output']>;
+};
+
 export type QuarterInvoiceAmounts = {
   __typename?: 'QuarterInvoiceAmounts';
   invoiceAmount?: Maybe<Scalars['Float']['output']>;
   invoicePaid?: Maybe<Scalars['Float']['output']>;
   invoicePending?: Maybe<Scalars['Float']['output']>;
   month?: Maybe<Scalars['String']['output']>;
+};
+
+export type QuarterPurchaseAmounts = {
+  __typename?: 'QuarterPurchaseAmounts';
+  month?: Maybe<Scalars['String']['output']>;
+  purchaseAmount?: Maybe<Scalars['Float']['output']>;
+  purchasePaid?: Maybe<Scalars['Float']['output']>;
+  purchasePending?: Maybe<Scalars['Float']['output']>;
 };
 
 export type QuarterlySales = {
@@ -4865,11 +4949,13 @@ export type TotalInvoicesThisYear = {
 
 export type TotalMonthlyExpense = {
   __typename?: 'TotalMonthlyExpense';
+  dailyTotalAmountsForMonth?: Maybe<Array<Maybe<DailyExpenseTotalAmountForMonth>>>;
   expensesThisMonth?: Maybe<Scalars['Float']['output']>;
   paidInvoicesThisMonth?: Maybe<Scalars['Float']['output']>;
   pendingExpensesThisMonth?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInExpenseThisMonth?: Maybe<Scalars['Float']['output']>;
-  percentageOfExpenseToInvoiceThisMonth: Scalars['Float']['output'];
+  percentageIncreaseInPaidExpensesThisMonth?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPendingExpensesThisMonth?: Maybe<Scalars['Float']['output']>;
   totalExpenseAmountThisMonth: Scalars['Float']['output'];
   totalPaidExpensesThisMonth?: Maybe<Scalars['Float']['output']>;
   totalPendingExpensesThisMonth?: Maybe<Scalars['Float']['output']>;
@@ -4906,8 +4992,10 @@ export type TotalQuarterlyExpense = {
   expensesThisQuarter?: Maybe<Scalars['Float']['output']>;
   paidExpensesThisQuarter?: Maybe<Scalars['Float']['output']>;
   pendingExpensesThisQuarter?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInExpensesPaidThisQuarter?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInExpensesThisQuarter?: Maybe<Scalars['Float']['output']>;
-  percentageOfExpenseToInvoiceThisQuarter: Scalars['Float']['output'];
+  percentageIncreaseInPendingExpensesThisQuarter?: Maybe<Scalars['Float']['output']>;
+  quarterExpenseAmounts?: Maybe<Array<Maybe<QuarterExpenseAmounts>>>;
   totalExpenseAmountThisQuarter: Scalars['Float']['output'];
   totalPaidExpensesThisQuarter?: Maybe<Scalars['Float']['output']>;
   totalPendingExpensesThisQuarter?: Maybe<Scalars['Float']['output']>;
@@ -4915,11 +5003,13 @@ export type TotalQuarterlyExpense = {
 
 export type TotalWeeklyExpense = {
   __typename?: 'TotalWeeklyExpense';
+  dailyTotalAmounts?: Maybe<Array<Maybe<DailyExpenseTotalAmounts>>>;
   expensesThisWeek?: Maybe<Scalars['Float']['output']>;
   paidExpensesThisWeek?: Maybe<Scalars['Float']['output']>;
   pendingExpensesThisWeek?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInExpenseThisWeek?: Maybe<Scalars['Float']['output']>;
-  percentageOfExpenseToInvoiceThisWeek: Scalars['Float']['output'];
+  percentageIncreaseInPaidExpensesThisWeek?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPendingExpensesThisWeek?: Maybe<Scalars['Float']['output']>;
   totalExpenseAmountThisWeek: Scalars['Float']['output'];
   totalPaidExpenseAmountThisWeek?: Maybe<Scalars['Float']['output']>;
   totalPendingExpenseAmountThisWeek?: Maybe<Scalars['Float']['output']>;
@@ -4954,10 +5044,12 @@ export type TotalYearInvoiceAmounts = {
 export type TotalYearlyExpense = {
   __typename?: 'TotalYearlyExpense';
   expensesThisYear?: Maybe<Scalars['Float']['output']>;
+  monthlyTotalAmounts?: Maybe<Array<Maybe<YearExpenseAmounts>>>;
   paidExpensesThisYear?: Maybe<Scalars['Float']['output']>;
   pendingExpensesThisYear?: Maybe<Scalars['Float']['output']>;
   percentageIncreaseInExpensesThisYear?: Maybe<Scalars['Float']['output']>;
-  percentageOfExpenseToInvoiceThisYear: Scalars['Float']['output'];
+  percentageIncreaseInPaidExpensesThisYear?: Maybe<Scalars['Float']['output']>;
+  percentageIncreaseInPendingExpensesThisYear?: Maybe<Scalars['Float']['output']>;
   totalExpenseAmountThisYear: Scalars['Float']['output'];
   totalPaidExpensesAmountThisYear?: Maybe<Scalars['Float']['output']>;
   totalPendingExpenseAmountThisYear?: Maybe<Scalars['Float']['output']>;
@@ -5334,12 +5426,28 @@ export type WeeklySales = {
   salesThisWeek: Array<Maybe<Sale>>;
 };
 
+export type YearExpenseAmounts = {
+  __typename?: 'YearExpenseAmounts';
+  month: Scalars['String']['output'];
+  totalExpensesAmount?: Maybe<Scalars['Float']['output']>;
+  totalPaidExpensesAmount?: Maybe<Scalars['Float']['output']>;
+  totalPendingExpensesAmount?: Maybe<Scalars['Float']['output']>;
+};
+
 export type YearInvoiceAmounts = {
   __typename?: 'YearInvoiceAmounts';
   month: Scalars['String']['output'];
   totalInvoicesAmount?: Maybe<Scalars['Float']['output']>;
   totalPaidInvoicesAmount?: Maybe<Scalars['Float']['output']>;
   totalPendingInvoicesAmount?: Maybe<Scalars['Float']['output']>;
+};
+
+export type YearPurchaseAmounts = {
+  __typename?: 'YearPurchaseAmounts';
+  month: Scalars['String']['output'];
+  totalPaidPurchasesAmount?: Maybe<Scalars['Float']['output']>;
+  totalPendingPurchasesAmount?: Maybe<Scalars['Float']['output']>;
+  totalPurchasesAmount?: Maybe<Scalars['Float']['output']>;
 };
 
 export type YearlySales = {
@@ -5650,7 +5758,7 @@ export type CreateSubscriptionNewCardAMutationVariables = Exact<{
 export type CreateSubscriptionNewCardAMutation = { __typename?: 'Mutation', createSubscriptionNewCardA?: { __typename?: 'SeerbitStandardCheckoutResponse', status?: string | null, paymentReference?: string | null, paymentLink?: string | null } | null };
 
 export type CreateSubscriptionNewCardBMutationVariables = Exact<{
-  seerbitRef: Scalars['String']['input'];
+  reference: Scalars['String']['input'];
   businessId: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
@@ -5660,7 +5768,7 @@ export type CreateSubscriptionNewCardBMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionNewCardBMutation = { __typename?: 'Mutation', createSubscriptionNewCardB?: { __typename?: 'Subscription', id: string, dateSubscribed: any, validTo: any, business?: { __typename?: 'Business', businessName: string } | null, subscriptionInvoice?: Array<{ __typename?: 'SubscriptionInvoice', invoiceDescription?: string | null, invoiceTotal?: number | null, invoicePaid?: any | null } | null> | null, subscriptionPayment?: { __typename?: 'SubscriptionPayment', amount?: number | null } | null } | null };
+export type CreateSubscriptionNewCardBMutation = { __typename?: 'Mutation', createSubscriptionNewCardB?: { __typename?: 'Subscription', id: string, dateSubscribed: any, validTo: any } | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5921,7 +6029,7 @@ export type GetExpenseForMonthQueryVariables = Exact<{
 }>;
 
 
-export type GetExpenseForMonthQuery = { __typename?: 'Query', getExpensesForMonth?: { __typename?: 'TotalMonthlyExpense', totalExpenseAmountThisMonth: number, percentageOfExpenseToInvoiceThisMonth: number, percentageIncreaseInExpenseThisMonth?: number | null } | null };
+export type GetExpenseForMonthQuery = { __typename?: 'Query', getExpensesForMonth?: { __typename?: 'TotalMonthlyExpense', totalExpenseAmountThisMonth: number, totalPaidExpensesThisMonth?: number | null, totalPendingExpensesThisMonth?: number | null, percentageIncreaseInExpenseThisMonth?: number | null, percentageIncreaseInPaidExpensesThisMonth?: number | null, percentageIncreaseInPendingExpensesThisMonth?: number | null, dailyTotalAmountsForMonth?: Array<{ __typename?: 'DailyExpenseTotalAmountForMonth', date: any, totalAmount: number, totalPaidAmount: number, totalPendingAmount: number } | null> | null } | null };
 
 export type GetExpenseForQuarterQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5929,7 +6037,7 @@ export type GetExpenseForQuarterQueryVariables = Exact<{
 }>;
 
 
-export type GetExpenseForQuarterQuery = { __typename?: 'Query', getExpensesForQuarter?: { __typename?: 'TotalQuarterlyExpense', totalExpenseAmountThisQuarter: number, percentageOfExpenseToInvoiceThisQuarter: number, percentageIncreaseInExpensesThisQuarter?: number | null } | null };
+export type GetExpenseForQuarterQuery = { __typename?: 'Query', getExpensesForQuarter?: { __typename?: 'TotalQuarterlyExpense', totalExpenseAmountThisQuarter: number, totalPaidExpensesThisQuarter?: number | null, totalPendingExpensesThisQuarter?: number | null, percentageIncreaseInExpensesThisQuarter?: number | null, percentageIncreaseInExpensesPaidThisQuarter?: number | null, percentageIncreaseInPendingExpensesThisQuarter?: number | null, quarterExpenseAmounts?: Array<{ __typename?: 'QuarterExpenseAmounts', month?: string | null, expenseAmount?: number | null, expensePaid?: number | null, expensePending?: number | null } | null> | null } | null };
 
 export type GetExpenseForWeekQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5937,7 +6045,7 @@ export type GetExpenseForWeekQueryVariables = Exact<{
 }>;
 
 
-export type GetExpenseForWeekQuery = { __typename?: 'Query', getExpensesForWeek?: { __typename?: 'TotalWeeklyExpense', totalExpenseAmountThisWeek: number, percentageOfExpenseToInvoiceThisWeek: number, percentageIncreaseInExpenseThisWeek?: number | null } | null };
+export type GetExpenseForWeekQuery = { __typename?: 'Query', getExpensesForWeek?: { __typename?: 'TotalWeeklyExpense', totalExpenseAmountThisWeek: number, totalPaidExpenseAmountThisWeek?: number | null, totalPendingExpenseAmountThisWeek?: number | null, percentageIncreaseInExpenseThisWeek?: number | null, percentageIncreaseInPaidExpensesThisWeek?: number | null, percentageIncreaseInPendingExpensesThisWeek?: number | null, dailyTotalAmounts?: Array<{ __typename?: 'DailyExpenseTotalAmounts', date: any, dayOfWeek?: string | null, totalAmount: number, totalPaidAmount: number, totalPendingAmount: number } | null> | null } | null };
 
 export type GetExpenseForYearQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -5945,7 +6053,7 @@ export type GetExpenseForYearQueryVariables = Exact<{
 }>;
 
 
-export type GetExpenseForYearQuery = { __typename?: 'Query', getExpensesForYear?: { __typename?: 'TotalYearlyExpense', totalExpenseAmountThisYear: number, percentageOfExpenseToInvoiceThisYear: number, percentageIncreaseInExpensesThisYear?: number | null } | null };
+export type GetExpenseForYearQuery = { __typename?: 'Query', getExpensesForYear?: { __typename?: 'TotalYearlyExpense', totalExpenseAmountThisYear: number, percentageIncreaseInExpensesThisYear?: number | null, percentageIncreaseInPaidExpensesThisYear?: number | null, percentageIncreaseInPendingExpensesThisYear?: number | null, totalPaidExpensesAmountThisYear?: number | null, totalPendingExpenseAmountThisYear?: number | null, monthlyTotalAmounts?: Array<{ __typename?: 'YearExpenseAmounts', month: string, totalExpensesAmount?: number | null, totalPaidExpensesAmount?: number | null, totalPendingExpensesAmount?: number | null } | null> | null } | null };
 
 export type GetExpensesByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6139,7 +6247,7 @@ export type GetPurchaseForMonthQueryVariables = Exact<{
 }>;
 
 
-export type GetPurchaseForMonthQuery = { __typename?: 'Query', getPurchaseForMonth?: { __typename?: 'GetPurchaseForMonthResponse', purchasesThisMonth?: number | null, totalPurchaseAmountThisMonth?: number | null, percentageIncreaseInPurchaseThisMonth?: number | null, pendingPurchasesThisMonth?: number | null, totalPendingPurchaseAmountThisMonth?: number | null, paidPurchasesThisMonth?: number | null, totalPaidPurchaseAmountThisMonth?: number | null } | null };
+export type GetPurchaseForMonthQuery = { __typename?: 'Query', getPurchaseForMonth?: { __typename?: 'GetPurchaseForMonthResponse', purchasesThisMonth?: number | null, totalPurchaseAmountThisMonth?: number | null, percentageIncreaseInPurchaseThisMonth?: number | null, percentageIncreaseInPaidPurchasesThisMonth?: number | null, percentageIncreaseInPendingPurchasesThisMonth?: number | null, pendingPurchasesThisMonth?: number | null, totalPendingPurchaseAmountThisMonth?: number | null, paidPurchasesThisMonth?: number | null, totalPaidPurchaseAmountThisMonth?: number | null, dailyTotalAmountsForMonth?: Array<{ __typename?: 'DailyPurchaseTotalAmountForMonth', date: any, totalAmount: number, totalPaidAmount: number, totalPendingAmount: number } | null> | null } | null };
 
 export type GetPurchaseForQuarterQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6147,7 +6255,7 @@ export type GetPurchaseForQuarterQueryVariables = Exact<{
 }>;
 
 
-export type GetPurchaseForQuarterQuery = { __typename?: 'Query', getPurchaseForQuarter?: { __typename?: 'GetPurchaseForQuarterResponse', purchasesThisQuarter?: number | null, totalPurchaseAmountThisQuarter?: number | null, pendingpurchasesThisQuarter?: number | null, percentageIncreaseInPurchaseThisQuarter?: number | null, totalPendingPurchaseAmountThisQuarter?: number | null, paidPurchasesThisQuarter?: number | null, totalPaidPurchaseAmountThisQuarter?: number | null } | null };
+export type GetPurchaseForQuarterQuery = { __typename?: 'Query', getPurchaseForQuarter?: { __typename?: 'GetPurchaseForQuarterResponse', purchasesThisQuarter?: number | null, totalPurchaseAmountThisQuarter?: number | null, pendingpurchasesThisQuarter?: number | null, percentageIncreaseInPaidPurchasesThisQuarter?: number | null, percentageIncreaseInPendingPurchasesThisQuarter?: number | null, percentageIncreaseInPurchaseThisQuarter?: number | null, totalPendingPurchaseAmountThisQuarter?: number | null, paidPurchasesThisQuarter?: number | null, totalPaidPurchaseAmountThisQuarter?: number | null, quarterPurchaseAmounts?: Array<{ __typename?: 'QuarterPurchaseAmounts', month?: string | null, purchaseAmount?: number | null, purchasePaid?: number | null, purchasePending?: number | null } | null> | null } | null };
 
 export type GetPurchaseForWeekQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6155,7 +6263,7 @@ export type GetPurchaseForWeekQueryVariables = Exact<{
 }>;
 
 
-export type GetPurchaseForWeekQuery = { __typename?: 'Query', getPurchasesForWeek?: { __typename?: 'GetPurchaseForWeekResponse', purchasesThisWeek?: number | null, totalPurchaseAmountThisWeek?: number | null, percentageIncreaseInPurchaseThisWeek?: number | null, pendingPurchasesThisWeek?: number | null, totalPendingPurchaseAmountThisWeek?: number | null, paidPurchasesThisWeek?: number | null, totalPaidPurchaseAmountThisWeek?: number | null } | null };
+export type GetPurchaseForWeekQuery = { __typename?: 'Query', getPurchasesForWeek?: { __typename?: 'GetPurchaseForWeekResponse', purchasesThisWeek?: number | null, totalPurchaseAmountThisWeek?: number | null, totalPaidPurchaseAmountThisWeek?: number | null, totalPendingPurchaseAmountThisWeek?: number | null, percentageIncreaseInPaidPurchases?: number | null, percentageIncreaseInPendingPurchaseThisWeek?: number | null, percentageIncreaseInPurchaseThisWeek?: number | null, dailyTotalAmounts?: Array<{ __typename?: 'DailyPurchaseTotalAmounts', date: any, dayOfWeek?: string | null, totalAmount: number, totalPaidAmount: number, totalPendingAmount: number } | null> | null } | null };
 
 export type GetPurchaseForYearQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6163,7 +6271,7 @@ export type GetPurchaseForYearQueryVariables = Exact<{
 }>;
 
 
-export type GetPurchaseForYearQuery = { __typename?: 'Query', getPurchaseForYear?: { __typename?: 'GetPurchaseForYearResponse', purchasesThisYear?: number | null, totalPurchaseAmountThisYear?: number | null, percentageIncreaseInPurchaseThisYear?: number | null, pendingPurchasesThisYear?: number | null, totalPendingPurchaseAmountThisYear?: number | null, paidPurchasesThisYear?: number | null, totalPaidPurchaseAmountThisYear?: number | null } | null };
+export type GetPurchaseForYearQuery = { __typename?: 'Query', getPurchaseForYear?: { __typename?: 'GetPurchaseForYearResponse', purchasesThisYear?: number | null, totalPurchaseAmountThisYear?: number | null, percentageIncreaseInPurchaseThisYear?: number | null, pendingPurchasesThisYear?: number | null, totalPendingPurchaseAmountThisYear?: number | null, paidPurchasesThisYear?: number | null, totalPaidPurchaseAmountThisYear?: number | null, percentageIncreaseInPaidPurchasesThisYear?: number | null, percentageIncreaseInPendingPurchasesThisYear?: number | null, monthlyTotalAmounts?: Array<{ __typename?: 'YearPurchaseAmounts', month: string, totalPurchasesAmount?: number | null, totalPaidPurchasesAmount?: number | null, totalPendingPurchasesAmount?: number | null } | null> | null } | null };
 
 export type GetSaleByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6279,7 +6387,7 @@ export type TotalMonthlyInvoicesAmountQueryVariables = Exact<{
 }>;
 
 
-export type TotalMonthlyInvoicesAmountQuery = { __typename?: 'Query', totalMonthlyInvoicesAmount?: { __typename?: 'TotalMonthlyInvoiceAmount', totalPaidInvoiceAmountThisMonth?: number | null, totalInvoiceAmountForMonth?: number | null, totalPendingInvoiceAmountThisMonth?: number | null, percentageIncreaseInPendingInvoiceThisMonth?: number | null, totalOverdueInvoiceAmountThisMonth?: number | null, percentageIncreaseInOverdueInvoicesThisMonth?: number | null, percentageIncreaseInInvoicesThisMonth?: number | null, dailyTotalAmountsForMonth: Array<{ __typename?: 'DailyInvoiceTotalAmountForMonth', date: any, totalAmount: number, totalPendingAmount: number, totalPaidAmount: number } | null> } | null };
+export type TotalMonthlyInvoicesAmountQuery = { __typename?: 'Query', totalMonthlyInvoicesAmount?: { __typename?: 'TotalMonthlyInvoiceAmount', totalPaidInvoiceAmountThisMonth?: number | null, totalInvoiceAmountForMonth?: number | null, totalPendingInvoiceAmountThisMonth?: number | null, percentageIncreaseInPaidInvoicesForMonth?: number | null, percentageIncreaseInPendingInvoiceThisMonth?: number | null, totalOverdueInvoiceAmountThisMonth?: number | null, percentageIncreaseInOverdueInvoicesThisMonth?: number | null, percentageIncreaseInInvoicesThisMonth?: number | null, dailyTotalAmountsForMonth: Array<{ __typename?: 'DailyInvoiceTotalAmountForMonth', date: any, totalAmount: number, totalPendingAmount: number, totalPaidAmount: number } | null> } | null };
 
 export type TotalQuarterlyInvoicesAmountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6287,7 +6395,7 @@ export type TotalQuarterlyInvoicesAmountQueryVariables = Exact<{
 }>;
 
 
-export type TotalQuarterlyInvoicesAmountQuery = { __typename?: 'Query', totalQuarterlyInvoicesAmount?: { __typename?: 'TotalQuarterInvoiceAmounts', totalPaidInvoiceAmountThisQuarter?: number | null, totalInvoiceAmountForQuarter?: number | null, totalPendingInvoiceAmountThisQuarter?: number | null, percentageIncreaseInPendingInvoiceThisQuarter?: number | null, totalOverdueInvoiceAmountThisQuarter?: number | null, percentageIncreaseInOverdueInvoiceThisQuarter?: number | null, percentageIncreaseInInvoiceThisQuarter?: number | null, quarterInvoiceAmounts: Array<{ __typename?: 'QuarterInvoiceAmounts', month?: string | null, invoiceAmount?: number | null, invoicePending?: number | null, invoicePaid?: number | null } | null> } | null };
+export type TotalQuarterlyInvoicesAmountQuery = { __typename?: 'Query', totalQuarterlyInvoicesAmount?: { __typename?: 'TotalQuarterInvoiceAmounts', totalPaidInvoiceAmountThisQuarter?: number | null, totalInvoiceAmountForQuarter?: number | null, totalPendingInvoiceAmountThisQuarter?: number | null, percentageIncreaseInInvoicePaidThisQuarter?: number | null, percentageIncreaseInPendingInvoiceThisQuarter?: number | null, totalOverdueInvoiceAmountThisQuarter?: number | null, percentageIncreaseInOverdueInvoiceThisQuarter?: number | null, percentageIncreaseInInvoiceThisQuarter?: number | null, quarterInvoiceAmounts: Array<{ __typename?: 'QuarterInvoiceAmounts', month?: string | null, invoiceAmount?: number | null, invoicePending?: number | null, invoicePaid?: number | null } | null> } | null };
 
 export type TotalWeeklyInvoicesAmountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6295,7 +6403,7 @@ export type TotalWeeklyInvoicesAmountQueryVariables = Exact<{
 }>;
 
 
-export type TotalWeeklyInvoicesAmountQuery = { __typename?: 'Query', totalWeeklyInvoicesAmount?: { __typename?: 'TotalWeeklyInvoiceAmount', totalPaidInvoiceAmountThisWeek?: number | null, totalOverdueInvoiceAmountThisWeek?: number | null, totalInvoiceAmountForWeek?: number | null, totalPendingInvoiceAmountThisWeek?: number | null, percentageIncreaseInPendingInvoiceThisWeek?: number | null, percentageIncreaseInOverdueInvoicesThisWeek?: number | null, percentageOfIncreaseInInvoicesThisWeek?: number | null, dailyTotalAmounts: Array<{ __typename?: 'DailyInvoiceTotalAmounts', date: any, dayOfWeek?: string | null, totalAmount: number, totalPendingAmount: number, totalPaidAmount: number } | null> } | null };
+export type TotalWeeklyInvoicesAmountQuery = { __typename?: 'Query', totalWeeklyInvoicesAmount?: { __typename?: 'TotalWeeklyInvoiceAmount', totalPaidInvoiceAmountThisWeek?: number | null, totalOverdueInvoiceAmountThisWeek?: number | null, percentageIncreaseInPaidInvoicesThisWeek?: number | null, totalInvoiceAmountForWeek?: number | null, totalPendingInvoiceAmountThisWeek?: number | null, percentageIncreaseInPendingInvoiceThisWeek?: number | null, percentageIncreaseInOverdueInvoicesThisWeek?: number | null, percentageOfIncreaseInInvoicesThisWeek?: number | null, dailyTotalAmounts: Array<{ __typename?: 'DailyInvoiceTotalAmounts', date: any, dayOfWeek?: string | null, totalAmount: number, totalPendingAmount: number, totalPaidAmount: number } | null> } | null };
 
 export type TotalYearlyInvoicesAmountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6303,7 +6411,7 @@ export type TotalYearlyInvoicesAmountQueryVariables = Exact<{
 }>;
 
 
-export type TotalYearlyInvoicesAmountQuery = { __typename?: 'Query', totalYearlyInvoicesAmount?: { __typename?: 'TotalYearInvoiceAmounts', totalInvoiceAmountForYear?: number | null, totalPaidInvoiceAmountThisYear?: number | null, totalPendingInvoiceAmountThisYear?: number | null, percentageIncreaseInPendingInvoiceThisYear?: number | null, totalOverdueInvoiceAmountThisYear?: number | null, percentageIncreaseInOverdueInvoicesThisYear?: number | null, percentageIncreaseInInvoiceThisYear?: number | null, monthlyTotalAmounts: Array<{ __typename?: 'YearInvoiceAmounts', month: string, totalInvoicesAmount?: number | null, totalPendingInvoicesAmount?: number | null, totalPaidInvoicesAmount?: number | null } | null> } | null };
+export type TotalYearlyInvoicesAmountQuery = { __typename?: 'Query', totalYearlyInvoicesAmount?: { __typename?: 'TotalYearInvoiceAmounts', totalInvoiceAmountForYear?: number | null, totalPaidInvoiceAmountThisYear?: number | null, percentageIncreaseInInvoicesPaidThisYear?: number | null, totalPendingInvoiceAmountThisYear?: number | null, percentageIncreaseInPendingInvoiceThisYear?: number | null, totalOverdueInvoiceAmountThisYear?: number | null, percentageIncreaseInOverdueInvoicesThisYear?: number | null, percentageIncreaseInInvoiceThisYear?: number | null, monthlyTotalAmounts: Array<{ __typename?: 'YearInvoiceAmounts', month: string, totalInvoicesAmount?: number | null, totalPendingInvoicesAmount?: number | null, totalPaidInvoicesAmount?: number | null } | null> } | null };
 
 export type GetUserByIdQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -7923,25 +8031,13 @@ export type CreateSubscriptionNewCardAMutationHookResult = ReturnType<typeof use
 export type CreateSubscriptionNewCardAMutationResult = Apollo.MutationResult<CreateSubscriptionNewCardAMutation>;
 export type CreateSubscriptionNewCardAMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionNewCardAMutation, CreateSubscriptionNewCardAMutationVariables>;
 export const CreateSubscriptionNewCardBDocument = gql`
-    mutation CreateSubscriptionNewCardB($seerbitRef: String!, $businessId: String!, $currentPlanId: String!, $offerId: String, $addOnOptionId: String, $addOnQuantity: Float, $tax: Float!) {
+    mutation CreateSubscriptionNewCardB($reference: String!, $businessId: String!, $currentPlanId: String!, $offerId: String, $addOnOptionId: String, $addOnQuantity: Float, $tax: Float!) {
   createSubscriptionNewCardB(
-    seerbitRef: $seerbitRef
-    input: {businessId: $businessId, currentPlanId: $currentPlanId, offerId: $offerId, addOnOptionId: $addOnOptionId, addOnQuantity: $addOnQuantity, tax: $tax}
+    input: {businessId: $businessId, currentPlanId: $currentPlanId, reference: $reference, offerId: $offerId, addOnOptionId: $addOnOptionId, addOnQuantity: $addOnQuantity, tax: $tax}
   ) {
     id
     dateSubscribed
     validTo
-    business {
-      businessName
-    }
-    subscriptionInvoice {
-      invoiceDescription
-      invoiceTotal
-      invoicePaid
-    }
-    subscriptionPayment {
-      amount
-    }
   }
 }
     `;
@@ -7960,7 +8056,7 @@ export type CreateSubscriptionNewCardBMutationFn = Apollo.MutationFunction<Creat
  * @example
  * const [createSubscriptionNewCardBMutation, { data, loading, error }] = useCreateSubscriptionNewCardBMutation({
  *   variables: {
- *      seerbitRef: // value for 'seerbitRef'
+ *      reference: // value for 'reference'
  *      businessId: // value for 'businessId'
  *      currentPlanId: // value for 'currentPlanId'
  *      offerId: // value for 'offerId'
@@ -9571,9 +9667,18 @@ export type GetExpenseCategoryWithSetsQueryResult = Apollo.QueryResult<GetExpens
 export const GetExpenseForMonthDocument = gql`
     query GetExpenseForMonth($businessId: String!, $monthly: Boolean) {
   getExpensesForMonth(businessId: $businessId, monthly: $monthly) {
+    dailyTotalAmountsForMonth {
+      date
+      totalAmount
+      totalPaidAmount
+      totalPendingAmount
+    }
     totalExpenseAmountThisMonth
-    percentageOfExpenseToInvoiceThisMonth
+    totalPaidExpensesThisMonth
+    totalPendingExpensesThisMonth
     percentageIncreaseInExpenseThisMonth
+    percentageIncreaseInPaidExpensesThisMonth
+    percentageIncreaseInPendingExpensesThisMonth
   }
 }
     `;
@@ -9614,9 +9719,18 @@ export type GetExpenseForMonthQueryResult = Apollo.QueryResult<GetExpenseForMont
 export const GetExpenseForQuarterDocument = gql`
     query GetExpenseForQuarter($businessId: String!, $quarterly: Boolean) {
   getExpensesForQuarter(businessId: $businessId, quarterly: $quarterly) {
+    quarterExpenseAmounts {
+      month
+      expenseAmount
+      expensePaid
+      expensePending
+    }
     totalExpenseAmountThisQuarter
-    percentageOfExpenseToInvoiceThisQuarter
+    totalPaidExpensesThisQuarter
+    totalPendingExpensesThisQuarter
     percentageIncreaseInExpensesThisQuarter
+    percentageIncreaseInExpensesPaidThisQuarter
+    percentageIncreaseInPendingExpensesThisQuarter
   }
 }
     `;
@@ -9657,9 +9771,19 @@ export type GetExpenseForQuarterQueryResult = Apollo.QueryResult<GetExpenseForQu
 export const GetExpenseForWeekDocument = gql`
     query GetExpenseForWeek($businessId: String!, $weekly: Boolean) {
   getExpensesForWeek(businessId: $businessId, weekly: $weekly) {
+    dailyTotalAmounts {
+      date
+      dayOfWeek
+      totalAmount
+      totalPaidAmount
+      totalPendingAmount
+    }
     totalExpenseAmountThisWeek
-    percentageOfExpenseToInvoiceThisWeek
+    totalPaidExpenseAmountThisWeek
+    totalPendingExpenseAmountThisWeek
     percentageIncreaseInExpenseThisWeek
+    percentageIncreaseInPaidExpensesThisWeek
+    percentageIncreaseInPendingExpensesThisWeek
   }
 }
     `;
@@ -9700,9 +9824,18 @@ export type GetExpenseForWeekQueryResult = Apollo.QueryResult<GetExpenseForWeekQ
 export const GetExpenseForYearDocument = gql`
     query GetExpenseForYear($businessId: String!, $yearly: Boolean) {
   getExpensesForYear(businessId: $businessId, yearly: $yearly) {
+    monthlyTotalAmounts {
+      month
+      totalExpensesAmount
+      totalPaidExpensesAmount
+      totalPendingExpensesAmount
+    }
     totalExpenseAmountThisYear
-    percentageOfExpenseToInvoiceThisYear
     percentageIncreaseInExpensesThisYear
+    percentageIncreaseInPaidExpensesThisYear
+    percentageIncreaseInPendingExpensesThisYear
+    totalPaidExpensesAmountThisYear
+    totalPendingExpenseAmountThisYear
   }
 }
     `;
@@ -11078,9 +11211,18 @@ export const GetPurchaseForMonthDocument = gql`
     query GetPurchaseForMonth($businessId: String!, $monthly: Boolean) {
   getPurchaseForMonth(businessId: $businessId, monthly: $monthly) {
     purchasesThisMonth
+    dailyTotalAmountsForMonth {
+      date
+      totalAmount
+      totalPaidAmount
+      totalPendingAmount
+    }
     totalPurchaseAmountThisMonth
     percentageIncreaseInPurchaseThisMonth
+    percentageIncreaseInPaidPurchasesThisMonth
+    percentageIncreaseInPendingPurchasesThisMonth
     pendingPurchasesThisMonth
+    percentageIncreaseInPaidPurchasesThisMonth
     totalPendingPurchaseAmountThisMonth
     paidPurchasesThisMonth
     totalPaidPurchaseAmountThisMonth
@@ -11125,8 +11267,16 @@ export const GetPurchaseForQuarterDocument = gql`
     query GetPurchaseForQuarter($businessId: String!, $quarterly: Boolean) {
   getPurchaseForQuarter(businessId: $businessId, quarterly: $quarterly) {
     purchasesThisQuarter
+    quarterPurchaseAmounts {
+      month
+      purchaseAmount
+      purchasePaid
+      purchasePending
+    }
     totalPurchaseAmountThisQuarter
     pendingpurchasesThisQuarter
+    percentageIncreaseInPaidPurchasesThisQuarter
+    percentageIncreaseInPendingPurchasesThisQuarter
     percentageIncreaseInPurchaseThisQuarter
     totalPendingPurchaseAmountThisQuarter
     paidPurchasesThisQuarter
@@ -11172,12 +11322,19 @@ export const GetPurchaseForWeekDocument = gql`
     query GetPurchaseForWeek($businessId: String!, $weekly: Boolean) {
   getPurchasesForWeek(businessId: $businessId, weekly: $weekly) {
     purchasesThisWeek
+    dailyTotalAmounts {
+      date
+      dayOfWeek
+      totalAmount
+      totalPaidAmount
+      totalPendingAmount
+    }
     totalPurchaseAmountThisWeek
-    percentageIncreaseInPurchaseThisWeek
-    pendingPurchasesThisWeek
-    totalPendingPurchaseAmountThisWeek
-    paidPurchasesThisWeek
     totalPaidPurchaseAmountThisWeek
+    totalPendingPurchaseAmountThisWeek
+    percentageIncreaseInPaidPurchases
+    percentageIncreaseInPendingPurchaseThisWeek
+    percentageIncreaseInPurchaseThisWeek
   }
 }
     `;
@@ -11219,12 +11376,20 @@ export const GetPurchaseForYearDocument = gql`
     query GetPurchaseForYear($businessId: String!, $yearly: Boolean) {
   getPurchaseForYear(businessId: $businessId, yearly: $yearly) {
     purchasesThisYear
+    monthlyTotalAmounts {
+      month
+      totalPurchasesAmount
+      totalPaidPurchasesAmount
+      totalPendingPurchasesAmount
+    }
     totalPurchaseAmountThisYear
     percentageIncreaseInPurchaseThisYear
     pendingPurchasesThisYear
     totalPendingPurchaseAmountThisYear
     paidPurchasesThisYear
     totalPaidPurchaseAmountThisYear
+    percentageIncreaseInPaidPurchasesThisYear
+    percentageIncreaseInPendingPurchasesThisYear
   }
 }
     `;
@@ -12088,6 +12253,7 @@ export const TotalMonthlyInvoicesAmountDocument = gql`
     totalPaidInvoiceAmountThisMonth
     totalInvoiceAmountForMonth
     totalPendingInvoiceAmountThisMonth
+    percentageIncreaseInPaidInvoicesForMonth
     percentageIncreaseInPendingInvoiceThisMonth
     totalOverdueInvoiceAmountThisMonth
     percentageIncreaseInOverdueInvoicesThisMonth
@@ -12141,6 +12307,7 @@ export const TotalQuarterlyInvoicesAmountDocument = gql`
     totalPaidInvoiceAmountThisQuarter
     totalInvoiceAmountForQuarter
     totalPendingInvoiceAmountThisQuarter
+    percentageIncreaseInInvoicePaidThisQuarter
     percentageIncreaseInPendingInvoiceThisQuarter
     totalOverdueInvoiceAmountThisQuarter
     percentageIncreaseInOverdueInvoiceThisQuarter
@@ -12194,6 +12361,7 @@ export const TotalWeeklyInvoicesAmountDocument = gql`
     }
     totalPaidInvoiceAmountThisWeek
     totalOverdueInvoiceAmountThisWeek
+    percentageIncreaseInPaidInvoicesThisWeek
     totalInvoiceAmountForWeek
     totalPendingInvoiceAmountThisWeek
     percentageIncreaseInPendingInvoiceThisWeek
@@ -12247,6 +12415,7 @@ export const TotalYearlyInvoicesAmountDocument = gql`
     }
     totalInvoiceAmountForYear
     totalPaidInvoiceAmountThisYear
+    percentageIncreaseInInvoicesPaidThisYear
     totalPendingInvoiceAmountThisYear
     percentageIncreaseInPendingInvoiceThisYear
     totalOverdueInvoiceAmountThisYear

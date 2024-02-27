@@ -9,6 +9,7 @@ query TotalQuarterlyInvoicesAmount($businessId: String!, $quarterly: Boolean) {
     totalPaidInvoiceAmountThisQuarter
     totalInvoiceAmountForQuarter
     totalPendingInvoiceAmountThisQuarter
+    percentageIncreaseInInvoicePaidThisQuarter
     percentageIncreaseInPendingInvoiceThisQuarter
     totalOverdueInvoiceAmountThisQuarter
     percentageIncreaseInOverdueInvoiceThisQuarter

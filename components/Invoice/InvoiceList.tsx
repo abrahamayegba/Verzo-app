@@ -42,12 +42,6 @@ const InvoiceList = () => {
     closeModal: closeEditModal,
   } = useModal();
 
-  // const {
-  //   isOpen: isSendModalOpen,
-  //   openModal: openSendModal,
-  //   closeModal: closeSendModal,
-  // } = useModal();
-
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
   };
@@ -161,20 +155,12 @@ const InvoiceList = () => {
         onClose={closeDeleteInvoiceModal}
         invoiceId={selectedId}
       />
-      {/* <SendInvoice
-        open={isSendModalOpen}
-        openModal={openSendModal}
-        onClose={closeSendModal}
-        invoiceId={selectedId}
-        customerName={customerName}
-        customerEmail={customerEmail}
-      /> */}
-      <BulkArchiveInvoice
+      {/* <BulkArchiveInvoice
         open={isOpen}
         openModal={openModal}
         onClose={closeModal}
         invoiceId={selectedId}
-      />
+      /> */}
     </div>
   );
 };

@@ -122,7 +122,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
       const storedPlanId = localStorage.getItem("planId")!;
       const { data, errors } = await createSubscriptionNewCardBMutation({
         variables: {
-          seerbitRef: reference,
+          reference: reference,
           businessId: businessId,
           currentPlanId: storedPlanId,
           tax: 0,
@@ -169,13 +169,13 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
                 Update your Verzo plan
               </p>
             </div>
-            {/* <button
+            <button
               onClick={() => setOpenPlanSheet(true)}
               className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
             >
               Update
-            </button> */}
-            <AlertDialog
+            </button>
+            {/* <AlertDialog
               open={openBillingModal}
               onOpenChange={() => setOpenBillingModal(true)}
             >
@@ -206,7 +206,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
                   </button>
                 </AlertDialogFooter>
               </AlertDialogContent>
-            </AlertDialog>
+            </AlertDialog> */}
           </div>
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[6px]">
@@ -216,8 +216,8 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
               </p>
             </div>
             <button
-              // onClick={() => setOpenCardSheet(true)}
-              onClick={() => setOpenBillingModal(true)}
+              onClick={() => setOpenCardSheet(true)}
+              // onClick={() => setOpenBillingModal(true)}
               className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
             >
               Update

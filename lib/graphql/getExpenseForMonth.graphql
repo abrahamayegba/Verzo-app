@@ -1,7 +1,16 @@
 query GetExpenseForMonth($businessId: String!, $monthly: Boolean) {
   getExpensesForMonth(businessId: $businessId, monthly: $monthly) {
+    dailyTotalAmountsForMonth {
+      date
+      totalAmount
+      totalPaidAmount
+      totalPendingAmount
+    }
     totalExpenseAmountThisMonth
-    percentageOfExpenseToInvoiceThisMonth
+    totalPaidExpensesThisMonth
+    totalPendingExpensesThisMonth
     percentageIncreaseInExpenseThisMonth
+    percentageIncreaseInPaidExpensesThisMonth
+    percentageIncreaseInPendingExpensesThisMonth
   }
 }

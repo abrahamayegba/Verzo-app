@@ -1,5 +1,5 @@
 mutation CreateSubscriptionNewCardB(
-  $seerbitRef: String!
+  $reference: String!
   $businessId: String!
   $currentPlanId: String!
   $offerId: String
@@ -8,10 +8,10 @@ mutation CreateSubscriptionNewCardB(
   $tax: Float!
 ) {
   createSubscriptionNewCardB(
-    seerbitRef: $seerbitRef
     input: {
       businessId: $businessId
       currentPlanId: $currentPlanId
+      reference: $reference
       offerId: $offerId
       addOnOptionId: $addOnOptionId
       addOnQuantity: $addOnQuantity
@@ -21,16 +21,5 @@ mutation CreateSubscriptionNewCardB(
     id
     dateSubscribed
     validTo
-    business {
-      businessName
-    }
-    subscriptionInvoice {
-      invoiceDescription
-      invoiceTotal
-      invoicePaid
-    }
-    subscriptionPayment {
-      amount
-    }
   }
 }
