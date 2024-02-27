@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import { useSendInvoiceBMutation } from "@/src/generated/graphql";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Send } from "lucide-react";
 
 interface SendInvoiceProps {
   open: boolean;
@@ -89,7 +89,7 @@ const SendInvoice: React.FC<SendInvoiceProps> = ({
                 <div className=" flex flex-col gap-y-3">
                   <div className=" flex">
                     <span className=" rounded-full p-3 bg-[#F9FCFF] flex">
-                      <ArchiveInvoiceIcon />
+                      <Send className=" text-primary-blue" />
                     </span>
                   </div>
                   <p className=" text-lg text-[#121212]">Send invoice</p>

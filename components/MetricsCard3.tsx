@@ -14,10 +14,12 @@ import {
 } from "@/src/generated/graphql";
 import Link from "next/link";
 import React from "react";
-import Graphflat from "./ui/icons/Graphflat";
 import localStorage from "local-storage-fallback";
-import GraphUp from "./ui/icons/GraphUp";
-import ArrowUpIcon from "./ui/icons/ArrowUpIcon";
+import { TrendingUp } from "lucide-react";
+import PurchaseWeeklyGraph from "./graphs/purchase/dashboard/PurchaseWeeklyGraph";
+import PurchaseMonthlyGraph from "./graphs/purchase/dashboard/PurchaseMonthlyGraph";
+import PurchaseQuarterlyGraph from "./graphs/purchase/dashboard/PurchaseQuarterlyGraph";
+import PurchaseYearlyGraph from "./graphs/purchase/dashboard/PurchaseYearlyGraph";
 
 interface MetricsProps {
   filter: string;
@@ -205,9 +207,9 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
           </button>
         </Link>
       </div>
-      <div className=" flex justify-between flex-wrap h-[70px]">
-        <div className=" flex flex-col gap-y-1">
-          <p className=" text-[30px]  font-medium">
+      <div className=" flex flex-col">
+        <div className=" flex justify-between gap-y-1">
+          <p className=" text-[30px] font-medium">
             {filter === "weekly" &&
               weeklyData?.totalPurchaseAmountThisWeek?.toLocaleString("en-NG", {
                 style: "currency",
@@ -241,77 +243,45 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
           </p>
           {filter === "weekly" &&
             weeklyData?.percentageIncreaseInPurchaseThisWeek! > 0 && (
-              <div className=" flex items-center text-primary-greytext text-[15px]">
-                <span>
-                  <ArrowUpIcon />
-                </span>
-                <span className="text-[#4BB543] mx-1">
+              <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                <span className="text-[#4BB543] ml-2">
                   {weeklyData?.percentageIncreaseInPurchaseThisWeek}%
-                </span>{" "}
-                this week
+                </span>
               </div>
             )}
           {filter === "monthly" &&
             monthlyData?.percentageIncreaseInPurchaseThisMonth! > 0 && (
-              <div className=" flex items-center text-primary-greytext text-[15px]">
-                <span>
-                  <ArrowUpIcon />
-                </span>
-                <span className="text-[#4BB543] mx-1">
+              <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                <span className="text-[#4BB543] ml-2">
                   {monthlyData?.percentageIncreaseInPurchaseThisMonth}%
                 </span>{" "}
-                this month
               </div>
             )}
           {filter === "quarterly" &&
             quarterlyData?.percentageIncreaseInPurchaseThisQuarter! > 0 && (
-              <div className=" flex items-center text-primary-greytext text-[15px]">
-                <span>
-                  <ArrowUpIcon />
-                </span>
-                <span className="text-[#4BB543] mx-1">
+              <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                <span className="text-[#4BB543] ml-2">
                   {quarterlyData?.percentageIncreaseInPurchaseThisQuarter}%
                 </span>{" "}
-                this quarter
               </div>
             )}
           {filter === "yearly" &&
             yearlyData?.percentageIncreaseInPurchaseThisYear! > 0 && (
-              <div className=" flex items-center text-primary-greytext text-[15px]">
-                <span>
-                  <ArrowUpIcon />
-                </span>
-                <span className="text-[#4BB543] mx-1">
+              <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                <span className="text-[#4BB543] ml-2">
                   {yearlyData?.percentageIncreaseInPurchaseThisYear}%
                 </span>{" "}
-                this year
               </div>
             )}
         </div>
-        {filter === "weekly" &&
-          (weeklyData?.totalPurchaseAmountThisWeek === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "monthly" &&
-          (monthlyData?.totalPurchaseAmountThisMonth === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "quarterly" &&
-          (quarterlyData?.totalPurchaseAmountThisQuarter === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "yearly" &&
-          (yearlyData?.totalPurchaseAmountThisYear === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
+        {filter === "weekly" && <PurchaseWeeklyGraph />}
+        {filter === "monthly" && <PurchaseMonthlyGraph />}
+        {filter === "quarterly" && <PurchaseQuarterlyGraph />}
+        {filter === "yearly" && <PurchaseYearlyGraph />}
       </div>
     </>
   );

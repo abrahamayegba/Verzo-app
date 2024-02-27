@@ -1,11 +1,18 @@
 query GetPurchaseForWeek($businessId: String!, $weekly: Boolean) {
   getPurchasesForWeek(businessId: $businessId, weekly: $weekly) {
     purchasesThisWeek
+    dailyTotalAmounts {
+      date
+      dayOfWeek
+      totalAmount
+      totalPaidAmount
+      totalPendingAmount
+    }
     totalPurchaseAmountThisWeek
-    percentageIncreaseInPurchaseThisWeek
-    pendingPurchasesThisWeek
-    totalPendingPurchaseAmountThisWeek
-    paidPurchasesThisWeek
     totalPaidPurchaseAmountThisWeek
+    totalPendingPurchaseAmountThisWeek
+    percentageIncreaseInPaidPurchases
+    percentageIncreaseInPendingPurchaseThisWeek
+    percentageIncreaseInPurchaseThisWeek
   }
 }

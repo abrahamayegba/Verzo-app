@@ -114,9 +114,7 @@ const ViewPurchase = () => {
           <div className=" flex justify-between items-center">
             {businessLogo ? (
               <Image alt="Logo" src={businessLogo} width={100} height={80} />
-            ) : (
-              <p className="">LOGO</p>
-            )}
+            ) : null}
             <Link href={`/purchase/editpurchase?purchaseId=${purchaseId}`}>
               <button
                 disabled={purchaseStatusId >= 2}

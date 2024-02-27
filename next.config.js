@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["cdn.filestackcontent.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.filestackcontent.com",
+      },
+    ],
   },
   eslint: {
     ignoreDuringBuilds: true,

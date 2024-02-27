@@ -1,6 +1,4 @@
 import React from "react";
-import ArrowUpIcon from "../ui/icons/ArrowUpIcon";
-import Graphflat from "../ui/icons/Graphflat";
 import localStorage from "local-storage-fallback";
 import {
   useGetPurchaseForMonthQuery,
@@ -9,8 +7,11 @@ import {
   useGetPurchaseForYearQuery,
 } from "@/src/generated/graphql";
 import Link from "next/link";
-import GraphUp from "../ui/icons/GraphUp";
-import { Plus } from "lucide-react";
+import { Plus, TrendingUp } from "lucide-react";
+import PurchaseDashboardPaidWeeklyGraph from "../graphs/purchase/purchasedashboard/weekly/PurchaseDashboardPaidWeeklyGraph";
+import PurchaseDashboardPaidMonthlyGraph from "../graphs/purchase/purchasedashboard/monthly/PurchaseDashboardPaidMonthlyGraph";
+import PurchaseDashboardPaidQuarterlyGraph from "../graphs/purchase/purchasedashboard/quarterly/PurchaseDashboardPaidQuarterlyGraph";
+import PurchaseDashboardPaidYearlyGraph from "../graphs/purchase/purchasedashboard/yearly/PurchaseDashboardPaidYearlyGraph";
 
 interface MetricsProps {
   filter: string;
@@ -33,8 +34,9 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
       totalPaidPurchaseAmountThisWeek:
         getPurchaseForWeek?.data?.getPurchasesForWeek
           ?.totalPaidPurchaseAmountThisWeek,
-      numberOfPaidPurchasesThisWeek:
-        getPurchaseForWeek.data?.getPurchasesForWeek?.paidPurchasesThisWeek,
+      percentageIncreaseInPaidPurchaseThisWeek:
+        getPurchaseForWeek.data?.getPurchasesForWeek
+          ?.percentageIncreaseInPaidPurchases,
     };
   };
 
@@ -49,8 +51,9 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
       totalPaidPurchaseAmountThisMonth:
         getPurchaseForMonth?.data?.getPurchaseForMonth
           ?.totalPaidPurchaseAmountThisMonth,
-      numberOfPaidPurchasesThisMonth:
-        getPurchaseForMonth.data?.getPurchaseForMonth?.paidPurchasesThisMonth,
+      percentageIncreaseInPaidPurchaseThisMonth:
+        getPurchaseForMonth.data?.getPurchaseForMonth
+          ?.percentageIncreaseInPaidPurchasesThisMonth,
     };
   };
 
@@ -65,9 +68,9 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
       totalPaidPurchaseAmountThisQuarter:
         getPurchaseForQuarter?.data?.getPurchaseForQuarter
           ?.totalPaidPurchaseAmountThisQuarter,
-      numberOfPaidPurchasesThisQuarter:
+      percentageIncreaseInPaidPurchasesThisQuarter:
         getPurchaseForQuarter.data?.getPurchaseForQuarter
-          ?.paidPurchasesThisQuarter,
+          ?.percentageIncreaseInPaidPurchasesThisQuarter,
     };
   };
 
@@ -82,8 +85,9 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
       totalPaidPurchaseAmountThisYear:
         getPurchaseForYear?.data?.getPurchaseForYear
           ?.totalPaidPurchaseAmountThisYear,
-      numberOfPaidPurchasesThisYear:
-        getPurchaseForYear.data?.getPurchaseForYear?.paidPurchasesThisYear,
+      percentageIncreaseInPaidPurchasesThisYear:
+        getPurchaseForYear.data?.getPurchaseForYear
+          ?.percentageIncreaseInPaidPurchasesThisYear,
     };
   };
 
@@ -101,8 +105,8 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
           </button>
         </Link>
       </div>
-      <div className=" flex justify-between flex-wrap h-[70px]">
-        <div className=" flex flex-col gap-y-1">
+      <div className=" flex flex-col">
+        <div className=" flex justify-between gap-y-1">
           <p className=" text-[30px]  font-medium">
             {filter === "weekly" &&
               weeklyData?.totalPaidPurchaseAmountThisWeek?.toLocaleString(
@@ -141,73 +145,53 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
                 }
               )}
           </p>
-          <div className=" items-center text-primary-greytext">
+          <div className=" flex items-center text-primary-greytext">
             {filter === "weekly" &&
-              weeklyData?.numberOfPaidPurchasesThisWeek! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <Plus className=" w-4 h-4" />
-                  <span className=" ml-[2px] mr-1">
-                    {weeklyData?.numberOfPaidPurchasesThisWeek}
+              weeklyData?.percentageIncreaseInPaidPurchaseThisWeek! > 0 && (
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
+                    {weeklyData?.percentageIncreaseInPaidPurchaseThisWeek}%
                   </span>{" "}
-                  this week
                 </div>
               )}
             {filter === "monthly" &&
-              monthlyData?.numberOfPaidPurchasesThisMonth! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <Plus className=" w-4 h-4" />
-                  <span className=" ml-[2px] mr-1">
-                    {monthlyData?.numberOfPaidPurchasesThisMonth}
+              monthlyData?.percentageIncreaseInPaidPurchaseThisMonth! > 0 && (
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
+                    {monthlyData?.percentageIncreaseInPaidPurchaseThisMonth}%
                   </span>{" "}
-                  this month
                 </div>
               )}
             {filter === "quarterly" &&
-              quarterlyData?.numberOfPaidPurchasesThisQuarter! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <Plus className=" w-4 h-4" />
-                  <span className=" ml-[2px] mr-1">
-                    {quarterlyData?.numberOfPaidPurchasesThisQuarter}%
+              quarterlyData?.percentageIncreaseInPaidPurchasesThisQuarter! >
+                0 && (
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
+                    {
+                      quarterlyData?.percentageIncreaseInPaidPurchasesThisQuarter
+                    }
+                    %
                   </span>{" "}
-                  this quarter
                 </div>
               )}
             {filter === "yearly" &&
-              yearlyData?.numberOfPaidPurchasesThisYear! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <Plus className=" w-4 h-4" />
-                  <span className=" ml-[2px] mr-1">
-                    {yearlyData?.numberOfPaidPurchasesThisYear}%
+              yearlyData?.percentageIncreaseInPaidPurchasesThisYear! > 0 && (
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
+                    {yearlyData?.percentageIncreaseInPaidPurchasesThisYear}%
                   </span>{" "}
-                  this year
                 </div>
               )}
           </div>
         </div>
-        {filter === "weekly" &&
-          (weeklyData?.numberOfPaidPurchasesThisWeek === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "monthly" &&
-          (monthlyData?.numberOfPaidPurchasesThisMonth === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "quarterly" &&
-          (quarterlyData?.numberOfPaidPurchasesThisQuarter === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "yearly" &&
-          (yearlyData?.numberOfPaidPurchasesThisYear === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
+        {filter === "weekly" && <PurchaseDashboardPaidWeeklyGraph />}
+        {filter === "monthly" && <PurchaseDashboardPaidMonthlyGraph />}
+        {filter === "quarterly" && <PurchaseDashboardPaidQuarterlyGraph />}
+        {filter === "yearly" && <PurchaseDashboardPaidYearlyGraph />}
       </div>
     </>
   );

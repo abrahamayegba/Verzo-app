@@ -1,11 +1,19 @@
 query GetPurchaseForYear($businessId: String!, $yearly: Boolean) {
   getPurchaseForYear(businessId: $businessId, yearly: $yearly) {
     purchasesThisYear
+    monthlyTotalAmounts {
+      month
+      totalPurchasesAmount
+      totalPaidPurchasesAmount
+      totalPendingPurchasesAmount
+    }
     totalPurchaseAmountThisYear
     percentageIncreaseInPurchaseThisYear
     pendingPurchasesThisYear
     totalPendingPurchaseAmountThisYear
     paidPurchasesThisYear
     totalPaidPurchaseAmountThisYear
+    percentageIncreaseInPaidPurchasesThisYear
+    percentageIncreaseInPendingPurchasesThisYear
   }
 }

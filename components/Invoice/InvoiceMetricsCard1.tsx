@@ -1,5 +1,4 @@
 import React from "react";
-import GraphUp from "../ui/icons/GraphUp";
 import localStorage from "local-storage-fallback";
 import {
   useTotalMonthlyInvoicesAmountQuery,
@@ -7,8 +6,11 @@ import {
   useTotalWeeklyInvoicesAmountQuery,
   useTotalYearlyInvoicesAmountQuery,
 } from "@/src/generated/graphql";
-import ArrowUpIcon from "../ui/icons/ArrowUpIcon";
-import Graphflat from "../ui/icons/Graphflat";
+import { TrendingUp } from "lucide-react";
+import InvoiceDashboardPaidWeeklygraph from "../graphs/invoice/invoicedashboard/weekly/InvoiceDashboardPaidWeeklyGraph";
+import InvoiceDashboardPaidMonthlyGraph from "../graphs/invoice/invoicedashboard/monthly/InvoiceDashboardPaidMonthlyGraph";
+import InvoiceDashboardPaidQuarterlyGraph from "../graphs/invoice/invoicedashboard/quarterly/InvoiceDashboardPaidQuarterlyGraph";
+import InvoiceDashboardPaidYearlyGraph from "../graphs/invoice/invoicedashboard/yearly/InvoiceDashboardPaidYearlyGraph";
 interface MetricsProps {
   filter: string;
 }
@@ -31,7 +33,7 @@ const InvoiceMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
           ?.totalPaidInvoiceAmountThisWeek,
       percentagePaidInvoicesThisWeek:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
-          ?.percentageOfIncreaseInInvoicesThisWeek,
+          ?.percentageIncreaseInPaidInvoicesThisWeek,
     };
   };
 
@@ -48,7 +50,7 @@ const InvoiceMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
           ?.totalPaidInvoiceAmountThisMonth,
       percentagePaidInvoicesThisMonth:
         totalMonthlyInvoicesAmountQuery.data?.totalMonthlyInvoicesAmount
-          ?.percentageIncreaseInInvoicesThisMonth,
+          ?.percentageIncreaseInPaidInvoicesForMonth,
     };
   };
 
@@ -66,7 +68,7 @@ const InvoiceMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
           ?.totalPaidInvoiceAmountThisQuarter,
       percentagePaidInvoicesThisQuarter:
         totalQuarterlyInvoicesAmountQuery.data?.totalQuarterlyInvoicesAmount
-          ?.percentageIncreaseInInvoiceThisQuarter,
+          ?.percentageIncreaseInInvoicePaidThisQuarter,
     };
   };
 
@@ -83,7 +85,7 @@ const InvoiceMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
           ?.totalPaidInvoiceAmountThisYear,
       percentagePaidInvoicesThisYear:
         totalYearlyInvoicesAmountQuery.data?.totalYearlyInvoicesAmount
-          ?.percentageIncreaseInInvoiceThisYear,
+          ?.percentageIncreaseInInvoicesPaidThisYear,
     };
   };
 
@@ -96,8 +98,8 @@ const InvoiceMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
       <div className=" flex justify-between text-primary-black">
         <p className=" text-[20px] tracking-[-0.3px]">Paid</p>
       </div>
-      <div className=" flex justify-between flex-wrap h-[70px]">
-        <div className=" flex flex-col gap-y-1">
+      <div className=" flex flex-col">
+        <div className="flex justify-between gap-y-1">
           <p className=" text-[30px]  font-medium">
             {filter === "weekly" &&
               weeklyData?.totalInvoiceAmountThisWeek?.toLocaleString("en-NG", {
@@ -133,78 +135,46 @@ const InvoiceMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
           <div className=" flex items-center text-primary-greytext">
             {filter === "weekly" &&
               weeklyData?.percentagePaidInvoicesThisWeek! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
                     {weeklyData?.percentagePaidInvoicesThisWeek}%
                   </span>{" "}
-                  this week
                 </div>
               )}
             {filter === "monthly" &&
               monthlyData?.percentagePaidInvoicesThisMonth! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
                     {monthlyData?.percentagePaidInvoicesThisMonth}%
                   </span>{" "}
-                  this month
                 </div>
               )}
             {filter === "quarterly" &&
               quarterlyData?.percentagePaidInvoicesThisQuarter! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
                     {quarterlyData?.percentagePaidInvoicesThisQuarter}%
                   </span>{" "}
-                  this quarter
                 </div>
               )}
             {filter === "yearly" &&
               yearlyData?.percentagePaidInvoicesThisYear! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
                     {yearlyData?.percentagePaidInvoicesThisYear}%
                   </span>{" "}
-                  this year
                 </div>
               )}
           </div>
         </div>
-        {filter === "weekly" &&
-          (weeklyData?.percentagePaidInvoicesThisWeek === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "monthly" &&
-          (monthlyData?.percentagePaidInvoicesThisMonth === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "quarterly" &&
-          (quarterlyData?.percentagePaidInvoicesThisQuarter === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "yearly" &&
-          (yearlyData?.percentagePaidInvoicesThisYear === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
+        {filter === "weekly" && <InvoiceDashboardPaidWeeklygraph />}
+        {filter === "monthly" && <InvoiceDashboardPaidMonthlyGraph />}
+        {filter === "quarterly" && <InvoiceDashboardPaidQuarterlyGraph />}
+        {filter === "yearly" && <InvoiceDashboardPaidYearlyGraph />}
       </div>
     </>
   );
