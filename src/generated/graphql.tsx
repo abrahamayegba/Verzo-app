@@ -3153,6 +3153,7 @@ export type OptionIncluded = {
   __typename?: 'OptionIncluded';
   createdAt: Scalars['Date']['output'];
   id: Scalars['String']['output'];
+  limit?: Maybe<Scalars['Float']['output']>;
   option?: Maybe<Option>;
   optionId: Scalars['String']['output'];
   plan?: Maybe<Plan>;
@@ -3550,6 +3551,7 @@ export type Query = {
   getCombinedCOAs?: Maybe<Array<Maybe<CombinedChartOfAccount>>>;
   getCombinedProductUnits?: Maybe<Array<Maybe<CombinedProductUnit>>>;
   getCombinedServiceUnits?: Maybe<Array<Maybe<CombinedServiceUnit>>>;
+  getCurrentSubscriptionByBusiness?: Maybe<Subscription>;
   getCustomerByBusiness?: Maybe<GetCustomerResponse>;
   getCustomerByBusinessMobile?: Maybe<GetCustomerResponse>;
   getCustomerById?: Maybe<Customer>;
@@ -3883,6 +3885,11 @@ export type QueryGetCombinedProductUnitsArgs = {
 
 
 export type QueryGetCombinedServiceUnitsArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGetCurrentSubscriptionByBusinessArgs = {
   businessId: Scalars['String']['input'];
 };
 
@@ -5977,6 +5984,13 @@ export type GetCombinedCoAsQueryVariables = Exact<{
 
 
 export type GetCombinedCoAsQuery = { __typename?: 'Query', getCombinedCOAs?: Array<{ __typename?: 'CombinedChartOfAccount', id: string, name: string } | null> | null };
+
+export type GetCurrentSubscriptionByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetCurrentSubscriptionByBusinessQuery = { __typename?: 'Query', getCurrentSubscriptionByBusiness?: { __typename?: 'Subscription', id: string, dateSubscribed: any, validTo: any, plan?: { __typename?: 'Plan', id: string, planName: string, currentPrice: number, optionIncluded?: Array<{ __typename?: 'OptionIncluded', limit?: number | null, option?: { __typename?: 'Option', optionName: string } | null } | null> | null } | null } | null };
 
 export type GetCustomerByIdQueryVariables = Exact<{
   customerId: Scalars['String']['input'];
@@ -9343,6 +9357,59 @@ export type GetCombinedCoAsQueryHookResult = ReturnType<typeof useGetCombinedCoA
 export type GetCombinedCoAsLazyQueryHookResult = ReturnType<typeof useGetCombinedCoAsLazyQuery>;
 export type GetCombinedCoAsSuspenseQueryHookResult = ReturnType<typeof useGetCombinedCoAsSuspenseQuery>;
 export type GetCombinedCoAsQueryResult = Apollo.QueryResult<GetCombinedCoAsQuery, GetCombinedCoAsQueryVariables>;
+export const GetCurrentSubscriptionByBusinessDocument = gql`
+    query GetCurrentSubscriptionByBusiness($businessId: String!) {
+  getCurrentSubscriptionByBusiness(businessId: $businessId) {
+    id
+    dateSubscribed
+    validTo
+    plan {
+      id
+      planName
+      currentPrice
+      optionIncluded {
+        option {
+          optionName
+        }
+        limit
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCurrentSubscriptionByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentSubscriptionByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentSubscriptionByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentSubscriptionByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetCurrentSubscriptionByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetCurrentSubscriptionByBusinessQuery, GetCurrentSubscriptionByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCurrentSubscriptionByBusinessQuery, GetCurrentSubscriptionByBusinessQueryVariables>(GetCurrentSubscriptionByBusinessDocument, options);
+      }
+export function useGetCurrentSubscriptionByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentSubscriptionByBusinessQuery, GetCurrentSubscriptionByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCurrentSubscriptionByBusinessQuery, GetCurrentSubscriptionByBusinessQueryVariables>(GetCurrentSubscriptionByBusinessDocument, options);
+        }
+export function useGetCurrentSubscriptionByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCurrentSubscriptionByBusinessQuery, GetCurrentSubscriptionByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCurrentSubscriptionByBusinessQuery, GetCurrentSubscriptionByBusinessQueryVariables>(GetCurrentSubscriptionByBusinessDocument, options);
+        }
+export type GetCurrentSubscriptionByBusinessQueryHookResult = ReturnType<typeof useGetCurrentSubscriptionByBusinessQuery>;
+export type GetCurrentSubscriptionByBusinessLazyQueryHookResult = ReturnType<typeof useGetCurrentSubscriptionByBusinessLazyQuery>;
+export type GetCurrentSubscriptionByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetCurrentSubscriptionByBusinessSuspenseQuery>;
+export type GetCurrentSubscriptionByBusinessQueryResult = Apollo.QueryResult<GetCurrentSubscriptionByBusinessQuery, GetCurrentSubscriptionByBusinessQueryVariables>;
 export const GetCustomerByIdDocument = gql`
     query GetCustomerById($customerId: String!) {
   getCustomerById(customerId: $customerId) {

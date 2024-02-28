@@ -1,0 +1,18 @@
+query GetCurrentSubscriptionByBusiness($businessId: String!) {
+  getCurrentSubscriptionByBusiness(businessId: $businessId) {
+    id
+    dateSubscribed
+    validTo
+    plan {
+      id
+      planName
+      currentPrice
+      optionIncluded {
+        option {
+          optionName
+        }
+        limit
+      }
+    }
+  }
+}

@@ -8,6 +8,7 @@ import DeleteCard from "../modals/settings/DeleteCardModal";
 import DefaultCardModal from "../modals/settings/DefaultCardModal";
 import {
   useCreateSubscriptionNewCardBMutation,
+  useGetCurrentSubscriptionByBusinessQuery,
   useGetPlanByIdQuery,
   useGetSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
@@ -105,14 +106,13 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     openDefaultCardModal();
   };
 
-  const { data } = useGetSubscriptionByBusinessQuery({
+  const { data } = useGetCurrentSubscriptionByBusinessQuery({
     variables: {
       businessId: businessId,
     },
   });
 
-  const subscription = data?.getSubscriptionByBusiness[0];
-  const planName = subscription?.plan?.planName;
+  const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
 
   const [createSubscriptionNewCardBMutation] =
     useCreateSubscriptionNewCardBMutation();
