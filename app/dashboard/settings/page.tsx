@@ -8,7 +8,7 @@ import localStorage from "local-storage-fallback";
 import {
   useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
-  useGetSubscriptionByBusinessQuery,
+  useGetCurrentSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
 
@@ -23,11 +23,13 @@ const Settings = () => {
       businessId: businessId,
     },
   });
-  const subscription = useGetSubscriptionByBusinessQuery({
-    variables: {
-      businessId: businessId,
-    },
-  });
+
+  const getCurrentSubscriptionByBusiness =
+    useGetCurrentSubscriptionByBusinessQuery({
+      variables: {
+        businessId: businessId,
+      },
+    });
 
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const handleBillingBannerClick = () => {
@@ -43,7 +45,7 @@ const Settings = () => {
   if (
     getBusinessesByUserId.loading ||
     getBusinessById.loading ||
-    subscription.loading
+    getCurrentSubscriptionByBusiness.loading
   ) {
     return <MainLoader />;
   }
