@@ -1,7 +1,16 @@
 query GetExpenseForYear($businessId: String!, $yearly: Boolean) {
   getExpensesForYear(businessId: $businessId, yearly: $yearly) {
+    monthlyTotalAmounts {
+      month
+      totalExpensesAmount
+      totalPaidExpensesAmount
+      totalPendingExpensesAmount
+    }
     totalExpenseAmountThisYear
-    percentageOfExpenseToInvoiceThisYear
     percentageIncreaseInExpensesThisYear
+    percentageIncreaseInPaidExpensesThisYear
+    percentageIncreaseInPendingExpensesThisYear
+    totalPaidExpensesAmountThisYear
+    totalPendingExpenseAmountThisYear
   }
 }

@@ -1,15 +1,14 @@
 "use client";
 import { useGetSaleByIdQuery } from "@/src/generated/graphql";
-import { notFound, useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import React from "react";
 import Image from "next/image";
 import MainLoader from "@/components/loading/MainLoader";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
 import Link from "next/link";
 
-const InvoiceDetailPage = () => {
-  const { invoiceId } = useParams();
-  const saleId = Array.isArray(invoiceId) ? invoiceId[0] : invoiceId;
+const InvoiceDetailPage = ({ params }: any) => {
+  const saleId = params?.invoiceId;
   const getSaleById = useGetSaleByIdQuery({
     variables: {
       saleId: saleId,
@@ -86,9 +85,7 @@ const InvoiceDetailPage = () => {
                 width={120}
                 height={90}
               />
-            ) : (
-              <p className="">LOGO</p>
-            )}
+            ) : null}
           </div>
           <p className=" text-3xl">INVOICE</p>
         </div>

@@ -3,21 +3,18 @@ import {
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
 } from "@/src/generated/graphql";
-import { notFound, useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import React from "react";
 import Image from "next/image";
 import MainLoader from "@/components/loading/MainLoader";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
 import Link from "next/link";
 
-const PurchaseDetailPage = () => {
-  const { purchaseId } = useParams();
-  const purchaseIdString = Array.isArray(purchaseId)
-    ? purchaseId[0]
-    : purchaseId;
+const PurchaseDetailPage = ({ params }: any) => {
+  const purchaseId = params?.purchaseId;
   const getPurchaseById = useGetPurchaseByIdQuery({
     variables: {
-      purchaseId: purchaseIdString,
+      purchaseId: purchaseId,
     },
   });
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
@@ -82,9 +79,7 @@ const PurchaseDetailPage = () => {
                 width={120}
                 height={90}
               />
-            ) : (
-              <p className="">LOGO</p>
-            )}
+            ) : null}
           </div>
           <p className=" text-3xl">PURCHASE</p>
         </div>

@@ -8,6 +8,7 @@ import DeleteCard from "../modals/settings/DeleteCardModal";
 import DefaultCardModal from "../modals/settings/DefaultCardModal";
 import {
   useCreateSubscriptionNewCardBMutation,
+  useGetCurrentSubscriptionByBusinessQuery,
   useGetPlanByIdQuery,
   useGetSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
@@ -105,24 +106,58 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     openDefaultCardModal();
   };
 
-  const { data } = useGetSubscriptionByBusinessQuery({
+  const { data } = useGetCurrentSubscriptionByBusinessQuery({
     variables: {
       businessId: businessId,
     },
   });
 
-  const subscription = data?.getSubscriptionByBusiness[0];
-  const planName = subscription?.plan?.planName;
+  const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
 
   const [createSubscriptionNewCardBMutation] =
     useCreateSubscriptionNewCardBMutation();
 
+  // const handlePaymentVerification = async (reference: string) => {
+  //   try {
+  //     const storedPlanId = localStorage.getItem("planId")!;
+  //     const { data, errors } = await createSubscriptionNewCardBMutation({
+  //       variables: {
+  //         reference: reference,
+  //         businessId: businessId,
+  //         currentPlanId: storedPlanId,
+  //         tax: 0,
+  //       },
+  //     });
+  //     if (errors && errors.length > 0) {
+  //       throw new Error(errors[0].message);
+  //     }
+  //     if (data) {
+  //       showSuccessToast();
+  //     } else {
+  //       showFailureToast(errors);
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Error verifying payment:", error.message);
+  //     showFailureToast(error);
+  //   }
+  // };
+  // if (reference) {
+  //   handlePaymentVerification(reference);
+  //   router.replace("/dashboard/settings");
+  //   return null;
+  // }
+
+  let isMutationInProgress = false;
   const handlePaymentVerification = async (reference: string) => {
     try {
+      if (isMutationInProgress) {
+        return;
+      }
+      isMutationInProgress = true;
       const storedPlanId = localStorage.getItem("planId")!;
       const { data, errors } = await createSubscriptionNewCardBMutation({
         variables: {
-          seerbitRef: reference,
+          reference: reference,
           businessId: businessId,
           currentPlanId: storedPlanId,
           tax: 0,
@@ -139,9 +174,10 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     } catch (error: any) {
       console.error("Error verifying payment:", error.message);
       showFailureToast(error);
+    } finally {
+      isMutationInProgress = false;
     }
   };
-
   if (reference) {
     handlePaymentVerification(reference);
     router.replace("/dashboard/settings");
@@ -169,13 +205,13 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
                 Update your Verzo plan
               </p>
             </div>
-            {/* <button
+            <button
               onClick={() => setOpenPlanSheet(true)}
               className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
             >
               Update
-            </button> */}
-            <AlertDialog
+            </button>
+            {/* <AlertDialog
               open={openBillingModal}
               onOpenChange={() => setOpenBillingModal(true)}
             >
@@ -206,7 +242,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
                   </button>
                 </AlertDialogFooter>
               </AlertDialogContent>
-            </AlertDialog>
+            </AlertDialog> */}
           </div>
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[6px]">
@@ -216,8 +252,8 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
               </p>
             </div>
             <button
-              // onClick={() => setOpenCardSheet(true)}
-              onClick={() => setOpenBillingModal(true)}
+              onClick={() => setOpenCardSheet(true)}
+              // onClick={() => setOpenBillingModal(true)}
               className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
             >
               Update

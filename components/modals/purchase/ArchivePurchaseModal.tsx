@@ -8,6 +8,7 @@ import {
   useArchivePurchaseMutation,
 } from "@/src/generated/graphql";
 import { useToast } from "@/app/hooks/use-toast";
+import { Archive } from "lucide-react";
 
 interface ArchivePurchaseProps {
   open: boolean;
@@ -88,7 +89,7 @@ const ArchivePurchase: React.FC<ArchivePurchaseProps> = ({
                 <div className=" flex flex-col gap-y-3">
                   <div className=" flex">
                     <span className=" rounded-full p-3 bg-[#F9FCFF] flex">
-                      <ArchiveInvoiceIcon />
+                      <Archive className=" text-primary-blue" />
                     </span>
                   </div>
                   <p className=" text-lg text-[#121212]">

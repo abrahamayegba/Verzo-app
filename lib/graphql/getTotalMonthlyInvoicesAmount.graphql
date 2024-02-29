@@ -9,6 +9,7 @@ query TotalMonthlyInvoicesAmount($businessId: String!, $monthly: Boolean) {
     totalPaidInvoiceAmountThisMonth
     totalInvoiceAmountForMonth
     totalPendingInvoiceAmountThisMonth
+    percentageIncreaseInPaidInvoicesForMonth
     percentageIncreaseInPendingInvoiceThisMonth
     totalOverdueInvoiceAmountThisMonth
     percentageIncreaseInOverdueInvoicesThisMonth

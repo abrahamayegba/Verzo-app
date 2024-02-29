@@ -60,6 +60,7 @@ const UnarchivePurchase: React.FC<UnarchivePurchaseProps> = ({
       showFailureToast(error);
     }
   };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>

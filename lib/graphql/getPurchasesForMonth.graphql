@@ -1,9 +1,18 @@
 query GetPurchaseForMonth($businessId: String!, $monthly: Boolean) {
   getPurchaseForMonth(businessId: $businessId, monthly: $monthly) {
     purchasesThisMonth
+    dailyTotalAmountsForMonth {
+      date
+      totalAmount
+      totalPaidAmount
+      totalPendingAmount
+    }
     totalPurchaseAmountThisMonth
     percentageIncreaseInPurchaseThisMonth
+    percentageIncreaseInPaidPurchasesThisMonth
+    percentageIncreaseInPendingPurchasesThisMonth
     pendingPurchasesThisMonth
+    percentageIncreaseInPaidPurchasesThisMonth
     totalPendingPurchaseAmountThisMonth
     paidPurchasesThisMonth
     totalPaidPurchaseAmountThisMonth

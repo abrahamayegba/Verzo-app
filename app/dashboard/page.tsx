@@ -214,12 +214,6 @@ const Dashboard = () => {
               </p>
             </div>
             <div className=" flex gap-x-[14px] max-h-[48px]">
-              {/* <ImportDataDropdown
-                openImportCustomerModal={openImportCustomerModal}
-                openImportMerchantModal={openImportMerchantModal}
-                openImportProductModal={openImportProductModal}
-                openImportServiceModal={openImportServiceModal}
-              /> */}
               <FilterDataDropdown
                 selectedFilter={selectedFilter}
                 onFilterChange={handleFilterChange}

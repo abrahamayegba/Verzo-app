@@ -100,9 +100,7 @@ const ViewExpense = () => {
         <div className=" flex justify-between items-center">
           {businessLogo ? (
             <Image alt="Logo" src={businessLogo} width={100} height={80} />
-          ) : (
-            <p className="">LOGO</p>
-          )}
+          ) : null}
           <div className=" flex flex-row gap-x-5">
             <Link href={`/expense/editexpense?expenseId=${expenseId}`}>
               <button
