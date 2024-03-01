@@ -161,7 +161,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   }, [reference, mutationExecuted, mutationInProgress, router]);
   return (
     <>
-      {!mutationLoading && <PaymentLoader />}
+      {mutationLoading && <PaymentLoader />}
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
         <p className=" text-sm text-primary-greytext px-6">
           Manage subscription
