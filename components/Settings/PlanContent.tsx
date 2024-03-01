@@ -38,7 +38,8 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   );
   const businessId = storedBusinessId[0] || "";
   const [selectedPlanId, setSelectedPlanId] = useState("");
-  const [paymentReference, setPaymentReference] = useState("");
+  const [mutationExecuted, setMutationExecuted] = useState(false);
+  const [mutationInProgress, setMutationInProgress] = useState(false);
   const {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
@@ -120,6 +121,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
 
   const handlePaymentVerification = async (reference: string) => {
     try {
+      setMutationInProgress(true);
       const storedPlanId = localStorage.getItem("planId")!;
       const { data, errors } = await createSubscriptionNewCardBMutation({
         variables: {
@@ -129,7 +131,8 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
           tax: 0,
         },
       });
-      setPaymentReference("");
+      setMutationExecuted(true);
+      setMutationInProgress(false);
       if (errors && errors.length > 0) {
         throw new Error(errors[0].message);
       }
@@ -143,20 +146,12 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
       showFailureToast(error);
     }
   };
-  // if (reference) {
-  //   handlePaymentVerification(reference);
-  //   router.replace("/dashboard/settings");
-  //   return null;
-  // }
-  useEffect(() => {
-    if (reference) {
-      setPaymentReference(reference);
-      handlePaymentVerification(paymentReference);
-      setPaymentReference("");
-      router.replace("/dashboard/settings");
-    }
-  });
 
+  useEffect(() => {
+    if (reference && !mutationExecuted && !mutationInProgress) {
+      handlePaymentVerification(reference);
+    }
+  }, [reference, mutationExecuted, mutationInProgress]);
   return (
     <>
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
