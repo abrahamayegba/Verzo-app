@@ -7,6 +7,7 @@ import CardSheet from "../sheets/settings/planandbilling/CardSheet";
 import DeleteCard from "../modals/settings/DeleteCardModal";
 import DefaultCardModal from "../modals/settings/DefaultCardModal";
 import {
+  GetCurrentSubscriptionByBusinessDocument,
   useCreateSubscriptionNewCardBMutation,
   useGetCurrentSubscriptionByBusinessQuery,
   useGetPlanByIdQuery,
@@ -25,6 +26,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import PaymentLoader from "../loading/Paymentloader";
+import { useApolloClient } from "@apollo/client";
 
 interface PlanProps {
   reference: string;
@@ -32,6 +35,7 @@ interface PlanProps {
 
 const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const { toast } = useToast();
+  const client = useApolloClient(); // Apollo Client instance
   const router = useRouter();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -40,6 +44,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const [selectedPlanId, setSelectedPlanId] = useState("");
   const [mutationExecuted, setMutationExecuted] = useState(false);
   const [mutationInProgress, setMutationInProgress] = useState(false);
+  const [mutationLoading, setMutationLoading] = useState(false);
   const {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
@@ -120,33 +125,32 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     useCreateSubscriptionNewCardBMutation();
 
   const handlePaymentVerification = async (reference: string) => {
+    setMutationLoading(true);
     try {
       setMutationInProgress(true);
       const storedPlanId = localStorage.getItem("planId")!;
-      const { data, errors } = await createSubscriptionNewCardBMutation({
+      await createSubscriptionNewCardBMutation({
         variables: {
           reference: reference,
           businessId: businessId,
           currentPlanId: storedPlanId,
           tax: 0,
         },
+        refetchQueries: [GetCurrentSubscriptionByBusinessDocument],
       });
       setMutationExecuted(true);
       setMutationInProgress(false);
-      if (errors && errors.length > 0) {
-        throw new Error(errors[0].message);
-      }
-      if (data) {
-        showSuccessToast();
-      } else {
-        showFailureToast(errors);
-      }
+      await client.query({
+        query: GetCurrentSubscriptionByBusinessDocument,
+        fetchPolicy: "network-only",
+      });
+      setMutationLoading(false);
+      showSuccessToast();
     } catch (error: any) {
       console.error("Error verifying payment:", error.message);
       showFailureToast(error);
     }
   };
-
   useEffect(() => {
     if (reference && !mutationExecuted && !mutationInProgress) {
       handlePaymentVerification(reference);
@@ -157,6 +161,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   }, [reference, mutationExecuted, mutationInProgress, router]);
   return (
     <>
+      {!mutationLoading && <PaymentLoader />}
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
         <p className=" text-sm text-primary-greytext px-6">
           Manage subscription
