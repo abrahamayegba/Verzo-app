@@ -38,6 +38,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   );
   const businessId = storedBusinessId[0] || "";
   const [selectedPlanId, setSelectedPlanId] = useState("");
+  const [paymentReference, setPaymentReference] = useState("");
   const {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
@@ -128,6 +129,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
           tax: 0,
         },
       });
+      setPaymentReference("");
       if (errors && errors.length > 0) {
         throw new Error(errors[0].message);
       }
@@ -148,7 +150,9 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   // }
   useEffect(() => {
     if (reference) {
-      handlePaymentVerification(reference);
+      setPaymentReference(reference);
+      handlePaymentVerification(paymentReference);
+      setPaymentReference("");
       router.replace("/dashboard/settings");
     }
   });
