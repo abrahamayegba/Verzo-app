@@ -151,7 +151,10 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     if (reference && !mutationExecuted && !mutationInProgress) {
       handlePaymentVerification(reference);
     }
-  }, [reference, mutationExecuted, mutationInProgress]);
+    if (mutationExecuted && !mutationInProgress) {
+      router.replace("/dashboard/settings");
+    }
+  }, [reference, mutationExecuted, mutationInProgress, router]);
   return (
     <>
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
