@@ -35,7 +35,6 @@ interface PlanProps {
 
 const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const { toast } = useToast();
-  const client = useApolloClient(); // Apollo Client instance
   const router = useRouter();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -44,7 +43,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const [selectedPlanId, setSelectedPlanId] = useState("");
   const [mutationExecuted, setMutationExecuted] = useState(false);
   const [mutationInProgress, setMutationInProgress] = useState(false);
-  const [mutationLoading, setMutationLoading] = useState(false);
   const {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
@@ -121,47 +119,10 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
 
   const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
 
-  const [createSubscriptionNewCardBMutation] =
+  const [createSubscriptionNewCardBMutation, { loading }] =
     useCreateSubscriptionNewCardBMutation();
 
-  // const handlePaymentVerification = async (reference: string) => {
-  //   setMutationLoading(true);
-  //   try {
-  //     setMutationInProgress(true);
-  //     const storedPlanId = localStorage.getItem("planId")!;
-  //     await createSubscriptionNewCardBMutation({
-  //       variables: {
-  //         reference: reference,
-  //         businessId: businessId,
-  //         currentPlanId: storedPlanId,
-  //         tax: 0,
-  //       },
-  //       refetchQueries: [GetCurrentSubscriptionByBusinessDocument],
-  //     });
-  //     setMutationExecuted(true);
-  //     setMutationInProgress(false);
-  //     setMutationLoading(false);
-  //     await client.query({
-  //       query: GetCurrentSubscriptionByBusinessDocument,
-  //       fetchPolicy: "network-only",
-  //     });
-  //     showSuccessToast();
-  //   } catch (error: any) {
-  //     console.error("Error verifying payment:", error.message);
-  //     showFailureToast(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (reference && !mutationExecuted && !mutationInProgress) {
-  //     handlePaymentVerification(reference);
-  //   }
-  //   if (mutationExecuted && !mutationInProgress) {
-  //     router.replace("/dashboard/settings");
-  //   }
-  // }, [reference, mutationExecuted, mutationInProgress]);
-
   const handlePaymentVerification = async (reference: string) => {
-    setMutationLoading(true);
     try {
       setMutationInProgress(true);
       const storedPlanId = localStorage.getItem("planId")!;
@@ -187,8 +148,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     } catch (error: any) {
       console.error("Error verifying payment:", error.message);
       showFailureToast(error);
-    } finally {
-      setMutationLoading(false);
     }
   };
 
@@ -196,11 +155,14 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     if (reference && !mutationExecuted && !mutationInProgress) {
       handlePaymentVerification(reference);
     }
+    if (mutationExecuted && !mutationInProgress) {
+      router.replace("/dashboard/settings");
+    }
   }, [reference, mutationExecuted, mutationInProgress]);
 
   return (
     <>
-      {/* {mutationLoading && <PaymentLoader />} */}
+      {loading && <PaymentLoader />}
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
         <p className=" text-sm text-primary-greytext px-6">
           Manage subscription
