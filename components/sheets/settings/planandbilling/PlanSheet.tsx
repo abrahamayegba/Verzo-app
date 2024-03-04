@@ -26,6 +26,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
   const businessId = storedBusinessId[0] || "";
 
   const Plans = useGetPlansQuery();
+  const Plansloading = Plans.loading;
   const Planlist = Plans.data?.getPlans;
 
   const { data } = useGetCurrentSubscriptionByBusinessQuery({
@@ -37,12 +38,14 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
   const planId = data?.getCurrentSubscriptionByBusiness?.plan?.id!;
 
   const [selectedOption, setSelectedOption] = useState<string>(planId);
-  const getPlanById = useGetPlanByIdQuery({
-    variables: {
-      planId: selectedOption,
-    },
-  });
-  const planQueryLoading = getPlanById.loading;
+  // const getPlanById = useGetPlanByIdQuery({
+  //   variables: {
+  //     planId: selectedOption,
+  //   },
+  // });
+  // const planQueryLoading = getPlanById.loading;
+
+  // console.log(selectedOption, planId);
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
@@ -217,12 +220,13 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
               </TabsContent>
             </Tabs>
             <button
+              disabled={!selectedOption}
               onClick={() => {
                 onClose();
                 confirmPlan(selectedOption);
               }}
-              className={`bg-primary-blue text-white rounded-[10px] py-[10px] mt-[10px] ${
-                planQueryLoading ? "opacity-50" : ""
+              className={`bg-primary-blue disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[10px] py-[10px] mt-[10px] ${
+                Plansloading ? "opacity-50" : ""
               }`}
             >
               Next
