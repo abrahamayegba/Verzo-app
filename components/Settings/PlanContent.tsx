@@ -40,7 +40,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
-  const [selectedPlanId, setSelectedPlanId] = useState("");
+
   const [mutationExecuted, setMutationExecuted] = useState(false);
   const [mutationInProgress, setMutationInProgress] = useState(false);
   const {
@@ -90,18 +90,14 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     setOpenCardSheet(false);
   };
 
-  const confirmPlan = (selectedOption: string) => {
-    setSelectedPlanId(selectedOption);
+  const [selectedPlanId, setSelectedPlanId] = useState<string>("");
+  const [selectedPlanName, setSelectedPlanName] = useState<string>("");
+
+  const confirmPlan = (selectedOption: { id: string; name: string }) => {
+    setSelectedPlanId(selectedOption.id);
+    setSelectedPlanName(selectedOption.name);
     openConfirmPlanModal();
   };
-
-  const getPlanById = useGetPlanByIdQuery({
-    variables: {
-      planId: selectedPlanId,
-    },
-  });
-
-  const selectedPlanName = getPlanById.data?.getPlanById?.planName!;
 
   const deleteCard = () => {
     openDeleteCardModal();
