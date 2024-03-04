@@ -124,12 +124,48 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const [createSubscriptionNewCardBMutation] =
     useCreateSubscriptionNewCardBMutation();
 
+  // const handlePaymentVerification = async (reference: string) => {
+  //   setMutationLoading(true);
+  //   try {
+  //     setMutationInProgress(true);
+  //     const storedPlanId = localStorage.getItem("planId")!;
+  //     await createSubscriptionNewCardBMutation({
+  //       variables: {
+  //         reference: reference,
+  //         businessId: businessId,
+  //         currentPlanId: storedPlanId,
+  //         tax: 0,
+  //       },
+  //       refetchQueries: [GetCurrentSubscriptionByBusinessDocument],
+  //     });
+  //     setMutationExecuted(true);
+  //     setMutationInProgress(false);
+  //     setMutationLoading(false);
+  //     await client.query({
+  //       query: GetCurrentSubscriptionByBusinessDocument,
+  //       fetchPolicy: "network-only",
+  //     });
+  //     showSuccessToast();
+  //   } catch (error: any) {
+  //     console.error("Error verifying payment:", error.message);
+  //     showFailureToast(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (reference && !mutationExecuted && !mutationInProgress) {
+  //     handlePaymentVerification(reference);
+  //   }
+  //   if (mutationExecuted && !mutationInProgress) {
+  //     router.replace("/dashboard/settings");
+  //   }
+  // }, [reference, mutationExecuted, mutationInProgress]);
+
   const handlePaymentVerification = async (reference: string) => {
     setMutationLoading(true);
     try {
       setMutationInProgress(true);
       const storedPlanId = localStorage.getItem("planId")!;
-      await createSubscriptionNewCardBMutation({
+      const { data, errors } = await createSubscriptionNewCardBMutation({
         variables: {
           reference: reference,
           businessId: businessId,
@@ -140,28 +176,31 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
       });
       setMutationExecuted(true);
       setMutationInProgress(false);
-      setMutationLoading(false);
-      await client.query({
-        query: GetCurrentSubscriptionByBusinessDocument,
-        fetchPolicy: "network-only",
-      });
-      showSuccessToast();
+      if (errors && errors.length > 0) {
+        throw new Error(errors[0].message);
+      }
+      if (data) {
+        showSuccessToast();
+      } else {
+        showFailureToast(errors);
+      }
     } catch (error: any) {
       console.error("Error verifying payment:", error.message);
       showFailureToast(error);
+    } finally {
+      setMutationLoading(false);
     }
   };
+
   useEffect(() => {
     if (reference && !mutationExecuted && !mutationInProgress) {
       handlePaymentVerification(reference);
     }
-    if (mutationExecuted && !mutationInProgress) {
-      router.replace("/dashboard/settings");
-    }
   }, [reference, mutationExecuted, mutationInProgress]);
+
   return (
     <>
-      {mutationLoading && <PaymentLoader />}
+      {/* {mutationLoading && <PaymentLoader />} */}
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
         <p className=" text-sm text-primary-greytext px-6">
           Manage subscription
