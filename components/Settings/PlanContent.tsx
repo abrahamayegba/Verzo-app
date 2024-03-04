@@ -158,7 +158,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     if (mutationExecuted && !mutationInProgress) {
       router.replace("/dashboard/settings");
     }
-  }, [reference, mutationExecuted, mutationInProgress, router]);
+  }, [reference, mutationExecuted, mutationInProgress]);
   return (
     <>
       {mutationLoading && <PaymentLoader />}
