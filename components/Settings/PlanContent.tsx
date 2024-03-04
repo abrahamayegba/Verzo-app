@@ -140,11 +140,11 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
       });
       setMutationExecuted(true);
       setMutationInProgress(false);
+      setMutationLoading(false);
       await client.query({
         query: GetCurrentSubscriptionByBusinessDocument,
         fetchPolicy: "network-only",
       });
-      setMutationLoading(false);
       showSuccessToast();
     } catch (error: any) {
       console.error("Error verifying payment:", error.message);
