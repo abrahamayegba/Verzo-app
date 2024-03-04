@@ -10,8 +10,6 @@ import {
   GetCurrentSubscriptionByBusinessDocument,
   useCreateSubscriptionNewCardBMutation,
   useGetCurrentSubscriptionByBusinessQuery,
-  useGetPlanByIdQuery,
-  useGetSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
@@ -27,7 +25,6 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import PaymentLoader from "../loading/Paymentloader";
-import { useApolloClient } from "@apollo/client";
 
 interface PlanProps {
   reference: string;
@@ -36,13 +33,6 @@ interface PlanProps {
 const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const { toast } = useToast();
   const router = useRouter();
-  const storedBusinessId = JSON.parse(
-    localStorage.getItem("businessId") || "[]"
-  );
-  const businessId = storedBusinessId[0] || "";
-
-  const [mutationExecuted, setMutationExecuted] = useState(false);
-  const [mutationInProgress, setMutationInProgress] = useState(false);
   const {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
@@ -61,9 +51,18 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     closeModal: closeDefaultCardModal,
   } = useModal();
 
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+
+  const [selectedPlanId, setSelectedPlanId] = useState<string>("");
+  const [selectedPlanName, setSelectedPlanName] = useState<string>("");
+  const [mutationExecuted, setMutationExecuted] = useState(false);
+  const [mutationInProgress, setMutationInProgress] = useState(false);
   const [openPlanSheet, setOpenPlanSheet] = useState(false);
   const [openCardSheet, setOpenCardSheet] = useState(false);
-  const [openBillingModal, setOpenBillingModal] = useState(false);
+  // const [openBillingModal, setOpenBillingModal] = useState(false);
 
   const showSuccessToast = () => {
     toast({
@@ -90,9 +89,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     setOpenCardSheet(false);
   };
 
-  const [selectedPlanId, setSelectedPlanId] = useState<string>("");
-  const [selectedPlanName, setSelectedPlanName] = useState<string>("");
-
   const confirmPlan = (selectedOption: { id: string; name: string }) => {
     setSelectedPlanId(selectedOption.id);
     setSelectedPlanName(selectedOption.name);
@@ -114,7 +110,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   });
 
   const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
-
   const [createSubscriptionNewCardBMutation, { loading }] =
     useCreateSubscriptionNewCardBMutation();
 

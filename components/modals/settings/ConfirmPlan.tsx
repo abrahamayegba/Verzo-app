@@ -17,7 +17,6 @@ interface ConfirmPlanProps {
 
 const ConfirmPlanModal: React.FC<ConfirmPlanProps> = ({
   open,
-  openModal,
   onClose,
   planName,
   planId,

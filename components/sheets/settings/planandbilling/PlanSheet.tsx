@@ -1,14 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronLeft, X } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import PlanIcon from "@/components/ui/icons/PlanIcon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   useGetCurrentSubscriptionByBusinessQuery,
-  useGetPlanByIdQuery,
   useGetPlansQuery,
-  useGetSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 
@@ -27,19 +25,16 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
-
   const businessId = storedBusinessId[0] || "";
 
   const Plans = useGetPlansQuery();
   const Plansloading = Plans.loading;
   const Planlist = Plans.data?.getPlans;
-
   const { data } = useGetCurrentSubscriptionByBusinessQuery({
     variables: {
       businessId: businessId,
     },
   });
-
   const planId = data?.getCurrentSubscriptionByBusiness?.plan?.id!;
   const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName!;
 
@@ -55,8 +50,6 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
     const selectedOption: SelectedPlanOption = { id: planId, name: planName };
     setSelectedOption(selectedOption);
   };
-
-  console.log(selectedOption?.id, planId);
 
   return (
     <>
@@ -223,7 +216,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
               </TabsContent>
             </Tabs>
             <button
-              disabled={!selectedOption}
+              disabled={!selectedOption.id || !selectedOption.name}
               onClick={() => {
                 onClose();
                 confirmPlan(selectedOption!);
