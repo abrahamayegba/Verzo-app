@@ -47,7 +47,7 @@ const Pdf = () => {
   }
   return (
     <div className=" flex flex-col w-full justify-center items-center gap-y-[20px]">
-      <div className=" w-full flex flex-col max-w-[790px] min-h-[1024px] bg-white shadow-xl pt-[30px] pb-[36px]">
+      <div className=" w-full flex flex-col max-w-[790px] min-h-[1024px] bg-white border-x border-t border-gray-200 pt-[30px] pb-[36px]">
         <div className=" flex flex-row justify-between items-center px-[44px]">
           <div>
             {businessLogo ? (
