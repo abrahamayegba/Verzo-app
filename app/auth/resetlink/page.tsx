@@ -5,6 +5,7 @@ import { useForgotPasswordMutation } from "@/src/generated/graphql";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/app/hooks/use-toast";
 import Link from "next/link";
+import Verzologoblue2 from "@/components/ui/icons/Verzologoblue2";
 
 type FormData = {
   email: string;
@@ -47,8 +48,8 @@ const Resetlink = () => {
   return (
     <div className=" w-full flex flex-row h-screen">
       <AuthSidebar />
-      <div className=" flex-1 ml-[34%] h-full pt-[60px]">
-        <div className=" w-full flex justify-end items-center gap-x-9 pl-[140px] pr-[60px]">
+      <div className=" flex-1 md:ml-[34%] h-full flex items-center md:block overflow-y-auto md:pt-[60px]">
+        <div className=" w-full lg:flex justify-end hidden items-center gap-x-9 pl-[140px] pr-[60px]">
           <p className=" text-primary-greytext text-lg">
             Don’t have an account?
           </p>
@@ -58,34 +59,39 @@ const Resetlink = () => {
             </button>
           </Link>
         </div>
-        <div className=" flex flex-col pl-[140px] pr-[60px] mt-[60px]">
+        <div className=" flex flex-col w-full px-[28px] md:pl-[140px] md:pr-[60px] mt-[-70px] md:mt-[60px]">
+          <span className=" flex items-center md:hidden mb-[20px]">
+            <Verzologoblue2 />
+          </span>
           <div className=" flex flex-col gap-y-2">
-            <p className=" text-primary-black text-[32px]">Reset Password</p>
-            <p className=" text-primary-greytext text-lg">
+            <p className=" text-primary-black md:text-[32px] text-[28px]">
+              Reset Password
+            </p>
+            <p className=" text-primary-greytext md:text-lg text-base ">
               A reset link will be sent to your email address
             </p>
           </div>
           <form
             onSubmit={handleSubmit(onResetHandler)}
-            className=" flex flex-col mt-[30px] gap-y-5"
+            className=" flex flex-col md:mt-[30px] mt-5 gap-y-5 items-center md:items-start w-full"
           >
-            <div className=" flex flex-col gap-y-2">
+            <div className=" flex flex-col gap-y-2 w-full">
               <label className=" text-primary-black" htmlFor="email">
                 Email address
               </label>
               <input
                 type="email"
                 required
-                className="max-w-[400px] px-3 py-[10px] border-gray-300 rounded-[8px] border focus:outline-none "
+                className="md:max-w-[400px] max-w-full px-3 py-[10px] border-gray-300 rounded-[8px] border focus:outline-none "
                 placeholder="e.g john@mail.com"
                 {...register("email")}
               />
             </div>
-            <div className=" flex flex-col mt-3">
+            <div className=" flex flex-col mt-3 w-full">
               <button
                 type="submit"
                 disabled={loading}
-                className={`rounded-[10px] px-[100px] max-w-[400px] py-[10px]  text-white bg-primary-blue text-lg flex items-center justify-center ${
+                className={`rounded-[10px] md:px-[100px] px-[90px] w-full md:max-w-[400px] py-[11px]  text-white bg-primary-blue text-base md:text-lg flex items-center justify-center ${
                   loading ? "opacity-50" : ""
                 }`}
               >
@@ -95,16 +101,20 @@ const Resetlink = () => {
           </form>
         </div>
       </div>
-      <div className=" border-t border-t-gray-100 bg-white w-full flex z-[15] absolute bottom-0 pl-[34%]">
-        <p className=" py-6 text-[15px] pl-[140px] text-primary-greytext">
+      <div className=" border-t border-t-gray-100 bg-white w-full flex z-[15] absolute bottom-0 px-[28px] md:px-0 md:pl-[34%]">
+        <p className=" py-6 md:text-[15px] text-sm md:pl-[140px] leading-6 text-primary-greytext">
           By using the platform you agree to{" "}
-          <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
-            Verzo’s Privacy Policy
-          </span>{" "}
+          <Link href="https://verzo.app/privacy">
+            <span className=" text-primary-blue cursor-pointer text-sm md:text-[15px] ml-1 underline underline-offset-4">
+              Verzo’s Privacy Policy
+            </span>{" "}
+          </Link>
           and
-          <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
-            Terms of Use
-          </span>
+          <Link href="https://verzo.app/terms">
+            <span className=" text-primary-blue cursor-pointer text-sm md:text-[15px] ml-1 underline underline-offset-4">
+              Terms of Use
+            </span>
+          </Link>
         </p>
       </div>
     </div>
