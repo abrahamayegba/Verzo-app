@@ -1,5 +1,4 @@
 "use client";
-import CustomerForm from "@/components/CustomerForm";
 import InvoiceItem from "@/components/Invoice/InvoiceItem";
 import SaleExpenseItem from "@/components/SaleExpenseItem";
 import ServiceExpenseItem from "@/components/ServiceExpenseItem";
@@ -29,13 +28,7 @@ import {
 import { ChevronDown, Eye, Info, MoveLeft, Phone, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, {
-  ChangeEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -93,7 +86,6 @@ const EditInvoice = () => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
-  const businessId = storedBusinessId[0] || "";
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
 
   const businessName =

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PlanSheet from "../sheets/settings/planandbilling/PlanSheet";
 import ConfirmPlanModal from "../modals/settings/ConfirmPlan";
 import useModal from "@/app/hooks/useModal";
@@ -7,13 +7,24 @@ import CardSheet from "../sheets/settings/planandbilling/CardSheet";
 import DeleteCard from "../modals/settings/DeleteCardModal";
 import DefaultCardModal from "../modals/settings/DefaultCardModal";
 import {
+  GetCurrentSubscriptionByBusinessDocument,
   useCreateSubscriptionNewCardBMutation,
-  useGetPlanByIdQuery,
-  useGetSubscriptionByBusinessQuery,
+  useGetCurrentSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import PaymentLoader from "../loading/Paymentloader";
 
 interface PlanProps {
   reference: string;
@@ -22,11 +33,6 @@ interface PlanProps {
 const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const { toast } = useToast();
   const router = useRouter();
-  const storedBusinessId = JSON.parse(
-    localStorage.getItem("businessId") || "[]"
-  );
-  const businessId = storedBusinessId[0] || "";
-  const [selectedPlanId, setSelectedPlanId] = useState("");
   const {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
@@ -45,8 +51,18 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     closeModal: closeDefaultCardModal,
   } = useModal();
 
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+
+  const [selectedPlanId, setSelectedPlanId] = useState<string>("");
+  const [selectedPlanName, setSelectedPlanName] = useState<string>("");
+  const [mutationExecuted, setMutationExecuted] = useState(false);
+  const [mutationInProgress, setMutationInProgress] = useState(false);
   const [openPlanSheet, setOpenPlanSheet] = useState(false);
   const [openCardSheet, setOpenCardSheet] = useState(false);
+  // const [openBillingModal, setOpenBillingModal] = useState(false);
 
   const showSuccessToast = () => {
     toast({
@@ -73,18 +89,11 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     setOpenCardSheet(false);
   };
 
-  const confirmPlan = (selectedOption: string) => {
-    setSelectedPlanId(selectedOption);
+  const confirmPlan = (selectedOption: { id: string; name: string }) => {
+    setSelectedPlanId(selectedOption.id);
+    setSelectedPlanName(selectedOption.name);
     openConfirmPlanModal();
   };
-
-  const getPlanById = useGetPlanByIdQuery({
-    variables: {
-      planId: selectedPlanId,
-    },
-  });
-
-  const selectedPlanName = getPlanById.data?.getPlanById?.planName!;
 
   const deleteCard = () => {
     openDeleteCardModal();
@@ -94,29 +103,65 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     openDefaultCardModal();
   };
 
-  const { data } = useGetSubscriptionByBusinessQuery({
+  const { data } = useGetCurrentSubscriptionByBusinessQuery({
     variables: {
       businessId: businessId,
     },
   });
 
-  const subscription = data?.getSubscriptionByBusiness[0];
-  const planName = subscription?.plan?.planName;
+  const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
 
-  const [createSubscriptionNewCardBMutation] =
+  const [createSubscriptionNewCardBMutation, { loading }] =
+
     useCreateSubscriptionNewCardBMutation();
 
+  // const handlePaymentVerification = async (reference: string) => {
+  //   try {
+  //     const storedPlanId = localStorage.getItem("planId")!;
+  //     const { data, errors } = await createSubscriptionNewCardBMutation({
+  //       variables: {
+  //         reference: reference,
+  //         businessId: businessId,
+  //         currentPlanId: storedPlanId,
+  //         tax: 0,
+  //       },
+  //     });
+  //     if (errors && errors.length > 0) {
+  //       throw new Error(errors[0].message);
+  //     }
+  //     if (data) {
+  //       showSuccessToast();
+  //     } else {
+  //       showFailureToast(errors);
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Error verifying payment:", error.message);
+  //     showFailureToast(error);
+  //   }
+  // };
+  // if (reference) {
+  //   handlePaymentVerification(reference);
+  //   router.replace("/dashboard/settings");
+  //   return null;
+  // }
+
+  let isMutationInProgress = false;
   const handlePaymentVerification = async (reference: string) => {
     try {
+      setMutationInProgress(true);
+
       const storedPlanId = localStorage.getItem("planId")!;
       const { data, errors } = await createSubscriptionNewCardBMutation({
         variables: {
-          seerbitRef: reference,
+          reference: reference,
           businessId: businessId,
           currentPlanId: storedPlanId,
           tax: 0,
         },
+        refetchQueries: [GetCurrentSubscriptionByBusinessDocument],
       });
+      setMutationExecuted(true);
+      setMutationInProgress(false);
       if (errors && errors.length > 0) {
         throw new Error(errors[0].message);
       }
@@ -128,17 +173,23 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     } catch (error: any) {
       console.error("Error verifying payment:", error.message);
       showFailureToast(error);
+    } finally {
+      isMutationInProgress = false;
     }
   };
 
-  if (reference) {
-    handlePaymentVerification(reference);
-    router.replace("/dashboard/settings");
-    return null;
-  }
+  useEffect(() => {
+    if (reference && !mutationExecuted && !mutationInProgress) {
+      handlePaymentVerification(reference);
+    }
+    if (mutationExecuted && !mutationInProgress) {
+      router.replace("/dashboard/settings");
+    }
+  }, [reference, mutationExecuted, mutationInProgress]);
 
   return (
     <>
+      {loading && <PaymentLoader />}
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
         <p className=" text-sm text-primary-greytext px-6">
           Manage subscription
@@ -164,6 +215,38 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
             >
               Update
             </button>
+            {/* <AlertDialog
+              open={openBillingModal}
+              onOpenChange={() => setOpenBillingModal(true)}
+            >
+              <button
+                onClick={() => setOpenBillingModal(true)}
+                className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
+              >
+                Update
+              </button>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    You are on the Beta testing plan!
+                  </AlertDialogTitle>
+                  <p className=" text-sm text-gray-700 leading-6">
+                    Please be informed that our billing and payment
+                    functionalities are currently disabled as part of our
+                    ongoing beta testing phase. We appreciate your patience and
+                    understanding as we work to enhance our platform.
+                  </p>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <button
+                    className=" border border-gray-200 px-5 hover:border-gray-500 py-2 text-[15px] rounded-md"
+                    onClick={() => setOpenBillingModal(false)}
+                  >
+                    Close
+                  </button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog> */}
           </div>
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[6px]">
@@ -174,6 +257,7 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
             </div>
             <button
               onClick={() => setOpenCardSheet(true)}
+              // onClick={() => setOpenBillingModal(true)}
               className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
             >
               Update

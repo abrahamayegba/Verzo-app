@@ -1,6 +1,4 @@
 import React from "react";
-import GraphUp from "../ui/icons/GraphUp";
-import Graphflat from "../ui/icons/Graphflat";
 import localStorage from "local-storage-fallback";
 import {
   useTotalMonthlyInvoicesAmountQuery,
@@ -8,7 +6,11 @@ import {
   useTotalWeeklyInvoicesAmountQuery,
   useTotalYearlyInvoicesAmountQuery,
 } from "@/src/generated/graphql";
-import ArrowUpIcon from "../ui/icons/ArrowUpIcon";
+import { TrendingUp } from "lucide-react";
+import InvoiceDashboardTotalWeeklygraph from "../graphs/invoice/invoicedashboard/weekly/InvoiceDashboardTotalWeeklyGraph";
+import InvoiceDashboardTotalMonthlyGraph from "../graphs/invoice/invoicedashboard/monthly/InvoiceDashboardTotalMonthlyGraph";
+import InvoiceDashboardTotalQuarterlyGraph from "../graphs/invoice/invoicedashboard/quarterly/InvoiceDashboardTotalQuarterlyGraph";
+import InvoiceDashboardTotalYearlyGraph from "../graphs/invoice/invoicedashboard/yearly/invoiceDashboardTotalYearlyGraph";
 
 interface MetricsProps {
   filter: string;
@@ -28,12 +30,12 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
       },
     });
     return {
-      totalOverdueInvoicesAmountThisWeek:
+      totalInvoicesAmountThisWeek:
         totalWeeklyInvoicesAmountQuery?.data?.totalWeeklyInvoicesAmount
-          ?.totalOverdueInvoiceAmountThisWeek,
-      percentageOverdueInvoicesThisWeek:
+          ?.totalInvoiceAmountForWeek,
+      percentageInvoicesThisWeek:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
-          ?.percentageIncreaseInOverdueInvoicesThisWeek,
+          ?.percentageOfIncreaseInInvoicesThisWeek,
     };
   };
 
@@ -45,12 +47,12 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
       },
     });
     return {
-      totalOverdueInvoicesAmountThisMonth:
+      totalInvoicesAmountThisMonth:
         totalMonthlyInvoicesAmountQuery?.data?.totalMonthlyInvoicesAmount
-          ?.totalOverdueInvoiceAmountThisMonth,
-      percentageOverdueInvoicesThisMonth:
+          ?.totalInvoiceAmountForMonth,
+      percentageInvoicesThisMonth:
         totalMonthlyInvoicesAmountQuery.data?.totalMonthlyInvoicesAmount
-          ?.percentageIncreaseInOverdueInvoicesThisMonth,
+          ?.percentageIncreaseInInvoicesThisMonth,
     };
   };
 
@@ -63,12 +65,12 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
         },
       });
     return {
-      totalOverdueInvoicesAmountThisQuarter:
+      totalInvoicesAmountThisQuarter:
         totalQuarterlyInvoicesAmountQuery?.data?.totalQuarterlyInvoicesAmount
-          ?.totalOverdueInvoiceAmountThisQuarter,
-      percentageOverdueInvoicesThisQuarter:
+          ?.totalInvoiceAmountForQuarter,
+      percentageInvoicesThisQuarter:
         totalQuarterlyInvoicesAmountQuery.data?.totalQuarterlyInvoicesAmount
-          ?.percentageIncreaseInOverdueInvoiceThisQuarter,
+          ?.percentageIncreaseInInvoiceThisQuarter,
     };
   };
 
@@ -80,12 +82,12 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
       },
     });
     return {
-      totalOverdueInvoicesAmountThisYear:
+      totalInvoicesAmountThisYear:
         totalYearlyInvoicesAmountQuery?.data?.totalYearlyInvoicesAmount
-          ?.totalOverdueInvoiceAmountThisYear,
-      percentageOverdueInvoicesThisYear:
+          ?.totalInvoiceAmountForYear,
+      percentageInvoicesThisYear:
         totalYearlyInvoicesAmountQuery.data?.totalYearlyInvoicesAmount
-          ?.percentageIncreaseInOverdueInvoicesThisYear,
+          ?.percentageIncreaseInInvoiceThisYear,
     };
   };
 
@@ -96,22 +98,19 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
   return (
     <>
       <div className=" flex justify-between text-primary-black">
-        <p className=" text-[20px] tracking-[-0.3px]">Overdue</p>
+        <p className=" text-[20px] tracking-[-0.3px]">Total</p>
       </div>
-      <div className=" flex justify-between flex-wrap h-[70px]">
-        <div className=" flex flex-col gap-y-1">
+      <div className=" flex flex-col">
+        <div className=" flex justify-between gap-y-1">
           <p className=" text-[30px] font-medium">
             {filter === "weekly" &&
-              weeklyData?.totalOverdueInvoicesAmountThisWeek?.toLocaleString(
-                "en-NG",
-                {
-                  style: "currency",
-                  currency: "NGN",
-                  minimumFractionDigits: 2,
-                }
-              )}
+              weeklyData?.totalInvoicesAmountThisWeek?.toLocaleString("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                minimumFractionDigits: 2,
+              })}
             {filter === "monthly" &&
-              monthlyData?.totalOverdueInvoicesAmountThisMonth?.toLocaleString(
+              monthlyData?.totalInvoicesAmountThisMonth?.toLocaleString(
                 "en-NG",
                 {
                   style: "currency",
@@ -120,7 +119,7 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                 }
               )}
             {filter === "quarterly" &&
-              quarterlyData?.totalOverdueInvoicesAmountThisQuarter?.toLocaleString(
+              quarterlyData?.totalInvoicesAmountThisQuarter?.toLocaleString(
                 "en-NG",
                 {
                   style: "currency",
@@ -129,90 +128,55 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                 }
               )}
             {filter === "yearly" &&
-              yearlyData?.totalOverdueInvoicesAmountThisYear?.toLocaleString(
-                "en-NG",
-                {
-                  style: "currency",
-                  currency: "NGN",
-                  minimumFractionDigits: 2,
-                }
-              )}
+              yearlyData?.totalInvoicesAmountThisYear?.toLocaleString("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                minimumFractionDigits: 2,
+              })}
           </p>
           <div className=" flex items-center text-primary-greytext ">
             {filter === "weekly" &&
-              weeklyData?.percentageOverdueInvoicesThisWeek! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
-                    {weeklyData?.percentageOverdueInvoicesThisWeek}%
+              weeklyData?.percentageInvoicesThisWeek! > 0 && (
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
+                    {weeklyData?.percentageInvoicesThisWeek}%
                   </span>{" "}
-                  this week
                 </div>
               )}
             {filter === "monthly" &&
-              monthlyData?.percentageOverdueInvoicesThisMonth! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
-                    {monthlyData?.percentageOverdueInvoicesThisMonth}%
+              monthlyData?.percentageInvoicesThisMonth! > 0 && (
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
+                    {monthlyData?.percentageInvoicesThisMonth}%
                   </span>{" "}
-                  this month
                 </div>
               )}
             {filter === "quarterly" &&
-              quarterlyData?.percentageOverdueInvoicesThisQuarter! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
-                    {quarterlyData?.percentageOverdueInvoicesThisQuarter}%
+              quarterlyData?.percentageInvoicesThisQuarter! > 0 && (
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
+                    {quarterlyData?.percentageInvoicesThisQuarter}%
                   </span>{" "}
-                  this quarter
                 </div>
               )}
             {filter === "yearly" &&
-              yearlyData?.percentageOverdueInvoicesThisYear! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
-                    {yearlyData?.percentageOverdueInvoicesThisYear}%
+              yearlyData?.percentageInvoicesThisYear! > 0 && (
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
+                    {yearlyData?.percentageInvoicesThisYear}%
                   </span>{" "}
-                  this year
                 </div>
               )}
           </div>
         </div>
-        {filter === "weekly" &&
-          (weeklyData?.percentageOverdueInvoicesThisWeek === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "monthly" &&
-          (monthlyData?.percentageOverdueInvoicesThisMonth === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "quarterly" &&
-          (quarterlyData?.percentageOverdueInvoicesThisQuarter === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "yearly" &&
-          (yearlyData?.percentageOverdueInvoicesThisYear === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
+        {filter === "weekly" && <InvoiceDashboardTotalWeeklygraph />}
+        {filter === "monthly" && <InvoiceDashboardTotalMonthlyGraph />}
+        {filter === "quarterly" && <InvoiceDashboardTotalQuarterlyGraph />}
+        {filter === "yearly" && <InvoiceDashboardTotalYearlyGraph />}
       </div>
     </>
   );

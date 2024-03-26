@@ -15,9 +15,11 @@ import {
 import Link from "next/link";
 import localStorage from "local-storage-fallback";
 import React from "react";
-import Graphflat from "./ui/icons/Graphflat";
-import GraphUp from "./ui/icons/GraphUp";
-import ArrowUpIcon from "./ui/icons/ArrowUpIcon";
+import Invoicegraph from "./graphs/invoice/dashboard/InvoiceWeeklygraph";
+import InvoiceMonthlyGraph from "./graphs/invoice/dashboard/InvoiceMonthlyGraph";
+import InvoiceQuarterlyGraph from "./graphs/invoice/dashboard/InvoiceQuarterlyGraph";
+import InvoiceYearlyGraph from "./graphs/invoice/dashboard/InvoiceYearlyGraph";
+import { TrendingUp } from "lucide-react";
 
 interface MetricsProps {
   filter: string;
@@ -194,9 +196,9 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
           </button>
         </Link>
       </div>
-      <div className=" flex justify-between flex-wrap h-[70px]">
-        <div className=" flex flex-col gap-y-1">
-          <p className=" text-[30px]  font-medium">
+      <div className=" flex flex-col">
+        <div className=" flex justify-between gap-y-1">
+          <p className=" text-[30px] font-medium">
             {filter === "weekly" &&
               weeklyData?.weeklyRevenue?.toLocaleString("en-NG", {
                 style: "currency",
@@ -223,76 +225,44 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
               })}
           </p>
           {filter === "weekly" && weeklyData?.percentageWeeklyRevenue! > 0 && (
-            <div className=" flex items-center text-primary-greytext text-[15px]">
-              <span>
-                <ArrowUpIcon />
-              </span>
-              <span className="text-[#4BB543] mx-1">
+            <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+              <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+              <span className="text-[#4BB543] ml-2">
                 {weeklyData?.percentageWeeklyRevenue}%
               </span>{" "}
-              this week
             </div>
           )}
           {filter === "monthly" &&
             monthlyData?.percentageMonthlyRevenue! > 0 && (
-              <div className=" flex items-center text-primary-greytext text-[15px]">
-                <span>
-                  <ArrowUpIcon />
-                </span>
-                <span className="text-[#4BB543] mx-1">
+              <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                <span className="text-[#4BB543] ml-2">
                   {monthlyData?.percentageMonthlyRevenue}%
                 </span>{" "}
-                this month
               </div>
             )}
           {filter === "quarterly" &&
             quarterlyData?.percentageQuarterlyRevenue! > 0 && (
-              <div className=" flex items-center text-primary-greytext text-[15px]">
-                <span>
-                  <ArrowUpIcon />
-                </span>
-                <span className="text-[#4BB543] mx-1">
+              <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                <span className="text-[#4BB543] ml-2">
                   {quarterlyData?.percentageQuarterlyRevenue}%
                 </span>{" "}
-                this quarter
               </div>
             )}
           {filter === "yearly" && yearlyData?.percentageYearlyRevenue! > 0 && (
-            <div className=" flex items-center text-primary-greytext text-[15px]">
-              <span>
-                <ArrowUpIcon />
-              </span>
-              <span className="text-[#4BB543] mx-1">
+            <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+              <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+              <span className="text-[#4BB543] ml-1">
                 {yearlyData?.percentageYearlyRevenue}%
               </span>{" "}
-              this year
             </div>
           )}
         </div>
-        {filter === "weekly" &&
-          (weeklyData?.percentageWeeklyRevenue === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "monthly" &&
-          (monthlyData?.percentageMonthlyRevenue === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "quarterly" &&
-          (quarterlyData?.percentageQuarterlyRevenue === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "yearly" &&
-          (yearlyData?.percentageYearlyRevenue === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
+        {filter === "weekly" && <Invoicegraph />}
+        {filter === "monthly" && <InvoiceMonthlyGraph />}
+        {filter === "quarterly" && <InvoiceQuarterlyGraph />}
+        {filter === "yearly" && <InvoiceYearlyGraph />}
       </div>
     </>
   );

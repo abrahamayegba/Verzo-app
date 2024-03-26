@@ -1,11 +1,9 @@
-// layout.tsx
 "use client";
 import React, { useEffect } from "react";
-// import { useRouter } from "next/router";
 import { Toaster } from "@/components/ui/toaster";
 import { ApolloProvider } from "@/src/apollo/ApolloProvider";
 import "./globals.css";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -13,14 +11,26 @@ interface RootLayoutProps {
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   const router = useRouter();
+  const pathname = usePathname();
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 768; // Check for screen size less than 768px (sm)
+      if (isMobile) {
+        router.push("/verzo/mobilenotavailable");
+      } else if (pathname === "/verzo/mobilenotavailable") {
+        router.push("/auth/signin");
+      }
+    };
 
-  // useEffect(() => {
-  //   const isMobileDevice = window.matchMedia("(max-width: 1440px)").matches;
-  //   if (isMobileDevice) {
-  //     router.replace("/mobile-download");
-  //   }
-  // }, [router]);
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [router]);
+
+  //made fake changes
   return (
     <html lang="en">
       <ApolloProvider>

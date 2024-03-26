@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useSignInMutation } from "@/src/generated/graphql";
 import { saveToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import Verzologoblue2 from "@/components/ui/icons/Verzologoblue2";
 type FormData = {
   email: string;
   password: string;
@@ -45,10 +46,10 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen w-full">
       <AuthSidebar />
-      <div className="flex-1 ml-0 lg:ml-[34%] overflow-y-auto pt-[50px]">
-        <div className=" w-full flex justify-end items-center gap-x-9 pl-[140px] pr-[60px]">
+      <div className=" flex-1 md:ml-[34%] h-full flex items-center md:block md:pt-[50px] overflow-y-auto">
+        <div className=" w-full lg:flex justify-end hidden items-center gap-x-9 pl-[140px] pr-[60px]">
           <p className=" text-primary-greytext text-lg">
             Don’t have an account?
           </p>
@@ -58,14 +59,21 @@ const SignIn = () => {
             </button>
           </Link>
         </div>
-        <div className=" flex flex-col pl-[140px] pr-[60px] mt-[70px]">
+        <div className="flex flex-col w-full px-[28px] md:pl-[140px] md:pr-[60px] mt-[-70px] md:mt-[70px]">
+          <span className=" flex items-center md:hidden mb-[15px]">
+            <Verzologoblue2 />
+          </span>
           <div className=" flex flex-col gap-y-2">
-            <p className=" text-primary-black text-[32px]">Sign in to Verzo</p>
-            <p className=" text-primary-greytext text-lg">Welcome back</p>
+            <p className=" text-primary-black md:text-[32px] text-[28px]">
+              Sign in to Verzo
+            </p>
+            <p className=" text-primary-greytext md:text-lg text-base">
+              Welcome back
+            </p>
           </div>
           <form
             onSubmit={handleSubmit(SignInHandler)}
-            className=" flex flex-col mt-[30px] gap-y-6"
+            className=" flex flex-col md:mt-[30px] mt-[20px] md:gap-y-6 gap-y-4"
           >
             <div className=" flex flex-col gap-y-2">
               <label className=" text-primary-black" htmlFor="email">
@@ -117,12 +125,11 @@ const SignIn = () => {
                 </Link>
               </p>
             </div>
-
             <div className=" flex flex-col mt-1">
               <button
                 type="submit"
                 disabled={loading}
-                className={`rounded-[10px] px-[100px] max-w-[400px] py-[10px]  text-white bg-primary-blue text-lg flex items-center justify-center ${
+                className={`rounded-[10px] md:px-[100px] px-[90px] max-w-full md:max-w-[400px] py-[10px]  text-white bg-primary-blue text-lg flex items-center justify-center ${
                   loading ? "opacity-50" : ""
                 }`}
               >
@@ -141,16 +148,20 @@ const SignIn = () => {
           </form>
         </div>
       </div>
-      <div className=" border-t border-t-gray-100 bg-white w-full pl-[34%]">
-        <p className=" py-6 text-[15px] pl-[140px] text-primary-greytext">
+      <div className=" border-t border-t-gray-100 bg-white w-full flex z-[15] absolute bottom-0 px-[28px] md:px-0 md:pl-[34%]">
+        <p className=" md:py-6 py-4 md:text-[15px] text-sm md:pl-[140px] leading-6 text-primary-greytext">
           By using the platform you agree to{" "}
-          <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
-            Verzo’s Privacy Policy
-          </span>{" "}
+          <Link href="https://verzo.app/privacy">
+            <span className=" text-primary-blue cursor-pointer text-sm md:text-[15px] underline underline-offset-4">
+              Verzo’s Privacy Policy
+            </span>{" "}
+          </Link>
           and
-          <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
-            Terms of Use
-          </span>
+          <Link href="https://verzo.app/terms">
+            <span className=" text-primary-blue cursor-pointer text-sm md:text-[15px] ml-1 underline underline-offset-4">
+              Terms of Use
+            </span>
+          </Link>
         </p>
       </div>
     </div>

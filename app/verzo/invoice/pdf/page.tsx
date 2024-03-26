@@ -52,8 +52,9 @@ const Pdf = () => {
   }
   return (
     <div className=" flex flex-col w-full justify-center items-center gap-y-[20px]">
-      <div className=" w-full flex flex-col max-w-[790px] min-h-[1024px] bg-white border border-gray-200 pt-[30px] pb-[36px] px-[44px]">
-        <div className=" flex flex-row justify-between items-center">
+
+      <div className=" w-full flex flex-col max-w-[790px] min-h-[1024px] bg-white border-x border-t border-gray-200 pt-[30px] pb-[36px]">
+        <div className=" flex flex-row justify-between items-center px-[44px]">
           <div>
             {businessLogo ? (
               <Image
@@ -63,14 +64,12 @@ const Pdf = () => {
                 width={120}
                 height={90}
               />
-            ) : (
-              <p className="">LOGO</p>
-            )}
+            ) : null}
           </div>
           <p className=" text-3xl">INVOICE</p>
         </div>
         <div className=" flex flex-col border-t border-t-gray-200 mt-2">
-          <div className="grid grid-cols-3 pt-8 gap-4">
+          <div className="grid grid-cols-3 pt-8 gap-4 px-[44px]">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>Invoice</p>
               <p className=" text-primary-black font-normal">
@@ -92,7 +91,7 @@ const Pdf = () => {
               </p>
             </div>
           </div>
-          <div className=" grid grid-cols-3 gap-4 w-full pt-8">
+          <div className=" grid grid-cols-3 gap-4 w-full pt-8 px-[44px]">
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>From</p>
               <p className=" text-primary-black font-normal">{businessName}</p>
@@ -107,21 +106,25 @@ const Pdf = () => {
             </div>
           </div>
           <div className=" w-full flex flex-col mt-[40px] gap-y-4">
-            <p className=" text-lg">Invoice details</p>
+            <p className=" text-lg px-[44px]">Invoice details</p>
             <table className=" w-full ">
               <thead>
                 <tr className=" text-sm text-primary-greytext border-y border-y-gray-200">
-                  <th className=" text-start font-normal py-3">Item</th>
+                  <th className=" text-start font-normal py-3 pl-[44px]">
+                    Item
+                  </th>
                   <th className=" text-end font-normal py-3">Qty</th>
-                  <th className=" text-end font-normal py-3">Unit price</th>
+                  <th className=" text-end font-normal py-3 pr-[44px]">
+                    Unit price
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {saleItem?.map((item) => (
                   <tr key={item?.id}>
-                    <td className=" py-4">{item?.itemName}</td>
+                    <td className=" py-4 pl-[44px]">{item?.itemName}</td>
                     <td className=" text-end py-4">{item?.quantity}</td>
-                    <td className=" text-end py-4">
+                    <td className=" text-end py-4 pr-[44px]">
                       ₦{item?.price?.toLocaleString()}
                     </td>
                   </tr>
@@ -129,7 +132,7 @@ const Pdf = () => {
               </tbody>
             </table>
           </div>
-          <div className=" flex justify-between items-center mt-3">
+          <div className=" flex justify-between items-center mt-3 px-[44px]">
             <div className=" text-sm text-[#c4c4c4] max-w-[250px] flex flex-col gap-y-2">
               <p>Thanks for your patronage</p>
               <div className="flex">

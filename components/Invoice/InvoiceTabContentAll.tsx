@@ -177,13 +177,6 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
                         Edit Invoice
                       </Link>
                     </DropdownMenuItem>
-                    {/* <DropdownMenuItem
-                      onClick={() => openSendModal(invoice?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <Send className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Send Invoice
-                    </DropdownMenuItem> */}
                     <DropdownMenuItem
                       onClick={() => openArchiveModal(invoice?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"

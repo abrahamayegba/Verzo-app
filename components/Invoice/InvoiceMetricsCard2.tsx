@@ -1,6 +1,4 @@
 import React from "react";
-import GraphUp from "../ui/icons/GraphUp";
-import Graphflat from "../ui/icons/Graphflat";
 import localStorage from "local-storage-fallback";
 import {
   useTotalMonthlyInvoicesAmountQuery,
@@ -8,7 +6,11 @@ import {
   useTotalWeeklyInvoicesAmountQuery,
   useTotalYearlyInvoicesAmountQuery,
 } from "@/src/generated/graphql";
-import ArrowUpIcon from "../ui/icons/ArrowUpIcon";
+import { TrendingUp } from "lucide-react";
+import InvoiceDashboardPendingWeeklygraph from "../graphs/invoice/invoicedashboard/weekly/InvoiceDashboardPendingWeeklyGraph";
+import InvoiceDashboardPendingMonthlyGraph from "../graphs/invoice/invoicedashboard/monthly/InvoiceDashboardPendingMonthlyGraph";
+import InvoiceDashboardPendingQuarterlyGraph from "../graphs/invoice/invoicedashboard/quarterly/InvoiceDashboardPendingQuarterlyGraph";
+import InvoiceDashboardPendingYearlyGraph from "../graphs/invoice/invoicedashboard/yearly/InvoiceDashboardPendingYearlyGraph";
 
 interface MetricsProps {
   filter: string;
@@ -98,8 +100,8 @@ const InvoiceMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
       <div className=" flex justify-between text-primary-black">
         <p className=" text-[20px] tracking-[-0.3px]">Pending</p>
       </div>
-      <div className=" flex justify-between flex-wrap h-[70px]">
-        <div className=" flex flex-col gap-y-1">
+      <div className=" flex flex-col">
+        <div className=" flex justify-between gap-y-1">
           <p className=" text-[30px] font-medium">
             {filter === "weekly" &&
               weeklyData?.totalPendingInvoicesAmountThisWeek?.toLocaleString(
@@ -138,81 +140,49 @@ const InvoiceMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
                 }
               )}
           </p>
-          <div className=" items-center text-primary-greytext">
+          <div className=" flex items-center text-primary-greytext">
             {filter === "weekly" &&
               weeklyData?.percentagePendingInvoicesThisWeek! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
                     {weeklyData?.percentagePendingInvoicesThisWeek}%
                   </span>{" "}
-                  this week
                 </div>
               )}
             {filter === "monthly" &&
               monthlyData?.percentagePendingInvoicesThisMonth! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
                     {monthlyData?.percentagePendingInvoicesThisMonth}%
                   </span>{" "}
-                  this month
                 </div>
               )}
             {filter === "quarterly" &&
               quarterlyData?.percentagePendingInvoicesThisQuarter! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
                     {quarterlyData?.percentagePendingInvoicesThisQuarter}%
                   </span>{" "}
-                  this quarter
                 </div>
               )}
             {filter === "yearly" &&
               yearlyData?.percentagePendingInvoicesThisYear! > 0 && (
-                <div className=" flex items-center text-primary-greytext text-[15px]">
-                  <span>
-                    <ArrowUpIcon />
-                  </span>
-                  <span className="text-[#4BB543] mx-1">
+                <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
+                  <TrendingUp className=" text-[#4BB543] w-5 h-5" />
+                  <span className="text-[#4BB543] ml-2">
                     {yearlyData?.percentagePendingInvoicesThisYear}%
                   </span>{" "}
-                  this year
                 </div>
               )}
           </div>
         </div>
-        {filter === "weekly" &&
-          (weeklyData?.percentagePendingInvoicesThisWeek === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "monthly" &&
-          (monthlyData?.percentagePendingInvoicesThisMonth === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "quarterly" &&
-          (quarterlyData?.percentagePendingInvoicesThisQuarter === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
-        {filter === "yearly" &&
-          (yearlyData?.percentagePendingInvoicesThisYear === 0 ? (
-            <Graphflat />
-          ) : (
-            <GraphUp />
-          ))}
+        {filter === "weekly" && <InvoiceDashboardPendingWeeklygraph />}
+        {filter === "monthly" && <InvoiceDashboardPendingMonthlyGraph />}
+        {filter === "quarterly" && <InvoiceDashboardPendingQuarterlyGraph />}
+        {filter === "yearly" && <InvoiceDashboardPendingYearlyGraph />}
       </div>
     </>
   );

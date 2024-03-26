@@ -7,6 +7,7 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { useChangePasswordMutation } from "@/src/generated/graphql";
 import Link from "next/link";
+import Verzologoblue2 from "@/components/ui/icons/Verzologoblue2";
 
 type FormData = {
   newPassword: string;
@@ -88,8 +89,8 @@ const Resetpassword = () => {
   return (
     <div className=" w-full flex flex-row h-screen">
       <AuthSidebar />
-      <div className=" flex-1 ml-[34%] h-full pt-[60px]">
-        <div className=" w-full flex justify-end items-center gap-x-9 pl-[140px] pr-[60px]">
+      <div className=" flex-1 md:ml-[34%] h-full flex items-center md:block md:pt-[60px] overflow-y-auto">
+        <div className="  w-full lg:flex justify-end hidden items-center gap-x-9 pl-[140px] pr-[60px]">
           <p className=" text-primary-greytext text-lg">
             Don’t have an account?
           </p>
@@ -99,24 +100,29 @@ const Resetpassword = () => {
             </button>
           </Link>
         </div>
-        <div className=" flex flex-col pl-[140px] pr-[60px] mt-[40px]">
+        <div className=" flex flex-col w-full px-[28px] md:pl-[140px] md:pr-[60px] mt-[-50px] md:mt-[60px]">
+          <span className=" flex items-center md:hidden mb-[20px]">
+            <Verzologoblue2 />
+          </span>
           <div className=" flex flex-col gap-y-2">
-            <p className=" text-primary-black text-[32px]">Reset password</p>
-            <p className=" text-primary-greytext text-lg">
+            <p className=" text-primary-black md:text-[32px] text-[28px]">
+              Reset password
+            </p>
+            <p className="  text-primary-greytext md:text-lg text-base">
               Enter a new password
             </p>
           </div>
           <form
             onSubmit={handleSubmit(onResetHandler)}
-            className=" flex flex-col mt-[30px]"
+            className=" flex flex-col md:mt-[30px] mt-5 md:gap-y-5 gap-y-3 items-center md:items-start w-full"
           >
-            <div className=" flex flex-col gap-y-2">
+            <div className=" flex flex-col gap-y-2 w-full">
               <label className=" text-primary-black" htmlFor="password">
                 Password
               </label>
               <input
                 type={type}
-                className="max-w-[400px] px-3 py-[10px] relative border-gray-300 rounded-[8px] border focus:outline-none "
+                className="md:max-w-[400px] max-w-full px-3 py-[10px] relative border-gray-300 rounded-[8px] border focus:outline-none "
                 placeholder="8+ characters"
                 {...register("newPassword", {
                   onChange: handleInputChange,
@@ -135,7 +141,7 @@ const Resetpassword = () => {
               )}
               <span
                 onClick={togglePasswordVisibility}
-                className="absolute cursor-pointer mt-[48px] ml-[360px]"
+                className="absolute cursor-pointer hidden md:block mt-[48px] ml-[360px]"
               >
                 {type === "text" ? (
                   <Eye className=" w-4 h-4 text-primary-greytext" />
@@ -144,7 +150,7 @@ const Resetpassword = () => {
                 )}
               </span>
             </div>
-            <div className=" flex flex-col  gap-y-2 mt-5">
+            <div className=" flex flex-col  gap-y-2 md:mt-5 mt-2 w-full">
               <label className=" text-primary-black " htmlFor="confirmpassword">
                 Confirm password
               </label>
@@ -153,7 +159,7 @@ const Resetpassword = () => {
                 name="confirmpassword"
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
-                className="max-w-[400px] px-3 py-[10px] relative border-gray-300 rounded-[8px] border focus:outline-none "
+                className="md:max-w-[400px] max-w-full px-3 py-[10px] relative border-gray-300 rounded-[8px] border focus:outline-none "
                 placeholder="8+ characters"
               />
               {formSubmitted && !passwordsMatch && (
@@ -161,7 +167,7 @@ const Resetpassword = () => {
               )}
               <span
                 onClick={togglePasswordVisibility}
-                className="absolute cursor-pointer mt-[48px] ml-[360px]"
+                className="absolute cursor-pointer mt-[48px] hidden md:block ml-[360px]"
               >
                 {type === "text" ? (
                   <Eye className=" w-4 h-4 text-primary-greytext" />
@@ -170,11 +176,11 @@ const Resetpassword = () => {
                 )}
               </span>
             </div>
-            <div className=" flex flex-col mt-6">
+            <div className=" flex flex-col md:mt-6 mt-4 w-full">
               <button
                 type="submit"
                 disabled={loading}
-                className={`rounded-[10px] px-[100px] max-w-[400px] py-[10px]  text-white bg-primary-blue text-lg flex items-center justify-center ${
+                className={`rounded-[10px] md:px-[100px] px-[60px] w-full md:max-w-[400px] py-[11px] text-white bg-primary-blue text-base md:text-lg flex items-center justify-center ${
                   loading ? "opacity-50" : ""
                 }`}
               >
@@ -184,16 +190,20 @@ const Resetpassword = () => {
           </form>
         </div>
       </div>
-      <div className=" border-t border-t-gray-100 bg-white w-full flex z-[15] absolute bottom-0 pl-[34%]">
-        <p className=" py-6 text-[15px] pl-[140px] text-primary-greytext">
+      <div className=" border-t border-t-gray-100 bg-white w-full flex z-[15] absolute bottom-0 px-[28px] md:px-0 md:pl-[34%]">
+        <p className=" md:py-6 py-4 md:text-[15px] text-sm md:pl-[140px] leading-6 text-primary-greytext">
           By using the platform you agree to{" "}
-          <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
-            Verzo’s Privacy Policy
-          </span>{" "}
+          <Link href="https://verzo.app/privacy">
+            <span className=" text-primary-blue cursor-pointer text-sm md:text-[15px] underline underline-offset-4">
+              Verzo’s Privacy Policy
+            </span>{" "}
+          </Link>
           and
-          <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
-            Terms of Use
-          </span>
+          <Link href="https://verzo.app/terms">
+            <span className=" text-primary-blue cursor-pointer text-sm md:text-[15px] ml-1 underline underline-offset-4">
+              Terms of Use
+            </span>
+          </Link>
         </p>
       </div>
     </div>

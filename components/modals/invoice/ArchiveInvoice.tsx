@@ -9,6 +9,7 @@ import {
   GetSaleByIdDocument,
   useArchiveSaleMutation,
 } from "@/src/generated/graphql";
+import { Archive } from "lucide-react";
 
 interface ArchiveInvoiceProps {
   open: boolean;
@@ -87,7 +88,8 @@ const ArchiveInvoice: React.FC<ArchiveInvoiceProps> = ({
                 <div className=" flex flex-col gap-y-3">
                   <div className=" flex">
                     <span className=" rounded-full p-3 bg-[#F9FCFF] flex">
-                      <ArchiveInvoiceIcon />
+                      {/* <ArchiveInvoiceIcon /> */}
+                      <Archive className=" text-primary-blue" />
                     </span>
                   </div>
                   <p className=" text-lg text-[#121212]">Archive invoice</p>
