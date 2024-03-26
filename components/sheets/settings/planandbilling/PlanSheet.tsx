@@ -1,51 +1,57 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronLeft, X } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import PlanIcon from "@/components/ui/icons/PlanIcon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   useGetCurrentSubscriptionByBusinessQuery,
-  useGetPlanByIdQuery,
   useGetPlansQuery,
-  useGetSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
+
+interface SelectedPlanOption {
+  id: string;
+  name: string;
+}
 
 interface PlanProps {
   open: boolean;
   onClose: () => void;
-  confirmPlan: (selectedOption: string) => void;
+  confirmPlan: (selectedOption: SelectedPlanOption) => void;
 }
 
 const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
-
   const businessId = storedBusinessId[0] || "";
 
   const Plans = useGetPlansQuery();
+  const Plansloading = Plans.loading;
   const Planlist = Plans.data?.getPlans;
+
 
   const { data } = useGetCurrentSubscriptionByBusinessQuery({
     variables: {
       businessId: businessId,
     },
   });
-
+  
   const planId = data?.getCurrentSubscriptionByBusiness?.plan?.id!;
+  const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName!;
 
-  const [selectedOption, setSelectedOption] = useState<string>(planId);
-  const getPlanById = useGetPlanByIdQuery({
-    variables: {
-      planId: selectedOption,
-    },
+  const [selectedOption, setSelectedOption] = useState<{
+    id: string;
+    name: string;
+  }>({
+    id: planId,
+    name: planName,
   });
-  const planQueryLoading = getPlanById.loading;
 
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
+  const handleOptionSelect = (planId: string, planName: string) => {
+    const selectedOption: SelectedPlanOption = { id: planId, name: planName };
+    setSelectedOption(selectedOption);
   };
 
   return (
@@ -89,9 +95,12 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                 {Planlist?.map((plan) => (
                   <button
                     key={plan?.id}
-                    onClick={() => handleOptionSelect(plan?.id!)}
+                    onClick={() =>
+                      handleOptionSelect(plan?.id!, plan?.planName!)
+                    }
                     className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
-                      selectedOption === plan?.id
+                      selectedOption && selectedOption.id === plan?.id
+
                         ? "bg-blue-50 text-primary-blue bg-opacity-25"
                         : ""
                     }`}
@@ -117,7 +126,8 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                       <div className="border border-gray-300 w-5 h-5 rounded-full">
                         <span
                           className={`${
-                            selectedOption === plan?.id
+                            selectedOption && selectedOption.id === plan?.id
+
                               ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                               : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                           }`}
@@ -129,11 +139,10 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
               </TabsContent>
               <TabsContent className=" flex flex-col gap-y-6" value="annually">
                 <button
-                  onClick={() => handleOptionSelect("option-one")}
+                  // onClick={() => handleOptionSelect("option-one")}
                   className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
-                    selectedOption === "option-one"
-                      ? "bg-blue-50 bg-opacity-25"
-                      : ""
+                    selectedOption ? "bg-blue-50 bg-opacity-25" : ""
+
                   }`}
                 >
                   <div className="flex flex-col gap-y-2">
@@ -148,7 +157,8 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                     >
                       <span
                         className={`${
-                          selectedOption === "option-one"
+                          selectedOption
+
                             ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                             : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                         }`}
@@ -158,11 +168,9 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                 </button>
                 {/* Verzo Standard */}
                 <button
-                  onClick={() => handleOptionSelect("option-two")}
+                  // onClick={() => handleOptionSelect("option-two")}
                   className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
-                    selectedOption === "option-two"
-                      ? " bg-blue-50 bg-opacity-25"
-                      : ""
+                    selectedOption ? " bg-blue-50 bg-opacity-25" : ""
                   }`}
                 >
                   <div className="flex flex-col gap-y-2">
@@ -177,7 +185,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                     >
                       <span
                         className={`${
-                          selectedOption === "option-two"
+                          selectedOption
                             ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                             : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                         }`}
@@ -187,11 +195,9 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                 </button>
                 {/* Verzo Premium */}
                 <button
-                  onClick={() => handleOptionSelect("option-three")}
+                  // onClick={() => handleOptionSelect("option-three")}
                   className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
-                    selectedOption === "option-three"
-                      ? "bg-blue-50 bg-opacity-25"
-                      : ""
+                    selectedOption ? "bg-blue-50 bg-opacity-25" : ""
                   }`}
                 >
                   <div className="flex flex-col gap-y-2">
@@ -206,7 +212,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                     >
                       <span
                         className={`${
-                          selectedOption === "option-three"
+                          selectedOption
                             ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                             : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                         }`}
@@ -217,12 +223,13 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
               </TabsContent>
             </Tabs>
             <button
+              disabled={!selectedOption.id || !selectedOption.name}
               onClick={() => {
                 onClose();
-                confirmPlan(selectedOption);
+                confirmPlan(selectedOption!);
               }}
-              className={`bg-primary-blue text-white rounded-[10px] py-[10px] mt-[10px] ${
-                planQueryLoading ? "opacity-50" : ""
+              className={`bg-primary-blue disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[10px] py-[10px] mt-[10px] ${
+                Plansloading ? "opacity-50" : ""
               }`}
             >
               Next

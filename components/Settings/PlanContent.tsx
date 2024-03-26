@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PlanSheet from "../sheets/settings/planandbilling/PlanSheet";
 import ConfirmPlanModal from "../modals/settings/ConfirmPlan";
 import useModal from "@/app/hooks/useModal";
@@ -7,10 +7,9 @@ import CardSheet from "../sheets/settings/planandbilling/CardSheet";
 import DeleteCard from "../modals/settings/DeleteCardModal";
 import DefaultCardModal from "../modals/settings/DefaultCardModal";
 import {
+  GetCurrentSubscriptionByBusinessDocument,
   useCreateSubscriptionNewCardBMutation,
   useGetCurrentSubscriptionByBusinessQuery,
-  useGetPlanByIdQuery,
-  useGetSubscriptionByBusinessQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
@@ -25,6 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import PaymentLoader from "../loading/Paymentloader";
 
 interface PlanProps {
   reference: string;
@@ -33,11 +33,6 @@ interface PlanProps {
 const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const { toast } = useToast();
   const router = useRouter();
-  const storedBusinessId = JSON.parse(
-    localStorage.getItem("businessId") || "[]"
-  );
-  const businessId = storedBusinessId[0] || "";
-  const [selectedPlanId, setSelectedPlanId] = useState("");
   const {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
@@ -56,9 +51,18 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     closeModal: closeDefaultCardModal,
   } = useModal();
 
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+
+  const [selectedPlanId, setSelectedPlanId] = useState<string>("");
+  const [selectedPlanName, setSelectedPlanName] = useState<string>("");
+  const [mutationExecuted, setMutationExecuted] = useState(false);
+  const [mutationInProgress, setMutationInProgress] = useState(false);
   const [openPlanSheet, setOpenPlanSheet] = useState(false);
   const [openCardSheet, setOpenCardSheet] = useState(false);
-  const [openBillingModal, setOpenBillingModal] = useState(false);
+  // const [openBillingModal, setOpenBillingModal] = useState(false);
 
   const showSuccessToast = () => {
     toast({
@@ -85,18 +89,11 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     setOpenCardSheet(false);
   };
 
-  const confirmPlan = (selectedOption: string) => {
-    setSelectedPlanId(selectedOption);
+  const confirmPlan = (selectedOption: { id: string; name: string }) => {
+    setSelectedPlanId(selectedOption.id);
+    setSelectedPlanName(selectedOption.name);
     openConfirmPlanModal();
   };
-
-  const getPlanById = useGetPlanByIdQuery({
-    variables: {
-      planId: selectedPlanId,
-    },
-  });
-
-  const selectedPlanName = getPlanById.data?.getPlanById?.planName!;
 
   const deleteCard = () => {
     openDeleteCardModal();
@@ -114,7 +111,8 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
 
   const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
 
-  const [createSubscriptionNewCardBMutation] =
+  const [createSubscriptionNewCardBMutation, { loading }] =
+
     useCreateSubscriptionNewCardBMutation();
 
   // const handlePaymentVerification = async (reference: string) => {
@@ -150,10 +148,8 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   let isMutationInProgress = false;
   const handlePaymentVerification = async (reference: string) => {
     try {
-      if (isMutationInProgress) {
-        return;
-      }
-      isMutationInProgress = true;
+      setMutationInProgress(true);
+
       const storedPlanId = localStorage.getItem("planId")!;
       const { data, errors } = await createSubscriptionNewCardBMutation({
         variables: {
@@ -162,7 +158,10 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
           currentPlanId: storedPlanId,
           tax: 0,
         },
+        refetchQueries: [GetCurrentSubscriptionByBusinessDocument],
       });
+      setMutationExecuted(true);
+      setMutationInProgress(false);
       if (errors && errors.length > 0) {
         throw new Error(errors[0].message);
       }
@@ -178,14 +177,19 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
       isMutationInProgress = false;
     }
   };
-  if (reference) {
-    handlePaymentVerification(reference);
-    router.replace("/dashboard/settings");
-    return null;
-  }
+
+  useEffect(() => {
+    if (reference && !mutationExecuted && !mutationInProgress) {
+      handlePaymentVerification(reference);
+    }
+    if (mutationExecuted && !mutationInProgress) {
+      router.replace("/dashboard/settings");
+    }
+  }, [reference, mutationExecuted, mutationInProgress]);
 
   return (
     <>
+      {loading && <PaymentLoader />}
       <div className=" flex flex-col w-full pt-[20px] gap-y-3">
         <p className=" text-sm text-primary-greytext px-6">
           Manage subscription
