@@ -31,7 +31,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   }, [router]);
 
   //made fake changes
-
   return (
     <html lang="en">
       <ApolloProvider>
