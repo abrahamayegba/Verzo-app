@@ -1,0 +1,44 @@
+name: Frontend APP CI/CD
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js and Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: SSH into DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.BETA_DROPLET_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.BETA_SSH_PRIVATE_KEY }}
+          script: |
+            # Commands to run on the remote server
+            sudo apt-get update
+            cd verzo-new-app
+            git checkout main
+            sudo rm -rf .env
+            touch .env
+            sudo chmod 777 -R .env
+            sudo echo NEXT_PUBLIC_EXPRESS_URL="${{secrets.BETA_NEXT_PUBLIC_EXPRESS_URL}}" >> .env
+            sudo echo NEXT_GOOGLE_CLIENT_ID="${{secrets.BETA_NEXT_GOOGLE_CLIENT_ID}}" >> .env
+            sudo echo NEXT_GOOGLE_SECRET_ID="${{secrets.BETA_NEXT_GOOGLE_SECRET_ID}}" >> .env
+            sudo echo NEXT_PUBLIC_TYPESENSE_HOST="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_HOST}}" >> .env
+            sudo echo NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY}}" >> .env
+            pm2 stop verzo-new-app
+            git fetch
+            git merge
+            npm install
+            npm run build
+            pm2 restart verzo-new-app
