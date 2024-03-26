@@ -30,11 +30,14 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
   const Plans = useGetPlansQuery();
   const Plansloading = Plans.loading;
   const Planlist = Plans.data?.getPlans;
+
+
   const { data } = useGetCurrentSubscriptionByBusinessQuery({
     variables: {
       businessId: businessId,
     },
   });
+  
   const planId = data?.getCurrentSubscriptionByBusiness?.plan?.id!;
   const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName!;
 
@@ -97,6 +100,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                     }
                     className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
                       selectedOption && selectedOption.id === plan?.id
+
                         ? "bg-blue-50 text-primary-blue bg-opacity-25"
                         : ""
                     }`}
@@ -123,6 +127,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                         <span
                           className={`${
                             selectedOption && selectedOption.id === plan?.id
+
                               ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                               : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                           }`}
@@ -137,6 +142,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                   // onClick={() => handleOptionSelect("option-one")}
                   className={`flex items-center justify-between border border-[#D9D9D9] border-opacity-70 px-6 py-3 rounded-[10px] cursor-pointer relative ${
                     selectedOption ? "bg-blue-50 bg-opacity-25" : ""
+
                   }`}
                 >
                   <div className="flex flex-col gap-y-2">
@@ -152,6 +158,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
                       <span
                         className={`${
                           selectedOption
+
                             ? "bg-primary-blue w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                             : "w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                         }`}

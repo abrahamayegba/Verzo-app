@@ -29,7 +29,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, [router]);
-
+      
   return (
     <html lang="en">
       <ApolloProvider>

@@ -110,12 +110,46 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   });
 
   const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
+
   const [createSubscriptionNewCardBMutation, { loading }] =
+
     useCreateSubscriptionNewCardBMutation();
 
+  // const handlePaymentVerification = async (reference: string) => {
+  //   try {
+  //     const storedPlanId = localStorage.getItem("planId")!;
+  //     const { data, errors } = await createSubscriptionNewCardBMutation({
+  //       variables: {
+  //         reference: reference,
+  //         businessId: businessId,
+  //         currentPlanId: storedPlanId,
+  //         tax: 0,
+  //       },
+  //     });
+  //     if (errors && errors.length > 0) {
+  //       throw new Error(errors[0].message);
+  //     }
+  //     if (data) {
+  //       showSuccessToast();
+  //     } else {
+  //       showFailureToast(errors);
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Error verifying payment:", error.message);
+  //     showFailureToast(error);
+  //   }
+  // };
+  // if (reference) {
+  //   handlePaymentVerification(reference);
+  //   router.replace("/dashboard/settings");
+  //   return null;
+  // }
+
+  let isMutationInProgress = false;
   const handlePaymentVerification = async (reference: string) => {
     try {
       setMutationInProgress(true);
+
       const storedPlanId = localStorage.getItem("planId")!;
       const { data, errors } = await createSubscriptionNewCardBMutation({
         variables: {
@@ -139,6 +173,8 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     } catch (error: any) {
       console.error("Error verifying payment:", error.message);
       showFailureToast(error);
+    } finally {
+      isMutationInProgress = false;
     }
   };
 
