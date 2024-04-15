@@ -37,8 +37,8 @@ const TopbarDropdown = () => {
     <>
       <Menu as="div" className="relative ">
         <div>
-          <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none lg:rounded-md lg:p-2 lg:hover:bg-gray-50">
-            <div className=" flex flex-col items-start">
+          <Menu.Button className="relative flex justify-end items-center rounded-full bg-white text-sm focus:outline-none lg:rounded-md lg:p-2 lg:hover:bg-gray-50">
+            <div className=" flex flex-col items-end">
               <span className="hidden text-sm capitalize text-primary-greytext lg:block">
                 {userInfo.name}
               </span>
@@ -47,7 +47,7 @@ const TopbarDropdown = () => {
               </span>
             </div>
             <ChevronDown
-              className="ml-2 hidden h-[18px] w-[18px] flex-shrink-0 text-primary-greytext lg:block"
+              className="ml-4 hidden h-[18px] w-[18px] flex-shrink-0 text-primary-greytext lg:block"
               aria-hidden="true"
             />
           </Menu.Button>

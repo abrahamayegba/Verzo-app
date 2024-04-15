@@ -174,6 +174,7 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
                   required
                   pattern="[0-9]*"
                   placeholder="Price"
+                  defaultValue={0}
                   {...register("price", {
                     valueAsNumber: true,
                   })}

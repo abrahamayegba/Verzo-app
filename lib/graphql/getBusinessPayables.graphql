@@ -1,0 +1,3 @@
+query GetBusinessPayables($businessId: String!) {
+  getBusinessPayables(businessId: $businessId)
+}

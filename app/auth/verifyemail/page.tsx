@@ -91,11 +91,11 @@ const VerifyEmail = () => {
         <div className=" border-t border-t-gray-100 bg-white w-full flex z-[15] absolute bottom-0 pl-[34%]">
           <p className=" py-6 text-[15px] pl-[140px] text-primary-greytext">
             By using the platform you agree to{" "}
-            <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
+            <span className=" text-primary-blue text-opacity-70 cursor-pointer text-[15px] ml-1 underline underline-offset-4">
               Verzo’s Privacy Policy
             </span>{" "}
             and
-            <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
+            <span className=" text-primary-blue text-opacity-70 cursor-pointer text-[15px] ml-1 underline underline-offset-4">
               Terms of Use
             </span>
           </p>

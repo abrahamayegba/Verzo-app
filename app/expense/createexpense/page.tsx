@@ -215,15 +215,6 @@ const CreateExpense = () => {
             Fill out the information below to record an expense
           </p>
         </div>
-        <button
-          type="button"
-          disabled
-          onClick={() => setOpenViewExpenseSheet(true)}
-          className=" px-6 py-3 cursor-not-allowed rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
-        >
-          Preview
-          <Eye className=" w-5 h-5 text-gray-500" />
-        </button>
       </div>
       <div className=" flex flex-col gap-y-5">
         <div className=" text-primary-black text-lg flex flex-row justify-between">

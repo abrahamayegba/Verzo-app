@@ -21,7 +21,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
           <div className=" w-1/3 border-r-[0.5px] px-5 py-6 flex flex-col justify-start gap-y-[20px]">
             <MetricsCard2 filter={filter} />
           </div>
-          <div className=" w-1/3 border-r-[0.5px] px-5 py-6 flex flex-col justify-start gap-y-[20px]">
+          <div className=" w-1/3 px-5 py-6 flex flex-col justify-start gap-y-[20px]">
             <MetricsCard3 filter={filter} />
           </div>
         </div>
@@ -33,7 +33,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
             <div className=" w-1/3 border-r-[0.5px] px-5 py-6 flex flex-col justify-start gap-y-[20px]">
               <Receivables filter={filter} />
             </div>
-            <div className=" w-1/3 border-r-[0.5px] px-5 py-6 flex flex-col justify-start gap-y-[20px]">
+            <div className=" w-1/3 px-5 py-6 flex flex-col justify-start gap-y-[20px]">
               <Payables filter={filter} />
             </div>
           </div>

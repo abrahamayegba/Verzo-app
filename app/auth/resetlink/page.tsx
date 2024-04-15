@@ -105,13 +105,13 @@ const Resetlink = () => {
         <p className=" py-6 md:text-[15px] text-sm md:pl-[140px] leading-6 text-primary-greytext">
           By using the platform you agree to{" "}
           <Link href="https://verzo.app/privacy">
-            <span className=" text-primary-blue cursor-pointer text-sm md:text-[15px] ml-1 underline underline-offset-4">
+            <span className=" text-primary-blue text-opacity-70 cursor-pointer text-sm md:text-[15px] ml-1 underline underline-offset-4">
               Verzo’s Privacy Policy
             </span>{" "}
           </Link>
           and
           <Link href="https://verzo.app/terms">
-            <span className=" text-primary-blue cursor-pointer text-sm md:text-[15px] ml-1 underline underline-offset-4">
+            <span className=" text-primary-blue text-opacity-70 cursor-pointer text-sm md:text-[15px] ml-1 underline underline-offset-4">
               Terms of Use
             </span>
           </Link>

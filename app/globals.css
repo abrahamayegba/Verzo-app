@@ -96,3 +96,8 @@
 .shadow2 {
   box-shadow: 0px 12.13549px 24.27099px 0px rgba(0, 0, 0, 0.08);
 }
+
+.custom-popover {
+  max-height: 400px;
+  overflow-y: auto;
+}

@@ -1773,6 +1773,7 @@ export type Mutation = {
   refreshToken: Token;
   resendVerification?: Maybe<Scalars['Boolean']['output']>;
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
+  sendEmailAdvert?: Maybe<Scalars['String']['output']>;
   sendInvoice?: Maybe<Scalars['Boolean']['output']>;
   sendInvoiceB?: Maybe<Scalars['Boolean']['output']>;
   sendPurchase?: Maybe<Scalars['Boolean']['output']>;
@@ -3537,8 +3538,10 @@ export type Query = {
   getBusinessCOAs: Array<Maybe<BusinessChartOfAccount>>;
   getBusinessCategories: Array<Maybe<BusinessCategory>>;
   getBusinessCategoryById?: Maybe<BusinessCategory>;
+  getBusinessPayables?: Maybe<Scalars['Float']['output']>;
   getBusinessProductUnitById?: Maybe<BusinessProductUnit>;
   getBusinessProductUnits?: Maybe<Array<Maybe<BusinessProductUnit>>>;
+  getBusinessReceivables?: Maybe<Scalars['Float']['output']>;
   getBusinessServiceUnitById?: Maybe<BusinessServiceUnit>;
   getBusinessServiceUnits?: Maybe<Array<Maybe<BusinessServiceUnit>>>;
   getBusinesses: Array<Maybe<Business>>;
@@ -3839,12 +3842,22 @@ export type QueryGetBusinessCategoryByIdArgs = {
 };
 
 
+export type QueryGetBusinessPayablesArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
 export type QueryGetBusinessProductUnitByIdArgs = {
   productUnitId: Scalars['String']['input'];
 };
 
 
 export type QueryGetBusinessProductUnitsArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGetBusinessReceivablesArgs = {
   businessId: Scalars['String']['input'];
 };
 
@@ -4868,6 +4881,7 @@ export type SubscriptionPayment = {
   cardId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   id: Scalars['String']['output'];
+  paymentReference?: Maybe<Scalars['String']['output']>;
   subscription?: Maybe<Subscription>;
   subscriptionId?: Maybe<Scalars['String']['output']>;
 };
@@ -5966,12 +5980,26 @@ export type GetBusinessCategoriesQueryVariables = Exact<{ [key: string]: never; 
 
 export type GetBusinessCategoriesQuery = { __typename?: 'Query', getBusinessCategories: Array<{ __typename?: 'BusinessCategory', id: string, categoryName: string, createdAt?: any | null } | null> };
 
+export type GetBusinessPayablesQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetBusinessPayablesQuery = { __typename?: 'Query', getBusinessPayables?: number | null };
+
 export type GetBusinessProductUnitsQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
 }>;
 
 
 export type GetBusinessProductUnitsQuery = { __typename?: 'Query', getBusinessProductUnits?: Array<{ __typename?: 'BusinessProductUnit', id?: string | null, unitName?: string | null } | null> | null };
+
+export type GetBusinessReceivablesQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetBusinessReceivablesQuery = { __typename?: 'Query', getBusinessReceivables?: number | null };
 
 export type GetChartOfAccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -9229,6 +9257,44 @@ export type GetBusinessCategoriesQueryHookResult = ReturnType<typeof useGetBusin
 export type GetBusinessCategoriesLazyQueryHookResult = ReturnType<typeof useGetBusinessCategoriesLazyQuery>;
 export type GetBusinessCategoriesSuspenseQueryHookResult = ReturnType<typeof useGetBusinessCategoriesSuspenseQuery>;
 export type GetBusinessCategoriesQueryResult = Apollo.QueryResult<GetBusinessCategoriesQuery, GetBusinessCategoriesQueryVariables>;
+export const GetBusinessPayablesDocument = gql`
+    query GetBusinessPayables($businessId: String!) {
+  getBusinessPayables(businessId: $businessId)
+}
+    `;
+
+/**
+ * __useGetBusinessPayablesQuery__
+ *
+ * To run a query within a React component, call `useGetBusinessPayablesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBusinessPayablesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBusinessPayablesQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetBusinessPayablesQuery(baseOptions: Apollo.QueryHookOptions<GetBusinessPayablesQuery, GetBusinessPayablesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBusinessPayablesQuery, GetBusinessPayablesQueryVariables>(GetBusinessPayablesDocument, options);
+      }
+export function useGetBusinessPayablesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBusinessPayablesQuery, GetBusinessPayablesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBusinessPayablesQuery, GetBusinessPayablesQueryVariables>(GetBusinessPayablesDocument, options);
+        }
+export function useGetBusinessPayablesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBusinessPayablesQuery, GetBusinessPayablesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBusinessPayablesQuery, GetBusinessPayablesQueryVariables>(GetBusinessPayablesDocument, options);
+        }
+export type GetBusinessPayablesQueryHookResult = ReturnType<typeof useGetBusinessPayablesQuery>;
+export type GetBusinessPayablesLazyQueryHookResult = ReturnType<typeof useGetBusinessPayablesLazyQuery>;
+export type GetBusinessPayablesSuspenseQueryHookResult = ReturnType<typeof useGetBusinessPayablesSuspenseQuery>;
+export type GetBusinessPayablesQueryResult = Apollo.QueryResult<GetBusinessPayablesQuery, GetBusinessPayablesQueryVariables>;
 export const GetBusinessProductUnitsDocument = gql`
     query GetBusinessProductUnits($businessId: String!) {
   getBusinessProductUnits(businessId: $businessId) {
@@ -9270,6 +9336,44 @@ export type GetBusinessProductUnitsQueryHookResult = ReturnType<typeof useGetBus
 export type GetBusinessProductUnitsLazyQueryHookResult = ReturnType<typeof useGetBusinessProductUnitsLazyQuery>;
 export type GetBusinessProductUnitsSuspenseQueryHookResult = ReturnType<typeof useGetBusinessProductUnitsSuspenseQuery>;
 export type GetBusinessProductUnitsQueryResult = Apollo.QueryResult<GetBusinessProductUnitsQuery, GetBusinessProductUnitsQueryVariables>;
+export const GetBusinessReceivablesDocument = gql`
+    query GetBusinessReceivables($businessId: String!) {
+  getBusinessReceivables(businessId: $businessId)
+}
+    `;
+
+/**
+ * __useGetBusinessReceivablesQuery__
+ *
+ * To run a query within a React component, call `useGetBusinessReceivablesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBusinessReceivablesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBusinessReceivablesQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetBusinessReceivablesQuery(baseOptions: Apollo.QueryHookOptions<GetBusinessReceivablesQuery, GetBusinessReceivablesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBusinessReceivablesQuery, GetBusinessReceivablesQueryVariables>(GetBusinessReceivablesDocument, options);
+      }
+export function useGetBusinessReceivablesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBusinessReceivablesQuery, GetBusinessReceivablesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBusinessReceivablesQuery, GetBusinessReceivablesQueryVariables>(GetBusinessReceivablesDocument, options);
+        }
+export function useGetBusinessReceivablesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBusinessReceivablesQuery, GetBusinessReceivablesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBusinessReceivablesQuery, GetBusinessReceivablesQueryVariables>(GetBusinessReceivablesDocument, options);
+        }
+export type GetBusinessReceivablesQueryHookResult = ReturnType<typeof useGetBusinessReceivablesQuery>;
+export type GetBusinessReceivablesLazyQueryHookResult = ReturnType<typeof useGetBusinessReceivablesLazyQuery>;
+export type GetBusinessReceivablesSuspenseQueryHookResult = ReturnType<typeof useGetBusinessReceivablesSuspenseQuery>;
+export type GetBusinessReceivablesQueryResult = Apollo.QueryResult<GetBusinessReceivablesQuery, GetBusinessReceivablesQueryVariables>;
 export const GetChartOfAccountsDocument = gql`
     query GetChartOfAccounts {
   getChartOfAccounts {
@@ -12432,6 +12536,7 @@ export const TotalWeeklyInvoicesAmountDocument = gql`
     totalInvoiceAmountForWeek
     totalPendingInvoiceAmountThisWeek
     percentageIncreaseInPendingInvoiceThisWeek
+    percentageIncreaseInPaidInvoicesThisWeek
     percentageIncreaseInOverdueInvoicesThisWeek
     percentageOfIncreaseInInvoicesThisWeek
   }

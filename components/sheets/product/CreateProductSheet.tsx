@@ -46,7 +46,7 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
-  const { register, reset, handleSubmit } = useForm<FormData>();
+  const { register, reset, handleSubmit, getValues } = useForm<FormData>();
   const {
     register: registerUnit,
     reset: resetUnit,
@@ -111,6 +111,13 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
     }
   };
 
+  console.log(
+    getValues("initialStockLevel"),
+    getValues("price"),
+    getValues("productName"),
+    productUnitId
+  );
+
   const onCreateProductUnitHandler = async (data: UnitData) => {
     try {
       await createBusinessProductUnitMutation({
@@ -174,13 +181,12 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
                 <label htmlFor="price">Price</label>
                 <input
                   className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                  type="text"
+                  type="tel"
                   required
                   pattern="[0-9]*"
                   placeholder="Price"
-                  {...register("price", {
-                    valueAsNumber: true,
-                  })}
+                  defaultValue={0}
+                  {...register("price", { valueAsNumber: true })}
                 />
               </div>
               <div className=" flex flex-col gap-y-1">
@@ -216,13 +222,12 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
                 <label htmlFor="basicunit">Initial stock level</label>
                 <input
                   className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                  type="text"
+                  type="tel"
                   required
                   pattern="[0-9]*"
                   placeholder="0"
-                  {...register("initialStockLevel", {
-                    valueAsNumber: true,
-                  })}
+                  defaultValue={0}
+                  {...register("initialStockLevel", { valueAsNumber: true })}
                 />
               </div>
               <button

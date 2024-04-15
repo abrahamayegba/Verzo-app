@@ -30,10 +30,7 @@ type FormData = {
   businessMobile: string;
 };
 
-const CreateBusinessSheet: React.FC<CreateBusinessProps> = ({
-  open,
-  onClose,
-}) => {
+const VerzoWalletSheet: React.FC<CreateBusinessProps> = ({ open, onClose }) => {
   const { register, handleSubmit, reset } = useForm<FormData>();
   const { toast } = useToast();
   const [businessCategoryId, setBusinessCategoryId] = useState("");
@@ -94,9 +91,7 @@ const CreateBusinessSheet: React.FC<CreateBusinessProps> = ({
               <ActiveBankIcon />
             </span>
           </div>
-          <p className=" mt-[14px] text-lg text-primary-black">
-            Business profile
-          </p>
+          <p className=" mt-[14px] text-lg text-primary-black">Verzo wallet</p>
           <p className=" font-light text-primary-greytext mt-2">
             Complete all input fields
           </p>
@@ -104,6 +99,19 @@ const CreateBusinessSheet: React.FC<CreateBusinessProps> = ({
             onSubmit={handleSubmit(onCreateBusinessHandler)}
             className=" w-full mt-[30px] flex flex-col gap-y-4 "
           >
+            <div className=" flex flex-col gap-y-2">
+              <label className=" text-[15px]" htmlFor="phone">
+                Phone number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                required
+                placeholder="Phone number"
+                className=" w-full border p-[10px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
+                {...register("businessMobile")}
+              />
+            </div>
             <div className=" flex flex-col gap-y-2">
               <label className=" text-[15px]" htmlFor="businessname">
                 Business name
@@ -158,19 +166,7 @@ const CreateBusinessSheet: React.FC<CreateBusinessProps> = ({
                 </SelectContent>
               </Select>
             </div>
-            <div className=" flex flex-col gap-y-2">
-              <label className=" text-[15px]" htmlFor="phone">
-                Phone number
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                required
-                placeholder="Phone number"
-                className=" w-full border p-[10px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
-                {...register("businessMobile")}
-              />
-            </div>
+
             <button
               type="submit"
               disabled={loading}
@@ -178,7 +174,7 @@ const CreateBusinessSheet: React.FC<CreateBusinessProps> = ({
                 loading ? "opacity-50" : ""
               }`}
             >
-              Set up business
+              Create wallet
             </button>
           </form>
         </SheetContent>
@@ -187,4 +183,4 @@ const CreateBusinessSheet: React.FC<CreateBusinessProps> = ({
   );
 };
 
-export default CreateBusinessSheet;
+export default VerzoWalletSheet;

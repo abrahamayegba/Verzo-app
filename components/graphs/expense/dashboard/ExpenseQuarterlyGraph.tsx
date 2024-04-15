@@ -1,14 +1,12 @@
 "use client";
-import {
-  useGetExpenseForMonthQuery,
-  useGetExpenseForQuarterQuery,
-} from "@/src/generated/graphql";
+import { useGetExpenseForQuarterQuery } from "@/src/generated/graphql";
 import { AreaChart } from "@tremor/react";
 import React, { useEffect, useState } from "react";
 import localStorage from "local-storage-fallback";
 
 interface QuarterlyExpenseTotalAmounts {
-  month?: string | null;
+  __typename?: string;
+  month?: string | null | undefined;
   expenseAmount?: number | null;
   expensePending?: number | null;
   expensePaid?: number | null;
@@ -22,10 +20,11 @@ const ExpenseQuarterlyGraph = () => {
   const customTooltip = (props: any) => {
     const { payload, active } = props;
     if (!active || !payload) return null;
+    const month = payload[0]?.payload?.month;
     return (
       <div className="w-[190px] rounded-tremor-default border border-tremor-border bg-tremor-background p-2 ml-[280px] mt-[-150px] text-tremor-default shadow-tremor-dropdown">
         <div className="font-medium text-tremor-content-emphasis ml-1 mb-1">
-          {new Date(payload[0]?.payload?.date).toDateString()}
+          {month}
         </div>
         {payload.map((category: any, idx: any) => (
           <div
@@ -68,6 +67,8 @@ const ExpenseQuarterlyGraph = () => {
       setChartData(data?.getExpensesForQuarter?.quarterExpenseAmounts);
     }
   }, [data]);
+
+  console.log(chartData);
 
   return (
     <div className=" w-full">

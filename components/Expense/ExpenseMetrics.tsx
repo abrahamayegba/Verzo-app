@@ -16,7 +16,7 @@ const ExpenseMetrics: React.FC<MetricsProps> = ({ filter }) => {
       <div className=" w-1/2 border-r-[0.5px] px-5 py-6 flex flex-col justify-center gap-y-[20px]">
         <ExpenseMetricsCard3 filter={filter} />
       </div>
-      <div className=" w-1/2 border-r-[0.5px] px-5 py-6 flex flex-col justify-center gap-y-[20px]">
+      <div className=" w-1/2 px-5 py-6 flex flex-col justify-center gap-y-[20px]">
         <ExpenseMetricsCard1 filter={filter} />
       </div>
     </div>

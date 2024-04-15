@@ -55,7 +55,7 @@ const MetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
           ?.totalPaidInvoiceAmountThisWeek,
       percentageWeeklyRevenue:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
-          ?.percentageOfIncreaseInInvoicesThisWeek,
+          ?.percentageIncreaseInPaidInvoicesThisWeek,
       totalExpenseAmountThisWeek:
         getExpenseForWeek.data?.getExpensesForWeek?.totalExpenseAmountThisWeek,
       percentageIncreaseInExpenseThisWeek:

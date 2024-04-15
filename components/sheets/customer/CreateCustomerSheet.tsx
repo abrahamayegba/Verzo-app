@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import ActiveCustomerIcon from "@/components/ui/icons/ActiveCustomerIcon";
@@ -17,7 +17,6 @@ interface CreateCustomerProps {
 
 type FormData = {
   name: string;
-  address: string;
   mobile: string;
   email: string;
 };
@@ -31,7 +30,8 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
-  const { register, reset, handleSubmit } = useForm<FormData>();
+  const { register, reset, handleSubmit, getValues } = useForm<FormData>();
+  const [address, setAddress] = useState("");
   const [createCustomerMutation, { loading }] = useCreateCustomerMutation();
   const showSuccessToast = () => {
     toast({
@@ -54,6 +54,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
       await createCustomerMutation({
         variables: {
           businessId: businessId,
+          address: address ? address : null,
           ...data,
         },
         refetchQueries: [GetCustomerByBusinessDocument],
@@ -137,11 +138,11 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
               </label>
               <input
                 type="text"
-                required
                 id="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
                 placeholder="Customer address"
                 className=" w-full border p-[10px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
-                {...register("address")}
               />
             </div>
             <button

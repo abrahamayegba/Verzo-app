@@ -170,13 +170,13 @@ const Signup = () => {
         <p className=" py-6 text-[15px] pl-[140px] text-primary-greytext">
           By using the platform you agree to{" "}
           <Link href="https://verzo.app/privacy">
-            <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
+            <span className=" text-primary-blue text-opacity-70 cursor-pointer text-[15px] ml-1 underline underline-offset-4">
               Verzo’s Privacy Policy
             </span>{" "}
           </Link>
           and
           <Link href="https://verzo.app/terms">
-            <span className=" text-primary-blue cursor-pointer text-[15px] ml-1 underline underline-offset-4">
+            <span className=" text-primary-blue text-opacity-70 cursor-pointer text-[15px] ml-1 underline underline-offset-4">
               Terms of Use
             </span>
           </Link>

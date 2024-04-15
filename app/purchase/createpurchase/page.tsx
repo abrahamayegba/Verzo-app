@@ -242,15 +242,6 @@ const CreatePurchase = () => {
             Fill out the information below to create a purchase order
           </p>
         </div>
-        <button
-          type="button"
-          disabled
-          onClick={() => setOpenViewPurchaseSheet(true)}
-          className=" px-6 py-3 rounded-[10px] cursor-not-allowed flex gap-x-2 items-center justify-center border border-primary-border"
-        >
-          Preview
-          <Eye className=" w-5 h-5 text-gray-500" />
-        </button>
       </div>
       <div className=" flex flex-col gap-y-5">
         <p className=" text-primary-black text-lg">Business details</p>

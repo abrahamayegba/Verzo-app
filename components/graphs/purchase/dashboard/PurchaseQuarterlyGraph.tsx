@@ -19,10 +19,11 @@ const PurchaseQuarterlyGraph = () => {
   const customTooltip = (props: any) => {
     const { payload, active } = props;
     if (!active || !payload) return null;
+    const month = payload[0]?.payload?.month;
     return (
       <div className="w-[190px] rounded-tremor-default border border-tremor-border bg-tremor-background p-2 ml-[280px] mt-[-150px] text-tremor-default shadow-tremor-dropdown">
         <div className="font-medium text-tremor-content-emphasis ml-1 mb-1">
-          {new Date(payload[0]?.payload?.date).toDateString()}
+          {month}
         </div>
         {payload.map((category: any, idx: any) => (
           <div

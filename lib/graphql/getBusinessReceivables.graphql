@@ -1,0 +1,3 @@
+query GetBusinessReceivables($businessId: String!) {
+  getBusinessReceivables(businessId: $businessId)
+}

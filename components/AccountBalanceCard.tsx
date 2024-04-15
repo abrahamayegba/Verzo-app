@@ -12,13 +12,8 @@ import {
   useTotalWeeklyInvoicesAmountQuery,
   useTotalYearlyInvoicesAmountQuery,
 } from "@/src/generated/graphql";
-import Link from "next/link";
 import localStorage from "local-storage-fallback";
 import React from "react";
-import Invoicegraph from "./graphs/invoice/dashboard/InvoiceWeeklygraph";
-import InvoiceMonthlyGraph from "./graphs/invoice/dashboard/InvoiceMonthlyGraph";
-import InvoiceQuarterlyGraph from "./graphs/invoice/dashboard/InvoiceQuarterlyGraph";
-import InvoiceYearlyGraph from "./graphs/invoice/dashboard/InvoiceYearlyGraph";
 import { TrendingUp } from "lucide-react";
 
 interface MetricsProps {
@@ -190,11 +185,6 @@ const AccountBalanceCard: React.FC<MetricsProps> = ({ filter }) => {
     <>
       <div className=" flex justify-between text-primary-black">
         <p className=" text-[20px] tracking-[-0.3px]">Cash Balance</p>
-        <Link href="/dashboard/invoices">
-          <button className=" text-primary-blue text-sm tracking-[-0.2px]">
-            See more
-          </button>
-        </Link>
       </div>
       <div className=" flex flex-col">
         <div className=" flex justify-between gap-y-1">

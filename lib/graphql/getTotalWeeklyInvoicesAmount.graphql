@@ -13,6 +13,7 @@ query TotalWeeklyInvoicesAmount($businessId: String!, $weekly: Boolean) {
     totalInvoiceAmountForWeek
     totalPendingInvoiceAmountThisWeek
     percentageIncreaseInPendingInvoiceThisWeek
+    percentageIncreaseInPaidInvoicesThisWeek
     percentageIncreaseInOverdueInvoicesThisWeek
     percentageOfIncreaseInInvoicesThisWeek
   }
