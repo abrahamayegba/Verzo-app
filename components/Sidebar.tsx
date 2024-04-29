@@ -20,6 +20,10 @@ import ActiveProductIcon from "./ui/icons/ActiveProductIcon";
 import ActiveServiceIcon from "./ui/icons/ActiveServiceIcon";
 import LogoutModal from "./modals/LogoutModal";
 import useModal from "@/app/hooks/useModal";
+import ActiveCardIcon from "./ui/icons/ActiveCardIcon";
+import CreditCardIcon from "./ui/icons/CreditCardIcon";
+import TransactionIcon from "./ui/icons/TransactionIcon";
+import ActiveTransactionIcon from "./ui/icons/ActiveTransactionIcon";
 
 const sidebarItems = [
   {
@@ -28,6 +32,20 @@ const sidebarItems = [
     activeicon: <ActiveDashboardIcon />,
     text: "Dashboard",
     path: "/dashboard",
+  },
+  {
+    id: 9,
+    icon: <TransactionIcon />,
+    activeicon: <ActiveTransactionIcon />,
+    text: "Transactions",
+    path: "/dashboard/transactions",
+  },
+  {
+    id: 8,
+    icon: <CreditCardIcon />,
+    activeicon: <ActiveCardIcon />,
+    text: "Cards",
+    path: "/dashboard/cards",
   },
   {
     id: 2,

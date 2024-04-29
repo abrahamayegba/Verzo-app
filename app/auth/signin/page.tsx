@@ -49,7 +49,7 @@ const SignIn = () => {
     <div className="flex flex-col h-screen w-full">
       <AuthSidebar />
       <div className=" flex-1 md:ml-[34%] h-full flex items-center md:block md:pt-[50px] overflow-y-auto">
-        <div className=" w-full lg:flex justify-end hidden items-center gap-x-9 pl-[140px] pr-[60px]">
+        <div className=" w-full lg:flex justify-end hidden items-center gap-x-6 pl-[140px] pr-[60px]">
           <p className=" text-primary-greytext text-lg">
             Don’t have an account?
           </p>

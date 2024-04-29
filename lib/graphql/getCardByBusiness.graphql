@@ -1,0 +1,10 @@
+query GetCardsByBusiness($businessId: String!) {
+  getCardsByBusiness(businessId: $businessId) {
+    id
+    maskedPan
+    user {
+      fullname
+    }
+    createdAt
+  }
+}

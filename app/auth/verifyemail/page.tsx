@@ -47,7 +47,7 @@ const VerifyEmail = () => {
       <div className=" w-full flex flex-row h-screen">
         <AuthSidebar />
         <div className=" flex-1 ml-[34%] h-full pt-[40px]">
-          <div className=" w-full flex justify-end items-center gap-x-9 pl-[140px] pr-[60px]">
+          <div className=" w-full flex justify-end items-center gap-x-6 pl-[140px] pr-[60px]">
             <p className=" text-primary-greytext text-lg">
               Already have an account?
             </p>

@@ -57,7 +57,7 @@ const Signup = () => {
     <div className="flex flex-col h-screen">
       <AuthSidebar />
       <div className="flex-1 ml-0 lg:ml-[34%] overflow-y-auto pt-[50px]">
-        <div className=" w-full flex justify-end items-center gap-x-9 pl-[140px] pr-[60px]">
+        <div className=" w-full flex justify-end items-center gap-x-6 pl-[140px] pr-[60px]">
           <p className=" text-primary-greytext text-lg">
             Already have an account?
           </p>
@@ -70,13 +70,10 @@ const Signup = () => {
         <div className=" flex flex-col pl-[140px] pr-[60px] mt-[50px]">
           <div className=" flex flex-col gap-y-2">
             <p className=" text-primary-black text-[32px]">Sign up on Verzo</p>
-            <p className=" text-primary-greytext text-lg">
-              Let’s get you set up
-            </p>
           </div>
           <form
             onSubmit={handleSubmit(SignUpHandler)}
-            className=" flex flex-col mt-[25px] gap-y-6"
+            className=" flex flex-col mt-[20px] gap-y-6"
           >
             <div className=" flex flex-col gap-y-2">
               <label className=" text-primary-black" htmlFor="fullname">
@@ -143,7 +140,7 @@ const Signup = () => {
                 </p>
               )}
             </div>
-            <div className=" flex flex-col mt-3">
+            <div className=" flex flex-col mt-4">
               <button
                 type="submit"
                 disabled={loading}

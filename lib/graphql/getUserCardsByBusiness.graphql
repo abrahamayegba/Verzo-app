@@ -1,0 +1,6 @@
+query GetUserCardsByBusiness($businessId: String!) {
+  getUserCardsByBusiness(businessId: $businessId) {
+    id
+    maskedPan
+  }
+}

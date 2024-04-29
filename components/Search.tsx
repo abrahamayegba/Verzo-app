@@ -113,7 +113,7 @@ const SearchBar = () => {
         />
         <input
           id="search-field"
-          className="block h-full w-[600px] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent rounded focus:outline-none py-3 pl-9 pr-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-[15px]"
+          className="block h-full w-[500px] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent rounded focus:outline-none py-3 pl-9 pr-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-[15px]"
           placeholder="Search..."
           type="search"
           autoComplete="none"

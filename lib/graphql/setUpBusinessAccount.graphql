@@ -1,0 +1,29 @@
+mutation SetUpBusinessAccount(
+  $dob: Date!
+  $bvn: String!
+  $idFrontUrl: String
+  $idBackUrl: String
+  $incorporationCertificateUrl: String
+  $addressVerificationUrl: String
+  $addressLine1: String!
+  $addressLine2: String
+  $city: String!
+  $state: String!
+  $postalCode: String!
+) {
+  setUpBusinessAccount(
+    input: {
+      dob: $dob
+      bvn: $bvn
+      idFrontUrl: $idFrontUrl
+      idBackUrl: $idBackUrl
+      incorporationCertificateUrl: $incorporationCertificateUrl
+      addressVerificationUrl: $addressVerificationUrl
+      addressLine1: $addressLine1
+      addressLine2: $addressLine2
+      city: $city
+      state: $state
+      postalCode: $postalCode
+    }
+  )
+}

@@ -1,0 +1,37 @@
+query ViewCard($cardId: String!) {
+  viewCard(cardId: $cardId) {
+    statusCode
+    message
+    data {
+      type
+      brand
+      status
+      account {
+        currentBalance
+        availableBalance
+        updatedAt
+      }
+      maskedPan
+      expiryMonth
+      createdAt
+      expiryYear
+      spendingControls {
+        channels {
+          atm
+          pos
+          web
+          mobile
+        }
+        spendingLimits {
+          interval
+          amount
+        }
+      }
+      currency
+      account {
+        accountNumber
+        accountName
+      }
+    }
+  }
+}

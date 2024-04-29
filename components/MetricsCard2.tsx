@@ -198,7 +198,7 @@ const MetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
         </Link>
       </div>
       <div className=" flex flex-col">
-        <div className=" flex justify-between gap-y-1">
+        <div className=" flex gap-y-1">
           <p className=" text-[30px]  font-medium">
             {filter === "weekly" &&
               weeklyData?.totalExpenseAmountThisWeek?.toLocaleString("en-NG", {
@@ -234,36 +234,36 @@ const MetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
           {filter === "weekly" &&
             weeklyData?.percentageIncreaseInExpenseThisWeek! > 0 && (
               <div className=" items-center text-primary-greytext font-medium flex text-[15px]">
-                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
-                <span className="text-[#4BB543] ml-2">
-                  {weeklyData?.percentageIncreaseInExpenseThisWeek}%
+                {/* <TrendingUp className=" text-[#4BB543] w-5 h-5" /> */}
+                <span className="text-[#4BB543] mt-2 text-sm ml-2">
+                  +{weeklyData?.percentageIncreaseInExpenseThisWeek}%
                 </span>{" "}
               </div>
             )}
           {filter === "monthly" &&
             monthlyData?.percentageIncreaseInExpenseThisMonth! > 0 && (
               <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
-                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
-                <span className="text-[#4BB543] ml-2">
-                  {monthlyData?.percentageIncreaseInExpenseThisMonth}%
+                {/* <TrendingUp className=" text-[#4BB543] w-5 h-5" /> */}
+                <span className="text-[#4BB543] mt-2 text-sm ml-2">
+                  +{monthlyData?.percentageIncreaseInExpenseThisMonth}%
                 </span>{" "}
               </div>
             )}
           {filter === "quarterly" &&
             quarterlyData?.percentageIncreaseInExpenseThisQuarter! > 0 && (
               <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
-                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
-                <span className="text-[#4BB543] ml-2">
-                  {quarterlyData?.percentageIncreaseInExpenseThisQuarter}%
+                {/* <TrendingUp className=" text-[#4BB543] w-5 h-5" /> */}
+                <span className="text-[#4BB543] mt-2 text-sm ml-2">
+                  +{quarterlyData?.percentageIncreaseInExpenseThisQuarter}%
                 </span>{" "}
               </div>
             )}
           {filter === "yearly" &&
             yearlyData?.percentageIncreaseInExpenseThisYear! > 0 && (
               <div className=" flex items-center text-primary-greytext font-medium text-[15px]">
-                <TrendingUp className=" text-[#4BB543] w-5 h-5" />
-                <span className="text-[#4BB543] ml-2">
-                  {yearlyData?.percentageIncreaseInExpenseThisYear}%
+                {/* <TrendingUp className=" text-[#4BB543] w-5 h-5" /> */}
+                <span className="text-[#4BB543] mt-2 text-sm ml-2">
+                  +{yearlyData?.percentageIncreaseInExpenseThisYear}%
                 </span>{" "}
               </div>
             )}

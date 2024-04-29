@@ -12,7 +12,7 @@ const Topbar = () => {
           <Verzologoblue />
           <SearchBar />
         </div>
-        <div className="ml-4 flex items-center md:ml-6 gap-x-[20px]">
+        <div className=" flex items-center gap-x-[20px]">
           <NotificationsDropdown />
           <TopbarDropdown />
         </div>

@@ -49,7 +49,7 @@ const Resetlink = () => {
     <div className=" w-full flex flex-row h-screen">
       <AuthSidebar />
       <div className=" flex-1 md:ml-[34%] h-full flex items-center md:block overflow-y-auto md:pt-[60px]">
-        <div className=" w-full lg:flex justify-end hidden items-center gap-x-9 pl-[140px] pr-[60px]">
+        <div className=" w-full lg:flex justify-end hidden items-center gap-x-6 pl-[140px] pr-[60px]">
           <p className=" text-primary-greytext text-lg">
             Don’t have an account?
           </p>

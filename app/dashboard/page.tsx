@@ -6,7 +6,10 @@ import RecentMetrics from "@/components/RecentMetrics";
 import useModal from "../hooks/useModal";
 import FilterDataDropdown from "@/components/FilterDataDropdown";
 import {
+  useGetBusinessPayablesQuery,
+  useGetBusinessReceivablesQuery,
   useGetBusinessesByUserIdQuery,
+  useGetCardsByBusinessQuery,
   useGetExpenseForMonthQuery,
   useGetExpenseForQuarterQuery,
   useGetExpenseForWeekQuery,
@@ -32,6 +35,10 @@ import UploadCustomerCSV from "@/components/modals/customer/UploadCustomerModal"
 import UploadMerchantCSV from "@/components/modals/UploadMerchantModal";
 import UploadProductCSV from "@/components/modals/product/UploadProductModal";
 import UploadServiceCSV from "@/components/modals/service/UploadServiceModal";
+import { X } from "lucide-react";
+import CompleteAccountBanner from "@/components/CompleteAccountBanner";
+import CreateVerzoAccount from "@/components/modals/CreateVerzoAccountModal";
+import CreateVerzoAccount2 from "@/components/modals/CreateVerzoAccountModal2";
 
 const Dashboard = () => {
   const {
@@ -45,6 +52,11 @@ const Dashboard = () => {
     closeModal: closeImportProductModal,
   } = useModal();
   const {
+    isOpen: isCreateVerzoAccountModalOpen,
+    openModal: openVerzoAccountModal,
+    closeModal: closeVerzoAccountModal,
+  } = useModal();
+  const {
     isOpen: isImportServiceModalOpen,
     openModal: openImportServiceModal,
     closeModal: closeImportServiceModal,
@@ -55,6 +67,10 @@ const Dashboard = () => {
     closeModal: closeImportCustomerModal,
   } = useModal();
   const token = getToken();
+  const [isVisible, setIsVisible] = useState(true);
+  const handleCloseBanner = () => {
+    setIsVisible(false);
+  };
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -165,6 +181,12 @@ const Dashboard = () => {
     },
   });
 
+  const getCardsByBusiness = useGetCardsByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
   const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
     variables: {
       businessId: businessId,
@@ -172,6 +194,18 @@ const Dashboard = () => {
   });
 
   const getSalesByBusiness = useGetSaleByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
+  const getPayablesByBusiness = useGetBusinessPayablesQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
+  const getReceivablesByBusiness = useGetBusinessReceivablesQuery({
     variables: {
       businessId: businessId,
     },
@@ -196,53 +230,72 @@ const Dashboard = () => {
     getExpenseForYear.loading ||
     getPurchaseForYear.loading ||
     getExpensesByBusiness.loading ||
-    getPurchasesByBusiness.loading;
+    getPurchasesByBusiness.loading ||
+    getCardsByBusiness.loading ||
+    getReceivablesByBusiness.loading ||
+    getPayablesByBusiness.loading;
 
   return (
     <>
       {metricsLoading ? (
         <Loader2 />
       ) : (
-        <div className=" px-[52px] bg-primary-whiteTint pt-[47px] pb-[20px] gap-y-[36px] flex flex-col max-w-[1680px] mx-auto">
-          <div className=" flex flex-row justify-between items-center">
-            <div className=" flex flex-col  gap-y-2">
-              <p className=" text-primary-black font-medium text-3xl">
-                Dashboard
-              </p>
-              <p className=" text-primary-greytext">
-                Manage your business on Verzo
-              </p>
+        <>
+          <CompleteAccountBanner
+            open={isVisible}
+            onClose={handleCloseBanner}
+            openModal={openVerzoAccountModal}
+          />
+          <div
+            className={` px-[52px] bg-primary-whiteTint ${
+              isVisible ? " pt-[70px]" : "pt-[47px]"
+            } pb-[20px] gap-y-[36px] flex flex-col max-w-[1680px] mx-auto`}
+          >
+            <div className=" flex flex-row justify-between items-center">
+              <div className=" flex flex-col  gap-y-2">
+                <p className=" text-primary-black font-medium text-3xl">
+                  Dashboard
+                </p>
+                <p className=" text-primary-greytext">
+                  Manage your business on Verzo
+                </p>
+              </div>
+              <div className=" flex gap-x-[14px] max-h-[48px]">
+                <FilterDataDropdown
+                  selectedFilter={selectedFilter}
+                  onFilterChange={handleFilterChange}
+                />
+              </div>
             </div>
-            <div className=" flex gap-x-[14px] max-h-[48px]">
-              <FilterDataDropdown
-                selectedFilter={selectedFilter}
-                onFilterChange={handleFilterChange}
-              />
-            </div>
+            <Metrics filter={selectedFilter!} />
+            <RecentMetrics />
+            <UploadCustomerCSV
+              open={isImportCustomerModalOpen}
+              openModal={openImportCustomerModal}
+              onClose={closeImportCustomerModal}
+            />
+            <UploadMerchantCSV
+              open={isImportMerchantModalOpen}
+              openModal={openImportMerchantModal}
+              onClose={closeImportMerchantModal}
+            />
+            <UploadProductCSV
+              open={isImportProductModalOpen}
+              openModal={openImportProductModal}
+              onClose={closeImportProductModal}
+            />
+            <UploadServiceCSV
+              open={isImportServiceModalOpen}
+              openModal={openImportServiceModal}
+              onClose={closeImportServiceModal}
+            />
           </div>
-          <Metrics filter={selectedFilter!} />
-          <RecentMetrics />
-          <UploadCustomerCSV
-            open={isImportCustomerModalOpen}
-            openModal={openImportCustomerModal}
-            onClose={closeImportCustomerModal}
+          <CreateVerzoAccount2
+            open={isCreateVerzoAccountModalOpen}
+            onClose={closeVerzoAccountModal}
+            openModal={openVerzoAccountModal}
           />
-          <UploadMerchantCSV
-            open={isImportMerchantModalOpen}
-            openModal={openImportMerchantModal}
-            onClose={closeImportMerchantModal}
-          />
-          <UploadProductCSV
-            open={isImportProductModalOpen}
-            openModal={openImportProductModal}
-            onClose={closeImportProductModal}
-          />
-          <UploadServiceCSV
-            open={isImportServiceModalOpen}
-            openModal={openImportServiceModal}
-            onClose={closeImportServiceModal}
-          />
-        </div>
+        </>
       )}
     </>
   );

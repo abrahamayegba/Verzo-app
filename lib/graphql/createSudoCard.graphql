@@ -1,0 +1,13 @@
+mutation CreateSudoCard(
+  $businessId: String!
+  $assignedUserId: String
+  $spendingLimits: [SudoCardSpendingLimits]
+) {
+  createSudoCard(
+    input: {
+      businessId: $businessId
+      assignedUserId: $assignedUserId
+      spendingLimits: $spendingLimits
+    }
+  )
+}

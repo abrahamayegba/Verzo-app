@@ -70,17 +70,6 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
     }
   }, [customerSearchResult, customerSearchId]);
 
-  const handleSelectAll = () => {
-    const isChecked = selectedRows.length !== customers?.length;
-    if (isChecked) {
-      setSelectedRows(
-        customers?.map((customer) => String(customer?.id) || "") || []
-      );
-    } else {
-      setSelectedRows([]);
-    }
-    onToggleSelectAll(isChecked);
-  };
   return (
     <Table>
       <TableHeader>

@@ -1,0 +1,20 @@
+mutation CreateUserInvite(
+  $email: String!
+  $fullname: String!
+  $roleId: String!
+  $businessId: String!
+) {
+  createUserInvite(
+    input: {
+      email: $email
+      fullname: $fullname
+      roleId: $roleId
+      businessId: $businessId
+    }
+  ) {
+    id
+    fullname
+    email
+    createdAt
+  }
+}

@@ -1,0 +1,18 @@
+query ViewCardTransactions($cardId: String!, $page: Int, $limit: Int) {
+  viewCardTransactions(input: { cardId: $cardId, page: $page, limit: $limit }) {
+    statusCode
+    message
+    data {
+      amount
+      fee
+      vat
+      currency
+      type
+      transactionMetadata {
+        channel
+        type
+        reference
+      }
+    }
+  }
+}

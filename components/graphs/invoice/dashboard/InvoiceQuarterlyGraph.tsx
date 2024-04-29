@@ -24,7 +24,7 @@ const InvoiceQuarterlyGraph = () => {
     const month = payload[0]?.payload?.month;
 
     return (
-      <div className="w-[190px] rounded-tremor-default border border-tremor-border bg-tremor-background p-2 ml-[280px] mt-[-150px] text-tremor-default shadow-tremor-dropdown">
+      <div className="w-[190px] rounded-tremor-default border border-tremor-border bg-tremor-background p-2 ml-[200px] mt-[-150px] text-tremor-default shadow-tremor-dropdown">
         <div className="font-medium text-tremor-content-emphasis ml-1 mb-1">
           {month}
         </div>
@@ -78,6 +78,7 @@ const InvoiceQuarterlyGraph = () => {
         data={chartData}
         showLegend={false}
         showYAxis={false}
+        startEndOnly={true}
         index="month"
         yAxisWidth={65}
         categories={["invoicePending", "invoicePaid"]}

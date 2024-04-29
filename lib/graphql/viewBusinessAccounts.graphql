@@ -1,0 +1,10 @@
+query ViewBusinessAccount($businessId: String!) {
+  viewBusinessAccount(businessId: $businessId) {
+    statusCode
+    data {
+      accountName
+      accountNumber
+      accountBalance
+    }
+  }
+}

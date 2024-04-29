@@ -19,6 +19,7 @@ export type Scalars = {
   Float: { input: number; output: number; }
   Any: { input: any; output: any; }
   Date: { input: any; output: any; }
+  DateTime: { input: any; output: any; }
 };
 
 export type AccountCategory = {
@@ -96,6 +97,59 @@ export type Authorization = {
   pin?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type AuthorizationFeeDetails = {
+  __typename?: 'AuthorizationFeeDetails';
+  _id: Scalars['String']['output'];
+  amount: Scalars['Int']['output'];
+  contract: Scalars['String']['output'];
+  currency: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+};
+
+export type AuthorizedCard = {
+  __typename?: 'AuthorizedCard';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  account: Scalars['String']['output'];
+  brand: Scalars['String']['output'];
+  business: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  currency: Scalars['String']['output'];
+  customer: Scalars['String']['output'];
+  disposable: Scalars['Boolean']['output'];
+  expiryMonth: Scalars['String']['output'];
+  expiryYear: Scalars['String']['output'];
+  fundingSource: Scalars['String']['output'];
+  is2FAEnrolled: Scalars['Boolean']['output'];
+  isDefaultPINChanged: Scalars['Boolean']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  maskedPan: Scalars['String']['output'];
+  refundAccount?: Maybe<Scalars['String']['output']>;
+  spendingControls: CardSpendingControls;
+  status: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type AuthorizedMerchant = {
+  __typename?: 'AuthorizedMerchant';
+  _id: Scalars['String']['output'];
+  category: Scalars['String']['output'];
+  city: Scalars['String']['output'];
+  country: Scalars['String']['output'];
+  merchantId: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  postalCode: Scalars['String']['output'];
+  state: Scalars['String']['output'];
+};
+
+export type BvnVerificationResponse = {
+  __typename?: 'BVNVerificationResponse';
+  data?: Maybe<SafeHavenBvnTransactionData>;
+  message?: Maybe<Scalars['String']['output']>;
+  statusCode?: Maybe<Scalars['Int']['output']>;
+};
+
 export type BillingPlan = {
   __typename?: 'BillingPlan';
   createdAt?: Maybe<Scalars['Date']['output']>;
@@ -112,6 +166,7 @@ export type Business = {
   businessInitials?: Maybe<Scalars['String']['output']>;
   businessMobile?: Maybe<Scalars['String']['output']>;
   businessName: Scalars['String']['output'];
+  businessSudoCards?: Maybe<Array<Maybe<BusinessSudoCard>>>;
   cards?: Maybe<Array<Maybe<Card>>>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   createdBy?: Maybe<User>;
@@ -119,7 +174,11 @@ export type Business = {
   id: Scalars['String']['output'];
   logo?: Maybe<Scalars['String']['output']>;
   settlementAccounts?: Maybe<Array<Maybe<SettlementAccount>>>;
+  sudoAccountId?: Maybe<Scalars['String']['output']>;
+  sudoAccountNumber?: Maybe<Scalars['String']['output']>;
+  sudoCustomerId?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
+  userBusinesses?: Maybe<Array<Maybe<UserBusiness>>>;
 };
 
 export type BusinessCategory = {
@@ -166,6 +225,19 @@ export type BusinessServiceUnit = {
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
+export type BusinessSudoCard = {
+  __typename?: 'BusinessSudoCard';
+  business?: Maybe<Business>;
+  businessId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  maskedPan?: Maybe<Scalars['String']['output']>;
+  sudoCardId?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['Date']['output']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
 export type Card = {
   __typename?: 'Card';
   address?: Maybe<Scalars['String']['output']>;
@@ -180,6 +252,57 @@ export type Card = {
   subscriptionPayment?: Maybe<Array<Maybe<SubscriptionPayment>>>;
   token?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
+};
+
+export type CardAuthorizationPagination = {
+  __typename?: 'CardAuthorizationPagination';
+  limit: Scalars['Int']['output'];
+  page: Scalars['String']['output'];
+  pages: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
+};
+
+export type CardAuthorizationRequestHistory = {
+  __typename?: 'CardAuthorizationRequestHistory';
+  _id: Scalars['String']['output'];
+  amount: Scalars['Int']['output'];
+  approved: Scalars['Boolean']['output'];
+  createdAt: Scalars['String']['output'];
+  currency: Scalars['String']['output'];
+  merchantAmount: Scalars['Int']['output'];
+  merchantCurrency: Scalars['String']['output'];
+  reason: Scalars['String']['output'];
+};
+
+export type CardAuthorizationResponse = {
+  __typename?: 'CardAuthorizationResponse';
+  data: Array<SudoCardAuthorization>;
+  message: Scalars['String']['output'];
+  pagination: CardAuthorizationPagination;
+  statusCode: Scalars['Int']['output'];
+};
+
+export type CardAuthorizationTerminal = {
+  __typename?: 'CardAuthorizationTerminal';
+  _id: Scalars['String']['output'];
+  cardHolderPresence: Scalars['Boolean']['output'];
+  cardPresence: Scalars['Boolean']['output'];
+  panEntryMode: Scalars['String']['output'];
+  pinEntryMode: Scalars['String']['output'];
+  rrn: Scalars['String']['output'];
+  stan: Scalars['String']['output'];
+  terminalAttendance: Scalars['String']['output'];
+  terminalId: Scalars['String']['output'];
+  terminalOperatingEnvironment: Scalars['String']['output'];
+  terminalType: Scalars['String']['output'];
+};
+
+export type CardAuthorizationTransactionMetadata = {
+  __typename?: 'CardAuthorizationTransactionMetadata';
+  _id: Scalars['String']['output'];
+  channel: Scalars['String']['output'];
+  reference: Scalars['String']['output'];
+  type: Scalars['String']['output'];
 };
 
 export type CardDetails = {
@@ -209,6 +332,64 @@ export type CardDetailsB = {
   fullname?: InputMaybe<Scalars['String']['input']>;
   redirect_url?: InputMaybe<Scalars['String']['input']>;
   tx_ref?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CardSpendingChannels = {
+  __typename?: 'CardSpendingChannels';
+  _id: Scalars['String']['output'];
+  atm: Scalars['Boolean']['output'];
+  mobile: Scalars['Boolean']['output'];
+  pos: Scalars['Boolean']['output'];
+  web: Scalars['Boolean']['output'];
+};
+
+export type CardSpendingControls = {
+  __typename?: 'CardSpendingControls';
+  _id: Scalars['String']['output'];
+  allowedCategories: Array<Scalars['String']['output']>;
+  blockedCategories: Array<Scalars['String']['output']>;
+  channels: CardSpendingChannels;
+  spendingLimits: Array<CardSpendingLimits>;
+};
+
+export type CardSpendingLimits = {
+  __typename?: 'CardSpendingLimits';
+  _id: Scalars['String']['output'];
+  amount: Scalars['Int']['output'];
+  categories: Array<Scalars['String']['output']>;
+  interval: Scalars['String']['output'];
+};
+
+export type CardTransactionData = {
+  __typename?: 'CardTransactionData';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  amount: Scalars['Float']['output'];
+  authorization: SudoCardAuthorization;
+  balanceTransactions: Array<Scalars['String']['output']>;
+  business: Scalars['String']['output'];
+  card: AuthorizedCard;
+  createdAt: Scalars['String']['output'];
+  currency: Scalars['String']['output'];
+  fee: Scalars['Float']['output'];
+  feeDetails: Array<AuthorizationFeeDetails>;
+  isDeleted: Scalars['Boolean']['output'];
+  merchant: AuthorizedMerchant;
+  merchantAmount: Scalars['Float']['output'];
+  merchantCurrency: Scalars['String']['output'];
+  terminal: CardAuthorizationTerminal;
+  transactionMetadata: CardAuthorizationTransactionMetadata;
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+  vat: Scalars['Float']['output'];
+};
+
+export type CardTransactionResponse = {
+  __typename?: 'CardTransactionResponse';
+  data: Array<CardTransactionData>;
+  message: Scalars['String']['output'];
+  pagination: CardAuthorizationPagination;
+  statusCode: Scalars['Int']['output'];
 };
 
 export type Category = {
@@ -770,6 +951,26 @@ export type CreateSubscriptionWithCardB = {
   offerId?: InputMaybe<Scalars['String']['input']>;
   reference: Scalars['String']['input'];
   tax: Scalars['Float']['input'];
+};
+
+export type CreateSudoAccount = {
+  addressLine1: Scalars['String']['input'];
+  addressLine2?: InputMaybe<Scalars['String']['input']>;
+  addressVerificationUrl?: InputMaybe<Scalars['String']['input']>;
+  bvn: Scalars['String']['input'];
+  city: Scalars['String']['input'];
+  dob: Scalars['Date']['input'];
+  idBackUrl?: InputMaybe<Scalars['String']['input']>;
+  idFrontUrl?: InputMaybe<Scalars['String']['input']>;
+  incorporationCertificateUrl?: InputMaybe<Scalars['String']['input']>;
+  postalCode: Scalars['String']['input'];
+  state: Scalars['String']['input'];
+};
+
+export type CreateSudoCard = {
+  assignedUserId?: InputMaybe<Scalars['String']['input']>;
+  businessId: Scalars['String']['input'];
+  spendingLimits?: InputMaybe<Array<InputMaybe<SudoCardSpendingLimits>>>;
 };
 
 export type CreateUserInvite = {
@@ -1352,6 +1553,24 @@ export type GetServiceResponse = {
   serviceByBusiness: Array<Maybe<Service>>;
 };
 
+export type GetTaskInput = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  sets?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type GetTaskMobileInput = {
+  businessId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type GetTaskResponse = {
+  __typename?: 'GetTaskResponse';
+  cursorId?: Maybe<Scalars['String']['output']>;
+  tasks?: Maybe<Array<Maybe<Task>>>;
+};
+
 export type InventoryCostHistory = {
   __typename?: 'InventoryCostHistory';
   business?: Maybe<Business>;
@@ -1501,6 +1720,18 @@ export type MakeSalePaymentResponse = {
   saleStatus: Scalars['Float']['output'];
 };
 
+export type MakeTransferInput = {
+  amount: Scalars['Float']['input'];
+  beneficiaryAccountNumber: Scalars['String']['input'];
+  beneficiaryBankCode: Scalars['String']['input'];
+  businessId: Scalars['String']['input'];
+  debitAccountNumber: Scalars['String']['input'];
+  nameEnquiryReference: Scalars['String']['input'];
+  narration?: InputMaybe<Scalars['String']['input']>;
+  paymentReference?: InputMaybe<Scalars['String']['input']>;
+  saveBeneficiary: Scalars['Boolean']['input'];
+};
+
 export type MarkExpenseAsReceivedResponse = {
   __typename?: 'MarkExpenseAsReceivedResponse';
   completed: Scalars['Boolean']['output'];
@@ -1517,6 +1748,11 @@ export type MarkSaleAsDeliveredResponse = {
   __typename?: 'MarkSaleAsDeliveredResponse';
   delivered: Scalars['Boolean']['output'];
   saleStatus: Scalars['Float']['output'];
+};
+
+export type MarkTaskCompleted = {
+  businessId: Scalars['String']['input'];
+  taskId: Scalars['String']['input'];
 };
 
 export type Merchant = {
@@ -1671,6 +1907,7 @@ export type Mutation = {
   createSubscriptionNewCardA?: Maybe<SeerbitStandardCheckoutResponse>;
   createSubscriptionNewCardB?: Maybe<Subscription>;
   createSubscriptionTokenized?: Maybe<Subscription>;
+  createSudoCard?: Maybe<Scalars['Boolean']['output']>;
   createUserInvite?: Maybe<UserInvite>;
   deleteAccountCategory?: Maybe<Scalars['Boolean']['output']>;
   deleteAccountCategoryType?: Maybe<Scalars['Boolean']['output']>;
@@ -1765,11 +2002,13 @@ export type Mutation = {
   makeExpensePayment: MakePaymentForExpenseResponse;
   makePurchasePayment: MakePurchasePaymentResponse;
   makeSalePayment: MakeSalePaymentResponse;
+  makeTransfer?: Maybe<SafeHavenTransferResponse>;
   markExpenseAsNotRecurring?: Maybe<Scalars['Boolean']['output']>;
   markExpenseAsRecurring?: Maybe<Scalars['Boolean']['output']>;
   markExpenseItemAsReceived: MarkExpenseAsReceivedResponse;
   markPurchaseItemAsReceived: MarkPurchaseItemAsReceivedResponse;
   markSaleAsDelivered: MarkSaleAsDeliveredResponse;
+  markTaskAsCompleted?: Maybe<Scalars['Boolean']['output']>;
   refreshToken: Token;
   resendVerification?: Maybe<Scalars['Boolean']['output']>;
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -1779,6 +2018,7 @@ export type Mutation = {
   sendPurchase?: Maybe<Scalars['Boolean']['output']>;
   sendWaitlistToMail?: Maybe<Scalars['Boolean']['output']>;
   setCardAsDefault?: Maybe<Scalars['Boolean']['output']>;
+  setUpBusinessAccount?: Maybe<Scalars['Boolean']['output']>;
   signIn: TokenWithVerificationStatus;
   signInWithGoogle: Token;
   signUp: Token;
@@ -1839,6 +2079,7 @@ export type Mutation = {
   uploadMerchantInvoiceToExpense: UploadMerchantInvoiceToExpenseResponse;
   uploadMerchantInvoiceToPurchase: UploadMerchantInvoiceToPurchaseResponse;
   userDeleteUser?: Maybe<Scalars['Boolean']['output']>;
+  userRequestCard?: Maybe<Scalars['Boolean']['output']>;
   userSignUpAfterInvite: Token;
   validateCharge?: Maybe<Scalars['Boolean']['output']>;
   verification?: Maybe<Scalars['Boolean']['output']>;
@@ -2300,6 +2541,11 @@ export type MutationCreateSubscriptionTokenizedArgs = {
 };
 
 
+export type MutationCreateSudoCardArgs = {
+  input: CreateSudoCard;
+};
+
+
 export type MutationCreateUserInviteArgs = {
   input: CreateUserInvite;
 };
@@ -2669,6 +2915,11 @@ export type MutationMakeSalePaymentArgs = {
 };
 
 
+export type MutationMakeTransferArgs = {
+  input: MakeTransferInput;
+};
+
+
 export type MutationMarkExpenseAsNotRecurringArgs = {
   expenseId: Scalars['String']['input'];
   userId?: InputMaybe<Scalars['String']['input']>;
@@ -2693,6 +2944,11 @@ export type MutationMarkPurchaseItemAsReceivedArgs = {
 
 export type MutationMarkSaleAsDeliveredArgs = {
   saleId: Scalars['String']['input'];
+};
+
+
+export type MutationMarkTaskAsCompletedArgs = {
+  input: MarkTaskCompleted;
 };
 
 
@@ -2739,6 +2995,11 @@ export type MutationSendWaitlistToMailArgs = {
 export type MutationSetCardAsDefaultArgs = {
   businessId: Scalars['String']['input'];
   cardId: Scalars['String']['input'];
+};
+
+
+export type MutationSetUpBusinessAccountArgs = {
+  input: CreateSudoAccount;
 };
 
 
@@ -3092,6 +3353,11 @@ export type MutationUserDeleteUserArgs = {
 };
 
 
+export type MutationUserRequestCardArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
 export type MutationUserSignUpAfterInviteArgs = {
   inviteId: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -3113,10 +3379,44 @@ export type MutationVerificationWithEmailLinkArgs = {
   userIdFromEmail: Scalars['String']['input'];
 };
 
+export type NameEnquiryData = {
+  __typename?: 'NameEnquiryData';
+  accountName: Scalars['String']['output'];
+  accountNumber: Scalars['String']['output'];
+  bankCode: Scalars['String']['output'];
+  bvn: Scalars['String']['output'];
+  kycLevel: Scalars['String']['output'];
+  responseCode: Scalars['String']['output'];
+  responseMessage: Scalars['String']['output'];
+  sessionId: Scalars['String']['output'];
+};
+
+export type NameEnquiryInput = {
+  accountNumber: Scalars['String']['input'];
+  bankCode: Scalars['String']['input'];
+};
+
+export type NameEnquiryResponse = {
+  __typename?: 'NameEnquiryResponse';
+  data: NameEnquiryData;
+  message: Scalars['String']['output'];
+  responseCode: Scalars['String']['output'];
+  statusCode: Scalars['Int']['output'];
+};
+
 export type NonCurrentAssets = {
   __typename?: 'NonCurrentAssets';
   name?: Maybe<Scalars['String']['output']>;
   total?: Maybe<Scalars['Float']['output']>;
+};
+
+export type NotificationSettings = {
+  __typename?: 'NotificationSettings';
+  _id: Scalars['String']['output'];
+  emailMonthlyStatement: Scalars['Boolean']['output'];
+  emailNotification: Scalars['Boolean']['output'];
+  smsMonthlyStatement: Scalars['Boolean']['output'];
+  smsNotification: Scalars['Boolean']['output'];
 };
 
 export type Offer = {
@@ -3159,6 +3459,14 @@ export type OptionIncluded = {
   optionId: Scalars['String']['output'];
   plan?: Maybe<Plan>;
   planId: Scalars['String']['output'];
+};
+
+export type Pagination = {
+  __typename?: 'Pagination';
+  limit: Scalars['String']['output'];
+  page: Scalars['String']['output'];
+  pages: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
 };
 
 export type Payment = {
@@ -3532,6 +3840,7 @@ export type Query = {
   getArchivedSalesByBusiness?: Maybe<GetSaleByBusinessResponse>;
   getArchivedSalesByBusinessMobile?: Maybe<GetSaleByBusinessResponse>;
   getArchivedServicesByBusiness?: Maybe<GetServiceResponse>;
+  getBankList?: Maybe<SafeHavenBankResponse>;
   getBusinessById?: Maybe<Business>;
   getBusinessCOAByBusiness: Array<Maybe<BusinessChartOfAccount>>;
   getBusinessCOAById?: Maybe<BusinessChartOfAccount>;
@@ -3544,8 +3853,11 @@ export type Query = {
   getBusinessReceivables?: Maybe<Scalars['Float']['output']>;
   getBusinessServiceUnitById?: Maybe<BusinessServiceUnit>;
   getBusinessServiceUnits?: Maybe<Array<Maybe<BusinessServiceUnit>>>;
+  getBusinessTasks?: Maybe<GetTaskResponse>;
+  getBusinessTasksMobile?: Maybe<GetTaskResponse>;
   getBusinesses: Array<Maybe<Business>>;
   getBusinessesByUserId?: Maybe<GetBusinessByUser>;
+  getCardsByBusiness?: Maybe<Array<Maybe<BusinessSudoCard>>>;
   getCategories: Array<Maybe<Category>>;
   getCategoryByBusiness: Array<Maybe<Category>>;
   getCategoryById?: Maybe<Category>;
@@ -3661,7 +3973,9 @@ export type Query = {
   getSubscriptionInvoicesById?: Maybe<SubscriptionInvoice>;
   getSubscriptions: Array<Maybe<Subscription>>;
   getSubscriptionsByPlanId: Array<Maybe<Subscription>>;
+  getTaskTypes?: Maybe<Array<Maybe<TaskType>>>;
   getUserById: User;
+  getUserCardsByBusiness?: Maybe<Array<Maybe<BusinessSudoCard>>>;
   getUserInvites: Array<Maybe<UserInvite>>;
   getUserInvitesByBusiness: Array<Maybe<UserInvite>>;
   getUsers: Array<Maybe<User>>;
@@ -3672,6 +3986,7 @@ export type Query = {
   invoiceAndExpenseGraphWeekly?: Maybe<Array<Maybe<InvoiceAndExpenseGraphWeeklyResponse>>>;
   invoiceAndExpenseGraphYearly?: Maybe<Array<Maybe<InvoiceAndExpenseGraphYearlyResponse>>>;
   isForgotPasswordLinkValid: Scalars['Boolean']['output'];
+  nameEnquiry?: Maybe<NameEnquiryResponse>;
   numberOfCustomersThisMonth?: Maybe<TotalCustomersThisMonth>;
   numberOfCustomersThisQuarter?: Maybe<TotalCustomersThisQuarter>;
   numberOfCustomersThisWeek?: Maybe<TotalCustomersThisWeek>;
@@ -3689,6 +4004,7 @@ export type Query = {
   searchProductOrServiceByBusiness: Array<Maybe<ProductOrService>>;
   searchProductsByBusiness: Array<Maybe<Product>>;
   searchServicesByBusiness: Array<Maybe<Service>>;
+  sendVerificationOTP?: Maybe<SafeHavenOtpResponse>;
   serviceRevenueStream: Scalars['Float']['output'];
   subscriptionCheckerForFrontend?: Maybe<Scalars['Boolean']['output']>;
   totalInvoiceAmountPerMonthSelector?: Maybe<TotalInvoiceAmountSelector>;
@@ -3697,8 +4013,18 @@ export type Query = {
   totalQuarterlyInvoicesAmount?: Maybe<TotalQuarterInvoiceAmounts>;
   totalWeeklyInvoicesAmount?: Maybe<TotalWeeklyInvoiceAmount>;
   totalYearlyInvoicesAmount?: Maybe<TotalYearInvoiceAmounts>;
+  userGetTasks?: Maybe<GetTaskResponse>;
+  userGetTasksMobile?: Maybe<GetTaskResponse>;
   userJoinStrapiWaitlistEmail?: Maybe<Scalars['Boolean']['output']>;
+  verifyBVN?: Maybe<BvnVerificationResponse>;
   verzoPlusSubscriptionCheckerForFrontend?: Maybe<Scalars['Boolean']['output']>;
+  viewBusinessAccount?: Maybe<SafeHavenAccountResponse>;
+  viewBusinessAccountStatement?: Maybe<SafeHavenAccountStatementResponse>;
+  viewBusinessAccounts?: Maybe<SafeHavenAccountsResponse>;
+  viewBusinessCards?: Maybe<SudoCustomerCardsResponse>;
+  viewCard?: Maybe<SudoSingleCardResponse>;
+  viewCardAuthorizations?: Maybe<CardAuthorizationResponse>;
+  viewCardTransactions?: Maybe<CardTransactionResponse>;
 };
 
 
@@ -3868,6 +4194,21 @@ export type QueryGetBusinessServiceUnitByIdArgs = {
 
 
 export type QueryGetBusinessServiceUnitsArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryGetBusinessTasksArgs = {
+  input: GetTaskInput;
+};
+
+
+export type QueryGetBusinessTasksMobileArgs = {
+  input: GetTaskMobileInput;
+};
+
+
+export type QueryGetCardsByBusinessArgs = {
   businessId: Scalars['String']['input'];
 };
 
@@ -4350,6 +4691,11 @@ export type QueryGetUserByIdArgs = {
 };
 
 
+export type QueryGetUserCardsByBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
 export type QueryGetUserInvitesByBusinessArgs = {
   businessId: Scalars['String']['input'];
 };
@@ -4386,6 +4732,11 @@ export type QueryInvoiceAndExpenseGraphYearlyArgs = {
 
 export type QueryIsForgotPasswordLinkValidArgs = {
   forgotPasswordId: Scalars['String']['input'];
+};
+
+
+export type QueryNameEnquiryArgs = {
+  input: NameEnquiryInput;
 };
 
 
@@ -4524,8 +4875,53 @@ export type QueryTotalYearlyInvoicesAmountArgs = {
 };
 
 
+export type QueryUserGetTasksArgs = {
+  input: GetTaskInput;
+};
+
+
+export type QueryUserGetTasksMobileArgs = {
+  input: GetTaskMobileInput;
+};
+
+
 export type QueryUserJoinStrapiWaitlistEmailArgs = {
   input: SendAfterWaitlistJoin;
+};
+
+
+export type QueryVerifyBvnArgs = {
+  input: VerifyBvn;
+};
+
+
+export type QueryViewBusinessAccountArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryViewBusinessAccountStatementArgs = {
+  input: ViewAccountStatement;
+};
+
+
+export type QueryViewBusinessCardsArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
+export type QueryViewCardArgs = {
+  cardId: Scalars['String']['input'];
+};
+
+
+export type QueryViewCardAuthorizationsArgs = {
+  input: ViewCardAuthorizations;
+};
+
+
+export type QueryViewCardTransactionsArgs = {
+  input: ViewCardAuthorizations;
 };
 
 export type ResetPassword = {
@@ -4546,6 +4942,268 @@ export type Role = {
   roleDescription?: Maybe<Scalars['String']['output']>;
   roleName: Scalars['String']['output'];
   updatedAt: Scalars['Date']['output'];
+};
+
+export type SafeHavenAccount = {
+  __typename?: 'SafeHavenAccount';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  accountBalance: Scalars['Float']['output'];
+  accountName: Scalars['String']['output'];
+  accountNumber: Scalars['String']['output'];
+  accountProduct: Scalars['String']['output'];
+  accountType: Scalars['String']['output'];
+  allowOverdraft: Scalars['Boolean']['output'];
+  bookBalance: Scalars['Float']['output'];
+  bvn: Scalars['String']['output'];
+  callbackUrl?: Maybe<Scalars['String']['output']>;
+  canCredit: Scalars['Boolean']['output'];
+  canDebit: Scalars['Boolean']['output'];
+  cbaAccountId: Scalars['String']['output'];
+  chargeStampDuty: Scalars['Boolean']['output'];
+  chargeValueAddedTax: Scalars['Boolean']['output'];
+  chargeWithHoldingTax: Scalars['Boolean']['output'];
+  client: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  currencyCode: Scalars['String']['output'];
+  externalReference: Scalars['String']['output'];
+  interestBalance: Scalars['Float']['output'];
+  interestCalculationDaysInYearType: Scalars['String']['output'];
+  interestCalculationType: Scalars['String']['output'];
+  interestCompoundingPeriod: Scalars['String']['output'];
+  interestPostingPeriod: Scalars['String']['output'];
+  isDefault: Scalars['Boolean']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  isSubAccount: Scalars['Boolean']['output'];
+  lockinPeriodFrequency: Scalars['Float']['output'];
+  lockinPeriodFrequencyType: Scalars['String']['output'];
+  minRequiredOpeningBalance: Scalars['Float']['output'];
+  nominalAnnualInterestRate: Scalars['Float']['output'];
+  notificationSettings: NotificationSettings;
+  overdraftLimit: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+  subAccountDetails: SubAccountDetails;
+  updatedAt: Scalars['String']['output'];
+  withHoldingTaxBalance: Scalars['Float']['output'];
+};
+
+export type SafeHavenAccountForStatement = {
+  __typename?: 'SafeHavenAccountForStatement';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  accountBalance: Scalars['Float']['output'];
+  accountName: Scalars['String']['output'];
+  accountNumber: Scalars['String']['output'];
+  accountProduct: Scalars['String']['output'];
+  accountType: Scalars['String']['output'];
+  allowOverdraft: Scalars['Boolean']['output'];
+  bookBalance: Scalars['Float']['output'];
+  bvn: Scalars['String']['output'];
+  canCredit: Scalars['Boolean']['output'];
+  canDebit: Scalars['Boolean']['output'];
+  cbaAccountId: Scalars['String']['output'];
+  chargeStampDuty: Scalars['Boolean']['output'];
+  chargeValueAddedTax: Scalars['Boolean']['output'];
+  chargeWithHoldingTax: Scalars['Boolean']['output'];
+  client: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  currencyCode: Scalars['String']['output'];
+  interestBalance: Scalars['Float']['output'];
+  interestCalculationDaysInYearType: Scalars['String']['output'];
+  interestCalculationType: Scalars['String']['output'];
+  interestCompoundingPeriod: Scalars['String']['output'];
+  interestPostingPeriod: Scalars['String']['output'];
+  isDefault: Scalars['Boolean']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  isSubAccount: Scalars['Boolean']['output'];
+  lockinPeriodFrequency: Scalars['Int']['output'];
+  lockinPeriodFrequencyType: Scalars['String']['output'];
+  minRequiredOpeningBalance: Scalars['Float']['output'];
+  nominalAnnualInterestRate: Scalars['Float']['output'];
+  notificationSettings: NotificationSettings;
+  overdraftLimit: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+  withHoldingTaxBalance: Scalars['Float']['output'];
+};
+
+export type SafeHavenAccountPagination = {
+  __typename?: 'SafeHavenAccountPagination';
+  limit: Scalars['Int']['output'];
+  page: Scalars['Int']['output'];
+  pages: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
+};
+
+export type SafeHavenAccountResponse = {
+  __typename?: 'SafeHavenAccountResponse';
+  data: SafeHavenAccount;
+  message: Scalars['String']['output'];
+  pagination: SafeHavenAccountPagination;
+  statusCode: Scalars['Int']['output'];
+};
+
+export type SafeHavenAccountStatement = {
+  __typename?: 'SafeHavenAccountStatement';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  account: SafeHavenAccountForStatement;
+  amount: Scalars['Float']['output'];
+  cbaTransactionId: Scalars['String']['output'];
+  client: Scalars['String']['output'];
+  narration: Scalars['String']['output'];
+  paymentReference: Scalars['String']['output'];
+  provider: Scalars['String']['output'];
+  providerChannel: Scalars['String']['output'];
+  runningBalance: Scalars['Float']['output'];
+  transactionDate: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  valueDate: Scalars['String']['output'];
+};
+
+export type SafeHavenAccountStatementResponse = {
+  __typename?: 'SafeHavenAccountStatementResponse';
+  data: Array<Maybe<SafeHavenAccountStatement>>;
+  message: Scalars['String']['output'];
+  pagination: Pagination;
+  statusCode: Scalars['Int']['output'];
+};
+
+export type SafeHavenAccountsResponse = {
+  __typename?: 'SafeHavenAccountsResponse';
+  data: Array<SafeHavenAccount>;
+  message: Scalars['String']['output'];
+  pagination: SafeHavenAccountPagination;
+  statusCode: Scalars['Int']['output'];
+};
+
+export type SafeHavenBvnProviderResponse = {
+  __typename?: 'SafeHavenBVNProviderResponse';
+  bvn?: Maybe<Scalars['String']['output']>;
+  dateOfBirth?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  enrollmentBank?: Maybe<Scalars['String']['output']>;
+  enrollmentBranch?: Maybe<Scalars['String']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  gender?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  levelOfAccount?: Maybe<Scalars['String']['output']>;
+  lgaOfOrigin?: Maybe<Scalars['String']['output']>;
+  lgaOfResidence?: Maybe<Scalars['String']['output']>;
+  maritalStatus?: Maybe<Scalars['String']['output']>;
+  middleName?: Maybe<Scalars['String']['output']>;
+  nameOnCard?: Maybe<Scalars['String']['output']>;
+  nationality?: Maybe<Scalars['String']['output']>;
+  nin?: Maybe<Scalars['String']['output']>;
+  phoneNumber1?: Maybe<Scalars['String']['output']>;
+  phoneNumber2?: Maybe<Scalars['String']['output']>;
+  registrationDate?: Maybe<Scalars['String']['output']>;
+  residentialAddress?: Maybe<Scalars['String']['output']>;
+  stateOfOrigin?: Maybe<Scalars['String']['output']>;
+  stateOfResidence?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  watchListed?: Maybe<Scalars['String']['output']>;
+};
+
+export type SafeHavenBvnTransactionData = {
+  __typename?: 'SafeHavenBVNTransactionData';
+  _id?: Maybe<Scalars['String']['output']>;
+  _v?: Maybe<Scalars['Int']['output']>;
+  amount?: Maybe<Scalars['Int']['output']>;
+  clientId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  debitAccountNumber?: Maybe<Scalars['String']['output']>;
+  debitMessage?: Maybe<Scalars['String']['output']>;
+  debitResponsCode?: Maybe<Scalars['Int']['output']>;
+  debitSessionId?: Maybe<Scalars['String']['output']>;
+  isDeleted?: Maybe<Scalars['Boolean']['output']>;
+  providerResponse?: Maybe<SafeHavenBvnProviderResponse>;
+  stampDuty?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+  vat?: Maybe<Scalars['Int']['output']>;
+};
+
+export type SafeHavenBankEntity = {
+  __typename?: 'SafeHavenBankEntity';
+  bankCode: Scalars['String']['output'];
+  categoryId: Scalars['String']['output'];
+  logoImage?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  nubanCode?: Maybe<Scalars['String']['output']>;
+  routingKey: Scalars['String']['output'];
+};
+
+export type SafeHavenBankResponse = {
+  __typename?: 'SafeHavenBankResponse';
+  data: Array<SafeHavenBankEntity>;
+  message: Scalars['String']['output'];
+  responseCode: Scalars['String']['output'];
+  statusCode: Scalars['Int']['output'];
+};
+
+export type SafeHavenOtpResponse = {
+  __typename?: 'SafeHavenOtpResponse';
+  data: SafeHavenOtpResponseData;
+  message: Scalars['String']['output'];
+  statusCode: Scalars['Int']['output'];
+};
+
+export type SafeHavenOtpResponseData = {
+  __typename?: 'SafeHavenOtpResponseData';
+  otpId: Scalars['String']['output'];
+};
+
+export type SafeHavenTransferData = {
+  __typename?: 'SafeHavenTransferData';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  account: Scalars['String']['output'];
+  amount: Scalars['Float']['output'];
+  approvedAt: Scalars['String']['output'];
+  approvedBy: Scalars['String']['output'];
+  client: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  createdBy: Scalars['String']['output'];
+  creditAccountName: Scalars['String']['output'];
+  creditAccountNumber: Scalars['String']['output'];
+  creditBankVerificationNumber?: Maybe<Scalars['String']['output']>;
+  creditKYCLevel: Scalars['String']['output'];
+  debitAccountName: Scalars['String']['output'];
+  debitAccountNumber: Scalars['String']['output'];
+  debitBankVerificationNumber?: Maybe<Scalars['String']['output']>;
+  debitKYCLevel: Scalars['String']['output'];
+  destinationInstitutionCode: Scalars['String']['output'];
+  fees: Scalars['Float']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  isReversed: Scalars['Boolean']['output'];
+  mandateReference?: Maybe<Scalars['String']['output']>;
+  nameEnquiryReference: Scalars['String']['output'];
+  narration: Scalars['String']['output'];
+  paymentReference?: Maybe<Scalars['String']['output']>;
+  provider: Scalars['String']['output'];
+  providerChannel: Scalars['String']['output'];
+  providerChannelCode: Scalars['String']['output'];
+  queued: Scalars['Boolean']['output'];
+  responseCode: Scalars['String']['output'];
+  responseMessage: Scalars['String']['output'];
+  reversalReference?: Maybe<Scalars['String']['output']>;
+  sessionId: Scalars['String']['output'];
+  stampDuty: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+  transactionLocation: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+  vat: Scalars['Float']['output'];
+};
+
+export type SafeHavenTransferResponse = {
+  __typename?: 'SafeHavenTransferResponse';
+  data: SafeHavenTransferData;
+  message: Scalars['String']['output'];
+  responseCode: Scalars['String']['output'];
+  statusCode: Scalars['Int']['output'];
 };
 
 export type Sale = {
@@ -4830,9 +5488,22 @@ export type SignInDetails = {
 };
 
 export type SignUpDetails = {
+  bvn?: InputMaybe<Scalars['String']['input']>;
+  dob?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   fullname: Scalars['String']['input'];
   password: Scalars['String']['input'];
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SubAccountDetails = {
+  __typename?: 'SubAccountDetails';
+  _id: Scalars['String']['output'];
+  bvn: Scalars['String']['output'];
+  emailAddress: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  lastName: Scalars['String']['output'];
+  phoneNumber: Scalars['String']['output'];
 };
 
 export type Subscription = {
@@ -4890,6 +5561,230 @@ export type SuccessInfo = {
   __typename?: 'SuccessInfo';
   message?: Maybe<Scalars['String']['output']>;
   success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type SudoAccount = {
+  __typename?: 'SudoAccount';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  accountName: Scalars['String']['output'];
+  accountNumber: Scalars['String']['output'];
+  accountType: Scalars['String']['output'];
+  availableBalance: Scalars['Float']['output'];
+  bankCode: Scalars['String']['output'];
+  business: Scalars['String']['output'];
+  charges: Array<Maybe<Scalars['String']['output']>>;
+  createdAt: Scalars['String']['output'];
+  currency: Scalars['String']['output'];
+  currentBalance: Scalars['Float']['output'];
+  customer: SudoCustomer;
+  isDefault: Scalars['Boolean']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  provider: Scalars['String']['output'];
+  providerReference: Scalars['String']['output'];
+  referenceCode: Scalars['String']['output'];
+  reloadable: Scalars['Boolean']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type SudoBillingAddress = {
+  __typename?: 'SudoBillingAddress';
+  _id: Scalars['String']['output'];
+  city: Scalars['String']['output'];
+  country: Scalars['String']['output'];
+  line1: Scalars['String']['output'];
+  postalCode: Scalars['String']['output'];
+  state: Scalars['String']['output'];
+};
+
+export type SudoCardAuthorization = {
+  __typename?: 'SudoCardAuthorization';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  amount: Scalars['Int']['output'];
+  approved: Scalars['Boolean']['output'];
+  authorizationMethod: Scalars['String']['output'];
+  balanceTransactions: Array<Scalars['String']['output']>;
+  business: Scalars['String']['output'];
+  card: AuthorizedCard;
+  createdAt: Scalars['String']['output'];
+  currency: Scalars['String']['output'];
+  fee: Scalars['Int']['output'];
+  feeDetails: Array<AuthorizationFeeDetails>;
+  isDeleted: Scalars['Boolean']['output'];
+  merchant: AuthorizedMerchant;
+  merchantAmount: Scalars['Int']['output'];
+  merchantCurrency: Scalars['String']['output'];
+  pendingRequest?: Maybe<Scalars['String']['output']>;
+  requestHistory: Array<CardAuthorizationRequestHistory>;
+  status: Scalars['String']['output'];
+  terminal: CardAuthorizationTerminal;
+  transactionMetadata: CardAuthorizationTransactionMetadata;
+  updatedAt: Scalars['String']['output'];
+  vat: Scalars['Int']['output'];
+  verification: Verification;
+};
+
+export enum SudoCardSpendingInterval {
+  Daily = 'daily',
+  Monthly = 'monthly',
+  Weekly = 'weekly',
+  Yearly = 'yearly'
+}
+
+export type SudoCardSpendingLimits = {
+  amount: Scalars['Float']['input'];
+  interval: SudoCardSpendingInterval;
+};
+
+export type SudoChannelControls = {
+  __typename?: 'SudoChannelControls';
+  _id: Scalars['String']['output'];
+  atm: Scalars['Boolean']['output'];
+  mobile: Scalars['Boolean']['output'];
+  pos: Scalars['Boolean']['output'];
+  web: Scalars['Boolean']['output'];
+};
+
+export type SudoCustomer = {
+  __typename?: 'SudoCustomer';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  billingAddress: SudoBillingAddress;
+  business: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  emailAddress: Scalars['String']['output'];
+  individual: SudoIndividual;
+  isDeleted: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  phoneNumber: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type SudoCustomerCard = {
+  __typename?: 'SudoCustomerCard';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  account: SudoAccount;
+  brand: Scalars['String']['output'];
+  business: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  currency: Scalars['String']['output'];
+  customer: SudoCustomer;
+  disposable: Scalars['Boolean']['output'];
+  expiryMonth: Scalars['String']['output'];
+  expiryYear: Scalars['String']['output'];
+  fundingSource: SudoFundingSource;
+  is2FAEnrolled: Scalars['Boolean']['output'];
+  isDefaultPINChanged: Scalars['Boolean']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  maskedPan: Scalars['String']['output'];
+  refundAccount?: Maybe<Scalars['String']['output']>;
+  spendingControls: SudoSpendingControls;
+  status: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type SudoCustomerCardsPagination = {
+  __typename?: 'SudoCustomerCardsPagination';
+  limit: Scalars['String']['output'];
+  page: Scalars['String']['output'];
+  pages: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
+};
+
+export type SudoCustomerCardsResponse = {
+  __typename?: 'SudoCustomerCardsResponse';
+  data: Array<Maybe<SudoCustomerCard>>;
+  message: Scalars['String']['output'];
+  pagination: SudoCustomerCardsPagination;
+  statusCode: Scalars['Int']['output'];
+};
+
+export type SudoDocuments = {
+  __typename?: 'SudoDocuments';
+  _id: Scalars['String']['output'];
+};
+
+export type SudoFundingSource = {
+  __typename?: 'SudoFundingSource';
+  _id: Scalars['String']['output'];
+  _v: Scalars['Int']['output'];
+  business: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  isDefault: Scalars['Boolean']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  jitGateway?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type SudoIdentity = {
+  __typename?: 'SudoIdentity';
+  _id: Scalars['String']['output'];
+  number: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+};
+
+export type SudoIndividual = {
+  __typename?: 'SudoIndividual';
+  _id: Scalars['String']['output'];
+  dob: Scalars['String']['output'];
+  documents: SudoDocuments;
+  firstName: Scalars['String']['output'];
+  identity: SudoIdentity;
+  lastName: Scalars['String']['output'];
+};
+
+export type SudoSingleCardResponse = {
+  __typename?: 'SudoSingleCardResponse';
+  data: SudoCustomerCard;
+  message: Scalars['String']['output'];
+  statusCode: Scalars['Int']['output'];
+};
+
+export type SudoSpendingControls = {
+  __typename?: 'SudoSpendingControls';
+  _id: Scalars['String']['output'];
+  allowedCategories: Array<Maybe<Scalars['String']['output']>>;
+  blockedCategories: Array<Maybe<Scalars['String']['output']>>;
+  channels: SudoChannelControls;
+  spendingLimits: Array<Maybe<SudoSpendingLimit>>;
+};
+
+export type SudoSpendingLimit = {
+  __typename?: 'SudoSpendingLimit';
+  _id: Scalars['String']['output'];
+  amount: Scalars['Float']['output'];
+  categories: Array<Maybe<Scalars['String']['output']>>;
+  interval: Scalars['String']['output'];
+};
+
+export type Task = {
+  __typename?: 'Task';
+  business?: Maybe<Business>;
+  businessId?: Maybe<Scalars['String']['output']>;
+  completed?: Maybe<Scalars['Boolean']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  dateCompleted?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  taskType?: Maybe<TaskType>;
+  taskTypeId?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type TaskType = {
+  __typename?: 'TaskType';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['Float']['output']>;
+  taskType?: Maybe<Scalars['String']['output']>;
 };
 
 export type Token = {
@@ -5381,6 +6276,7 @@ export type UploadMerchantInvoiceToPurchaseResponse = {
 export type User = {
   __typename?: 'User';
   business?: Maybe<Array<Maybe<Business>>>;
+  businessSudoCards?: Maybe<Array<Maybe<BusinessSudoCard>>>;
   code?: Maybe<Scalars['Float']['output']>;
   codeExpiry?: Maybe<Scalars['Date']['output']>;
   createdAt: Scalars['Date']['output'];
@@ -5429,9 +6325,40 @@ export type UserWaitlist = {
   updatedAt: Scalars['Date']['output'];
 };
 
+export type Verification = {
+  __typename?: 'Verification';
+  _id: Scalars['String']['output'];
+  authentication: Scalars['String']['output'];
+  billingAddressLine1: Scalars['String']['output'];
+  billingAddressPostalCode: Scalars['String']['output'];
+  cvv: Scalars['String']['output'];
+  expiry: Scalars['String']['output'];
+  pin: Scalars['String']['output'];
+  safeToken: Scalars['String']['output'];
+  threeDSecure: Scalars['String']['output'];
+};
+
 export type VerificationResponse = {
   __typename?: 'VerificationResponse';
   message?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type VerifyBvn = {
+  number: Scalars['String']['input'];
+  otp: Scalars['String']['input'];
+  otpId: Scalars['String']['input'];
+};
+
+export type ViewAccountStatement = {
+  businessId: Scalars['String']['input'];
+  fromDate?: InputMaybe<Scalars['Date']['input']>;
+  toDate?: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type ViewCardAuthorizations = {
+  cardId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type WaitlistData = {
@@ -5809,6 +6736,25 @@ export type CreateSubscriptionMutationVariables = Exact<{
 
 export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, dateSubscribed: any, validTo: any, business?: { __typename?: 'Business', businessName: string } | null, subscriptionInvoice?: Array<{ __typename?: 'SubscriptionInvoice', invoiceDescription?: string | null, invoiceTotal?: number | null, invoicePaid?: any | null } | null> | null } | null };
 
+export type CreateSudoCardMutationVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  assignedUserId?: InputMaybe<Scalars['String']['input']>;
+  spendingLimits?: InputMaybe<Array<InputMaybe<SudoCardSpendingLimits>> | InputMaybe<SudoCardSpendingLimits>>;
+}>;
+
+
+export type CreateSudoCardMutation = { __typename?: 'Mutation', createSudoCard?: boolean | null };
+
+export type CreateUserInviteMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  fullname: Scalars['String']['input'];
+  roleId: Scalars['String']['input'];
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type CreateUserInviteMutation = { __typename?: 'Mutation', createUserInvite?: { __typename?: 'UserInvite', id: string, fullname?: string | null, email: string, createdAt: any } | null };
+
 export type DeleteProductMutationVariables = Exact<{
   productId: Scalars['String']['input'];
 }>;
@@ -6000,6 +6946,13 @@ export type GetBusinessReceivablesQueryVariables = Exact<{
 
 
 export type GetBusinessReceivablesQuery = { __typename?: 'Query', getBusinessReceivables?: number | null };
+
+export type GetCardsByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetCardsByBusinessQuery = { __typename?: 'Query', getCardsByBusiness?: Array<{ __typename?: 'BusinessSudoCard', id?: string | null, maskedPan?: string | null, createdAt?: any | null, user?: { __typename?: 'User', fullname: string } | null } | null> | null };
 
 export type GetChartOfAccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6315,6 +7268,11 @@ export type GetPurchaseForYearQueryVariables = Exact<{
 
 export type GetPurchaseForYearQuery = { __typename?: 'Query', getPurchaseForYear?: { __typename?: 'GetPurchaseForYearResponse', purchasesThisYear?: number | null, totalPurchaseAmountThisYear?: number | null, percentageIncreaseInPurchaseThisYear?: number | null, pendingPurchasesThisYear?: number | null, totalPendingPurchaseAmountThisYear?: number | null, paidPurchasesThisYear?: number | null, totalPaidPurchaseAmountThisYear?: number | null, percentageIncreaseInPaidPurchasesThisYear?: number | null, percentageIncreaseInPendingPurchasesThisYear?: number | null, monthlyTotalAmounts?: Array<{ __typename?: 'YearPurchaseAmounts', month: string, totalPurchasesAmount?: number | null, totalPaidPurchasesAmount?: number | null, totalPendingPurchasesAmount?: number | null } | null> | null } | null };
 
+export type GetRolesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRolesQuery = { __typename?: 'Query', roles: Array<{ __typename?: 'Role', id: string, roleName: string, roleDescription?: string | null } | null> };
+
 export type GetSaleByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
   cursor?: InputMaybe<Scalars['String']['input']>;
@@ -6459,6 +7417,13 @@ export type GetUserByIdQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', id: string, fullname: string, email: string } };
+
+export type GetUserCardsByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetUserCardsByBusinessQuery = { __typename?: 'Query', getUserCardsByBusiness?: Array<{ __typename?: 'BusinessSudoCard', id?: string | null, maskedPan?: string | null } | null> | null };
 
 export type InvoiceAndExpenseGraphMonthlyQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6615,6 +7580,23 @@ export type SendPurchaseMutationVariables = Exact<{
 
 
 export type SendPurchaseMutation = { __typename?: 'Mutation', sendPurchase?: boolean | null };
+
+export type SetUpBusinessAccountMutationVariables = Exact<{
+  dob: Scalars['Date']['input'];
+  bvn: Scalars['String']['input'];
+  idFrontUrl?: InputMaybe<Scalars['String']['input']>;
+  idBackUrl?: InputMaybe<Scalars['String']['input']>;
+  incorporationCertificateUrl?: InputMaybe<Scalars['String']['input']>;
+  addressVerificationUrl?: InputMaybe<Scalars['String']['input']>;
+  addressLine1: Scalars['String']['input'];
+  addressLine2?: InputMaybe<Scalars['String']['input']>;
+  city: Scalars['String']['input'];
+  state: Scalars['String']['input'];
+  postalCode: Scalars['String']['input'];
+}>;
+
+
+export type SetUpBusinessAccountMutation = { __typename?: 'Mutation', setUpBusinessAccount?: boolean | null };
 
 export type SignUpFromWaitlistMutationVariables = Exact<{
   waitlistId: Scalars['String']['input'];
@@ -6777,6 +7759,45 @@ export type VerificationWithEmailLinkMutationVariables = Exact<{
 
 
 export type VerificationWithEmailLinkMutation = { __typename?: 'Mutation', verificationWithEmailLink?: boolean | null };
+
+export type ViewBusinessAccountQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type ViewBusinessAccountQuery = { __typename?: 'Query', viewBusinessAccount?: { __typename?: 'SafeHavenAccountResponse', statusCode: number, data: { __typename?: 'SafeHavenAccount', accountName: string, accountNumber: string, accountBalance: number } } | null };
+
+export type ViewBusinessCardsQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type ViewBusinessCardsQuery = { __typename?: 'Query', viewBusinessCards?: { __typename?: 'SudoCustomerCardsResponse', statusCode: number, data: Array<{ __typename?: 'SudoCustomerCard', brand: string, maskedPan: string } | null> } | null };
+
+export type ViewCardAuthorizationsQueryVariables = Exact<{
+  cardId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ViewCardAuthorizationsQuery = { __typename?: 'Query', viewCardAuthorizations?: { __typename?: 'CardAuthorizationResponse', statusCode: number, message: string, data: Array<{ __typename?: 'SudoCardAuthorization', amount: number, fee: number, approved: boolean, status: string, currency: string, requestHistory: Array<{ __typename?: 'CardAuthorizationRequestHistory', amount: number, approved: boolean, reason: string }> }> } | null };
+
+export type ViewCardQueryVariables = Exact<{
+  cardId: Scalars['String']['input'];
+}>;
+
+
+export type ViewCardQuery = { __typename?: 'Query', viewCard?: { __typename?: 'SudoSingleCardResponse', statusCode: number, message: string, data: { __typename?: 'SudoCustomerCard', type: string, brand: string, status: string, maskedPan: string, expiryMonth: string, createdAt: string, expiryYear: string, currency: string, account: { __typename?: 'SudoAccount', currentBalance: number, availableBalance: number, updatedAt: string, accountNumber: string, accountName: string }, spendingControls: { __typename?: 'SudoSpendingControls', channels: { __typename?: 'SudoChannelControls', atm: boolean, pos: boolean, web: boolean, mobile: boolean }, spendingLimits: Array<{ __typename?: 'SudoSpendingLimit', interval: string, amount: number } | null> } } } | null };
+
+export type ViewCardTransactionsQueryVariables = Exact<{
+  cardId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ViewCardTransactionsQuery = { __typename?: 'Query', viewCardTransactions?: { __typename?: 'CardTransactionResponse', statusCode: number, message: string, data: Array<{ __typename?: 'CardTransactionData', amount: number, fee: number, vat: number, currency: string, type: string, transactionMetadata: { __typename?: 'CardAuthorizationTransactionMetadata', channel: string, type: string, reference: string } }> } | null };
 
 
 export const CreateBusinessServiceUnitDocument = gql`
@@ -8171,6 +9192,82 @@ export function useCreateSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type CreateSubscriptionMutationHookResult = ReturnType<typeof useCreateSubscriptionMutation>;
 export type CreateSubscriptionMutationResult = Apollo.MutationResult<CreateSubscriptionMutation>;
 export type CreateSubscriptionMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
+export const CreateSudoCardDocument = gql`
+    mutation CreateSudoCard($businessId: String!, $assignedUserId: String, $spendingLimits: [SudoCardSpendingLimits]) {
+  createSudoCard(
+    input: {businessId: $businessId, assignedUserId: $assignedUserId, spendingLimits: $spendingLimits}
+  )
+}
+    `;
+export type CreateSudoCardMutationFn = Apollo.MutationFunction<CreateSudoCardMutation, CreateSudoCardMutationVariables>;
+
+/**
+ * __useCreateSudoCardMutation__
+ *
+ * To run a mutation, you first call `useCreateSudoCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSudoCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSudoCardMutation, { data, loading, error }] = useCreateSudoCardMutation({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      assignedUserId: // value for 'assignedUserId'
+ *      spendingLimits: // value for 'spendingLimits'
+ *   },
+ * });
+ */
+export function useCreateSudoCardMutation(baseOptions?: Apollo.MutationHookOptions<CreateSudoCardMutation, CreateSudoCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSudoCardMutation, CreateSudoCardMutationVariables>(CreateSudoCardDocument, options);
+      }
+export type CreateSudoCardMutationHookResult = ReturnType<typeof useCreateSudoCardMutation>;
+export type CreateSudoCardMutationResult = Apollo.MutationResult<CreateSudoCardMutation>;
+export type CreateSudoCardMutationOptions = Apollo.BaseMutationOptions<CreateSudoCardMutation, CreateSudoCardMutationVariables>;
+export const CreateUserInviteDocument = gql`
+    mutation CreateUserInvite($email: String!, $fullname: String!, $roleId: String!, $businessId: String!) {
+  createUserInvite(
+    input: {email: $email, fullname: $fullname, roleId: $roleId, businessId: $businessId}
+  ) {
+    id
+    fullname
+    email
+    createdAt
+  }
+}
+    `;
+export type CreateUserInviteMutationFn = Apollo.MutationFunction<CreateUserInviteMutation, CreateUserInviteMutationVariables>;
+
+/**
+ * __useCreateUserInviteMutation__
+ *
+ * To run a mutation, you first call `useCreateUserInviteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserInviteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserInviteMutation, { data, loading, error }] = useCreateUserInviteMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      fullname: // value for 'fullname'
+ *      roleId: // value for 'roleId'
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useCreateUserInviteMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserInviteMutation, CreateUserInviteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserInviteMutation, CreateUserInviteMutationVariables>(CreateUserInviteDocument, options);
+      }
+export type CreateUserInviteMutationHookResult = ReturnType<typeof useCreateUserInviteMutation>;
+export type CreateUserInviteMutationResult = Apollo.MutationResult<CreateUserInviteMutation>;
+export type CreateUserInviteMutationOptions = Apollo.BaseMutationOptions<CreateUserInviteMutation, CreateUserInviteMutationVariables>;
 export const DeleteProductDocument = gql`
     mutation DeleteProduct($productId: String!) {
   deleteProduct(productId: $productId)
@@ -9374,6 +10471,51 @@ export type GetBusinessReceivablesQueryHookResult = ReturnType<typeof useGetBusi
 export type GetBusinessReceivablesLazyQueryHookResult = ReturnType<typeof useGetBusinessReceivablesLazyQuery>;
 export type GetBusinessReceivablesSuspenseQueryHookResult = ReturnType<typeof useGetBusinessReceivablesSuspenseQuery>;
 export type GetBusinessReceivablesQueryResult = Apollo.QueryResult<GetBusinessReceivablesQuery, GetBusinessReceivablesQueryVariables>;
+export const GetCardsByBusinessDocument = gql`
+    query GetCardsByBusiness($businessId: String!) {
+  getCardsByBusiness(businessId: $businessId) {
+    id
+    maskedPan
+    user {
+      fullname
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetCardsByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetCardsByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCardsByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCardsByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetCardsByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetCardsByBusinessQuery, GetCardsByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCardsByBusinessQuery, GetCardsByBusinessQueryVariables>(GetCardsByBusinessDocument, options);
+      }
+export function useGetCardsByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCardsByBusinessQuery, GetCardsByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCardsByBusinessQuery, GetCardsByBusinessQueryVariables>(GetCardsByBusinessDocument, options);
+        }
+export function useGetCardsByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCardsByBusinessQuery, GetCardsByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCardsByBusinessQuery, GetCardsByBusinessQueryVariables>(GetCardsByBusinessDocument, options);
+        }
+export type GetCardsByBusinessQueryHookResult = ReturnType<typeof useGetCardsByBusinessQuery>;
+export type GetCardsByBusinessLazyQueryHookResult = ReturnType<typeof useGetCardsByBusinessLazyQuery>;
+export type GetCardsByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetCardsByBusinessSuspenseQuery>;
+export type GetCardsByBusinessQueryResult = Apollo.QueryResult<GetCardsByBusinessQuery, GetCardsByBusinessQueryVariables>;
 export const GetChartOfAccountsDocument = gql`
     query GetChartOfAccounts {
   getChartOfAccounts {
@@ -11598,6 +12740,47 @@ export type GetPurchaseForYearQueryHookResult = ReturnType<typeof useGetPurchase
 export type GetPurchaseForYearLazyQueryHookResult = ReturnType<typeof useGetPurchaseForYearLazyQuery>;
 export type GetPurchaseForYearSuspenseQueryHookResult = ReturnType<typeof useGetPurchaseForYearSuspenseQuery>;
 export type GetPurchaseForYearQueryResult = Apollo.QueryResult<GetPurchaseForYearQuery, GetPurchaseForYearQueryVariables>;
+export const GetRolesDocument = gql`
+    query GetRoles {
+  roles {
+    id
+    roleName
+    roleDescription
+  }
+}
+    `;
+
+/**
+ * __useGetRolesQuery__
+ *
+ * To run a query within a React component, call `useGetRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRolesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetRolesQuery(baseOptions?: Apollo.QueryHookOptions<GetRolesQuery, GetRolesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRolesQuery, GetRolesQueryVariables>(GetRolesDocument, options);
+      }
+export function useGetRolesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRolesQuery, GetRolesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRolesQuery, GetRolesQueryVariables>(GetRolesDocument, options);
+        }
+export function useGetRolesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetRolesQuery, GetRolesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRolesQuery, GetRolesQueryVariables>(GetRolesDocument, options);
+        }
+export type GetRolesQueryHookResult = ReturnType<typeof useGetRolesQuery>;
+export type GetRolesLazyQueryHookResult = ReturnType<typeof useGetRolesLazyQuery>;
+export type GetRolesSuspenseQueryHookResult = ReturnType<typeof useGetRolesSuspenseQuery>;
+export type GetRolesQueryResult = Apollo.QueryResult<GetRolesQuery, GetRolesQueryVariables>;
 export const GetSaleByBusinessDocument = gql`
     query GetSaleByBusiness($businessId: String!, $cursor: String, $sets: Float) {
   getSaleByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
@@ -12671,6 +13854,47 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
+export const GetUserCardsByBusinessDocument = gql`
+    query GetUserCardsByBusiness($businessId: String!) {
+  getUserCardsByBusiness(businessId: $businessId) {
+    id
+    maskedPan
+  }
+}
+    `;
+
+/**
+ * __useGetUserCardsByBusinessQuery__
+ *
+ * To run a query within a React component, call `useGetUserCardsByBusinessQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserCardsByBusinessQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserCardsByBusinessQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetUserCardsByBusinessQuery(baseOptions: Apollo.QueryHookOptions<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>(GetUserCardsByBusinessDocument, options);
+      }
+export function useGetUserCardsByBusinessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>(GetUserCardsByBusinessDocument, options);
+        }
+export function useGetUserCardsByBusinessSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>(GetUserCardsByBusinessDocument, options);
+        }
+export type GetUserCardsByBusinessQueryHookResult = ReturnType<typeof useGetUserCardsByBusinessQuery>;
+export type GetUserCardsByBusinessLazyQueryHookResult = ReturnType<typeof useGetUserCardsByBusinessLazyQuery>;
+export type GetUserCardsByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetUserCardsByBusinessSuspenseQuery>;
+export type GetUserCardsByBusinessQueryResult = Apollo.QueryResult<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>;
 export const InvoiceAndExpenseGraphMonthlyDocument = gql`
     query InvoiceAndExpenseGraphMonthly($businessId: String!, $monthly: Boolean) {
   invoiceAndExpenseGraphMonthly(businessId: $businessId, monthly: $monthly) {
@@ -13414,6 +14638,49 @@ export function useSendPurchaseMutation(baseOptions?: Apollo.MutationHookOptions
 export type SendPurchaseMutationHookResult = ReturnType<typeof useSendPurchaseMutation>;
 export type SendPurchaseMutationResult = Apollo.MutationResult<SendPurchaseMutation>;
 export type SendPurchaseMutationOptions = Apollo.BaseMutationOptions<SendPurchaseMutation, SendPurchaseMutationVariables>;
+export const SetUpBusinessAccountDocument = gql`
+    mutation SetUpBusinessAccount($dob: Date!, $bvn: String!, $idFrontUrl: String, $idBackUrl: String, $incorporationCertificateUrl: String, $addressVerificationUrl: String, $addressLine1: String!, $addressLine2: String, $city: String!, $state: String!, $postalCode: String!) {
+  setUpBusinessAccount(
+    input: {dob: $dob, bvn: $bvn, idFrontUrl: $idFrontUrl, idBackUrl: $idBackUrl, incorporationCertificateUrl: $incorporationCertificateUrl, addressVerificationUrl: $addressVerificationUrl, addressLine1: $addressLine1, addressLine2: $addressLine2, city: $city, state: $state, postalCode: $postalCode}
+  )
+}
+    `;
+export type SetUpBusinessAccountMutationFn = Apollo.MutationFunction<SetUpBusinessAccountMutation, SetUpBusinessAccountMutationVariables>;
+
+/**
+ * __useSetUpBusinessAccountMutation__
+ *
+ * To run a mutation, you first call `useSetUpBusinessAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetUpBusinessAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setUpBusinessAccountMutation, { data, loading, error }] = useSetUpBusinessAccountMutation({
+ *   variables: {
+ *      dob: // value for 'dob'
+ *      bvn: // value for 'bvn'
+ *      idFrontUrl: // value for 'idFrontUrl'
+ *      idBackUrl: // value for 'idBackUrl'
+ *      incorporationCertificateUrl: // value for 'incorporationCertificateUrl'
+ *      addressVerificationUrl: // value for 'addressVerificationUrl'
+ *      addressLine1: // value for 'addressLine1'
+ *      addressLine2: // value for 'addressLine2'
+ *      city: // value for 'city'
+ *      state: // value for 'state'
+ *      postalCode: // value for 'postalCode'
+ *   },
+ * });
+ */
+export function useSetUpBusinessAccountMutation(baseOptions?: Apollo.MutationHookOptions<SetUpBusinessAccountMutation, SetUpBusinessAccountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetUpBusinessAccountMutation, SetUpBusinessAccountMutationVariables>(SetUpBusinessAccountDocument, options);
+      }
+export type SetUpBusinessAccountMutationHookResult = ReturnType<typeof useSetUpBusinessAccountMutation>;
+export type SetUpBusinessAccountMutationResult = Apollo.MutationResult<SetUpBusinessAccountMutation>;
+export type SetUpBusinessAccountMutationOptions = Apollo.BaseMutationOptions<SetUpBusinessAccountMutation, SetUpBusinessAccountMutationVariables>;
 export const SignUpFromWaitlistDocument = gql`
     mutation SignUpFromWaitlist($waitlistId: String!, $password: String!) {
   signupFromWaitlist(waitlistId: $waitlistId, password: $password) {
@@ -14072,3 +15339,274 @@ export function useVerificationWithEmailLinkMutation(baseOptions?: Apollo.Mutati
 export type VerificationWithEmailLinkMutationHookResult = ReturnType<typeof useVerificationWithEmailLinkMutation>;
 export type VerificationWithEmailLinkMutationResult = Apollo.MutationResult<VerificationWithEmailLinkMutation>;
 export type VerificationWithEmailLinkMutationOptions = Apollo.BaseMutationOptions<VerificationWithEmailLinkMutation, VerificationWithEmailLinkMutationVariables>;
+export const ViewBusinessAccountDocument = gql`
+    query ViewBusinessAccount($businessId: String!) {
+  viewBusinessAccount(businessId: $businessId) {
+    statusCode
+    data {
+      accountName
+      accountNumber
+      accountBalance
+    }
+  }
+}
+    `;
+
+/**
+ * __useViewBusinessAccountQuery__
+ *
+ * To run a query within a React component, call `useViewBusinessAccountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useViewBusinessAccountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useViewBusinessAccountQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useViewBusinessAccountQuery(baseOptions: Apollo.QueryHookOptions<ViewBusinessAccountQuery, ViewBusinessAccountQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ViewBusinessAccountQuery, ViewBusinessAccountQueryVariables>(ViewBusinessAccountDocument, options);
+      }
+export function useViewBusinessAccountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ViewBusinessAccountQuery, ViewBusinessAccountQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ViewBusinessAccountQuery, ViewBusinessAccountQueryVariables>(ViewBusinessAccountDocument, options);
+        }
+export function useViewBusinessAccountSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ViewBusinessAccountQuery, ViewBusinessAccountQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ViewBusinessAccountQuery, ViewBusinessAccountQueryVariables>(ViewBusinessAccountDocument, options);
+        }
+export type ViewBusinessAccountQueryHookResult = ReturnType<typeof useViewBusinessAccountQuery>;
+export type ViewBusinessAccountLazyQueryHookResult = ReturnType<typeof useViewBusinessAccountLazyQuery>;
+export type ViewBusinessAccountSuspenseQueryHookResult = ReturnType<typeof useViewBusinessAccountSuspenseQuery>;
+export type ViewBusinessAccountQueryResult = Apollo.QueryResult<ViewBusinessAccountQuery, ViewBusinessAccountQueryVariables>;
+export const ViewBusinessCardsDocument = gql`
+    query ViewBusinessCards($businessId: String!) {
+  viewBusinessCards(businessId: $businessId) {
+    statusCode
+    data {
+      brand
+      maskedPan
+    }
+  }
+}
+    `;
+
+/**
+ * __useViewBusinessCardsQuery__
+ *
+ * To run a query within a React component, call `useViewBusinessCardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useViewBusinessCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useViewBusinessCardsQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useViewBusinessCardsQuery(baseOptions: Apollo.QueryHookOptions<ViewBusinessCardsQuery, ViewBusinessCardsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ViewBusinessCardsQuery, ViewBusinessCardsQueryVariables>(ViewBusinessCardsDocument, options);
+      }
+export function useViewBusinessCardsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ViewBusinessCardsQuery, ViewBusinessCardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ViewBusinessCardsQuery, ViewBusinessCardsQueryVariables>(ViewBusinessCardsDocument, options);
+        }
+export function useViewBusinessCardsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ViewBusinessCardsQuery, ViewBusinessCardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ViewBusinessCardsQuery, ViewBusinessCardsQueryVariables>(ViewBusinessCardsDocument, options);
+        }
+export type ViewBusinessCardsQueryHookResult = ReturnType<typeof useViewBusinessCardsQuery>;
+export type ViewBusinessCardsLazyQueryHookResult = ReturnType<typeof useViewBusinessCardsLazyQuery>;
+export type ViewBusinessCardsSuspenseQueryHookResult = ReturnType<typeof useViewBusinessCardsSuspenseQuery>;
+export type ViewBusinessCardsQueryResult = Apollo.QueryResult<ViewBusinessCardsQuery, ViewBusinessCardsQueryVariables>;
+export const ViewCardAuthorizationsDocument = gql`
+    query ViewCardAuthorizations($cardId: String!, $page: Int, $limit: Int) {
+  viewCardAuthorizations(input: {cardId: $cardId, page: $page, limit: $limit}) {
+    statusCode
+    message
+    data {
+      amount
+      fee
+      approved
+      status
+      currency
+      requestHistory {
+        amount
+        approved
+        reason
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useViewCardAuthorizationsQuery__
+ *
+ * To run a query within a React component, call `useViewCardAuthorizationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useViewCardAuthorizationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useViewCardAuthorizationsQuery({
+ *   variables: {
+ *      cardId: // value for 'cardId'
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useViewCardAuthorizationsQuery(baseOptions: Apollo.QueryHookOptions<ViewCardAuthorizationsQuery, ViewCardAuthorizationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ViewCardAuthorizationsQuery, ViewCardAuthorizationsQueryVariables>(ViewCardAuthorizationsDocument, options);
+      }
+export function useViewCardAuthorizationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ViewCardAuthorizationsQuery, ViewCardAuthorizationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ViewCardAuthorizationsQuery, ViewCardAuthorizationsQueryVariables>(ViewCardAuthorizationsDocument, options);
+        }
+export function useViewCardAuthorizationsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ViewCardAuthorizationsQuery, ViewCardAuthorizationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ViewCardAuthorizationsQuery, ViewCardAuthorizationsQueryVariables>(ViewCardAuthorizationsDocument, options);
+        }
+export type ViewCardAuthorizationsQueryHookResult = ReturnType<typeof useViewCardAuthorizationsQuery>;
+export type ViewCardAuthorizationsLazyQueryHookResult = ReturnType<typeof useViewCardAuthorizationsLazyQuery>;
+export type ViewCardAuthorizationsSuspenseQueryHookResult = ReturnType<typeof useViewCardAuthorizationsSuspenseQuery>;
+export type ViewCardAuthorizationsQueryResult = Apollo.QueryResult<ViewCardAuthorizationsQuery, ViewCardAuthorizationsQueryVariables>;
+export const ViewCardDocument = gql`
+    query ViewCard($cardId: String!) {
+  viewCard(cardId: $cardId) {
+    statusCode
+    message
+    data {
+      type
+      brand
+      status
+      account {
+        currentBalance
+        availableBalance
+        updatedAt
+      }
+      maskedPan
+      expiryMonth
+      createdAt
+      expiryYear
+      spendingControls {
+        channels {
+          atm
+          pos
+          web
+          mobile
+        }
+        spendingLimits {
+          interval
+          amount
+        }
+      }
+      currency
+      account {
+        accountNumber
+        accountName
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useViewCardQuery__
+ *
+ * To run a query within a React component, call `useViewCardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useViewCardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useViewCardQuery({
+ *   variables: {
+ *      cardId: // value for 'cardId'
+ *   },
+ * });
+ */
+export function useViewCardQuery(baseOptions: Apollo.QueryHookOptions<ViewCardQuery, ViewCardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ViewCardQuery, ViewCardQueryVariables>(ViewCardDocument, options);
+      }
+export function useViewCardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ViewCardQuery, ViewCardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ViewCardQuery, ViewCardQueryVariables>(ViewCardDocument, options);
+        }
+export function useViewCardSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ViewCardQuery, ViewCardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ViewCardQuery, ViewCardQueryVariables>(ViewCardDocument, options);
+        }
+export type ViewCardQueryHookResult = ReturnType<typeof useViewCardQuery>;
+export type ViewCardLazyQueryHookResult = ReturnType<typeof useViewCardLazyQuery>;
+export type ViewCardSuspenseQueryHookResult = ReturnType<typeof useViewCardSuspenseQuery>;
+export type ViewCardQueryResult = Apollo.QueryResult<ViewCardQuery, ViewCardQueryVariables>;
+export const ViewCardTransactionsDocument = gql`
+    query ViewCardTransactions($cardId: String!, $page: Int, $limit: Int) {
+  viewCardTransactions(input: {cardId: $cardId, page: $page, limit: $limit}) {
+    statusCode
+    message
+    data {
+      amount
+      fee
+      vat
+      currency
+      type
+      transactionMetadata {
+        channel
+        type
+        reference
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useViewCardTransactionsQuery__
+ *
+ * To run a query within a React component, call `useViewCardTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useViewCardTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useViewCardTransactionsQuery({
+ *   variables: {
+ *      cardId: // value for 'cardId'
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useViewCardTransactionsQuery(baseOptions: Apollo.QueryHookOptions<ViewCardTransactionsQuery, ViewCardTransactionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ViewCardTransactionsQuery, ViewCardTransactionsQueryVariables>(ViewCardTransactionsDocument, options);
+      }
+export function useViewCardTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ViewCardTransactionsQuery, ViewCardTransactionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ViewCardTransactionsQuery, ViewCardTransactionsQueryVariables>(ViewCardTransactionsDocument, options);
+        }
+export function useViewCardTransactionsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ViewCardTransactionsQuery, ViewCardTransactionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ViewCardTransactionsQuery, ViewCardTransactionsQueryVariables>(ViewCardTransactionsDocument, options);
+        }
+export type ViewCardTransactionsQueryHookResult = ReturnType<typeof useViewCardTransactionsQuery>;
+export type ViewCardTransactionsLazyQueryHookResult = ReturnType<typeof useViewCardTransactionsLazyQuery>;
+export type ViewCardTransactionsSuspenseQueryHookResult = ReturnType<typeof useViewCardTransactionsSuspenseQuery>;
+export type ViewCardTransactionsQueryResult = Apollo.QueryResult<ViewCardTransactionsQuery, ViewCardTransactionsQueryVariables>;
