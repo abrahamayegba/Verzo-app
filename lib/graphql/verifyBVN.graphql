@@ -1,0 +1,14 @@
+mutation VerifyBvn($otp: String!, $identityId: String!) {
+  verifyBVN(input: { otp: $otp, identityId: $identityId }) {
+    statusCode
+    message
+    data {
+      providerResponse {
+        firstName
+        lastName
+        middleName
+        gender
+      }
+    }
+  }
+}

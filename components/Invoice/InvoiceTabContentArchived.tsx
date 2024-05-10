@@ -128,7 +128,15 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {invoice?.transactionDate
-                  ? new Date(invoice.transactionDate).toDateString()
+                  ? new Date(invoice.transactionDate).toLocaleDateString(
+                      "en-US",
+                      {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )
                   : ""}
               </TableCell>
               <TableCell>

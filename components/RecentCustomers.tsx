@@ -63,21 +63,15 @@ const RecentCustomers = () => {
                 <p>{customer?.name}</p>
                 <p className="text-primary-greytext">
                   {customer?.createdAt
-                    ? new Date(customer.createdAt).toDateString()
+                    ? new Date(customer.createdAt).toLocaleDateString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
                     : ""}
                 </p>
                 <p className="text-primary-greytext">{customer?.email}</p>
-                {/* <DropdownMenu>
-                  <DropdownMenuTrigger className=" focus:outline-none">
-                    <MoreHorizontal className=" text-[#c4c4c4]" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px] ml-1">
-                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
-                      <Eye className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      View Customer
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu> */}
               </div>
             ))}
           </div>

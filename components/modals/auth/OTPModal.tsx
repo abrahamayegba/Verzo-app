@@ -10,22 +10,26 @@ import { useToast } from "@/app/hooks/use-toast";
 
 interface OTPProps {
   open: boolean;
+  hasBusiness: boolean;
   openModal: () => void;
   onClose: () => void;
 }
 
-const OTPModal: React.FC<OTPProps> = ({ open, openModal, onClose }) => {
+const OTPModal: React.FC<OTPProps> = ({
+  open,
+  openModal,
+  onClose,
+  hasBusiness,
+}) => {
   const [codes, setCodes] = useState(["", "", "", ""]);
   const { toast } = useToast();
 
   const inputRefs = useRef<HTMLInputElement[]>([]);
-
   const handleChange = (index: number, value: string) => {
     const newCodes = [...codes];
     newCodes[index] = value;
 
     if (index < codes.length - 1 && value !== "") {
-      // Move focus to the next input
       inputRefs.current[index + 1].focus();
     }
 
@@ -60,7 +64,11 @@ const OTPModal: React.FC<OTPProps> = ({ open, openModal, onClose }) => {
           code: combinedCode,
         },
       });
-      router.push("/auth/businesssetup");
+      if (hasBusiness) {
+        router.push("/dashboard");
+      } else {
+        router.push("/auth/businesssetup");
+      }
       onClose();
       setCodes(["", "", "", ""]);
     } catch (error: any) {

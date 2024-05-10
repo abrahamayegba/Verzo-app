@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
-import { ChevronDown, Eye, MoveLeft } from "lucide-react";
+import { ChevronDown, Eye, MoveLeft, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as filestack from "filestack-js";
 import localStorage from "local-storage-fallback";
 import MainLoader from "@/components/loading/MainLoader";
@@ -26,7 +26,17 @@ import {
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
   useMakePurchasePaymentMutation,
+  useViewBusinessAccountStatementQuery,
 } from "@/src/generated/graphql";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { IoReceiptOutline } from "react-icons/io5";
+import { IoIosLink } from "react-icons/io";
+import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
 
 interface UploadedFile {
   filename: string;
@@ -48,6 +58,13 @@ const AddPurchasePayment = () => {
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
   const router = useRouter();
+  const [selectedTransaction, setSelectedTransaction] = useState("");
+  const [transactionId, setTransactionId] = useState("");
+  const [transactionAmount, setTransactionAmount] = useState(0);
+  const [transactionDate, setTransactionDate] = useState("");
+  const [transactionReference, setTransactionReference] = useState("");
+  const [transactionNarration, setTransactionNarration] = useState("");
+  const [selectedTab, setSelectedTab] = useState(1);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [date, setDate] = React.useState<Date>();
@@ -61,6 +78,42 @@ const AddPurchasePayment = () => {
       purchaseId: purchaseId!,
     },
   });
+  const { data } = useViewBusinessAccountStatementQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const transactions = data?.viewBusinessAccountStatement;
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredTransactions, setFilteredTransactions] =
+    useState(transactions);
+  useEffect(() => {
+    setFilteredTransactions(transactions);
+  }, [transactions]);
+  const [openTransactionsModal, setOpenTransactionsModal] = useState(false);
+  const handleSearchChange = (e: any) => {
+    setSearchQuery(e.target.value);
+    filterTransactions(e.target.value);
+  };
+
+  const filterTransactions = (query: string) => {
+    const filtered = transactions?.filter(
+      (transaction) =>
+        transaction?.narration.toLowerCase().includes(query.toLowerCase()) ||
+        new Date(transaction?.transactionDate)
+          .toLocaleString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+          })
+          .toLowerCase()
+          .includes(query.toLowerCase())
+    );
+    setFilteredTransactions(filtered);
+  };
+
   const purchase = getPurchaseById?.data?.getPurchaseById;
   const purchaseStatusId = purchase?.purchaseStatusId;
   const itemsConfirmed = true;
@@ -92,6 +145,25 @@ const AddPurchasePayment = () => {
       description: error,
       duration: 3000,
     });
+  };
+  const handleTransactionSelect = (transaction: any) => {
+    setOpenTransactionsModal(false);
+    setTransactionId(transaction?.id);
+    setSelectedTransaction(transaction);
+    setTransactionAmount(transaction.amount);
+    setTransactionDate(transaction.transactionDate);
+    const transactionDate = new Date(transaction.transactionDate);
+    const transactionDateWithoutTime = new Date(
+      transactionDate.getFullYear(),
+      transactionDate.getMonth(),
+      transactionDate.getDate()
+    );
+    setDate(transactionDateWithoutTime);
+    setTransactionReference(transaction.paymentReference);
+    setTransactionNarration(transaction.narration);
+  };
+  const handleTabClick = (tabNumber: number) => {
+    setSelectedTab(tabNumber);
   };
   const showSuccessToast = () => {
     toast({
@@ -137,9 +209,7 @@ const AddPurchasePayment = () => {
     picker.open();
     setIsPickerOpen(true);
   };
-  const handleCloseViewPurchaseSheet = () => {
-    setOpenViewPurchaseSheet(false);
-  };
+
   const formattedPurchaseDate = date
     ? format(date, "yyyy-MM-dd")
     : "Pick a date";
@@ -153,11 +223,16 @@ const AddPurchasePayment = () => {
       showDateFailureToast("Please pick a date and try again.");
       return;
     }
+    if (!transactionId && selectedTab === 2) {
+      showDateFailureToast("Select a transaction and try again");
+      return;
+    }
     try {
       await makePurchasePaymentMutation({
         variables: {
           purchaseId: purchaseId!,
           businessId: businessId,
+          sudoTransactionId: selectedTab === 2 ? transactionId : null,
           file: uploadedFiles[0]?.url || null,
           transactionDate: formattedPurchaseDate,
           total: amount!,
@@ -193,9 +268,11 @@ const AddPurchasePayment = () => {
             </button>
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
-            <p className=" text-[30px] text-primary-black ">Purchase #001 </p>
+            <p className=" text-[28px] text-primary-black ">
+              Purchase #{purchase?.reference}{" "}
+            </p>
             <p className=" text-primary-greytext font-light text-lg">
-              Add extra information to the purchase
+              Record the payment process for this purchase
             </p>
           </div>
           <div className=" flex gap-x-4">
@@ -231,9 +308,11 @@ const AddPurchasePayment = () => {
                 <Image src="/preview.png" width={80} height={80} alt="image" />
               </div>
               <div className=" flex flex-col">
-                <p className=" text-xl text-primary-black">Purchase #001</p>
+                <p className=" text-xl text-primary-black">
+                  Purchase #{purchase?.reference}
+                </p>
                 <p className=" text-lg text-primary-greytext font-light">
-                  Short description about the purchase
+                  {purchase?.description}
                 </p>
               </div>
             </div>
@@ -246,52 +325,252 @@ const AddPurchasePayment = () => {
               <Eye className=" w-5 h-5" />
             </button>
           </div>
-          <div className=" flex flex-col mt-[20px] gap-y-9">
-            <div className=" flex flex-col gap-y-1 ">
-              <p className=" text-lg text-primary-black">
-                Upload payment receipt
-              </p>
-              <p className=" text-sm text-primary-greytext">
-                Supported formats: PNG, JPG & JPEG
-              </p>
-            </div>
-            <div>
+          <div>
+            <div className="flex mb-4 gap-x-4">
               <button
                 type="button"
-                onClick={openPicker}
-                className={`border items-center flex-col gap-y-3 cursor-pointer justify-center flex border-dashed  border-gray-300 rounded-[8px] w-full h-[130px] ${
-                  uploadedFiles[0] ? "bg-[#F9FCFF]" : "bg-transparent"
+                className={`px-4 focus:outline-none rounded-md py-5 border-gray-300 flex flex-row items-center gap-x-2 ${
+                  selectedTab === 1
+                    ? "border-primary-blue border-[1.5px] bg-blue-50 text-primary-blue font-medium bg-primary-blue-light"
+                    : "text-gray-500 border"
                 }`}
+                onClick={() => handleTabClick(1)}
               >
-                {uploadedFiles[0] ? (
-                  <p>
-                    <a
-                      href={uploadedFiles[0]?.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {uploadedFiles[0]?.filename}
-                    </a>
-                    <span
-                      onClick={() => setUploadedFiles([])}
-                      className=" text-primary-red underline underline-offset-2 ml-2"
-                    >
-                      Remove file
-                    </span>
-                  </p>
-                ) : (
-                  <div className=" flex items-center justify-center flex-col gap-y-2">
-                    <FileIcon />
-                    <p>
-                      Drag and Drop or
-                      <span className="text-primary-blue underline underline-offset-2 ml-1">
-                        Upload file
-                      </span>
-                    </p>
-                  </div>
-                )}
+                <IoReceiptOutline
+                  className={`${
+                    selectedTab === 1 ? " text-primary-blue" : " text-gray-500"
+                  }`}
+                />
+                <span>Add Payment Receipt</span>
+                <input
+                  type="radio"
+                  className="form-radio h-[18px] w-[18px] ml-3 text-primary-blue-light focus:ring-primary-blue"
+                  checked={selectedTab === 1}
+                  onChange={() => handleTabClick(1)}
+                />
+              </button>
+              <button
+                type="button"
+                className={`rounded-md py-5 border-gray-300 px-7 focus:outline-none flex flex-row items-center gap-x-2 ${
+                  selectedTab === 2
+                    ? " border-primary-blue bg-blue-50 border-[1.5px] text-primary-blue font-medium bg-primary-blue-light"
+                    : "text-gray-500 border"
+                }`}
+                onClick={() => handleTabClick(2)}
+              >
+                <IoIosLink
+                  className={`${
+                    selectedTab === 2 ? " text-primary-blue" : " text-gray-500"
+                  }`}
+                />
+                <span>Link Transaction</span>
+                <input
+                  type="radio"
+                  className="form-radio h-[18px] w-[18px] ml-3 text-primary-blue-light focus:ring-primary-blue"
+                  checked={selectedTab === 2}
+                  onChange={() => handleTabClick(2)}
+                />
               </button>
             </div>
+            {selectedTab === 1 && (
+              <>
+                <div className=" flex flex-col mt-[20px] gap-y-4">
+                  <div className=" flex flex-col gap-y-1 ">
+                    <p className=" text-lg text-primary-black">
+                      Upload payment receipt{" "}
+                      <span className=" text-gray-500 text-[15px]">
+                        (optional)
+                      </span>
+                    </p>
+                    <p className=" text-sm text-primary-greytext">
+                      Supported formats: PNG, JPG & JPEG
+                    </p>
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={openPicker}
+                      className={`border items-center flex-col gap-y-3 cursor-pointer justify-center flex border-dashed  border-gray-300 rounded-[8px] w-full h-[130px] ${
+                        uploadedFiles[0] ? "bg-[#F9FCFF]" : "bg-transparent"
+                      }`}
+                    >
+                      {uploadedFiles[0] ? (
+                        <p>
+                          <a
+                            href={uploadedFiles[0]?.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {uploadedFiles[0]?.filename}
+                          </a>
+                          <span
+                            onClick={() => setUploadedFiles([])}
+                            className=" text-primary-red underline underline-offset-2 ml-2"
+                          >
+                            Remove file
+                          </span>
+                        </p>
+                      ) : (
+                        <div className=" flex items-center justify-center flex-col gap-y-2">
+                          <FileIcon />
+                          <p>
+                            Drag and Drop or
+                            <span className="text-primary-blue underline underline-offset-2 ml-1">
+                              Upload file
+                            </span>
+                          </p>
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+            {selectedTab === 2 && (
+              <div className=" flex flex-col mt-[20px] gap-y-2">
+                <p className=" text-lg text-primary-black">Link transaction</p>
+                <AlertDialog
+                  open={openTransactionsModal}
+                  onOpenChange={setOpenTransactionsModal}
+                >
+                  <button
+                    onClick={() => setOpenTransactionsModal(true)}
+                    type="button"
+                    className=" text-white bg-primary-blue rounded-md py-[12px] px-6 max-w-[500px]"
+                  >
+                    Select transaction
+                  </button>
+                  <AlertDialogContent className="w-[600px] shadow transition-all pt-5 pb-6 px-0">
+                    <div className="flex w-[598px] flex-col items-center justify-start">
+                      <div className="border-b border-b-gray-200 w-full pb-3">
+                        <div className="flex flex-col gap-y-5 w-full px-6">
+                          <div className="flex w-full justify-between">
+                            <p className="font-medium text-xl text-gray-700">
+                              Select the matching transaction
+                            </p>
+                            <button
+                              onClick={() => setOpenTransactionsModal(false)}
+                              className="p-1.5 bg-blue-100 rounded-full"
+                            >
+                              <X className="w-[17px] h-[17px] text-gray-700 stroke-[2.5px]" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="w-full flex flex-col gap-y-1 px-6">
+                        {filterTransactions.length > 0 ? (
+                          <>
+                            <div className="mt-7">
+                              <div className="relative">
+                                <input
+                                  className="w-full rounded-md py-2 placeholder:text-[15px] px-3 pl-10 border border-gray-200 bg-gray-50"
+                                  type="text"
+                                  placeholder="Search for a transaction.."
+                                  value={searchQuery}
+                                  onChange={handleSearchChange}
+                                />
+                                <Search className="absolute top-0 left-0 mt-3 ml-3 h-5 w-5 text-gray-400 pointer-events-none" />
+                              </div>
+                              <div className=" h-[320px] mt-1 flex flex-col overflow-y-scroll gap-y-1">
+                                {filteredTransactions?.map(
+                                  (transaction) =>
+                                    transaction?.type === "Credit" && (
+                                      <button
+                                        className=" flex flex-row gap-x-5 justify-between text-start items-start border-b border-b-gray-200 py-2 px-1 hover:bg-gray-100 cursor-pointer"
+                                        key={transaction?.id}
+                                        onClick={() =>
+                                          handleTransactionSelect(transaction)
+                                        }
+                                      >
+                                        <div className=" flex flex-col gap-y-1">
+                                          <p className=" font-medium text-gray-700">
+                                            {transaction?.narration}
+                                          </p>
+                                          <p className=" text-gray-600 text-sm font-light">
+                                            {new Date(
+                                              transaction?.transactionDate
+                                            ).toLocaleString("en-US", {
+                                              year: "numeric",
+                                              month: "short",
+                                              day: "numeric",
+                                              hour: "numeric",
+                                              minute: "numeric",
+                                            })}
+                                          </p>
+                                        </div>
+                                        <p className=" font-medium mt-1 text-[18px] text-gray-800">
+                                          {transaction?.amount?.toLocaleString(
+                                            "en-NG",
+                                            {
+                                              style: "currency",
+                                              currency: "NGN",
+                                            }
+                                          )}
+                                        </p>
+                                      </button>
+                                    )
+                                )}
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-center">
+                            <h3 className=" font-medium text-gray-700 pt-5">
+                              No transactions
+                            </h3>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </AlertDialogContent>
+                </AlertDialog>
+                {selectedTransaction && (
+                  <div className="mt-4 flex flex-col gap-y-4 w-[500px]">
+                    <div>
+                      <label className="block text-gray-800 mb-2">
+                        Transaction amount
+                      </label>
+                      <p className="border border-gray-100 bg-gray-50 cursor-not-allowed rounded-md px-3 py-2 w-full">
+                        {transactionAmount.toLocaleString("en-NG", {
+                          style: "currency",
+                          currency: "NGN",
+                        })}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-gray-800 mb-2">
+                        Transaction date
+                      </label>
+                      <p className="border border-gray-100 bg-gray-50 cursor-not-allowed rounded-md px-3 py-2 w-full">
+                        {new Date(transactionDate).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                        })}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-gray-800 mb-2">
+                        Transaction reference
+                      </label>
+                      <p className="border border-gray-100 bg-gray-50 cursor-not-allowed rounded-md px-3 py-2 w-full">
+                        {transactionReference}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-gray-800 mb-2">
+                        Transaction narration
+                      </label>
+                      <p className="border border-gray-100 bg-gray-50 cursor-not-allowed rounded-md px-3 py-2 w-full">
+                        {transactionNarration}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <div className=" flex flex-col gap-y-4 mt-[20px]">
             <p>Details</p>
@@ -307,12 +586,12 @@ const AddPurchasePayment = () => {
                     disabled={purchaseStatusId! >= 4}
                     asChild
                   >
-                    <button className=" text-left text-sm font-normal bg-white flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                    <button className=" text-left text-base font-normal bg-white flex items-center border border-gray-200 h-[45px] px-3 rounded-[8px]">
                       {date ? (
                         format(date, "PPP")
                       ) : (
                         <div className=" justify-between flex items-center w-full">
-                          <span className=" text-sm">Pick a date</span>
+                          <span className=" text-base">Pick a date</span>
                           <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                         </div>
                       )}
@@ -333,7 +612,7 @@ const AddPurchasePayment = () => {
               </div>
               <div className="text-primary-greytext flex flex-col gap-y-2 w-1/2">
                 <p>Amount</p>
-                <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
+                <p className="border cursor-not-allowed text-gray-70 text-[18px] border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
                   ₦{amount?.toLocaleString()}
                 </p>
               </div>

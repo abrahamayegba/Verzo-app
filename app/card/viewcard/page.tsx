@@ -1,154 +1,66 @@
 "use client";
 import MainLoader from "@/components/loading/MainLoader";
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CardChipIcon from "@/components/ui/icons/CardChipIcon";
 import CreatedAtIcon from "@/components/ui/icons/CreatedAtIcon";
 import VerzoLogoWhite from "@/components/ui/icons/VerzoLogoWhite";
 import { Progress } from "@/components/ui/progress";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  SudoCardSpendingInterval,
-  useViewCardQuery,
-} from "@/src/generated/graphql";
-import {
-  Download,
-  Eye,
-  MoveLeft,
-  PlusCircle,
-  History,
-  Copy,
-  EyeOff,
-  Pen,
-  Trash2,
-  Plus,
-  Lock,
-} from "lucide-react";
+import { useGetCardByIdQuery } from "@/src/generated/graphql";
+import { Eye, MoveLeft, PlusCircle, Copy, EyeOff, Lock } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import Image from "next/image";
-
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-];
-
-type SpendingLimitType = {
-  amount: number;
-  interval: SudoCardSpendingInterval;
-};
+import VerveCardIcon from "@/components/ui/icons/VerveCardIcon";
 
 const ViewCard = () => {
   const cardParams = useSearchParams();
   const cardId = cardParams.get("cardId");
   const [showPassword, setShowPassword] = useState(false);
-  const [openAddLimitModal, setOpenAddLimitModal] = useState(false);
-  const [spendingLimit, setSpendingLimit] = useState<SpendingLimitType>({
-    amount: 0,
-    interval: SudoCardSpendingInterval.Daily,
-  });
-
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
   const CVC = "333";
-  const { data, loading } = useViewCardQuery({
+  const { data, loading } = useGetCardByIdQuery({
     variables: {
       cardId: cardId!,
     },
   });
 
   const imageSrc = "https://i.imgur.com/kGkSg1v.png";
-  const cardData = data?.viewCard;
-  const accountNumber = cardData?.data?.account?.accountNumber;
-  const cardHolder = cardData?.data?.account?.accountName;
-  const maskedPan = cardData?.data?.maskedPan;
-  const expiryMonth = cardData?.data?.expiryMonth;
-  const expiryYear = cardData?.data?.expiryYear;
-  const spendLimit = cardData?.data?.spendingControls?.spendingLimits;
-  const accountBalance = cardData?.data?.account?.currentBalance;
-  const updatedAt = cardData?.data?.account?.updatedAt;
-  const cardType = cardData?.data?.type;
-  const createdAt = cardData?.data?.createdAt;
-  const status = cardData?.data?.status;
+  const cardData = data?.getCardById;
+  const transactions = cardData?.sudoCardTransactions ?? [];
+  const accountNumber = cardData?.account?.accountNumber;
+  const cardHolder = cardData?.user?.fullname;
+  const maskedPan = cardData?.maskedPan;
+  const expiryDate = cardData?.expiryDate;
+  const spendLimit = cardData?.spendingLimits!;
+  const accountBalance = cardData?.account?.accountBalance;
+  const updatedAt = cardData?.updatedAt;
+  const cardType = cardData?.type;
+  const createdAt = cardData?.createdAt;
+  const status = cardData?.status;
+  const [isCopied, setIsCopied] = useState(false);
 
-  const handleAmountChange = (event: any) => {
-    const amount = parseFloat(event.target.value);
-    setSpendingLimit((prev) => ({
-      ...prev,
-      amount: isNaN(amount) ? 0 : amount, // Set amount to 0 if NaN
-    }));
+  const handleCopyClick = () => {
+    navigator.clipboard
+      .writeText(accountNumber!)
+      .then(() => {
+        setIsCopied(true);
+        setTimeout(() => {
+          setIsCopied(false);
+        }, 1500);
+      })
+      .catch((error) => {
+        console.error("Failed to copy:", error);
+      });
   };
-
-  const handleIntervalChange = (value: string) => {
-    setSpendingLimit((prev) => ({
-      ...prev,
-      interval: value as SudoCardSpendingInterval, // Cast the value to SudoCardSpendingInterval enum
-    }));
-  };
-
-  // const handleCreateCardLimit = async () => {
-  //   try {
-  //     await createSudoCardMutation({
-  //       variables: {
-  //         businessId: businessId,
-  //         assignedUserId: assignedId === "myId" ? null : assignedId,
-  //         spendingLimits: spendingLimit,
-  //       },
-  //     });
-  //     setOpenAddCardModal(false);
-  //     showSuccessToast();
-  //     setSpendingLimit({
-  //       amount: 0,
-  //       interval: SudoCardSpendingInterval.Daily,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     showFailureToast(error);
-  //   }
-  // };
 
   if (loading) {
     return <MainLoader />;
@@ -200,13 +112,21 @@ const ViewCard = () => {
               </p>
               <p className=" text-2xl tracking-wide flex items-center font-medium">
                 {accountNumber}
-                <Copy className=" ml-5 w-5 h-5 text-gray-400" />
+                <Copy
+                  onClick={handleCopyClick}
+                  className="ml-5 w-5 h-5 text-gray-400 cursor-pointer"
+                />
+                {isCopied && (
+                  <span className="ml-2 text-[12px] text-gray-500">
+                    Copied!
+                  </span>
+                )}
               </p>
             </div>
             <div className=" flex flex-col w-[20%] px gap-y-2 border-r-2 px-4 justify-center h-full border-r-gray-200">
               <p className=" text-sm font-medium text-gray-600">Expiry date</p>
               <p className=" text-2xl tracking-wide flex items-center font-medium">
-                {`${expiryMonth}/${expiryYear}`}
+                {expiryDate}
               </p>
             </div>
             <div className=" flex flex-col w-[20%] gap-y-2 border-r-2 px-4 justify-center h-full border-r-gray-200">
@@ -247,6 +167,7 @@ const ViewCard = () => {
                 <p className=" text-gray-500">
                   {updatedAt &&
                     new Date(updatedAt).toLocaleString("en-US", {
+                      weekday: "long",
                       month: "short",
                       day: "2-digit",
                       year: "numeric",
@@ -257,7 +178,7 @@ const ViewCard = () => {
             <div className=" w-1/2 border border-gray-200 rounded-lg px-6 flex flex-col justify-center gap-y-5">
               <div className=" flex flex-row justify-between">
                 <p className=" font-medium text-gray-600"> Spending limit</p>
-                <DropdownMenu>
+                {/* <DropdownMenu>
                   <DropdownMenuTrigger className=" focus:outline-none">
                     <FaEllipsisVertical className=" text-gray-500" />
                   </DropdownMenuTrigger>
@@ -272,14 +193,21 @@ const ViewCard = () => {
                       Yearly limit
                     </DropdownMenuItem>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
               </div>
               <div className=" flex flex-col gap-y-3">
                 <div className=" flex flex-col gap-y-1">
-                  <Progress className=" h-[10px]" value={38} />
-                  <p className=" text-gray-500">₦500.00 spent of ₦10,000.00</p>
+                  <Progress className=" h-[10px]" value={1} />
+                  <p className=" text-gray-500">
+                    ₦0 spent of ₦{spendLimit?.map((limit) => limit?.amount)}
+                  </p>
                 </div>
-                <p className=" text-gray-500">Daily transaction limit</p>
+                <p className=" text-gray-500">
+                  <span className=" capitalize">
+                    {spendLimit.map((limit) => limit?.interval)}
+                  </span>{" "}
+                  transaction limit
+                </p>
               </div>
             </div>
           </div>
@@ -316,13 +244,7 @@ const ViewCard = () => {
                             </p>
                           </div>
                           <div className="min-w-[50px]">
-                            <Image
-                              className="w-12 h-12"
-                              alt="Logo"
-                              width={48}
-                              height={48}
-                              src={"https://i.imgur.com/bbPHJVe.png"}
-                            />
+                            <VerveCardIcon />
                           </div>
                         </div>
                       </div>
@@ -351,150 +273,130 @@ const ViewCard = () => {
       <div className=" flex flex-col max-w-[600px]">
         <div className=" flex flex-row justify-between mb-2">
           <p className=" text-[22px] text-gray-800 max-w-[700px] pl-1 pb-1">
-            Spending limit
+            Card transactions
           </p>
-          {/* <AlertDialog
-            open={openAddLimitModal}
-            onOpenChange={() => setOpenAddLimitModal(true)}
-          >
-            <button
-              onClick={() => setOpenAddLimitModal(true)}
-              className=" bg-primary-blue text-white rounded-md px-4 py-2 flex items-center gap-x-2"
-            >
-              <Plus className=" w-[18px] h-[18px]" />
-              Add limit
-            </button>
-            <AlertDialogContent className="sm:max-w-[430px] shadow-md">
-              <form>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className=" font-medium text-[20px]">
-                    Create a Verzo Card
-                  </AlertDialogTitle>
-                </AlertDialogHeader>
-                <div className=" flex flex-col gap-5 pb-4 pt-2 mt-1 max-w-[400px]">
-                  <div className=" flex flex-col gap-1 ">
-                    <label htmlFor="amount" className="text-left ">
-                      Spending limit (Amount)
-                    </label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-3 flex items-center ">
-                        &#8358;
-                      </span>
-                      <input
-                        id="amount"
-                        type="number"
-                        value={spendingLimit.amount}
-                        onChange={handleAmountChange}
-                        required
-                        className="w-full px-4 py-[10px] h-[42px] pl-7 border rounded-md"
-                      />
-                    </div>
-                  </div>
-                  <div className=" flex flex-col  gap-1 ">
-                    <label htmlFor="interval" className="text-left">
-                      Spending limit (Interval)
-                    </label>
-                    <Select
-                      value={spendingLimit.interval}
-                      onValueChange={handleIntervalChange}
-                    >
-                      <SelectTrigger className="border border-gray-200 bg-transparent rounded-md h-[42px] text-[15px] focus:outline-none px-3 py-[10px]">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white w-full z-[200] shadow-sm text-gray-800">
-                        <SelectGroup>
-                          <SelectItem
-                            className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
-                            value={"daily"}
-                          >
-                            Daily
-                          </SelectItem>
-                          <SelectItem
-                            className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
-                            value={"weekly"}
-                          >
-                            Weekly
-                          </SelectItem>
-                          <SelectItem
-                            className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
-                            value={"monthly"}
-                          >
-                            Monthly
-                          </SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <AlertDialogFooter className=" gap-x-3 mt-2">
-                  <button
-                    type="button"
-                    onClick={() => setOpenAddLimitModal(false)}
-                    className=" border border-gray-200 px-5 hover:bg-gray-50 cursor-pointer py-2 text-[15px] rounded-md"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    // onClick={handleCreateCardLimit}
-                    className={` px-6 bg-primary-blue hover:bg-primary-verzobluehover text-white py-2 cursor-pointer text-[15px] rounded-md ${
-                      loading ? " opacity-50" : ""
-                    }`}
-                    disabled={loading}
-                  >
-                    {loading ? "Loading" : "Submit"}
-                  </button>
-                </AlertDialogFooter>
-              </form>
-            </AlertDialogContent>
-          </AlertDialog> */}
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead
-                colSpan={2}
-                className=" w-[200px] text-[12px] text-gray-600"
+        <table className=" text-left">
+          <thead>
+            <tr>
+              <th
+                scope="col"
+                className="hidden font-medium uppercase text-gray-600 px-3 w-[500px] py-3.5 text-left text-[12px] sm:table-cell"
               >
-                AMOUNT
-              </TableHead>
-              <TableHead
-                colSpan={2}
-                className="text-[12px] text-gray-600 w-[200px]"
+                Amount
+              </th>
+              <th
+                scope="col"
+                className="hidden font-medium uppercase text-gray-600 px-3 w-[300px] py-3.5 text-left text-[12px] sm:table-cell"
               >
-                INTERVAL
-              </TableHead>
-              <TableHead colSpan={2} className=" w-[200px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {invoices.length > 0 ? (
-              <TableRow>
-                <TableCell className=" w-full text-center italic">
-                  You currently have no spending limit...
-                </TableCell>
-              </TableRow>
+                Type
+              </th>
+              <th
+                scope="col"
+                className="hidden font-medium uppercase text-gray-600 px-3 w-[200px] py-3.5 text-end text-[12px] sm:table-cell"
+              >
+                Date
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  className="hidden text-center px-3 py-4 text-sm text-gray-500 sm:table-cell"
+                >
+                  You currently have no transactions on this card...
+                </td>
+              </tr>
             ) : (
               <>
-                {invoices.map((invoice) => (
-                  <TableRow key={invoice.invoice}>
-                    <TableCell colSpan={2} className=" ">
-                      {invoice.totalAmount}
-                    </TableCell>
-                    <TableCell colSpan={2} className="">
-                      Daily
-                    </TableCell>
-                    <TableCell colSpan={2} className="text-right">
-                      <div className="flex flex-row gap-x-5 border-l border-l-gray-200 pl-4 text-gray-600">
-                        <Pen className=" w-4 h-4" />{" "}
-                        <Trash2 className=" w-4 h-4" />
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                {transactions?.map((transaction) => (
+                  <tr key={transaction?.id}>
+                    <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                      {transaction?.amount}
+                    </td>
+                    <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                      {transaction?.type}
+                    </td>
+                    <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                      {transaction?.createdAt}
+                    </td>
+                  </tr>
                 ))}
               </>
             )}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
+      </div>
+      <div className=" flex flex-col max-w-[600px]">
+        <div className=" flex flex-row justify-between mb-2">
+          <p className=" text-[22px] text-gray-800 max-w-[700px] pl-1 pb-1">
+            Spending limit
+          </p>
+        </div>
+        <table className=" text-left">
+          <thead>
+            <tr>
+              <th
+                scope="col"
+                className="hidden font-medium uppercase text-gray-800 px-3 w-[500px] py-3.5 text-left text-[12px] sm:table-cell"
+              >
+                Amount
+              </th>
+              <th
+                scope="col"
+                className="hidden font-medium uppercase text-gray-800 px-3 w-[300px] py-3.5 text-left text-[12px] sm:table-cell"
+              >
+                Interval
+              </th>
+              <th
+                scope="col"
+                className="hidden font-medium uppercase text-gray-800 px-3 w-[300px] py-3.5 text-end text-[12px] sm:table-cell"
+              >
+                Date
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {spendLimit.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  className="hidden text-center px-3 py-4 text-sm text-gray-500 sm:table-cell"
+                >
+                  You currently have no spending limits on this card...
+                </td>
+              </tr>
+            ) : (
+              <>
+                {spendLimit?.map((limit) => (
+                  <tr key={limit?.id}>
+                    <td className="hidden px-3 py-2 text-sm text-gray-800 sm:table-cell">
+                      {limit?.amount}
+                    </td>
+                    <td className="hidden px-3 capitalize py-2 text-sm text-gray-800 md:table-cell">
+                      {limit?.interval}
+                    </td>
+                    <td className="hidden px-3 py-2 text-sm text-end text-gray-800 md:table-cell">
+                      {limit?.createdAt
+                        ? new Date(limit.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              weekday: "long",
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )
+                        : ""}
+                    </td>
+                  </tr>
+                ))}
+              </>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

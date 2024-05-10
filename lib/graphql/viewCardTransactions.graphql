@@ -1,18 +1,26 @@
-query ViewCardTransactions($cardId: String!, $page: Int, $limit: Int) {
-  viewCardTransactions(input: { cardId: $cardId, page: $page, limit: $limit }) {
-    statusCode
-    message
-    data {
-      amount
-      fee
-      vat
-      currency
-      type
-      transactionMetadata {
-        channel
-        type
-        reference
+query ViewCardTransactions($cardId: String!) {
+  viewCardTransactions(input: { cardId: $cardId }) {
+    id
+    amount
+    fee
+    vat
+    currency
+    type
+    merchantAmount
+    merchantCurrency
+    authorization {
+      authorizationFeeDetails {
+        amount
+        description
+      }
+      requestsHistory {
+        amount
+        currency
+        approved
+        reason
       }
     }
+    createdAt
+    updatedAt
   }
 }

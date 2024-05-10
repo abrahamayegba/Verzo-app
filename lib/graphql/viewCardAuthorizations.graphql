@@ -1,20 +1,22 @@
-query ViewCardAuthorizations($cardId: String!, $page: Int, $limit: Int) {
-  viewCardAuthorizations(
-    input: { cardId: $cardId, page: $page, limit: $limit }
-  ) {
-    statusCode
-    message
-    data {
+query ViewCardAuthorizations($cardId: String!) {
+  viewCardAuthorizations(input: { cardId: $cardId }) {
+    id
+    amount
+    fee
+    vat
+    approved
+    status
+    merchantAmount
+    merchantCurrency
+    authorizationFeeDetails {
       amount
-      fee
-      approved
-      status
+      description
+    }
+    requestsHistory {
+      amount
       currency
-      requestHistory {
-        amount
-        approved
-        reason
-      }
+      approved
+      reason
     }
   }
 }

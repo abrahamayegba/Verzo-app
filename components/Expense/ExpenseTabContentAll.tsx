@@ -85,10 +85,10 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
             Expense
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Category
+            Date
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Date
+            Status
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Merchant
@@ -125,15 +125,28 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                 />
                 #{expense?.reference}
               </TableCell>
-              <TableCell>
-                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                  {expense?.expenseCategory?.name}
-                </span>
-              </TableCell>
               <TableCell className=" text-primary-greytext">
                 {expense?.expenseDate
-                  ? new Date(expense.expenseDate).toDateString()
+                  ? new Date(expense.expenseDate).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
                   : ""}
+              </TableCell>
+              <TableCell>
+                {expense?.paid === true ? (
+                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                    <span className="mr-2 text-green-500">✔</span>
+                    Paid
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
+                    <span className="mr-2 text-yellow-500">⌛</span>
+                    Pending
+                  </span>
+                )}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {expense?.merchant?.name}

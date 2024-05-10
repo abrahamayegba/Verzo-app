@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ImportDataDropdown from "@/components/ImportDataDropdown";
 import Metrics from "@/components/Metrics";
 import RecentMetrics from "@/components/RecentMetrics";
 import useModal from "../hooks/useModal";
@@ -25,6 +24,7 @@ import {
   useTotalQuarterlyInvoicesAmountQuery,
   useTotalWeeklyInvoicesAmountQuery,
   useTotalYearlyInvoicesAmountQuery,
+  useViewBusinessAccountQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import MainLoader from "@/components/loading/MainLoader";
@@ -35,10 +35,8 @@ import UploadCustomerCSV from "@/components/modals/customer/UploadCustomerModal"
 import UploadMerchantCSV from "@/components/modals/UploadMerchantModal";
 import UploadProductCSV from "@/components/modals/product/UploadProductModal";
 import UploadServiceCSV from "@/components/modals/service/UploadServiceModal";
-import { X } from "lucide-react";
 import CompleteAccountBanner from "@/components/CompleteAccountBanner";
 import CreateVerzoAccount from "@/components/modals/CreateVerzoAccountModal";
-import CreateVerzoAccount2 from "@/components/modals/CreateVerzoAccountModal2";
 
 const Dashboard = () => {
   const {
@@ -211,6 +209,12 @@ const Dashboard = () => {
     },
   });
 
+  const viewBusinessAccounts = useViewBusinessAccountQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
   }
@@ -233,7 +237,8 @@ const Dashboard = () => {
     getPurchasesByBusiness.loading ||
     getCardsByBusiness.loading ||
     getReceivablesByBusiness.loading ||
-    getPayablesByBusiness.loading;
+    getPayablesByBusiness.loading ||
+    viewBusinessAccounts.loading;
 
   return (
     <>
@@ -241,14 +246,18 @@ const Dashboard = () => {
         <Loader2 />
       ) : (
         <>
-          <CompleteAccountBanner
-            open={isVisible}
-            onClose={handleCloseBanner}
-            openModal={openVerzoAccountModal}
-          />
+          {!viewBusinessAccounts?.data?.viewBusinessAccount?.id && (
+            <CompleteAccountBanner
+              open={isVisible}
+              onClose={handleCloseBanner}
+              openModal={openVerzoAccountModal}
+            />
+          )}
           <div
             className={` px-[52px] bg-primary-whiteTint ${
-              isVisible ? " pt-[70px]" : "pt-[47px]"
+              !viewBusinessAccounts?.data?.viewBusinessAccount?.id && isVisible
+                ? " pt-[70px]"
+                : "pt-[47px]"
             } pb-[20px] gap-y-[36px] flex flex-col max-w-[1680px] mx-auto`}
           >
             <div className=" flex flex-row justify-between items-center">
@@ -290,7 +299,7 @@ const Dashboard = () => {
               onClose={closeImportServiceModal}
             />
           </div>
-          <CreateVerzoAccount2
+          <CreateVerzoAccount
             open={isCreateVerzoAccountModalOpen}
             onClose={closeVerzoAccountModal}
             openModal={openVerzoAccountModal}

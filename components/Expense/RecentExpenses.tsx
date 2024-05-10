@@ -53,7 +53,15 @@ const RecentExpenses = () => {
                 <p>#{expense?.reference}</p>
                 <p className=" text-primary-greytext">
                   {expense?.expenseDate
-                    ? new Date(expense.expenseDate).toDateString()
+                    ? new Date(expense.expenseDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )
                     : ""}
                 </p>
                 <div className="bg-green-100 h-[20px] text-xs text-green-800 flex items-center rounded-full px-2.5 py-0.5 ">

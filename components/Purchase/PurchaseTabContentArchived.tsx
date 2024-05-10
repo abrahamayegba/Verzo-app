@@ -133,7 +133,15 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
                   {purchase?.transactionDate
-                    ? new Date(purchase.transactionDate).toDateString()
+                    ? new Date(purchase.transactionDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )
                     : ""}
                 </TableCell>
                 <TableCell>

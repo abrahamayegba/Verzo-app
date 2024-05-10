@@ -1,9 +1,0 @@
-query ViewBusinessCards($businessId: String!) {
-  viewBusinessCards(businessId: $businessId) {
-    statusCode
-    data {
-      brand
-      maskedPan
-    }
-  }
-}

@@ -15,8 +15,13 @@ import {
 import CardChipIcon from "./ui/icons/CardChipIcon";
 import VerzoLogoWhite from "./ui/icons/VerzoLogoWhite";
 import {
+  CreateSudoCardDocument,
+  GetCardsByBusinessDocument,
   SudoCardSpendingInterval,
+  useCreateSudoCardMutation,
   useGetCardsByBusinessQuery,
+  useGetUsersByBusinessQuery,
+  useViewBusinessAccountQuery,
 } from "@/src/generated/graphql";
 import Link from "next/link";
 import { AlertDialog, AlertDialogContent } from "./ui/alert-dialog";
@@ -29,6 +34,10 @@ import {
   SelectValue,
 } from "./ui/select";
 import Image from "next/image";
+import { useToast } from "@/app/hooks/use-toast";
+import VerveCardIcon from "./ui/icons/VerveCardIcon";
+import CreateVerzoAccount from "./modals/CreateVerzoAccountModal";
+import useModal from "@/app/hooks/useModal";
 
 interface MetricsProps {
   filter: string;
@@ -43,6 +52,12 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
+  const { toast } = useToast();
+  const {
+    isOpen: isCreateVerzoAccountModalOpen,
+    openModal: openVerzoAccountModal,
+    closeModal: closeVerzoAccountModal,
+  } = useModal();
   const [openAddCardModal, setOpenAddCardModal] = useState(false);
   const [assignedId, setAssignedId] = useState("");
   const [spendingLimit, setSpendingLimit] = useState<SpendingLimitType>({
@@ -57,7 +72,25 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
     },
   });
 
-  const imageSrc = "https://i.imgur.com/kGkSg1v.png";
+  const viewBusinessAccounts = useViewBusinessAccountQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
+  const doesUserHaveVerzoAccount =
+    viewBusinessAccounts?.data?.viewBusinessAccount?.id;
+
+  const getUsersBybusiness = useGetUsersByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const [createSudoCardMutation, { loading }] = useCreateSudoCardMutation();
+  const users = getUsersBybusiness?.data?.getUsersByBusiness;
+
+  const imageSrc =
+    "https://verzo.fra1.cdn.digitaloceanspaces.com/undefined%20-%20Imgur.png";
 
   const cards = data?.getCardsByBusiness ?? [];
 
@@ -86,6 +119,55 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
       ...prev,
       interval: value as SudoCardSpendingInterval, // Cast the value to SudoCardSpendingInterval enum
     }));
+  };
+
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+
+  const showSuccessToast = () => {
+    toast({
+      title: "Successful!",
+      description: "Your card has been successfully created",
+      duration: 3500,
+    });
+  };
+
+  const handleCreateCard = async () => {
+    try {
+      await createSudoCardMutation({
+        variables: {
+          businessId: businessId,
+          assignedUserId: assignedId,
+          spendingLimits: spendingLimit,
+        },
+        refetchQueries: [CreateSudoCardDocument, GetCardsByBusinessDocument],
+      });
+      setOpenAddCardModal(false);
+      showSuccessToast();
+      setSpendingLimit({
+        amount: 0,
+        interval: SudoCardSpendingInterval.Daily,
+      });
+      setAssignedId("");
+    } catch (error) {
+      console.error(error);
+      setOpenAddCardModal(false);
+      showFailureToast(error);
+    }
+  };
+
+  const handleCreateCardClick = () => {
+    if (doesUserHaveVerzoAccount) {
+      setOpenAddCardModal(true);
+    } else {
+      openVerzoAccountModal();
+    }
   };
 
   return (
@@ -165,7 +247,6 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
                             <span className=" ml-2 flex ">
                               <CardChipIcon />
                             </span>
-
                             <p className=" tracking-[5px] mt-[10px]">
                               {card?.maskedPan}
                             </p>
@@ -177,15 +258,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
                                   {card?.user?.fullname}
                                 </p>
                               </div>
-                              <div className="">
-                                <Image
-                                  className="w-12 h-12"
-                                  alt="Logo"
-                                  width={48}
-                                  height={48}
-                                  src={"https://i.imgur.com/bbPHJVe.png"}
-                                />
-                              </div>
+                              <VerveCardIcon />
                             </div>
                           </div>
                         </div>
@@ -285,15 +358,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
                               <div>
                                 <p className="text-sm uppercase">CARD HOLDER</p>
                               </div>
-                              <div>
-                                <Image
-                                  className="w-12 h-12"
-                                  alt="Logo"
-                                  width={48}
-                                  height={48}
-                                  src={"https://i.imgur.com/bbPHJVe.png"}
-                                />
-                              </div>
+                              <VerveCardIcon />
                             </div>
                           </div>
                         </div>
@@ -318,18 +383,18 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
                 onOpenChange={() => setOpenAddCardModal(true)}
               >
                 <button
-                  onClick={() => setOpenAddCardModal(true)}
+                  onClick={handleCreateCardClick}
                   className=" w-full bg-primary-blue text-white py-3 px-5 rounded-md"
                 >
                   Add new card
                 </button>
                 <AlertDialogContent className="w-[482px] shadow transition-all pt-6 pb-7 px-0">
                   <div className="flex w-[480px] flex-col items-center justify-center">
-                    <div className="border-b border-b-gray-200 w-full pb-4">
+                    <div className="border-b border-b-gray-200 w-full pb-3">
                       <div className="flex flex-col gap-y-5 w-full px-6">
                         <div className="flex w-full justify-between">
                           <p className="font-medium text-xl text-gray-700">
-                            Create your Verzo account
+                            Create a Verzo card
                           </p>
                           <button
                             onClick={() => setOpenAddCardModal(false)}
@@ -340,7 +405,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
                         </div>
                       </div>
                     </div>
-                    <div className="w-full flex flex-col gap-y-3 px-6 mt-5">
+                    <div className="w-full flex flex-col gap-y-3 px-6 mt-4">
                       <div className=" flex flex-col gap-1">
                         <label htmlFor="name" className=" text-gray-600">
                           Assigned user
@@ -349,17 +414,23 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
                           value={assignedId}
                           onValueChange={setAssignedId}
                         >
-                          <SelectTrigger className="border border-gray-200 bg-transparent rounded-md h-[42px] text-[15px] focus:outline-none px-3 py-[10px]">
+                          <SelectTrigger
+                            className={`border border-gray-200"
+                              } bg-transparent rounded-md h-[42px] text-[15px] focus:outline-none px-3 py-[10px]`}
+                          >
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                           <SelectContent className="bg-white w-full z-[200] shadow-sm text-gray-800">
                             <SelectGroup>
-                              <SelectItem
-                                className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
-                                value={"myId"}
-                              >
-                                Myself
-                              </SelectItem>
+                              {users?.map((user) => (
+                                <SelectItem
+                                  key={user?.id}
+                                  className="hover:bg-gray-100 cursor-pointer py-2 text-[15px]"
+                                  value={user?.id!}
+                                >
+                                  {user?.fullname}
+                                </SelectItem>
+                              ))}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -422,10 +493,14 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
                       </div>
                       <div className="flex mt-4">
                         <button
+                          onClick={handleCreateCard}
                           type="button"
-                          className={`px-7 py-[10px] w-full rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white`}
+                          disabled={loading || !assignedId}
+                          className={`px-7 py-[10px] w-full disabled:cursor-not-allowed disabled:opacity-50 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                            loading ? "opacity-50" : ""
+                          }`}
                         >
-                          Create
+                          {loading ? "Loading" : "Create"}
                         </button>
                       </div>
                     </div>
@@ -436,6 +511,11 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
           </div>
         )}
       </div>
+      <CreateVerzoAccount
+        open={isCreateVerzoAccountModalOpen}
+        onClose={closeVerzoAccountModal}
+        openModal={openVerzoAccountModal}
+      />
     </>
   );
 };

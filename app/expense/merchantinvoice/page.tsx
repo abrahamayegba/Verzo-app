@@ -60,6 +60,7 @@ const AddMerchantInvoice = () => {
   });
   const expense = getExpenseById?.data?.getExpenseById;
   const expenseStatusId = expense?.expenseStatusId;
+  const expenseReference = expense?.reference;
   const merchantInvoiceAdded = expenseStatusId! >= 3;
   const amount = expense?.amount;
   const apiKey = "Am510qpybQ3i95Kv17umgz";
@@ -135,9 +136,8 @@ const AddMerchantInvoice = () => {
     return <MainLoader />;
   }
   const handleSaveInvoiceClick = () => {
-    // Check if there's a date
     if (!date) {
-      showDateFailureToast("Please pick a date before saving the invoice.");
+      showDateFailureToast("Please pick a date and try again.");
       return;
     }
     try {
@@ -171,9 +171,11 @@ const AddMerchantInvoice = () => {
             </button>
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
-            <p className=" text-[30px] text-primary-black ">Expense #001 </p>
+            <p className=" text-[28px] text-primary-black ">
+              Expense #{expenseReference}
+            </p>
             <p className=" text-primary-greytext font-light text-lg">
-              Add extra information to the expense
+              Upload the merchant invoice linked to this expense
             </p>
           </div>
           <div className=" flex gap-x-4">
@@ -206,9 +208,11 @@ const AddMerchantInvoice = () => {
                 <Image src="/preview.png" width={80} height={80} alt="image" />
               </div>
               <div className=" flex flex-col">
-                <p className=" text-xl text-primary-black">Expense #001</p>
+                <p className=" text-xl text-primary-black">
+                  Expense #{expenseReference}
+                </p>
                 <p className=" text-lg text-primary-greytext font-light">
-                  Short description about the expense
+                  {expense?.description}
                 </p>
               </div>
             </div>
@@ -223,7 +227,8 @@ const AddMerchantInvoice = () => {
           <div className=" flex flex-col mt-[20px] gap-y-9">
             <div className=" flex flex-col gap-y-1 ">
               <p className=" text-lg text-primary-black">
-                Upload merchant invoice
+                Upload merchant invoice{" "}
+                <span className=" text-gray-500">(optional)</span>
               </p>
               <p className=" text-sm text-primary-greytext">
                 Supported formats: PNG, JPG & JPEG
@@ -280,12 +285,12 @@ const AddMerchantInvoice = () => {
                     disabled={expenseStatusId! >= 3}
                     asChild
                   >
-                    <button className=" text-left text-sm font-normal bg-white flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                    <button className=" text-left text-[16px] font-normal bg-white flex items-center border border-gray-200 h-[45px] px-3 rounded-[8px]">
                       {date ? (
                         format(date, "PPP")
                       ) : (
                         <div className=" justify-between flex items-center w-full">
-                          <span className=" text-sm">Pick a date</span>
+                          <span className=" text-[16px]">Pick a date</span>
                           <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                         </div>
                       )}
@@ -306,7 +311,7 @@ const AddMerchantInvoice = () => {
               </div>
               <div className="text-primary-greytext flex flex-col gap-y-2 w-1/2">
                 <p>Amount</p>
-                <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
+                <p className="border cursor-not-allowed text-gray-700 text-[18px] border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
                   ₦{amount?.toLocaleString()}
                 </p>
               </div>

@@ -61,28 +61,28 @@ const VerzowalletSetup = () => {
     });
   };
 
-  const onCreateBusinessAccountHandler = async (data: FormData) => {
-    if (!dobValue) {
-      showdobToast();
-      return;
-    }
-    try {
-      await setUpBusinessAccountMutation({
-        variables: {
-          dob: dobValue,
-          ...data,
-        },
-        update: (cache) => {
-          cache.evict({ fieldName: "getBusinessesByUserId" });
-        },
-      });
-      await client.query({ query: GetBusinessesByUserIdDocument });
-      router.push("/dashboard");
-    } catch (error) {
-      console.error(error);
-      showFailureToast(error);
-    }
-  };
+  // const onCreateBusinessAccountHandler = async (data: FormData) => {
+  //   if (!dobValue) {
+  //     showdobToast();
+  //     return;
+  //   }
+  //   try {
+  //     await setUpBusinessAccountMutation({
+  //       variables: {
+  //         dob: dobValue,
+  //         ...data,
+  //       },
+  //       update: (cache) => {
+  //         cache.evict({ fieldName: "getBusinessesByUserId" });
+  //       },
+  //     });
+  //     await client.query({ query: GetBusinessesByUserIdDocument });
+  //     router.push("/dashboard");
+  //   } catch (error) {
+  //     console.error(error);
+  //     showFailureToast(error);
+  //   }
+  // };
 
   return (
     <>
@@ -106,7 +106,7 @@ const VerzowalletSetup = () => {
               </p>
             </div>
             <form
-              onSubmit={handleSubmit(onCreateBusinessAccountHandler)}
+              // onSubmit={handleSubmit(onCreateBusinessAccountHandler)}
               className=" flex flex-col mt-[20px] gap-y-5"
             >
               <div className=" flex flex-col gap-y-2">

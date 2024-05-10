@@ -228,7 +228,7 @@ const BusinessSetup = () => {
                 <input
                   type="text"
                   required
-                  className="max-w-[400px] px-3 py-[10px] border-gray-300 rounded-[8px] border placeholder:text-sm focus:outline-none "
+                  className="max-w-[400px] px-3 py-[10px] border-gray-300 rounded-[8px] border focus:outline-none "
                   id="businessname"
                   placeholder="Business name"
                   {...register("businessName")}
@@ -255,7 +255,7 @@ const BusinessSetup = () => {
                   value={businessCategoryId}
                   onValueChange={setBusinessCategoryId}
                 >
-                  <SelectTrigger className="border max-w-[400px] border-gray-200 bg-transparent rounded-lg h-[42px] text-sm focus:outline-none px-3 py-[10px]">
+                  <SelectTrigger className="border max-w-[400px] border-gray-200 bg-transparent rounded-lg h-[46px] text-base focus:outline-none px-3 py-[10px]">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent className="bg-white max-w-[400px] w-full z-[200] shadow-sm text-gray-800">
@@ -284,7 +284,7 @@ const BusinessSetup = () => {
                   id="phone"
                   required
                   placeholder="Phone number"
-                  className=" max-w-[400px] border p-[10px] pl-3 focus:outline-none rounded-lg text-sm border-gray-200"
+                  className=" max-w-[400px] border p-[10px] pl-3 focus:outline-none rounded-lg text-base border-gray-200"
                   {...register("businessMobile")}
                 />
               </div>

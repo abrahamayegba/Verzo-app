@@ -3,6 +3,7 @@ mutation MakeSalePayment(
   $transactionDate: Date!
   $description: String!
   $file: String
+  $accountTransactionId: String
 ) {
   makeSalePayment(
     input: {
@@ -10,6 +11,7 @@ mutation MakeSalePayment(
       transactionDate: $transactionDate
       description: $description
       file: $file
+      accountTransactionId: $accountTransactionId
     }
   ) {
     paid

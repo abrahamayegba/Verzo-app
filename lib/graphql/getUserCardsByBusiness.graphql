@@ -2,5 +2,20 @@ query GetUserCardsByBusiness($businessId: String!) {
   getUserCardsByBusiness(businessId: $businessId) {
     id
     maskedPan
+    type
+    brand
+    expiryDate
+    status
+    spendingLimits {
+      amount
+      interval
+    }
+    spendingControl {
+      atm
+      web
+      pos
+    }
+    authorizationLastSyncTime
+    transactionLastSyncTime
   }
 }

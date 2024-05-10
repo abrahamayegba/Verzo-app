@@ -133,7 +133,12 @@ const CustomerTabContentAll: React.FC<CustomerTabContentAllProps> = ({
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {customer?.createdAt
-                  ? new Date(customer.createdAt).toDateString()
+                  ? new Date(customer.createdAt).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
                   : ""}
               </TableCell>
               <TableCell className=" text-primary-greytext">

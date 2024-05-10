@@ -5,6 +5,7 @@ mutation MakeExpensePayment(
   $description: String!
   $total: Float!
   $file: String
+  $sudoTransactionId: String
 ) {
   makeExpensePayment(
     input: {
@@ -14,6 +15,7 @@ mutation MakeExpensePayment(
       description: $description
       total: $total
       file: $file
+      sudoTransactionId: $sudoTransactionId
     }
   ) {
     paid

@@ -133,7 +133,12 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {expense?.expenseDate
-                  ? new Date(expense.expenseDate).toDateString()
+                  ? new Date(expense.expenseDate).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
                   : ""}
               </TableCell>
               <TableCell className=" text-primary-greytext">

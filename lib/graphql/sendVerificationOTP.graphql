@@ -1,0 +1,11 @@
+mutation SendVerificationOtp($bvnNumber: String!) {
+  sendVerificationOTP(bvnNumber: $bvnNumber) {
+    statusCode
+    message
+    data {
+      _id
+      otpVerified
+      otpId
+    }
+  }
+}

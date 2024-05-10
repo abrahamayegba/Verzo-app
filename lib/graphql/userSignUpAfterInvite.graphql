@@ -1,0 +1,6 @@
+mutation userSignUpAfterInvite($inviteId: String!, $password: String!) {
+  userSignUpAfterInvite(inviteId: $inviteId, password: $password) {
+    access_token
+    refresh_token
+  }
+}

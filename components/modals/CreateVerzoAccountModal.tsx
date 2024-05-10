@@ -2,23 +2,16 @@
 import React, { useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import {
-  GetArchivedSalesByBusinessDocument,
-  GetSaleByBusinessDocument,
-  GetSaleByIdDocument,
-  useArchiveSaleMutation,
+  SendVerificationOtpDocument,
+  SetUpBusinessAccountDocument,
+  ViewBusinessAccountDocument,
+  useSendVerificationOtpMutation,
+  useSetUpBusinessAccountMutation,
 } from "@/src/generated/graphql";
-import { Archive, ChevronDown, X } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { format } from "date-fns";
-import { Calendar } from "../ui/calendar";
-import dayjs from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Props {
   open: boolean;
@@ -28,11 +21,88 @@ interface Props {
 
 const CreateVerzoAccount: React.FC<Props> = ({ open, openModal, onClose }) => {
   const { toast } = useToast();
-  const [archiveSaleMutation, { loading }] = useArchiveSaleMutation();
+  const router = useRouter();
+  const [sendOTPStep, setSendOTPStep] = useState(true);
+  const [identityId, setIdentityId] = useState("");
+  const [otp, setOtp] = useState("");
+  const [sendVerificationOtpMutation, { loading: sendOTPLoading }] =
+    useSendVerificationOtpMutation();
+  const [setUpBusinessAccountMutation, { loading }] =
+    useSetUpBusinessAccountMutation();
+  const [state, setState] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [dob, setDob] = useState("");
+  const [bvnNumber, setBvnNumber] = useState("");
+  const [addDetailsStep, setAddDetailsStep] = useState(false);
+  const handleSendOTP = () => {
+    setSendOTPStep(false);
+    setAddDetailsStep(true);
+  };
+  const resetInputs = () => {
+    setState("");
+    setPostalCode("");
+    setDob("");
+    setBvnNumber("");
+    setAddress("");
+    setOtp("");
+    setIdentityId("");
+    setSendOTPStep(true);
+    setAddDetailsStep(false);
+  };
+  const handleSendOTPMutation = async () => {
+    try {
+      await sendVerificationOtpMutation({
+        variables: {
+          bvnNumber: bvnNumber,
+        },
+        refetchQueries: [SendVerificationOtpDocument],
+        onCompleted(data) {
+          const identityId = data?.sendVerificationOTP?.data?._id!;
+          setIdentityId(identityId);
+          handleSendOTP();
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      onClose();
+      showFailureToast(error);
+    }
+  };
+  const handleAddDetails = async () => {
+    try {
+      await setUpBusinessAccountMutation({
+        variables: {
+          identityId: identityId,
+          identityNumber: bvnNumber,
+          otp: otp,
+          city: city,
+          state: state,
+          addressLine1: address,
+          postalCode: postalCode,
+          dob: dob,
+        },
+        refetchQueries: [
+          SetUpBusinessAccountDocument,
+          ViewBusinessAccountDocument,
+        ],
+      });
+      resetInputs();
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      console.error(error);
+      onClose();
+      // router.refresh();
+      showFailureToast(error);
+    }
+  };
+
   const showSuccessToast = () => {
     toast({
-      title: "Archived!",
-      description: "Your invoice has been successfully archived",
+      title: "Success!",
+      description: "You have successfully created a Verzo account",
       duration: 3500,
     });
   };
@@ -44,18 +114,6 @@ const CreateVerzoAccount: React.FC<Props> = ({ open, openModal, onClose }) => {
       duration: 3000,
     });
   };
-  const [dobValue, setDobValue] = useState("");
-  const [value, setValue] = React.useState(dayjs("2022-04-17"));
-  const [openDateOfBirthPicker, setOpenDateOfBirthPicker] =
-    React.useState(false);
-  const [dateOfBirth, setDateOfBirth] = React.useState<Date | null>(null);
-
-  React.useEffect(() => {
-    if (dateOfBirth) {
-      const formattedDate = format(dateOfBirth, "yyyy-MM-dd").toString();
-      setDobValue(formattedDate);
-    }
-  }, [dateOfBirth]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -82,266 +140,230 @@ const CreateVerzoAccount: React.FC<Props> = ({ open, openModal, onClose }) => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform gap-y-3 rounded-lg bg-white pb-9 text-left shadow transition-all px-11 pt-4">
+              <Dialog.Panel className="relative transform rounded-lg bg-white text-left pt-6 pb-7 shadow transition-all">
                 <>
-                  <div className="flex flex-col gap-y-3 relative w-[370px]">
-                    <X
-                      onClick={onClose}
-                      className=" absolute cursor-pointer right-0 mr-[-25px] w-6 h-6 text-gray-700"
-                    />
-                    <div className="flex ">
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-primary-blue rounded-full w-14 h-14 flex items-center justify-center text-white text-2xl font-bold">
-                              1
-                            </span>
+                  <div className="flex w-[500px] flex-col items-center justify-center">
+                    <div className="border-b border-b-gray-200 w-full pb-4">
+                      <div className="flex flex-col gap-y-5 w-full px-10">
+                        <div className="flex w-full justify-between">
+                          <p className="font-medium text-xl text-gray-700">
+                            Create your Verzo account
+                          </p>
+                          <button
+                            onClick={onClose}
+                            className="p-1.5 bg-blue-100 rounded-full"
+                          >
+                            <X className="w-[17px] h-[17px] text-gray-700 stroke-[2.5px]" />
+                          </button>
+                        </div>
+                        <div className="flex flex-row justify-between items-center">
+                          <div className="flex flex-col items-center">
+                            <div className="relative">
+                              <div
+                                className={`w-8 h-8 bg-${
+                                  sendOTPStep ? "primary-blue" : "gray-200"
+                                } rounded-full flex items-center justify-center text-${
+                                  sendOTPStep ? "white" : "gray-600"
+                                }`}
+                              >
+                                1
+                              </div>
+                            </div>
+                            <p
+                              className={`text-xs mt-2 w-[60px] text-center font-${
+                                sendOTPStep ? "medium" : "normal"
+                              }`}
+                            >
+                              Send OTP
+                            </p>
                           </div>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="bg-primary-blue rounded-full w-14 h-14 animate-pulse"></div>
+                          <div className="flex items-center justify-center">
+                            <div
+                              className={`h-[5px] bg-${
+                                sendOTPStep ? "primary-blue" : "gray-200"
+                              } rounded-xl w-[280px] mt-[-20px]`}
+                            ></div>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <div className="relative">
+                              <div
+                                className={`w-8 h-8 bg-${
+                                  addDetailsStep ? "primary-blue" : "gray-200"
+                                }
+                               text-${addDetailsStep ? "white" : "gray-600"}
+                              rounded-full flex items-center justify-center`}
+                              >
+                                2
+                              </div>
+                            </div>
+                            <p
+                              className={`text-xs mt-2 w-[70px] text-center font-${
+                                addDetailsStep ? "medium" : "normal"
+                              }`}
+                            >
+                              Add details
+                            </p>
                           </div>
                         </div>
-                        <p className="text-[13px] mt-2 font-medium">Send OTP</p>
-                      </div>
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-gray-200 rounded-full w-14 h-14 flex items-center justify-center text-gray-700 text-2xl font-bold">
-                              2
-                            </span>
-                          </div>
-                        </div>
-                        <p className=" text-[13px] mt-2">Verify BVN</p>
-                      </div>
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-gray-200 rounded-full w-14 h-14 flex items-center justify-center text-gray-700 text-2xl font-bold">
-                              3
-                            </span>
-                          </div>
-                        </div>
-                        <p className=" text-[13px] mt-2">Add details</p>
                       </div>
                     </div>
-                    <p className=" text-2xl font-medium text-[#121212] text-center">
-                      Create your Verzo account
-                    </p>
-                    <div className=" flex flex-col gap-y-2">
-                      <label className=" text-primary-black" htmlFor="BVN">
-                        Enter your Phone number (linked to your BVN)
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        className="max-w-[450px] px-4 py-[10px] border-gray-300 rounded-[8px] border placeholder:text-sm focus:outline-none "
-                        id="phone"
-                      />
-                    </div>
-                    <div className="flex justify-between mt-4">
-                      <button
-                        type="button"
-                        className={`px-7 py-[10px] w-full rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
-                          loading ? "opacity-50" : ""
-                        }`}
-                      >
-                        {loading ? "Loading..." : "Continue"}
-                      </button>
+                    <div className="w-full flex flex-col gap-y-3 px-6 mt-4">
+                      {/* Send OTP Step */}
+                      {sendOTPStep && (
+                        <>
+                          <p className="text-gray-600 font-medium">Send OTP</p>
+                          <div className="flex flex-col gap-y-[6px] mt-[-2px]">
+                            <label
+                              className="text-gray-700 text-[15px]"
+                              htmlFor="BVN"
+                            >
+                              Bank verification number (BVN)
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              disabled={sendOTPLoading}
+                              className="max-w-[450px] tracking-wider px-4 py-[8px] border-gray-300 rounded-[8px] border placeholder:text-sm focus:outline-none"
+                              id="BVN"
+                              value={bvnNumber}
+                              onChange={(e) => setBvnNumber(e.target.value)}
+                            />
+                          </div>
+                          <div className="flex mt-4">
+                            <button
+                              onClick={handleSendOTPMutation}
+                              type="button"
+                              disabled={sendOTPLoading || !bvnNumber}
+                              className={`${
+                                sendOTPLoading ? " opacity-50" : ""
+                              } px-7 py-[10px] disabled:opacity-50 disabled:cursor-not-allowed w-full rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white`}
+                            >
+                              {sendOTPLoading ? "Loading" : " Send OTP"}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                      {/* Add Details Step */}
+                      {addDetailsStep && (
+                        <>
+                          <p className="text-gray-600 font-medium">
+                            Add details
+                          </p>
+                          <div className="flex flex-col gap-y-[6px] mt-[-2px]">
+                            <label
+                              className="text-gray-700 text-[15px]"
+                              htmlFor="otp"
+                            >
+                              Enter OTP Code
+                            </label>
+                            <input
+                              type="number"
+                              required
+                              className="max-w-[450px] px-4 py-[8px] border-gray-300 rounded-[8px] border placeholder:text-sm focus:outline-none"
+                              id="otp"
+                              value={otp}
+                              onChange={(e) => setOtp(e.target.value)}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-y-2">
+                            <label className="text-gray-600" htmlFor="address">
+                              Address
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              id="address"
+                              className="w-full px-3 py-[8px] border-gray-300 rounded-[8px] border focus:outline-none"
+                              placeholder="Address"
+                              value={address}
+                              onChange={(e) => setAddress(e.target.value)}
+                            />
+                          </div>
+                          <div className="flex flex-row w-full gap-x-4">
+                            <div className="w-1/2 flex flex-col gap-y-2">
+                              <label
+                                className="text-[15px] text-gray-600"
+                                htmlFor="postalCode"
+                              >
+                                Postal code
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                id="postalCode"
+                                className="w-full px-3 py-[8px] border-gray-300 rounded-[8px] border focus:outline-none"
+                                placeholder="100001"
+                                value={postalCode}
+                                onChange={(e) => setPostalCode(e.target.value)}
+                              />
+                            </div>
+                            <div className="w-1/2 flex flex-col gap-y-2">
+                              <label
+                                className="text-[15px] text-gray-600"
+                                htmlFor="dob"
+                              >
+                                Date of birth (DOB)
+                              </label>
+                              <input
+                                className="w-full px-3 py-[8px] border-gray-300 rounded-[8px] border focus:outline-none"
+                                type="date"
+                                value={dob}
+                                onChange={(e) => setDob(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-row w-full gap-x-4">
+                            <div className="w-1/2 flex flex-col gap-y-2">
+                              <label
+                                className="text-[15px] text-gray-600"
+                                htmlFor="city"
+                              >
+                                City
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                id="city"
+                                className="w-full px-3 py-[8px] border-gray-300 rounded-[8px] border focus:outline-none"
+                                placeholder="Lekki"
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                              />
+                            </div>
+                            <div className="w-1/2 flex flex-col gap-y-2">
+                              <label
+                                className="text-[15px] text-gray-600"
+                                htmlFor="state"
+                              >
+                                State
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                id="state"
+                                className="w-full px-3 py-[8px] border-gray-300 rounded-[8px] border focus:outline-none"
+                                placeholder="Lagos"
+                                value={state}
+                                onChange={(e) => setState(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex mt-4">
+                            <button
+                              type="button"
+                              disabled={loading}
+                              onClick={handleAddDetails}
+                              className={`px-7 py-[10px] w-full rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                                loading ? "opacity-50" : ""
+                              }`}
+                            >
+                              {loading ? "Loading" : "Complete"}
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
-                  {/* <div className="flex flex-col gap-y-3 relative w-[370px]">
-                    <X
-                      onClick={onClose}
-                      className=" absolute cursor-pointer right-0 mr-[-25px] w-6 h-6 text-gray-700"
-                    />
-                    <div className=" flex">
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-gray-200 rounded-full w-14 h-14 flex items-center justify-center text-gray-700 text-2xl font-bold ">
-                              1
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-[13px] mt-2">Send Otp</p>
-                      </div>
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-primary-blue rounded-full w-14 h-14 flex items-center justify-center text-white text-2xl font-bold">
-                              2
-                            </span>
-                          </div>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="bg-primary-blue rounded-full w-14 h-14 animate-pulse"></div>
-                          </div>
-                        </div>
-                        <p className=" text-[13px] mt-2 font-medium">
-                          Verify BVN
-                        </p>
-                      </div>
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-gray-200 rounded-full w-14 h-14 flex items-center justify-center text-gray-700 text-2xl font-bold">
-                              3
-                            </span>
-                          </div>
-                        </div>
-                        <p className=" text-[13px] mt-2">Add details</p>
-                      </div>
-                    </div>
-                    <p className=" text-2xl mt-[-10px] font-medium text-[#121212] text-center">
-                      Verify Your BVN
-                    </p>
-
-                    <div className=" flex flex-col gap-y-2 ">
-                      <label className=" text-primary-black" htmlFor="BVN">
-                        Bank verification number (BVN)
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        className="max-w-[450px] px-4 py-[10px] border-gray-300 rounded-[8px] border placeholder:text-sm focus:outline-none "
-                        id="phone"
-                      />
-                    </div>
-                    <div className=" flex flex-col gap-y-2">
-                      <label className=" text-primary-black" htmlFor="otp">
-                        OTP Code
-                      </label>
-                      <input
-                        type="number"
-                        required
-                        className="max-w-[450px] px-4 py-[10px] border-gray-300 rounded-[8px] border placeholder:text-sm focus:outline-none "
-                        id="otp"
-                      />
-                    </div>
-                    <div className="flex mt-4">
-                      <button
-                        type="button"
-                        className={`px-7 py-[10px] w-full rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
-                          loading ? "opacity-50" : ""
-                        }`}
-                      >
-                        {loading ? "Loading..." : "Verify"}
-                      </button>
-                    </div>
-                  </div> */}
-
-                  {/* <div className="flex flex-col gap-y-3 relative w-[400px]">
-                    <div className="bg-white h-[120px] flex border border-gray-100 z-[100] rounded-lg absolute top-[-28%] left-0 w-full">
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-gray-200 rounded-full w-14 h-14 flex items-center justify-center text-gray-700 text-2xl font-bold ">
-                              1
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-[13px] mt-2">Send Otp</p>
-                      </div>
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-gray-200 rounded-full w-14 h-14 flex items-center justify-center text-gray-700 text-2xl font-bold">
-                              2
-                            </span>
-                          </div>
-                        </div>
-                        <p className=" text-[13px] mt-2">Verify BVN</p>
-                      </div>
-                      <div className="w-1/3 p-[16px] flex flex-col items-center justify-center">
-                        <div className="relative w-14 h-14">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="bg-primary-blue rounded-full w-14 h-14 flex items-center justify-center text-white text-2xl font-bold">
-                              3
-                            </span>
-                          </div>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="bg-primary-blue rounded-full w-14 h-14 animate-pulse"></div>
-                          </div>
-                        </div>
-                        <p className=" text-[13px] mt-2 font-medium">
-                          Add details
-                        </p>
-                      </div>
-                    </div>
-                    <p className=" text-2xl font-medium text-[#121212] mt-[30px] text-center">
-                      Add account details
-                    </p>
-                    <div className=" flex flex-col gap-y-2">
-                      <label className=" text-primary-black" htmlFor="address">
-                        Address
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        id="address"
-                        className="w-full px-3 py-[10px] border-gray-300 rounded-[8px] border focus:outline-none "
-                        placeholder="Address"
-                      />
-                    </div>
-                    <div className="flex flex-row w-full gap-x-4">
-                      <div className=" w-1/2 flex flex-col gap-y-2">
-                        <label className=" text-[15px]" htmlFor="category">
-                          Postal code
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          id="reference"
-                          className="w-full px-3 py-[10px] border-gray-300 rounded-[8px] border focus:outline-none "
-                          placeholder="100001"
-                        />
-                      </div>
-                      <div className=" w-1/2 flex flex-col gap-y-2">
-                        <label className=" text-[15px]" htmlFor="category">
-                          Date of birth (DOB)
-                        </label>
-                        <input
-                          className="w-full px-3 py-[9px] border-gray-300 rounded-[8px] border focus:outline-none "
-                          type="date"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-row w-full gap-x-4">
-                      <div className="w-1/2 max-w-[200px] flex flex-col gap-y-2">
-                        <label className=" text-[15px]" htmlFor="city">
-                          City
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          id="city"
-                          className="w-full px-3 py-[10px] border-gray-300 rounded-[8px] border focus:outline-none "
-                          placeholder="Lekki"
-                        />
-                      </div>
-                      <div className="w-1/2 max-w-[200px] flex flex-col gap-y-2">
-                        <label className=" text-[15px]" htmlFor="state">
-                          State
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          id="state"
-                          className="w-full px-3 py-[10px] border-gray-300 rounded-[8px] border focus:outline-none "
-                          placeholder="Lagos"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-between mt-4">
-                      <button
-                        type="button"
-                        className={`px-7 py-[10px] w-full rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
-                          loading ? "opacity-50" : ""
-                        }`}
-                      >
-                        {loading ? "Loading..." : "Submit"}
-                      </button>
-                    </div>
-                  </div> */}
                 </>
               </Dialog.Panel>
             </Transition.Child>

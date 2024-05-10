@@ -173,9 +173,11 @@ const AddPurchaseMerchantInvoice = () => {
             </button>
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
-            <p className=" text-[30px] text-primary-black ">Purchase #001 </p>
+            <p className=" text-[28px] text-primary-black ">
+              Purchase #{purchase?.reference}{" "}
+            </p>
             <p className=" text-primary-greytext font-light text-lg">
-              Add extra information to the purchase
+              Upload the merchant invoice linked to this purchase
             </p>
           </div>
           <div className=" flex gap-x-4">
@@ -208,9 +210,11 @@ const AddPurchaseMerchantInvoice = () => {
                 <Image src="/preview.png" width={80} height={80} alt="image" />
               </div>
               <div className=" flex flex-col">
-                <p className=" text-xl text-primary-black">Purchase #001</p>
+                <p className=" text-xl text-primary-black">
+                  Purchase #{purchase?.reference}
+                </p>
                 <p className=" text-lg text-primary-greytext font-light">
-                  Short description about the purchase
+                  {purchase?.description}
                 </p>
               </div>
             </div>
@@ -225,7 +229,8 @@ const AddPurchaseMerchantInvoice = () => {
           <div className=" flex flex-col mt-[20px] gap-y-9">
             <div className=" flex flex-col gap-y-1 ">
               <p className=" text-lg text-primary-black">
-                Upload merchant invoice
+                Upload merchant invoice{" "}
+                <span className=" text-gray-500">(optional)</span>
               </p>
               <p className=" text-sm text-primary-greytext">
                 Supported formats: PNG, JPG & JPEG
@@ -282,12 +287,12 @@ const AddPurchaseMerchantInvoice = () => {
                     disabled={purchaseStatusId! >= 3}
                     asChild
                   >
-                    <button className=" text-left text-sm font-normal bg-white flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                    <button className=" text-left text-base font-normal bg-white flex items-center border border-gray-200 h-[45px] px-3 rounded-[8px]">
                       {date ? (
                         format(date, "PPP")
                       ) : (
                         <div className=" justify-between flex items-center w-full">
-                          <span className=" text-sm">Pick a date</span>
+                          <span className=" text-base">Pick a date</span>
                           <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                         </div>
                       )}
@@ -308,7 +313,7 @@ const AddPurchaseMerchantInvoice = () => {
               </div>
               <div className="text-primary-greytext flex flex-col gap-y-2 w-1/2">
                 <p>Amount</p>
-                <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
+                <p className="border cursor-not-allowed text-gray-700 border-gray-100 text-[18px] px-3 bg-gray-50 py-2 rounded-[8px]">
                   ₦{amount?.toLocaleString()}
                 </p>
               </div>

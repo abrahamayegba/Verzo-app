@@ -1,15 +1,30 @@
-query GetCardsByBusiness($businessId: String!) {
-  getCardsByBusiness(businessId: $businessId) {
+query GetCardById($cardId: String!) {
+  getCardById(cardId: $cardId) {
     id
     maskedPan
     type
     brand
     expiryDate
+    account {
+      id
+      accountNumber
+      accountBalance
+      accountName
+    }
     createdAt
+    updatedAt
     status
+    sudoCardTransactions {
+      id
+      amount
+      type
+      createdAt
+    }
     spendingLimits {
       amount
       interval
+      createdAt
+      id
     }
     spendingControl {
       atm

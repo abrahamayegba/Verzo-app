@@ -9,5 +9,10 @@ mutation CreateSudoCard(
       assignedUserId: $assignedUserId
       spendingLimits: $spendingLimits
     }
-  )
+  ) {
+    id
+    maskedPan
+    brand
+    expiryDate
+  }
 }

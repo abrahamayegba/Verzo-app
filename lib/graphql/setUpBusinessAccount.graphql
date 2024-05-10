@@ -1,6 +1,8 @@
 mutation SetUpBusinessAccount(
   $dob: Date!
-  $bvn: String!
+  $identityId: String!
+  $identityNumber: String!
+  $otp: String!
   $idFrontUrl: String
   $idBackUrl: String
   $incorporationCertificateUrl: String
@@ -14,7 +16,9 @@ mutation SetUpBusinessAccount(
   setUpBusinessAccount(
     input: {
       dob: $dob
-      bvn: $bvn
+      identityId: $identityId
+      identityNumber: $identityNumber
+      otp: $otp
       idFrontUrl: $idFrontUrl
       idBackUrl: $idBackUrl
       incorporationCertificateUrl: $incorporationCertificateUrl

@@ -110,8 +110,15 @@ const CardTabContentAll = () => {
                 />
                 <div className=" flex flex-col">
                   <p className=" text-base">{card?.user?.fullname}</p>
-                  <p className=" mt-1 flex flex-row items-center gap-x-1 font-light text-[13px] text-gray-600">
-                    <CreatedAtIcon /> {card?.createdAt}
+                  <p className="mt-1 flex flex-row items-center gap-x-1 font-light text-[13px] text-gray-600">
+                    <CreatedAtIcon /> <span>Created at:</span>
+                    {new Date(card?.createdAt).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                    })}
                   </p>
                 </div>
               </TableCell>

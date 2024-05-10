@@ -80,9 +80,13 @@ const ConfirmItems = () => {
     });
   };
 
-  if (getBusinessesByUserId.loading || getExpenseById.loading) {
-    return <MainLoader />;
-  }
+  const showDateFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      description: error,
+      duration: 3000,
+    });
+  };
 
   const handleQuantityChange = (itemId: string, newValue: any) => {
     const newQuantityReceived = parseFloat(newValue);
@@ -97,6 +101,10 @@ const ConfirmItems = () => {
   };
 
   const handleMarkAsReceived = async (itemId: string) => {
+    if (!date) {
+      showDateFailureToast("Please pick a date and try again.");
+      return;
+    }
     try {
       const receivedQuantity = receivedQuantities[itemId];
       if (!receivedQuantity) {
@@ -131,6 +139,10 @@ const ConfirmItems = () => {
     }
   };
 
+  if (getBusinessesByUserId.loading || getExpenseById.loading) {
+    return <MainLoader />;
+  }
+
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[20px]">
       <div className=" flex justify-between w-full items-center relative">
@@ -144,9 +156,11 @@ const ConfirmItems = () => {
           </button>
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
-          <p className=" text-[30px] text-primary-black ">Expense #001 </p>
+          <p className=" text-[30px] text-primary-black ">
+            Expense #{expense?.reference}{" "}
+          </p>
           <p className=" text-primary-greytext font-light text-lg">
-            Add extra information to the expense
+            Confirm the items for this expense
           </p>
         </div>
         <div className=" flex gap-x-4">
@@ -183,7 +197,7 @@ const ConfirmItems = () => {
           <div className=" flex w-full gap-x-6">
             <div className=" text-primary-greytext flex flex-col gap-y-2 w-1/2">
               <p>Merchant</p>
-              <p className=" border text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
+              <p className=" border capitalize text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
                 {merchantName}
               </p>
             </div>
@@ -206,12 +220,12 @@ const ConfirmItems = () => {
                   disabled={expenseStatusId! >= 2}
                   asChild
                 >
-                  <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                  <button className=" text-left text-base font-normal flex items-center border border-gray-200 h-[45px] px-3 rounded-[8px]">
                     {date ? (
                       format(date, "PPP")
                     ) : (
                       <div className=" justify-between flex items-center w-full">
-                        <span className=" text-sm">Pick a date</span>
+                        <span className=" text-[16px]">Pick a date</span>
                         <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                       </div>
                     )}
@@ -241,7 +255,7 @@ const ConfirmItems = () => {
             <div key={expense?.id} className="flex flex-col mb-3">
               <div className=" flex w-full justify-end">
                 {expense?.quantity === expense?.quantityReceived ? (
-                  <p className=" text-primary-blue flex items-center gap-x-2 cursor-not-allowed">
+                  <p className=" text-gray-500 flex items-center gap-x-2 cursor-not-allowed">
                     Item Received
                     <Check className="w-4 h-4" />
                   </p>

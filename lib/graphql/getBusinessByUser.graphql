@@ -1,10 +1,14 @@
 query GetBusinessesByUserId {
   getBusinessesByUserId {
     user {
-      id
-      email
-      fullname
+      code
       verified
+      email
+      id
+      fullname
+      role {
+        roleName
+      }
     }
     businesses {
       id

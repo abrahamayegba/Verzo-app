@@ -7,6 +7,7 @@ import ActiveMailIcon from "@/components/ui/icons/ActiveMailIcon";
 import CircleMailIcon from "@/components/ui/icons/CircleMailIcon";
 import { useResendVerificationMutation } from "@/src/generated/graphql";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 
 const VerifyEmail = () => {
@@ -14,6 +15,9 @@ const VerifyEmail = () => {
   const { toast } = useToast();
   const [resendVerificationMutation, { loading: resendLoading }] =
     useResendVerificationMutation();
+  const businessParams = useSearchParams();
+  const hasBusinessString = businessParams.get("hasBusiness");
+  const hasBusiness = hasBusinessString === "true";
 
   const showSuccessToast = () => {
     toast({
@@ -41,7 +45,6 @@ const VerifyEmail = () => {
       showFailureToast(error);
     }
   };
-
   return (
     <>
       <div className=" w-full flex flex-row h-screen">
@@ -57,7 +60,7 @@ const VerifyEmail = () => {
               </button>
             </Link>
           </div>
-          <div className=" flex flex-col pt-[150px] gap-y-2 pl-[140px] pr-[60px] mt-[40px]">
+          <div className=" flex flex-col pt-[150px] gap-y-2 pl-[140px] pr-[60px] mt-[10px]">
             <div className=" flex mb-[30px]">
               <span>
                 <CircleMailIcon />
@@ -101,7 +104,12 @@ const VerifyEmail = () => {
           </p>
         </div>
       </div>
-      <OTPModal open={isOpen} openModal={openModal} onClose={closeModal} />
+      <OTPModal
+        hasBusiness={hasBusiness}
+        open={isOpen}
+        openModal={openModal}
+        onClose={closeModal}
+      />
     </>
   );
 };

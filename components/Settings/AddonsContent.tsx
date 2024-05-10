@@ -30,7 +30,7 @@ const AddonsContent = () => {
               Purchase
             </button>
           </div>
-          <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
+          {/* <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[6px]">
               <p className=" text-primary-black">Custom sync</p>
               <p className=" text-sm text-primary-greytext">
@@ -43,7 +43,7 @@ const AddonsContent = () => {
             >
               Purchase
             </button>
-          </div>
+          </div> */}
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[6px]">
               <p className=" text-primary-black">Weekly reports</p>

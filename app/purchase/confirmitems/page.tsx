@@ -160,9 +160,11 @@ const ConfirmPurchaseItems = () => {
           </button>
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
-          <p className=" text-[30px] text-primary-black ">Purchase #001 </p>
+          <p className=" text-[28px] text-primary-black ">
+            Purchase #{purchase?.reference}{" "}
+          </p>
           <p className=" text-primary-greytext font-light text-lg">
-            Add extra information to the purchase
+            Confirm the items of this purchase
           </p>
         </div>
         <div className=" flex gap-x-4">
@@ -222,12 +224,12 @@ const ConfirmPurchaseItems = () => {
                   disabled={purchaseStatusId! >= 2}
                   asChild
                 >
-                  <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                  <button className=" text-left text-base h-[45px] font-normal flex items-center border border-gray-200 px-3 rounded-[8px]">
                     {date ? (
                       format(date, "PPP")
                     ) : (
                       <div className=" justify-between flex items-center w-full">
-                        <span className=" text-sm">Pick a date</span>
+                        <span className=" text-base">Pick a date</span>
                         <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                       </div>
                     )}
@@ -252,12 +254,12 @@ const ConfirmPurchaseItems = () => {
         <div className=" w-full flex justify-between mt-2">
           <p className=" text-lg">Purchase items</p>
         </div>
-        <div className=" mt-[-8px] flex flex-col gap-y-7">
+        <div className=" mt-[-20px] flex flex-col gap-y-7">
           {purchaseItems?.map((purchase) => (
             <div key={purchase?.id} className="flex flex-col mb-3">
               <div className=" flex w-full justify-end">
                 {purchase?.quantity === purchase?.quantityReceived ? (
-                  <p className=" text-primary-blue flex items-center gap-x-2 cursor-not-allowed">
+                  <p className=" text-gray-500 flex items-center gap-x-2 cursor-not-allowed">
                     Item Received
                     <Check className="w-4 h-4" />
                   </p>

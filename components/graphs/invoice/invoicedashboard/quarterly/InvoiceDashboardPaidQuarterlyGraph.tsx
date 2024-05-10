@@ -76,6 +76,7 @@ const InvoiceDashboardPaidQuarterlyGraph = () => {
         data={chartData}
         showLegend={false}
         showYAxis={false}
+        startEndOnly={true}
         index="month"
         yAxisWidth={65}
         categories={["invoicePaid"]}

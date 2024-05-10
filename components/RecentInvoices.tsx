@@ -64,7 +64,15 @@ const RecentInvoices = () => {
                 <p className="text-primary-greytext">
                   {" "}
                   {sale?.transactionDate
-                    ? new Date(sale.transactionDate).toDateString()
+                    ? new Date(sale.transactionDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )
                     : ""}
                 </p>
                 {sale?.paid === true ? (

@@ -1,0 +1,13 @@
+query ViewBusinessAccountStatement($businessId: String!) {
+  viewBusinessAccountStatement(input: { businessId: $businessId }) {
+    id
+    paymentReference
+    type
+    provider
+    providerChannel
+    narration
+    amount
+    transactionDate
+    valueDate
+  }
+}

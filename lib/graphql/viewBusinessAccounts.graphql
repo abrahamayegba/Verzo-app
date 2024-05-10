@@ -1,10 +1,17 @@
 query ViewBusinessAccount($businessId: String!) {
   viewBusinessAccount(businessId: $businessId) {
-    statusCode
-    data {
-      accountName
-      accountNumber
-      accountBalance
+    id
+    customer {
+      billingAddressLine1
+      billingAddressCity
     }
+    canDebit
+    canCredit
+    accountName
+    accountNumber
+    accountType
+    accountBalance
+    status
+    lastSyncTime
   }
 }

@@ -152,9 +152,11 @@ const RecordSaleExpense = () => {
           </button>
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
-          <p className=" text-[30px] text-primary-black ">Invoice #001 </p>
+          <p className=" text-[30px] text-primary-black ">
+            Invoice #{sales?.reference}{" "}
+          </p>
           <p className=" text-primary-greytext font-light text-lg">
-            Add extra information to the invoice
+            Record the sale expenses for this invoice
           </p>
         </div>
         <div className=" flex gap-x-4">
@@ -191,7 +193,7 @@ const RecordSaleExpense = () => {
           <div className=" flex w-full gap-x-6">
             <div className=" text-primary-greytext flex flex-col gap-y-2 w-1/2">
               <p>Customer</p>
-              <p className=" border text-gray-700 cursor-not-allowed border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
+              <p className=" border text-gray-700 capitalize cursor-not-allowed border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
                 {customerName}
               </p>
             </div>
@@ -215,7 +217,7 @@ const RecordSaleExpense = () => {
                       format(date, "PPP")
                     ) : (
                       <div className=" justify-between flex items-center w-full">
-                        <span className=" text-sm">Pick a date</span>
+                        <span className=" text-[16px]">Pick a date</span>
                         <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                       </div>
                     )}

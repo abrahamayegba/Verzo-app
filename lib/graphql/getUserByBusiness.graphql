@@ -1,0 +1,13 @@
+query getUsersByBusiness($businessId: String!) {
+  getUsersByBusiness(businessId: $businessId) {
+    id
+    fullname
+    email
+    role {
+      id
+      roleName
+      roleDescription
+    }
+    createdAt
+  }
+}

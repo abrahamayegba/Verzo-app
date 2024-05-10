@@ -78,6 +78,7 @@ const InvoiceDashboardTotalQuarterlyGraph = () => {
         showYAxis={false}
         index="month"
         yAxisWidth={65}
+        startEndOnly={true}
         categories={["invoiceAmount"]}
         colors={["blue"]}
         showGridLines={false}
