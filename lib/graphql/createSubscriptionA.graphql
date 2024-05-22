@@ -4,7 +4,7 @@ mutation CreateSubscriptionNewCardA(
   $offerId: String
   $addOnOptionId: String
   $addOnQuantity: Float
-  $tax: Float!
+  $tax: BigInt!
 ) {
   createSubscriptionNewCardA(
     input: {

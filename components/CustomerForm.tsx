@@ -79,7 +79,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
               Customer
             </label>
             <Select value={customerId} onValueChange={setCustomerId}>
-              <SelectTrigger className=" w-full rounded-lg border border-gray-200">
+              <SelectTrigger className=" w-full text-[15px] rounded-lg border border-gray-200">
                 <SelectValue
                   className=" text-primary-greytext"
                   placeholder="Select a customer"

@@ -1,7 +1,7 @@
 mutation CreateProduct(
   $productName: String!
   $businessId: String!
-  $price: Float!
+  $price: BigInt!
   $productUnitId: String!
   $initialStockLevel: Float
 ) {

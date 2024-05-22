@@ -13,11 +13,12 @@ import { Progress } from "@/components/ui/progress";
 import { useGetCardByIdQuery } from "@/src/generated/graphql";
 import { Eye, MoveLeft, PlusCircle, Copy, EyeOff, Lock } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import Image from "next/image";
 import VerveCardIcon from "@/components/ui/icons/VerveCardIcon";
+import { isAuthenticated } from "@/lib/auth";
 
 const ViewCard = () => {
   const cardParams = useSearchParams();
@@ -32,6 +33,16 @@ const ViewCard = () => {
       cardId: cardId!,
     },
   });
+  const router = useRouter();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   const imageSrc = "https://i.imgur.com/kGkSg1v.png";
   const cardData = data?.getCardById;

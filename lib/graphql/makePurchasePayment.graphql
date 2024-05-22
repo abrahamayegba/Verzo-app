@@ -3,7 +3,7 @@ mutation MakePurchasePayment(
   $purchaseId: String!
   $transactionDate: Date!
   $description: String!
-  $total: Float!
+  $total: BigInt!
   $file: String
   $sudoTransactionId: String
 ) {

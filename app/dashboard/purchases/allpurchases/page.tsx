@@ -23,10 +23,15 @@ const AllPurchases = () => {
   const businessId = storedBusinessId[0] || "";
   const router = useRouter();
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/auth/signin");
-    }
-  });
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
   const getPurchasesByBusiness = useGetPurchaseByBusinessQuery({
     variables: {
       businessId: businessId,

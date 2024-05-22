@@ -8,9 +8,10 @@ import {
 } from "@/src/generated/graphql";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect } from "react";
 import Image from "next/image";
+import { isAuthenticated } from "@/lib/auth";
 
 const ViewExpense = () => {
   const currentStep = 1;
@@ -21,6 +22,17 @@ const ViewExpense = () => {
       expenseId: expenseId!,
     },
   });
+  const router = useRouter();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
   const expense = getExpenseById?.data?.getExpenseById;
   const expenseStatusId = expense?.expenseStatusId!;
 

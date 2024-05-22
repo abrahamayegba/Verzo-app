@@ -1,4 +1,4 @@
-query GetSaleByBusiness($businessId: String!, $cursor: String, $sets: Float) {
+query GetSaleByBusiness($businessId: String!, $cursor: String, $sets: Int) {
   getSaleByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
     salesByBusiness {
       id

@@ -1,7 +1,7 @@
 query GetDailyExpensesForMonth(
   $businessId: String!
-  $month: Float!
-  $year: Float!
+  $month: Int!
+  $year: Int!
 ) {
   getDailyExpensesForMonth(
     businessId: $businessId

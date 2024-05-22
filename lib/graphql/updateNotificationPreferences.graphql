@@ -1,0 +1,22 @@
+mutation UpdateNotificationPreferences(
+  $businessId: String!
+  $notificationPreferences: NotificationPrefs!
+) {
+  updateNotificationPreferences(
+    input: {
+      businessId: $businessId
+      notificationPreferences: $notificationPreferences
+    }
+  ) {
+    id
+    trackUsers
+    trackTasks
+    trackInvoices
+    trackProducts
+    trackServices
+    trackExpenses
+    trackPurchases
+    trackCustomers
+    trackMerchants
+  }
+}

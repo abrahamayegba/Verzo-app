@@ -1,0 +1,15 @@
+query GetBusinessTasks($businessId: String!, $cursor: String, $sets: Int) {
+  getBusinessTasks(
+    input: { businessId: $businessId, cursor: $cursor, sets: $sets }
+  ) {
+    cursorId
+    tasks {
+      id
+      completed
+      dateCompleted
+      taskType {
+        taskType
+      }
+    }
+  }
+}

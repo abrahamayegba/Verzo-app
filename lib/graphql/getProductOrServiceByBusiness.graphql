@@ -1,6 +1,6 @@
 query GetProductOrServiceByBusiness(
   $businessId: String!
-  $take: Float
+  $take: Int
   $cursor: String
   $type: String
 ) {

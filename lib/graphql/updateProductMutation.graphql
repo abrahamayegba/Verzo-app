@@ -1,7 +1,7 @@
 mutation UpdateProduct(
   $productId: String!
   $productName: String
-  $price: Float
+  $price: BigInt
   $productUnitId: String
   $trackReorderLevel: Boolean
   $reorderLevel: Float

@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ApolloProvider } from "@/src/apollo/ApolloProvider";
 import "./globals.css";
 import { usePathname, useRouter } from "next/navigation";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -30,13 +31,13 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     };
   }, [router]);
 
-  //made fake changes
   return (
     <html lang="en">
       <ApolloProvider>
         <body className="satoshi-text">
           {children}
           <Toaster />
+          <SonnerToaster />
         </body>
       </ApolloProvider>
     </html>

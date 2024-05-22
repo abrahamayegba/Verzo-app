@@ -1,6 +1,6 @@
 query GetArchivedExpensesByBusiness(
   $businessId: String!
-  $sets: Float
+  $sets: Int
   $cursor: String
 ) {
   getArchivedExpenseByBusiness(

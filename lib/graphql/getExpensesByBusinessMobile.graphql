@@ -1,7 +1,7 @@
 query GetExpenseByBusinessMobile(
   $businessId: String!
   $cursor: String
-  $take: Float
+  $take: Int
 ) {
   getExpenseByBusinessMobile(
     businessId: $businessId

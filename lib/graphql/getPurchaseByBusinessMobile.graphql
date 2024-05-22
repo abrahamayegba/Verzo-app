@@ -1,7 +1,7 @@
 query GetPurchaseByBusinessMobile(
   $businessId: String!
   $cursor: String
-  $take: Float
+  $take: Int
 ) {
   getPurchaseByBusinessMobile(
     businessId: $businessId

@@ -23,10 +23,15 @@ const Products = () => {
   const searchResultsParams = useSearchParams();
   const productSearchId = searchResultsParams.get("searchResult")?.toString();
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/auth/signin");
-    }
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
   }, [router]);
+
   const [openCreateProductSheet, setOpenCreateProductSheet] = useState(false);
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const getProductsByBusiness = useGetProductsByBusinessQuery({

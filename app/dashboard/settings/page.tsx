@@ -37,9 +37,13 @@ const Settings = () => {
   };
   const router = useRouter();
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/auth/signin");
-    }
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
   }, [router]);
 
   if (

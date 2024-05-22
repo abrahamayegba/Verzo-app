@@ -2,7 +2,7 @@ query GetSalesForYear(
   $businessId: String!
   $yearly: Boolean
   $cursor: String
-  $sets: Float
+  $sets: Int
 ) {
   getSalesForYear(
     businessId: $businessId

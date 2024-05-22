@@ -3,5 +3,8 @@ query GetUserById {
     id
     fullname
     email
+    business {
+      id
+    }
   }
 }

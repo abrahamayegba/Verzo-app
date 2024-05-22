@@ -1,8 +1,4 @@
-query GetExpensesByBusiness(
-  $businessId: String!
-  $sets: Float
-  $cursor: String
-) {
+query GetExpensesByBusiness($businessId: String!, $sets: Int, $cursor: String) {
   getExpenseByBusiness(businessId: $businessId, sets: $sets, cursor: $cursor) {
     expenseByBusiness {
       id

@@ -170,6 +170,16 @@ const CreateExpense = () => {
     0
   );
 
+  const updatedExpenseItems = expenseItems.map((item) => {
+    return {
+      description: item?.description,
+      quantity: item?.quantity,
+      unitPrice: item?.unitPrice * 100,
+      index: item?.index,
+      creditAccountId: item?.creditAccountId,
+    };
+  });
+
   const amountDue = subtotal;
 
   const onCreateExpenseHandler = async (data: FormData) => {
@@ -180,7 +190,7 @@ const CreateExpense = () => {
           expenseCategoryId: expenseCategoryId,
           expenseDate: expenseDate,
           merchantId: merchantId,
-          expenseItem: expenseItems,
+          expenseItem: updatedExpenseItems,
           ...data,
         },
         refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
@@ -230,7 +240,7 @@ const CreateExpense = () => {
                 value={expenseCategoryId}
                 onValueChange={setExpenseCategoryId}
               >
-                <SelectTrigger className=" w-full rounded-lg border text-primary-black border-gray-200">
+                <SelectTrigger className=" w-full text-[15px] rounded-lg border text-primary-black border-gray-200">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent className=" bg-white w-full">
@@ -256,12 +266,12 @@ const CreateExpense = () => {
               </label>
               <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
                 <PopoverTrigger asChild>
-                  <button className=" text-left text-sm font-normal text-primary-black flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+                  <button className=" text-left text-[15px] font-normal text-primary-black flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                     {date ? (
                       format(date, "PPP")
                     ) : (
                       <div className=" justify-between flex items-center w-full">
-                        <span className=" text-sm">Pick a date</span>
+                        <span className=" text-[15px]">Pick a date</span>
                         <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                       </div>
                     )}

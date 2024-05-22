@@ -20,15 +20,22 @@ const Customers = () => {
   );
   const businessId = storedBusinessId[0] || "";
   const router = useRouter();
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
   const searchResultsParams = useSearchParams();
   const customerSearchId = searchResultsParams.get("searchResult")?.toString();
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/auth/signin");
-    }
-  }, [router]);
   const [openCustomerSheet, setOpenCustomerSheet] = useState(false);
-  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+
   const getCustomerByBusiness = useGetCustomerByBusinessQuery({
     variables: {
       businessId: businessId,

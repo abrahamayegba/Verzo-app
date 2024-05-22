@@ -24,7 +24,6 @@ import {
   useTotalQuarterlyInvoicesAmountQuery,
   useTotalWeeklyInvoicesAmountQuery,
   useTotalYearlyInvoicesAmountQuery,
-  useViewBusinessAccountQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import MainLoader from "@/components/loading/MainLoader";
@@ -64,27 +63,28 @@ const Dashboard = () => {
     openModal: openImportCustomerModal,
     closeModal: closeImportCustomerModal,
   } = useModal();
-  const token = getToken();
   const [isVisible, setIsVisible] = useState(true);
   const handleCloseBanner = () => {
     setIsVisible(false);
   };
-  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const router = useRouter();
+  const token = getToken();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
-  const router = useRouter();
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/auth/signin");
-    }
-  });
-  useEffect(() => {
-    if (getBusinessesByUserId.data && !businessId) {
-      router.push("/auth/businesssetup");
-    }
-  }, [getBusinessesByUserId.data, businessId, router]);
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
   useEffect(() => {
     const fetchData = async () => {
       await getBusinessesByUserId.refetch();
@@ -208,12 +208,9 @@ const Dashboard = () => {
       businessId: businessId,
     },
   });
-
-  const viewBusinessAccounts = useViewBusinessAccountQuery({
-    variables: {
-      businessId: businessId,
-    },
-  });
+  const userHasSudoAccount =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.[0]
+      ?.sudoAccount?.id;
 
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
@@ -237,8 +234,7 @@ const Dashboard = () => {
     getPurchasesByBusiness.loading ||
     getCardsByBusiness.loading ||
     getReceivablesByBusiness.loading ||
-    getPayablesByBusiness.loading ||
-    viewBusinessAccounts.loading;
+    getPayablesByBusiness.loading;
 
   return (
     <>
@@ -246,7 +242,7 @@ const Dashboard = () => {
         <Loader2 />
       ) : (
         <>
-          {!viewBusinessAccounts?.data?.viewBusinessAccount?.id && (
+          {!userHasSudoAccount && (
             <CompleteAccountBanner
               open={isVisible}
               onClose={handleCloseBanner}
@@ -255,9 +251,7 @@ const Dashboard = () => {
           )}
           <div
             className={` px-[52px] bg-primary-whiteTint ${
-              !viewBusinessAccounts?.data?.viewBusinessAccount?.id && isVisible
-                ? " pt-[70px]"
-                : "pt-[47px]"
+              !userHasSudoAccount && isVisible ? " pt-[70px]" : "pt-[47px]"
             } pb-[20px] gap-y-[36px] flex flex-col max-w-[1680px] mx-auto`}
           >
             <div className=" flex flex-row justify-between items-center">

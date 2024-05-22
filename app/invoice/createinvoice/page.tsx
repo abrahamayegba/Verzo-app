@@ -5,7 +5,6 @@ import SaleExpenseItem from "@/components/SaleExpenseItem";
 import ServiceExpenseItem from "@/components/ServiceExpenseItem";
 import CreateCustomerSheet from "@/components/sheets/customer/CreateCustomerSheet";
 import CreateItemSheet from "@/components/sheets/invoice/CreateItemSheet";
-import ViewInvoiceSheet from "@/components/sheets/invoice/ViewInvoiceSheet";
 import {
   HoverCard,
   HoverCardContent,
@@ -284,7 +283,7 @@ const CreateInvoice = () => {
       id: item.id,
       type: item.type,
       index: item.index,
-      price: item.price,
+      price: item.price * 100,
       quantity: item.quantity,
     };
   });
@@ -297,6 +296,7 @@ const CreateInvoice = () => {
     VAT: 7.5,
     item: saleItemDetails,
   };
+  console.log(invoiceInput);
 
   const onSubmitCreateSaleHandler = async (data: FormData) => {
     if (!customerId) {
@@ -405,12 +405,12 @@ const CreateInvoice = () => {
           </label>
           <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
             <PopoverTrigger asChild>
-              <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+              <button className=" text-left text-[15px] font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                 {date ? (
                   format(date, "PPP")
                 ) : (
                   <div className=" justify-between flex items-center w-full">
-                    <span className=" text-sm">Pick a date</span>
+                    <span className=" text-[15px]">Pick a date</span>
                     <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                   </div>
                 )}
@@ -435,12 +435,12 @@ const CreateInvoice = () => {
           </label>
           <Popover open={openDueDate} onOpenChange={setOpenDueDate}>
             <PopoverTrigger asChild>
-              <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+              <button className=" text-left text-[15px] font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                 {dueDate ? (
                   format(dueDate, "PPP")
                 ) : (
                   <div className=" justify-between flex items-center w-full">
-                    <span className=" text-sm">Pick a date</span>
+                    <span className=" text-[15px]">Pick a date</span>
                     <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                   </div>
                 )}

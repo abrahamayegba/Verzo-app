@@ -1,8 +1,4 @@
-query GetPurchaseByBusiness(
-  $businessId: String!
-  $cursor: String
-  $sets: Float
-) {
+query GetPurchaseByBusiness($businessId: String!, $cursor: String, $sets: Int) {
   getPurchaseByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
     purchaseByBusiness {
       id

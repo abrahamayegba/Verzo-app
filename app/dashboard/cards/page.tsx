@@ -12,7 +12,7 @@ import {
   useViewBusinessAccountQuery,
 } from "@/src/generated/graphql";
 import { PlusCircle, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import localStorage from "local-storage-fallback";
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
 import {
@@ -26,6 +26,8 @@ import {
 import { useToast } from "@/app/hooks/use-toast";
 import CreateVerzoAccount from "@/components/modals/CreateVerzoAccountModal";
 import useModal from "@/app/hooks/useModal";
+import { isAuthenticated } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 type SpendingLimitType = {
   amount: number;
@@ -38,6 +40,7 @@ const Cards = () => {
   );
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
+  const router = useRouter();
   const {
     isOpen: isCreateVerzoAccountModalOpen,
     openModal: openVerzoAccountModal,
@@ -46,6 +49,17 @@ const Cards = () => {
   const [openAddCardModal, setOpenAddCardModal] = useState(false);
   const [assignedId, setAssignedId] = useState("");
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
   const [spendingLimit, setSpendingLimit] = useState<SpendingLimitType>({
     amount: 0,
     interval: SudoCardSpendingInterval.Daily,

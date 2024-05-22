@@ -2,18 +2,6 @@
 import React, { useState } from "react";
 import { Check, ChevronDown, ChevronLeft, Plus } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -42,7 +30,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -225,8 +212,11 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
             {currentStep === 1 ? (
               <>
                 <div className=" flex flex-col gap-y-6">
-                  <Popover open={openPopover} onOpenChange={setOpenPopover}>
-                    <PopoverTrigger asChild>
+                  <DropdownMenu
+                    open={openPopover}
+                    onOpenChange={setOpenPopover}
+                  >
+                    <DropdownMenuTrigger asChild>
                       <button
                         type="button"
                         aria-expanded={openPopover}
@@ -235,71 +225,61 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
                         {itemName ? itemName : "Select item..."}
                         <ChevronDown className="w-5 h-5 text-primary-black text-opacity-70 mt-[2px]" />
                       </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[327px] p-0 bg-white z-[200]">
-                      <Command>
-                        {productsOrServices?.length > 0 && (
-                          <CommandInput placeholder="Search items..." />
-                        )}
-                        {productsOrServices?.length > 0 && (
-                          <CommandEmpty className=" p-3 px-5 text-[15px]">
-                            No item found
-                          </CommandEmpty>
-                        )}
-                        <CommandGroup>
-                          {productsOrServices?.map((item) => (
-                            <CommandItem
-                              key={item?.id}
-                              value={item?.title}
-                              className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800"
-                              onSelect={(currentItem) => {
-                                setItemName(currentItem);
-                                const newIndex = selectedItem
-                                  ? selectedItem.index
-                                  : lastIndex + 1;
-                                setLastIndex(newIndex);
-                                setSelectedItem({
-                                  id: item?.id!,
-                                  price: item?.price!,
-                                  name: item?.title!,
-                                  type: item?.type!,
-                                  index: newIndex,
-                                });
-                                setOpenPopover(false);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  itemName === item?.title
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {item?.title}
-                            </CommandItem>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={() => handleCategoryChange("product")}
-                            className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-6 w-full flex justify-start"
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[327px] p-0 bg-white z-[200] max-h-[400px] overflow-y-scroll">
+                      <DropdownMenuGroup className=" px-1 py-1">
+                        {productsOrServices?.map((item) => (
+                          <DropdownMenuItem
+                            className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800"
+                            key={item?.id}
+                            onClick={() => {
+                              setItemName(item?.title!);
+                              const newIndex = selectedItem
+                                ? selectedItem.index
+                                : lastIndex + 1;
+                              setLastIndex(newIndex);
+                              setSelectedItem({
+                                id: item?.id!,
+                                price: item?.price!,
+                                name: item?.title!,
+                                type: item?.type!,
+                                index: newIndex,
+                              });
+                              setOpenPopover(false);
+                            }}
                           >
-                            Create product
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleCategoryChange("service")}
-                            className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-6 w-full flex justify-start"
-                          >
-                            Create service
-                          </button>
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                itemName === item?.title
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {item?.title}
+                          </DropdownMenuItem>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => handleCategoryChange("product")}
+                          className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-8 w-full flex justify-start"
+                        >
+                          Create product
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleCategoryChange("service")}
+                          className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-8 w-full flex justify-start"
+                        >
+                          Create service
+                        </button>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <button
                     onClick={handleItemSelect}
-                    className=" bg-primary-blue text-white rounded-[10px] py-[9px] "
+                    disabled={productsOrServices.length === 0 || itemName == ""}
+                    className=" bg-primary-blue disabled:opacity-50 text-white rounded-[10px] py-[9px] "
                   >
                     Add item
                   </button>

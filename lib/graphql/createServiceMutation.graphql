@@ -1,6 +1,6 @@
 mutation CreateService(
   $name: String!
-  $price: Float!
+  $price: BigInt!
   $businessId: String!
   $serviceUnitId: String!
 ) {
@@ -17,6 +17,7 @@ mutation CreateService(
     price
     businessId
     serviceUnitId
+    businessServiceUnitId
     archived
     createdAt
   }

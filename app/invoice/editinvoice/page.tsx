@@ -83,11 +83,7 @@ const EditInvoice = () => {
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
   const [customerId, setCustomerId] = useState("");
   const [openCreateItemSheet, setOpenCreateItemSheet] = useState(false);
-  const storedBusinessId = JSON.parse(
-    localStorage.getItem("businessId") || "[]"
-  );
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
-
   const businessName =
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
       (business) => business?.businessName
@@ -351,7 +347,7 @@ const EditInvoice = () => {
       id: item.id,
       type: item.type,
       index: item.index,
-      price: item.price,
+      price: item.price * 100,
       quantity: item.quantity,
     };
   });

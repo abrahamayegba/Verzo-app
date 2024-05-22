@@ -1,7 +1,7 @@
 mutation UpdateAddOnOption(
   $addOnOptionId: String!
   $addOnName: String
-  $addOnPrice: Float
+  $addOnPrice: BigInt
 ) {
   updateAddOnOption(
     addOnOptionId: $addOnOptionId

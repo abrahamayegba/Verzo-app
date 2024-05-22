@@ -12,6 +12,9 @@ query GetBusinessesByUserId {
     }
     businesses {
       id
+      sudoAccount {
+        id
+      }
       businessName
       businessEmail
       businessMobile

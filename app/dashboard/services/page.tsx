@@ -23,10 +23,15 @@ const Services = () => {
   const searchResultsParams = useSearchParams();
   const serviceSearchId = searchResultsParams.get("searchResult")?.toString();
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/auth/signin");
-    }
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
   }, [router]);
+
   const [openCreateServiceSheet, setOpenCreateServiceSheet] = useState(false);
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const getServicesByBusiness = useGetServiceByBusinessQuery({

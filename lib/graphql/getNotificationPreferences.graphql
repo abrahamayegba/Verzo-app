@@ -1,0 +1,14 @@
+query GetNotificationPreferences($businessId: String!) {
+  getNotificationPreferences(businessId: $businessId) {
+    id
+    trackUsers
+    trackTasks
+    trackInvoices
+    trackProducts
+    trackServices
+    trackExpenses
+    trackPurchases
+    trackCustomers
+    trackMerchants
+  }
+}

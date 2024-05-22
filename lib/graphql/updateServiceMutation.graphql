@@ -1,7 +1,7 @@
 mutation UpdateService(
   $serviceId: String!
   $name: String
-  $price: Float
+  $price: BigInt
   $serviceUnitId: String
 ) {
   updateService(

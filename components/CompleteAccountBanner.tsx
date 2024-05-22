@@ -1,6 +1,5 @@
-// "use client";
 import { X } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 
 type Props = {
   open: boolean;

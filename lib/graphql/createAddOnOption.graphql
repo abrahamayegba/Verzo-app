@@ -1,4 +1,4 @@
-mutation CreateAddOnOption($addOnName: String!, $addOnPrice: Float!) {
+mutation CreateAddOnOption($addOnName: String!, $addOnPrice: BigInt!) {
   createAddOnOption(input: { addOnName: $addOnName, addOnPrice: $addOnPrice }) {
     id
     addOnName

@@ -4,10 +4,8 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import ActiveProductIcon from "@/components/ui/icons/ActiveProductIcon";
 import {
   GetProductsByBusinessDocument,
-  useGetBusinessProductUnitsQuery,
   useGetCombinedProductUnitsQuery,
   useGetProductByIdQuery,
-  useGetProductUnitsQuery,
   useUpdateProductMutation,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
@@ -122,7 +120,7 @@ const EditProductSheet: React.FC<EditProductProps> = ({
         variables: {
           productId: productId,
           productName: productData.productName,
-          price: productData.price,
+          price: productData.price * 100,
           productUnitId: productData.productUnitId,
           reorderLevel: reorderLevel,
         },

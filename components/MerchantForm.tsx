@@ -78,7 +78,7 @@ const MerchantForm: React.FC<MerchantFormProps> = ({
               Merchant
             </label>
             <Select value={merchantId} onValueChange={setMerchantId}>
-              <SelectTrigger className=" w-full rounded-lg border border-gray-200">
+              <SelectTrigger className=" w-full text-[15px] rounded-lg border border-gray-200">
                 <SelectValue
                   className=" text-primary-greytext"
                   placeholder="Select a merchant"
@@ -111,7 +111,7 @@ const MerchantForm: React.FC<MerchantFormProps> = ({
             <label className="" htmlFor="customer">
               Merchant email
             </label>
-            <p className="border border-gray-200 rounded-lg h-10 text-sm focus:outline-none px-3 py-2">
+            <p className="border border-gray-200 rounded-lg h-10 text-[15px] focus:outline-none px-3 py-2">
               {merchantEmail}
             </p>
           </div>

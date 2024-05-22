@@ -1,8 +1,4 @@
-query GetInvoicesByBusiness(
-  $businessId: String!
-  $cursor: String
-  $sets: Float
-) {
+query GetInvoicesByBusiness($businessId: String!, $cursor: String, $sets: Int) {
   getInvoiceByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
     invoicesByBusiness {
       id

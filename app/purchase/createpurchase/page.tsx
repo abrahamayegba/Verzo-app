@@ -2,7 +2,6 @@
 import PurchaseItem from "@/components/Purchase/PurchaseItem";
 import CreateCategorySheet from "@/components/sheets/expense/CreateCategorySheet";
 import CreateMerchantSheet from "@/components/sheets/expense/CreateMerchantSheet";
-import ViewPurchaseSheet from "@/components/sheets/purchase/ViewPurchaseSheet";
 import ActivePurchaseIcon from "@/components/ui/icons/ActivePurchaseIcon";
 import BankIcon from "@/components/ui/icons/BankIcon";
 import LocationIcon from "@/components/ui/icons/LocationIcon";
@@ -11,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ChevronDown, Eye, MoveLeft, Phone, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { useState } from "react";
 import localStorage from "local-storage-fallback";
 import MerchantForm from "@/components/MerchantForm";
 import {
@@ -56,17 +55,12 @@ const CreatePurchase = () => {
   const [openCreateItemSheet, setOpenCreateItemSheet] = useState(false);
   const [openUpdateBusinessSheet, setOpenUpdateBusinessSheet] = useState(false);
   const [merchantId, setMerchantId] = useState("");
-  const [openViewPurchaseSheet, setOpenViewPurchaseSheet] = useState(false);
   const [openCreateCategorySheet, setOpenCreateCategorySheet] = useState(false);
   const [purchaseDate, setPurchaseDate] = useState("");
-  const [purchaseDueDate, setPurchaseDueDate] = useState("");
   const [date, setDate] = React.useState<Date | null>(null);
   const [dueDate, setDueDate] = React.useState<Date | null>(null);
   const [openDueDate, setOpenDueDate] = React.useState(false);
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
-  const [selectedImage, setSelectedImage] = useState<
-    string | ArrayBuffer | null
-  >(null);
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
@@ -101,11 +95,6 @@ const CreatePurchase = () => {
   const handleCloseCreateCategorySheet = () => {
     setOpenCreateCategorySheet(false);
   };
-
-  const handleCloseViewPurchaseSheet = () => {
-    setOpenViewPurchaseSheet(false);
-  };
-
   const handleOpenMerchantSheet = () => {
     setOpenMerchantSheet(true);
   };
@@ -127,13 +116,6 @@ const CreatePurchase = () => {
       setPurchaseDate(formattedDate);
     }
   }, [date]);
-
-  React.useEffect(() => {
-    if (dueDate) {
-      const formattedDueDate = format(dueDate, "yyyy-MM-dd").toString();
-      setPurchaseDueDate(formattedDueDate);
-    }
-  }, [dueDate]);
 
   const deleteItem = (index: number) => {
     const updatedItems = [...purchaseItems];
@@ -184,25 +166,48 @@ const CreatePurchase = () => {
       duration: 3000,
     });
   };
+  const showOtherFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      description: error,
+      duration: 3000,
+    });
+  };
+
+  const updatedPurchaseItems = purchaseItems.map((item) => {
+    return {
+      ...item,
+      unitPrice: item?.unitPrice * 100,
+    };
+  });
 
   const resetFormState = () => {
     reset();
     setDate(null);
     setDueDate(null);
     setPurchaseDate("");
-    setPurchaseDueDate("");
     setMerchantId("");
     setPurchaseItems([]);
     purchaseItems.length = 0;
   };
 
   const onSubmitCreatePurchaseHandler = async (data: FormData) => {
+    if (!merchantId) {
+      showOtherFailureToast(
+        "Please select a merchant before saving the purchase."
+      );
+      return;
+    }
+    if (!purchaseDate) {
+      showOtherFailureToast("Please pick a date before saving the purchase.");
+      return;
+    }
     try {
       const purchaseEntryData = {
         businessId: businessId,
         merchantId: merchantId,
         transactionDate: purchaseDate,
-        purchaseItem: purchaseItems,
+        purchaseItem: updatedPurchaseItems,
         ...data,
       };
       await createPurchaseEntryMutation({
@@ -297,12 +302,12 @@ const CreatePurchase = () => {
           </label>
           <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
             <PopoverTrigger asChild>
-              <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+              <button className=" text-left text-[15px] font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                 {date ? (
                   format(date, "PPP")
                 ) : (
                   <div className=" justify-between flex items-center w-full">
-                    <span className=" text-sm">Pick a date</span>
+                    <span className=" text-[15px]">Pick a date</span>
                     <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                   </div>
                 )}
@@ -327,12 +332,12 @@ const CreatePurchase = () => {
           </label>
           <Popover open={openDueDate} onOpenChange={setOpenDueDate}>
             <PopoverTrigger asChild>
-              <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+              <button className=" text-left text-[15px] font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                 {dueDate ? (
                   format(dueDate, "PPP")
                 ) : (
                   <div className=" justify-between flex items-center w-full">
-                    <span className=" text-sm">Pick a date</span>
+                    <span className=" text-[15px]">Pick a date</span>
                     <ChevronDown className=" w-4 h-4 text-primary-greytext" />
                   </div>
                 )}

@@ -1,4 +1,4 @@
-query GetExpenseCategoryWithSets($cursor: String, $sets: Float) {
+query GetExpenseCategoryWithSets($cursor: String, $sets: Int) {
   getExpenseCategoryWithSets(cursor: $cursor, sets: $sets) {
     expenseCategories {
       id

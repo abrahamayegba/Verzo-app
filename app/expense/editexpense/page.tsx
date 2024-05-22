@@ -49,7 +49,7 @@ const EditExpense = () => {
   const expenseIdParams = useSearchParams();
   const expenseId = expenseIdParams.get("expenseId")?.toString();
   const [expenseDate, setExpenseDate] = useState("");
-  const { register, reset, handleSubmit, getValues } = useForm<FormData>();
+  const { register, handleSubmit, getValues } = useForm<FormData>();
   const router = useRouter();
   const [expenseCategoryId, setExpenseCategoryId] = useState("");
   const [merchantId, setMerchantId] = useState("");
@@ -77,7 +77,7 @@ const EditExpense = () => {
       ? initialExpenseItems.map((item) => ({
           description: item?.description!,
           quantity: item?.quantity!,
-          unitPrice: item?.unitPrice!,
+          unitPrice: item?.unitPrice! / 100,
           index: item?.index!,
           creditAccountId: item?.chartOfAccount?.id!,
         }))
@@ -186,6 +186,7 @@ const EditExpense = () => {
     0
   );
   const amountDue = subtotal;
+  console.log(expenseItems);
   const onUpdateExpenseHandler = async (data: FormData) => {
     if (!date && !initialExpenseDate) {
       showDateFailureToast("Please pick a date and try again.");

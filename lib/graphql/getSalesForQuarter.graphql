@@ -2,7 +2,7 @@ query GetSalesForQuarter(
   $businessId: String!
   $quarterly: Boolean
   $cursor: String
-  $sets: Float
+  $sets: Int
 ) {
   getSalesForQuarter(
     businessId: $businessId

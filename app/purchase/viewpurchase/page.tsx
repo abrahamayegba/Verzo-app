@@ -3,6 +3,7 @@ import useModal from "@/app/hooks/useModal";
 import PurchaseStepIndicator from "@/components/Purchase/PurchaseTimeline";
 import MainLoader from "@/components/loading/MainLoader";
 import SendPurchase from "@/components/modals/purchase/SendPurchase";
+import { isAuthenticated } from "@/lib/auth";
 import {
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
@@ -10,8 +11,8 @@ import {
 import { MoveLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect } from "react";
 
 const ViewPurchase = () => {
   const currentStep = 1;
@@ -20,6 +21,7 @@ const ViewPurchase = () => {
     openModal: openSendModal,
     closeModal: closeSendModal,
   } = useModal();
+  const router = useRouter();
   const purchaseIdParams = useSearchParams();
   const purchaseId = purchaseIdParams.get("purchaseId")?.toString();
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
@@ -28,6 +30,16 @@ const ViewPurchase = () => {
       purchaseId: purchaseId!,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
   const purchase = getPurchaseById?.data?.getPurchaseById;
   const purchaseStatusId = purchase?.purchaseStatusId!;
   const purchaseItems = purchase?.purchaseItems;

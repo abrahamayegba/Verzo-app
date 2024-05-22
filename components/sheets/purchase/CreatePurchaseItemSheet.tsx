@@ -2,18 +2,6 @@
 import React, { useState } from "react";
 import { Check, ChevronDown, ChevronLeft, Plus } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -33,6 +21,13 @@ import {
 } from "@/src/generated/graphql";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/app/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface CreateItemProps {
   open: boolean;
@@ -161,7 +156,7 @@ const CreatePurchaseItemSheet: React.FC<CreateItemProps> = ({
             {currentStep === 1 ? (
               <>
                 <div className=" flex flex-col gap-y-6">
-                  <Popover open={openPopover} onOpenChange={setOpenPopover}>
+                  {/* <Popover open={openPopover} onOpenChange={setOpenPopover}>
                     <PopoverTrigger asChild>
                       <button
                         type="button"
@@ -224,10 +219,66 @@ const CreatePurchaseItemSheet: React.FC<CreateItemProps> = ({
                         </CommandGroup>
                       </Command>
                     </PopoverContent>
-                  </Popover>
+                  </Popover> */}
+                  <DropdownMenu
+                    open={openPopover}
+                    onOpenChange={setOpenPopover}
+                  >
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        aria-expanded={openPopover}
+                        className="w-full justify-between capitalize bg-gray-50 text-primary-black flex items-center border border-gray-200 py-2 px-3 rounded-[8px]"
+                      >
+                        {itemName ? itemName : "Select item..."}
+                        <ChevronDown className="w-5 h-5 text-primary-black text-opacity-70 mt-[2px]" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[327px] p-0 bg-white z-[200] max-h-[400px] overflow-y-scroll">
+                      <DropdownMenuGroup className=" px-1 py-1">
+                        {products?.map((product) => (
+                          <DropdownMenuItem
+                            className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800"
+                            key={product?.id}
+                            onClick={() => {
+                              setItemName(product?.productName!);
+                              const newIndex = selectedItem
+                                ? selectedItem.index
+                                : lastIndex + 1;
+                              setLastIndex(newIndex);
+                              setSelectedItem({
+                                productId: product?.id!,
+                                itemDescription: product?.productName || "",
+                                unitPrice: product?.price || 0,
+                                index: newIndex,
+                              });
+                              setOpenPopover(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                itemName === product?.productName
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {product?.productName}
+                          </DropdownMenuItem>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={handleNext}
+                          className=" hover:cursor-pointer hover:bg-gray-100 py-2 text-base text-gray-800 pl-8 w-full flex justify-start"
+                        >
+                          Create product
+                        </button>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <button
                     type="button"
-                    disabled={products.length === 0}
+                    disabled={products.length === 0 || itemName == ""}
                     onClick={handleItemSelect}
                     className=" bg-primary-blue text-white disabled:opacity-50 rounded-[10px] py-[9px] "
                   >

@@ -1,30 +1,16 @@
 "use client";
 
-import { getToken, isAuthenticated, saveToken } from "@/lib/auth";
-import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client";
-import { TokenRefreshLink } from "apollo-link-token-refresh";
+import { getToken, refreshToken } from "@/lib/auth";
+import { ApolloClient, ApolloLink, InMemoryCache, split } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { createUploadLink } from "apollo-upload-client";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { WebSocket } from "ws";
+import { SubscriptionClient } from "subscriptions-transport-ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 
 export const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL;
-// export const EXPRESS_URL = "https://api.verzo.app";
 export const GRAPHQL_URL = `${EXPRESS_URL}/graphql`;
-
-const refreshLink = new TokenRefreshLink({
-  accessTokenField: "access_token",
-  isTokenValidOrUndefined: () => Promise.resolve(isAuthenticated()),
-  fetchAccessToken: () => {
-    return fetch(`${EXPRESS_URL}/refresh`, {
-      method: "POST",
-      credentials: "include",
-    });
-  },
-  handleFetch: (accessToken) => saveToken(accessToken),
-  handleError: (err) => {
-    console.warn("Your refresh token is invalid. Try to relogin");
-    console.error(err);
-  },
-});
 
 const uploadLink = createUploadLink({
   uri: GRAPHQL_URL,
@@ -33,7 +19,6 @@ const uploadLink = createUploadLink({
 
 const authLink = setContext((_, { headers }) => {
   const token = getToken();
-
   return {
     headers: {
       ...headers,
@@ -42,7 +27,32 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const wsLink = new WebSocketLink(
+  new SubscriptionClient(
+    "wss://queue.api2.verzo.app/graphql",
+    {
+      reconnect: true,
+    },
+    WebSocket
+  )
+);
+
+const splitLink =
+  typeof window !== "undefined" && wsLink != null
+    ? split(
+        ({ query }) => {
+          const def = getMainDefinition(query);
+          return (
+            def.kind === "OperationDefinition" &&
+            def.operation === "subscription"
+          );
+        },
+        wsLink,
+        uploadLink
+      )
+    : uploadLink;
+
 export const client = new ApolloClient({
-  link: ApolloLink.from([authLink, uploadLink]),
+  link: ApolloLink.from([authLink, splitLink]),
   cache: new InMemoryCache(),
 });

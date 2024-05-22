@@ -1,8 +1,4 @@
-query GetServiceByBusiness(
-  $businessId: String!
-  $cursor: String
-  $sets: Float
-) {
+query GetServiceByBusiness($businessId: String!, $cursor: String, $sets: Int) {
   getServiceByBusiness(businessId: $businessId, cursor: $cursor, sets: $sets) {
     serviceByBusiness {
       id

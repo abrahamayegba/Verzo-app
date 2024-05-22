@@ -88,11 +88,15 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
   };
   const onCreateProductHandler = async (data: FormData) => {
     try {
+      const modifiedData = {
+        ...data,
+        price: data.price * 100,
+      };
       await createProductMutation({
         variables: {
           businessId: businessId,
           productUnitId: productUnitId,
-          ...data,
+          ...modifiedData,
         },
         refetchQueries: [GetProductsByBusinessDocument],
       });
@@ -110,13 +114,6 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
       showFailureToast(error);
     }
   };
-
-  console.log(
-    getValues("initialStockLevel"),
-    getValues("price"),
-    getValues("productName"),
-    productUnitId
-  );
 
   const onCreateProductUnitHandler = async (data: UnitData) => {
     try {

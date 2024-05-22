@@ -10,13 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ChevronDown, Eye, MoveLeft, Phone, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, {
-  ChangeEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import localStorage from "local-storage-fallback";
 import {
   Popover,
@@ -57,7 +51,7 @@ type FormData = {
 const EditPurchase = () => {
   const { toast } = useToast();
   const router = useRouter();
-  const { register, reset, handleSubmit, getValues } = useForm<FormData>();
+  const { register, handleSubmit, getValues } = useForm<FormData>();
   const [openMerchantSheet, setOpenMerchantSheet] = useState(false);
   const [openCreateItemSheet, setOpenCreateItemSheet] = useState(false);
   const [merchantId, setMerchantId] = useState("");
@@ -241,12 +235,19 @@ const EditPurchase = () => {
       return;
     }
     try {
+      // Multiply unitPrice by 100 for each item
+      const updatedPurchaseItems = purchaseItems?.map((item) => {
+        return {
+          ...item,
+          unitPrice: item?.unitPrice * 100,
+        };
+      });
       await updatePurchaseMutation({
         variables: {
           purchaseId: purchaseId!,
           transactionDate: purchaseDueDate ? purchaseDueDate : transactionDate,
           merchantId: merchantId ? merchantId : initialMerchantId,
-          purchaseItem: purchaseItems,
+          purchaseItem: updatedPurchaseItems,
           description: getValues("description")
             ? getValues("description")
             : purchase?.description,

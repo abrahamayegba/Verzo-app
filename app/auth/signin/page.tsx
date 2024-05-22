@@ -2,17 +2,34 @@
 import React, { useState } from "react";
 import AuthSidebar from "@/components/AuthSidebar";
 import { Eye, EyeOff } from "lucide-react";
-import GoogleIcon from "@/components/ui/icons/GoogleIcon";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useSignInMutation } from "@/src/generated/graphql";
-import { saveToken } from "@/lib/auth";
+import { saveRefreshToken, saveToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Verzologoblue2 from "@/components/ui/icons/Verzologoblue2";
+import { gql } from "@apollo/client";
+import { client } from "@/src/apollo/ApolloClient";
 type FormData = {
   email: string;
   password: string;
 };
+
+const GET_BUSINESSES_BY_USER_ID_QUERY = gql`
+  query GetBusinessesByUserId {
+    getBusinessesByUserId {
+      businesses {
+        id
+        businessName
+        sudoAccount {
+          id
+        }
+        businessEmail
+        businessMobile
+      }
+    }
+  }
+`;
 
 const SignIn = () => {
   const { register, handleSubmit } = useForm<FormData>();
@@ -27,6 +44,24 @@ const SignIn = () => {
     setError(null);
   };
   const [signInMutation, { loading }] = useSignInMutation();
+  // const SignInHandler = async (form: FormData) => {
+  //   try {
+  //     const response = await signInMutation({
+  //       variables: form,
+  //     });
+  //     if (response.data?.signIn.token.access_token) {
+  //       saveToken(response.data.signIn.token.access_token);
+  //       saveRefreshToken(response?.data?.signIn?.token?.refresh_token);
+  //       if (response.data.signIn.verified) {
+  //         router.push("/dashboard");
+  //       } else {
+  //         router.push("/auth/verifyemail");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     setError("Incorrect email or password");
+  //   }
+  // };
   const SignInHandler = async (form: FormData) => {
     try {
       const response = await signInMutation({
@@ -34,10 +69,22 @@ const SignIn = () => {
       });
       if (response.data?.signIn.token.access_token) {
         saveToken(response.data.signIn.token.access_token);
-        if (response.data.signIn.verified) {
-          router.push("/dashboard");
-        } else {
+        saveRefreshToken(response?.data?.signIn?.token?.refresh_token);
+        if (!response.data.signIn.verified) {
           router.push("/auth/verifyemail");
+        } else {
+          const {
+            data: {
+              getBusinessesByUserId: { businesses },
+            },
+          } = await client.query({
+            query: GET_BUSINESSES_BY_USER_ID_QUERY,
+          });
+          if (businesses && businesses.length > 0) {
+            router.push("/dashboard");
+          } else {
+            router.push("auth/businesssetup");
+          }
         }
       }
     } catch (error) {

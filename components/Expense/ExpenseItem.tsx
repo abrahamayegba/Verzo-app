@@ -113,7 +113,7 @@ const ExpenseItem: React.FC<ExpenseInputProps> = ({
                   className=" text-primary-greytext flex items-start placeholder:items-center"
                 />
               </SelectTrigger>
-              <SelectContent className=" bg-white w-[200px] max-h-[300px] overflow-y-scroll">
+              <SelectContent className=" bg-white w-[300px] max-h-[300px] overflow-y-scroll">
                 <SelectGroup>
                   {COAs.map((account) => (
                     <SelectItem

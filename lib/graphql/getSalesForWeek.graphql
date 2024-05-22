@@ -2,7 +2,7 @@ query GetSalesForWeek(
   $businessId: String!
   $weekly: Boolean
   $cursor: String
-  $sets: Float
+  $sets: Int
 ) {
   getSalesForWeek(
     businessId: $businessId

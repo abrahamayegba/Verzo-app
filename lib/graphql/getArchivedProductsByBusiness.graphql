@@ -1,6 +1,6 @@
 query GetArchivedProductsByBusiness(
   $businessId: String!
-  $sets: Float
+  $sets: Int
   $cursor: String
 ) {
   getArchivedProductByBusiness(

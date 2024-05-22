@@ -3,12 +3,13 @@ import useModal from "@/app/hooks/useModal";
 import InvoiceStepIndicator from "@/components/Invoice/InvoiceTimeline";
 import MainLoader from "@/components/loading/MainLoader";
 import SendInvoice from "@/components/modals/invoice/SendInvoice";
+import { isAuthenticated } from "@/lib/auth";
 import { useGetSaleByIdQuery } from "@/src/generated/graphql";
 import { MoveLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect } from "react";
 
 const ViewInvoice = () => {
   const currentStep = 1;
@@ -17,6 +18,7 @@ const ViewInvoice = () => {
     openModal: openSendModal,
     closeModal: closeSendModal,
   } = useModal();
+  const router = useRouter();
   const invoiceIdParams = useSearchParams();
   const invoiceId = invoiceIdParams.get("invoiceId")?.toString();
   const getSaleById = useGetSaleByIdQuery({
@@ -24,6 +26,16 @@ const ViewInvoice = () => {
       saleId: invoiceId!,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
   const sales = getSaleById.data?.getSaleById;
   const invoiceSendId = getSaleById?.data?.getSaleById?.invoice?.id!;
   const saleStatusId = sales?.saleStatus?.id!;
