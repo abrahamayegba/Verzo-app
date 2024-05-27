@@ -2,6 +2,7 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
+import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
 import {
   GetArchivedPurchasesByBusinessDocument,
@@ -11,6 +12,7 @@ import {
   GetPurchaseForWeekDocument,
   GetPurchaseForYearDocument,
   useDeletePurchaseMutation,
+  useGetPurchaseByBusinessQuery,
 } from "@/src/generated/graphql";
 
 interface DeletePurchaseProps {
@@ -27,6 +29,18 @@ const DeletePurchase: React.FC<DeletePurchaseProps> = ({
 }) => {
   const { toast } = useToast();
   const [deletePurchaseMutation, { loading }] = useDeletePurchaseMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getPurchaseByBusiness = useGetPurchaseByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfPurchases =
+    getPurchaseByBusiness.data?.getPurchaseByBusiness?.purchaseByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Deleted!",
@@ -55,6 +69,7 @@ const DeletePurchase: React.FC<DeletePurchaseProps> = ({
           GetArchivedPurchasesByBusinessDocument,
         ],
       });
+      numberOfPurchases === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

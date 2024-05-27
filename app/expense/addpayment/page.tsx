@@ -462,7 +462,7 @@ const AddPayment = () => {
                         </div>
                       </div>
                       <div className="w-full flex flex-col gap-y-1 px-6">
-                        {filterTransactions.length > 0 ? (
+                        {transactions?.length! > 0 ? (
                           <>
                             <div className="mt-7">
                               <div className="relative">
@@ -480,7 +480,7 @@ const AddPayment = () => {
                                   (transaction) =>
                                     transaction?.type === "Debit" && (
                                       <button
-                                        className=" flex flex-row gap-x-5 justify-between text-start items-start border-b border-b-gray-200 py-2 px-1 hover:bg-gray-100 cursor-pointer"
+                                        className=" flex flex-row gap-x-7 justify-between text-start items-start border-b border-b-gray-200 py-2 px-1 hover:bg-gray-100 cursor-pointer"
                                         key={transaction?.id}
                                         onClick={() =>
                                           handleTransactionSelect(transaction)

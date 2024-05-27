@@ -1,6 +1,7 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import localStorage from "local-storage-fallback";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
 import {
@@ -9,6 +10,8 @@ import {
   GetSaleByBusinessDocument,
   GetSaleByIdDocument,
   useDeleteSaleMutation,
+  useGetInvoicesByBusinessQuery,
+  useGetSaleByBusinessQuery,
 } from "@/src/generated/graphql";
 
 interface DeleteInvoiceProps {
@@ -25,6 +28,17 @@ const DeleteInvoice: React.FC<DeleteInvoiceProps> = ({
 }) => {
   const { toast } = useToast();
   const [deleteSaleMutation, { loading }] = useDeleteSaleMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getSalesByBusiness = useGetSaleByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfSales =
+    getSalesByBusiness.data?.getSaleByBusiness?.salesByBusiness.length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Deleted!",
@@ -51,6 +65,7 @@ const DeleteInvoice: React.FC<DeleteInvoiceProps> = ({
           GetArchivedSalesByBusinessDocument,
         ],
       });
+      numberOfSales === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

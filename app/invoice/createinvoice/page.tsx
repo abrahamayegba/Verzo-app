@@ -296,8 +296,6 @@ const CreateInvoice = () => {
     VAT: 7.5,
     item: saleItemDetails,
   };
-  console.log(invoiceInput);
-
   const onSubmitCreateSaleHandler = async (data: FormData) => {
     if (!customerId) {
       showOtherFailureToast(
@@ -307,6 +305,10 @@ const CreateInvoice = () => {
     }
     if (!invoiceDate || !invoiceDueDate) {
       showOtherFailureToast("Please pick a date before saving the invoice.");
+      return;
+    }
+    if (invoiceDueDate < invoiceDate) {
+      showOtherFailureToast("Due date cannot be earlier than the Issue date.");
       return;
     }
     try {

@@ -1,11 +1,12 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedPurchasesByBusinessDocument,
   GetPurchaseByBusinessDocument,
   useArchivePurchaseMutation,
+  useGetPurchaseByBusinessQuery,
 } from "@/src/generated/graphql";
 import { useToast } from "@/app/hooks/use-toast";
 import { Archive } from "lucide-react";
@@ -26,7 +27,18 @@ const ArchivePurchase: React.FC<ArchivePurchaseProps> = ({
   const { toast } = useToast();
 
   const [archivePurchaseMutation, { loading }] = useArchivePurchaseMutation();
-
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getPurchaseByBusiness = useGetPurchaseByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfPurchases =
+    getPurchaseByBusiness.data?.getPurchaseByBusiness?.purchaseByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Archived!",
@@ -52,6 +64,7 @@ const ArchivePurchase: React.FC<ArchivePurchaseProps> = ({
           GetArchivedPurchasesByBusinessDocument,
         ],
       });
+      numberOfPurchases === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

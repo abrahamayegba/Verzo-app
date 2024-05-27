@@ -102,19 +102,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {expenses?.length === 0 ? (
-          <TableRow>
-            <TableCell
-              colSpan={7}
-              className="text-center text-primary-greytext py-4 h-[293px]"
-            >
-              <TableEmptyState
-                icon={<ExpenseTableEmptyIcon />}
-                emptytext="No expenses available"
-              />
-            </TableCell>
-          </TableRow>
-        ) : (
+        {expenses?.length > 0 ? (
           expenses.slice(0, numberOfExpensesToShow).map((expense) => (
             <TableRow key={expense?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
@@ -199,6 +187,18 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
               </TableCell>
             </TableRow>
           ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={7}
+              className="text-center text-primary-greytext py-4 h-[293px]"
+            >
+              <TableEmptyState
+                icon={<ExpenseTableEmptyIcon />}
+                emptytext="No expenses available"
+              />
+            </TableCell>
+          </TableRow>
         )}
       </TableBody>
     </Table>

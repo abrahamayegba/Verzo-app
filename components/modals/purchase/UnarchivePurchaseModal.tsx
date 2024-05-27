@@ -3,10 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedPurchasesByBusinessDocument,
   GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
+  useGetArchivedPurchasesByBusinessQuery,
   useUnarchivePurchaseMutation,
 } from "@/src/generated/graphql";
 
@@ -24,7 +26,18 @@ const UnarchivePurchase: React.FC<UnarchivePurchaseProps> = ({
   purchaseId,
 }) => {
   const { toast } = useToast();
-
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getArchivedPurchaseByBusiness = useGetArchivedPurchasesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfArchivedPurchases =
+    getArchivedPurchaseByBusiness.data?.getArchivedPurchaseByBusiness
+      ?.purchaseByBusiness.length ?? 0;
   const [unarchivePurchaseMutation, { loading }] =
     useUnarchivePurchaseMutation();
   const showSuccessToast = () => {
@@ -53,6 +66,7 @@ const UnarchivePurchase: React.FC<UnarchivePurchaseProps> = ({
           GetPurchaseByIdDocument,
         ],
       });
+      numberOfArchivedPurchases === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

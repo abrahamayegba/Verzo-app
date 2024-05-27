@@ -456,7 +456,7 @@ const AddPayment = () => {
                         </div>
                       </div>
                       <div className="w-full flex flex-col gap-y-1 px-6">
-                        {filterTransactions.length > 0 ? (
+                        {transactions?.length! > 0 ? (
                           <>
                             <div className="mt-7">
                               <div className="relative">
@@ -529,7 +529,7 @@ const AddPayment = () => {
                         Transaction amount
                       </label>
                       <p className="border border-gray-100 bg-gray-50 cursor-not-allowed rounded-md px-3 py-2 w-full">
-                        {transactionAmount.toLocaleString("en-NG", {
+                        {(transactionAmount / 100).toLocaleString("en-NG", {
                           style: "currency",
                           currency: "NGN",
                         })}
@@ -607,7 +607,7 @@ const AddPayment = () => {
               <div className="text-primary-greytext flex flex-col gap-y-2 w-1/2">
                 <p>Amount</p>
                 <p className="border cursor-not-allowed text-[18px] text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
-                  ₦{amount?.toLocaleString()}
+                  ₦{(amount / 100)?.toLocaleString()}
                 </p>
               </div>
             </div>

@@ -9,6 +9,7 @@ import {
   useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
   useGetCurrentSubscriptionByBusinessQuery,
+  useViewBusinessAccountQuery,
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
 
@@ -32,6 +33,11 @@ const Settings = () => {
     });
 
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const viewBusinessAccount = useViewBusinessAccountQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
   const handleBillingBannerClick = () => {
     setShowBillingBanner(false);
   };
@@ -49,7 +55,8 @@ const Settings = () => {
   if (
     getBusinessesByUserId.loading ||
     getBusinessById.loading ||
-    getCurrentSubscriptionByBusiness.loading
+    getCurrentSubscriptionByBusiness.loading ||
+    viewBusinessAccount.loading
   ) {
     return <MainLoader />;
   }

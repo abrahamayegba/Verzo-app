@@ -96,14 +96,13 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                       {customer?.name}
                     </SelectItem>
                   ))}
-                  {customers.length === 0 && (
-                    <button
-                      onClick={openCustomerSheet}
-                      className="hover:bg-gray-100 cursor-pointer py-2 px-2 text-[15px] w-full flex items-start"
-                    >
-                      Create merchant
-                    </button>
-                  )}
+
+                  <button
+                    onClick={openCustomerSheet}
+                    className="hover:bg-gray-100 cursor-pointer py-2 px-2 text-[15px] w-full flex items-start"
+                  >
+                    Create customer
+                  </button>
                 </SelectGroup>
               </SelectContent>
             </Select>

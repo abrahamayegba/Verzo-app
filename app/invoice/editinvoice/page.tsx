@@ -375,6 +375,10 @@ const EditInvoice = () => {
       showOtherFailureToast("Please pick a date before saving the invoice.");
       return;
     }
+    if (invoiceDueDate || initialDueDate < invoiceDate || initialIssueDate) {
+      showOtherFailureToast("Due date cannot be earlier than the Issue date.");
+      return;
+    }
     try {
       await updateSaleMutation({
         variables: {

@@ -52,7 +52,6 @@ const Pdf = () => {
   }
   return (
     <div className=" flex flex-col w-full justify-center items-center gap-y-[20px]">
-
       <div className=" w-full flex flex-col max-w-[790px] min-h-[1024px] bg-white border-x border-t border-gray-200 pt-[30px] pb-[36px]">
         <div className=" flex flex-row justify-between items-center px-[44px]">
           <div>
@@ -125,7 +124,7 @@ const Pdf = () => {
                     <td className=" py-4 pl-[44px]">{item?.itemName}</td>
                     <td className=" text-end py-4">{item?.quantity}</td>
                     <td className=" text-end py-4 pr-[44px]">
-                      ₦{item?.price?.toLocaleString()}
+                      ₦{(item?.price / 100)?.toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -152,7 +151,7 @@ const Pdf = () => {
               <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                 <p className=" text-primary-greytext">Sub total</p>
                 <p className=" text-base">
-                  {subtotal?.toLocaleString("en-NG", {
+                  {(subtotal / 100)?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                     minimumFractionDigits: 0,
@@ -162,7 +161,7 @@ const Pdf = () => {
               <div className=" flex justify-between py-3 items-center">
                 <p className=" text-primary-greytext">Amount due</p>
                 <p className=" text-base">
-                  {total?.toLocaleString("en-NG", {
+                  {(total / 100)?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                     minimumFractionDigits: 0,

@@ -3,10 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedCustomersByBusinessDocument,
   GetCustomerByBusinessDocument,
   useArchiveCustomerByBusinessMutation,
+  useGetCustomerByBusinessQuery,
 } from "@/src/generated/graphql";
 import { client } from "@/src/apollo/ApolloClient";
 
@@ -25,6 +27,18 @@ const ArchiveCustomer: React.FC<ArchiveCustomerProps> = ({
   const { toast } = useToast();
   const [archiveCustomerByBusinessMutation, { loading }] =
     useArchiveCustomerByBusinessMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getCustomerByBusiness = useGetCustomerByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfCustomers =
+    getCustomerByBusiness.data?.getCustomerByBusiness?.customerByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Successful!",
@@ -52,6 +66,7 @@ const ArchiveCustomer: React.FC<ArchiveCustomerProps> = ({
       client.refetchQueries({
         include: "active",
       });
+      numberOfCustomers === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

@@ -7,7 +7,7 @@ import BankIcon from "@/components/ui/icons/BankIcon";
 import LocationIcon from "@/components/ui/icons/LocationIcon";
 import ProfileIcon from "@/components/ui/icons/ProfileIcon";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronDown, Eye, MoveLeft, Phone, Plus } from "lucide-react";
+import { MoveLeft, Phone, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
@@ -222,10 +222,6 @@ const EditPurchase = () => {
   };
 
   const onUpdatePurchaseHandler = async (data: FormData) => {
-    if (!date && !createdDate) {
-      showDateFailureToast("Please pick a date and try again.");
-      return;
-    }
     if (!dueDate && !transactionDate) {
       showDateFailureToast("Please pick a date and try again.");
       return;

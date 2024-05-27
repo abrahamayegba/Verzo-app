@@ -458,7 +458,7 @@ const AddPurchasePayment = () => {
                         </div>
                       </div>
                       <div className="w-full flex flex-col gap-y-1 px-6">
-                        {filterTransactions.length > 0 ? (
+                        {transactions?.length! > 0 ? (
                           <>
                             <div className="mt-7">
                               <div className="relative">

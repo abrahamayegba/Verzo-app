@@ -3,6 +3,7 @@ import { ChevronLeft, Plus } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import ActiveProductIcon from "@/components/ui/icons/ActiveProductIcon";
 import {
+  GetCombinedProductUnitsDocument,
   GetCombinesServiceUnitsDocument,
   GetProductUnitsDocument,
   GetProductsByBusinessDocument,
@@ -28,7 +29,6 @@ interface CreateProductProps {
 }
 
 type FormData = {
-  productName: string;
   price: number;
   initialStockLevel: number;
 };
@@ -46,14 +46,12 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
-  const { register, reset, handleSubmit, getValues } = useForm<FormData>();
-  const {
-    register: registerUnit,
-    reset: resetUnit,
-    handleSubmit: handleUnitSubmit,
-  } = useForm<UnitData>();
+  const { register, reset, handleSubmit } = useForm<FormData>();
+  const { handleSubmit: handleUnitSubmit } = useForm<UnitData>();
   const [productUnitId, setProductUnitId] = useState("");
+  const [productName, setProductName] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
+  const [productUnit, setProductUnit] = useState("");
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -95,6 +93,7 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
       await createProductMutation({
         variables: {
           businessId: businessId,
+          productName: productName,
           productUnitId: productUnitId,
           ...modifiedData,
         },
@@ -104,8 +103,8 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
       reset({
         price: 0,
         initialStockLevel: 0,
-        productName: "",
       });
+      setProductName("");
       setProductUnitId("");
       showSuccessToast();
     } catch (error) {
@@ -120,14 +119,14 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
       await createBusinessProductUnitMutation({
         variables: {
           businessId: businessId,
-          ...data,
+          unitName: productUnit,
         },
         refetchQueries: [
           GetProductUnitsDocument,
-          GetCombinesServiceUnitsDocument,
+          GetCombinedProductUnitsDocument,
         ],
       });
-      resetUnit();
+      setProductUnit("");
       setCurrentStep(1);
     } catch (error) {
       console.error(error);
@@ -171,7 +170,8 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
                   type="text"
                   placeholder="Product name"
                   required
-                  {...register("productName")}
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
                 />
               </div>
               <div className=" flex flex-col gap-y-1">
@@ -248,7 +248,8 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
                   type="text"
                   placeholder="Unit name"
                   required
-                  {...registerUnit("unitName")}
+                  value={productUnit}
+                  onChange={(e) => setProductUnit(e.target.value)}
                 />
               </div>
               <button

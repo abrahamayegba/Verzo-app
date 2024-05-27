@@ -3,10 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedCustomersByBusinessDocument,
   GetCustomerByBusinessDocument,
   GetCustomerByIdDocument,
+  useGetArchivedCustomersByBusinessQuery,
   useUnarchiveCustomerByBusinessMutation,
 } from "@/src/generated/graphql";
 import { client } from "@/src/apollo/ApolloClient";
@@ -27,6 +29,18 @@ const UnarchiveCustomer: React.FC<UnarchiveCustomerProps> = ({
   const { toast } = useToast();
   const [unarchiveCustomerByBusinessMutation, { loading }] =
     useUnarchiveCustomerByBusinessMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getArchivedCustomerByBusiness = useGetArchivedCustomersByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfArchivedCustomers =
+    getArchivedCustomerByBusiness.data?.getArchivedCustomerByBusiness
+      ?.customerByBusiness.length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Unarchived!",
@@ -55,6 +69,7 @@ const UnarchiveCustomer: React.FC<UnarchiveCustomerProps> = ({
       client.refetchQueries({
         include: "active",
       });
+      numberOfArchivedCustomers === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

@@ -3,10 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedProductsByBusinessDocument,
   GetProductsByBusinessDocument,
   useArchiveProductByBusinessMutation,
+  useGetProductsByBusinessQuery,
 } from "@/src/generated/graphql";
 
 interface ArchiveProductProps {
@@ -25,6 +27,18 @@ const ArchiveProduct: React.FC<ArchiveProductProps> = ({
   const { toast } = useToast();
   const [archiveProductByBusinessMutation, { loading }] =
     useArchiveProductByBusinessMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getProductsByBusiness = useGetProductsByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfProducts =
+    getProductsByBusiness?.data?.getProductsByBusiness?.productByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Successful!",
@@ -49,6 +63,7 @@ const ArchiveProduct: React.FC<ArchiveProductProps> = ({
           GetArchivedProductsByBusinessDocument,
         ],
       });
+      numberOfProducts === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

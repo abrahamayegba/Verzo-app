@@ -44,7 +44,12 @@ const RecentProducts = () => {
                 }`}
               >
                 <p>{product?.productName}</p>
-                <p className=" text-primary-greytext">₦{product?.price}</p>
+                <p className=" text-primary-greytext">
+                  {(product?.price / 100)?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
+                </p>
                 <p className=" text-primary-greytext">
                   {product?.productUnit?.unitName}
                 </p>

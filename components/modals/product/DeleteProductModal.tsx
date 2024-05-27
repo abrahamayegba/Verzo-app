@@ -3,10 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedProductsByBusinessDocument,
   GetProductsByBusinessDocument,
   useDeleteProductMutation,
+  useGetProductsByBusinessQuery,
 } from "@/src/generated/graphql";
 
 interface DeleteProductProps {
@@ -23,6 +25,18 @@ const DeleteProduct: React.FC<DeleteProductProps> = ({
 }) => {
   const { toast } = useToast();
   const [deleteProductMutation, { loading }] = useDeleteProductMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getProductsByBusiness = useGetProductsByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfProducts =
+    getProductsByBusiness?.data?.getProductsByBusiness?.productByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Deleted!",
@@ -47,6 +61,7 @@ const DeleteProduct: React.FC<DeleteProductProps> = ({
           GetArchivedProductsByBusinessDocument,
         ],
       });
+      numberOfProducts === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

@@ -111,7 +111,7 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
                 {service?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {service?.price.toLocaleString("en-NG", {
+                {(service?.price / 100)?.toLocaleString("en-NG", {
                   style: "currency",
                   currency: "NGN",
                 })}

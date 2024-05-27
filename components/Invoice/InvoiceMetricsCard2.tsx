@@ -104,41 +104,37 @@ const InvoiceMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
         <div className=" flex justify-between gap-y-1">
           <p className=" text-[30px] font-medium">
             {filter === "weekly" &&
-              weeklyData?.totalPendingInvoicesAmountThisWeek?.toLocaleString(
-                "en-NG",
-                {
-                  style: "currency",
-                  currency: "NGN",
-                  minimumFractionDigits: 2,
-                }
-              )}
+              (
+                weeklyData?.totalPendingInvoicesAmountThisWeek / 100
+              )?.toLocaleString("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                minimumFractionDigits: 2,
+              })}
             {filter === "monthly" &&
-              monthlyData?.totalPendingInvoicesAmountThisMonth?.toLocaleString(
-                "en-NG",
-                {
-                  style: "currency",
-                  currency: "NGN",
-                  minimumFractionDigits: 2,
-                }
-              )}
+              (
+                monthlyData?.totalPendingInvoicesAmountThisMonth / 100
+              )?.toLocaleString("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                minimumFractionDigits: 2,
+              })}
             {filter === "quarterly" &&
-              quarterlyData?.totalPendingInvoicesAmountThisQuarter?.toLocaleString(
-                "en-NG",
-                {
-                  style: "currency",
-                  currency: "NGN",
-                  minimumFractionDigits: 2,
-                }
-              )}
+              (
+                quarterlyData?.totalPendingInvoicesAmountThisQuarter / 100
+              )?.toLocaleString("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                minimumFractionDigits: 2,
+              })}
             {filter === "yearly" &&
-              yearlyData?.totalPendingInvoicesAmountThisYear?.toLocaleString(
-                "en-NG",
-                {
-                  style: "currency",
-                  currency: "NGN",
-                  minimumFractionDigits: 2,
-                }
-              )}
+              (
+                yearlyData?.totalPendingInvoicesAmountThisYear / 100
+              )?.toLocaleString("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                minimumFractionDigits: 2,
+              })}
           </p>
           <div className=" flex items-center text-primary-greytext">
             {filter === "weekly" &&

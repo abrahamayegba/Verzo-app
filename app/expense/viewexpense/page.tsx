@@ -56,7 +56,6 @@ const ViewExpense = () => {
 
   const merchantName = expense?.merchant?.name;
   const merchantEmail = expense?.merchant?.email;
-  const issueDate = expense?.createdAt;
   const expenseDate = expense?.expenseDate;
   const subtotal = expense?.amount;
   const total = subtotal;
@@ -133,13 +132,7 @@ const ViewExpense = () => {
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-              <p>Issue date</p>
-              <p className=" text-primary-black font-normal">
-                {issueDate ? new Date(issueDate).toDateString() : ""}
-              </p>
-            </div>
-            <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
-              <p>Due date</p>
+              <p>Expense date</p>
               <p className=" text-primary-black font-normal">
                 {expenseDate ? new Date(expenseDate).toDateString() : ""}
               </p>

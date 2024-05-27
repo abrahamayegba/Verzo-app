@@ -7,6 +7,7 @@ import {
   GetArchivedServiceByBusinessDocument,
   GetServiceByBusinessDocument,
   GetServiceByIdDocument,
+  useGetArchivedServiceByBusinessQuery,
   useUnarchiveServiceByBusinessMutation,
 } from "@/src/generated/graphql";
 
@@ -26,6 +27,18 @@ const UnarchiveService: React.FC<UnarchiveServiceProps> = ({
   const { toast } = useToast();
   const [unarchiveServiceByBusinessMutation, { loading }] =
     useUnarchiveServiceByBusinessMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getArchivedServicesByBusiness = useGetArchivedServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfArchivedServices =
+    getArchivedServicesByBusiness.data?.getArchivedServicesByBusiness
+      ?.serviceByBusiness.length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Unarchived!",
@@ -51,6 +64,7 @@ const UnarchiveService: React.FC<UnarchiveServiceProps> = ({
           GetServiceByIdDocument,
         ],
       });
+      numberOfArchivedServices === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

@@ -3,10 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedExpensesByBusinessDocument,
   GetExpensesByBusinessDocument,
   useArchiveExpenseMutation,
+  useGetExpensesByBusinessQuery,
 } from "@/src/generated/graphql";
 
 interface ArchiveExpenseProps {
@@ -24,6 +26,17 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
 }) => {
   const { toast } = useToast();
   const [archiveExpenseMutation, { loading }] = useArchiveExpenseMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getExpensesByBusiness = useGetExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
   const showSuccessToast = () => {
     toast({
       title: "Archived!",
@@ -39,6 +52,9 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
       duration: 3000,
     });
   };
+  const expenseNumber =
+    getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness
+      .length ?? 0;
   const handleArchiveClick = async () => {
     try {
       await archiveExpenseMutation({
@@ -48,6 +64,7 @@ const ArchiveExpense: React.FC<ArchiveExpenseProps> = ({
           GetArchivedExpensesByBusinessDocument,
         ],
       });
+      expenseNumber === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

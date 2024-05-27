@@ -156,10 +156,13 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
                 {invoice?.invoice?.customer?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {invoice?.invoice?.totalAmount.toLocaleString("en-NG", {
-                  style: "currency",
-                  currency: "NGN",
-                })}
+                {(invoice?.invoice?.totalAmount / 100)?.toLocaleString(
+                  "en-NG",
+                  {
+                    style: "currency",
+                    currency: "NGN",
+                  }
+                )}
               </TableCell>
               <TableCell className="text-right text-primary-blue">
                 <DropdownMenu>

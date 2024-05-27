@@ -37,6 +37,7 @@ const TransactionTabContentAll = () => {
       setSelectedRows((prevSelectedRows) => [...prevSelectedRows, rowId]);
     }
   };
+  console.log(transactions.length);
 
   return (
     <Table>
@@ -58,6 +59,9 @@ const TransactionTabContentAll = () => {
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Amount
+          </TableHead>
+          <TableHead className=" font-normal text-sm text-primary-greytext">
+            Status
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext text-right">
             Narration
@@ -117,16 +121,28 @@ const TransactionTabContentAll = () => {
                       Credit
                     </span>
                   ) : (
-                    <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
+                    <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
                       Debit
                     </span>
                   )}
                 </TableCell>
+
                 <TableCell className=" text-[15px] text-gray-700">
-                  {transaction?.amount?.toLocaleString("en-NG", {
+                  {(transaction?.amount / 100)?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                   })}
+                </TableCell>
+                <TableCell className=" text-primary-greytext tracking-wide">
+                  {transaction?.linked ? (
+                    <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      linked
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
+                      unlinked
+                    </span>
+                  )}
                 </TableCell>
                 <TableCell className="text-primary-greytext text-right max-w-[300px] truncate">
                   {transaction?.narration}

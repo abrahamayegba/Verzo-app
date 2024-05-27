@@ -85,11 +85,15 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
   };
   const onCreateServiceHandler = async (data: FormData) => {
     try {
+      const modifiedData = {
+        ...data,
+        price: data.price * 100,
+      };
       await createServiceMutation({
         variables: {
           businessId: businessId,
           serviceUnitId: serviceUnitId,
-          ...data,
+          ...modifiedData,
         },
         refetchQueries: [GetServiceByBusinessDocument],
       });

@@ -69,18 +69,6 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
     }
   }, [productSearchResult, productSearchId]);
 
-  // const handleSelectAll = () => {
-  //   const isChecked = selectedRows.length !== products?.length;
-  //   if (isChecked) {
-  //     setSelectedRows(
-  //       products?.map((product) => String(product?.id) || "") || []
-  //     );
-  //   } else {
-  //     setSelectedRows([]);
-  //   }
-  //   onToggleSelectAll(isChecked);
-  // };
-
   return (
     <Table>
       <TableHeader>
@@ -145,7 +133,7 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
                 {product?.productName}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {product?.price?.toLocaleString("en-NG", {
+                {(product?.price / 100)?.toLocaleString("en-NG", {
                   style: "currency",
                   currency: "NGN",
                 })}
@@ -158,9 +146,12 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
               <TableCell className=" text-primary-greytext">
                 {product?.productsInventory?.quantity}
               </TableCell>
-              <TableCell className=" text-primary-greytext">
-                {product?.productUnit?.unitName}
+              <TableCell className="text-primary-greytext">
+                {product?.businessProductUnit?.unitName
+                  ? product.businessProductUnit.unitName
+                  : product?.productUnit?.unitName}
               </TableCell>
+
               <TableCell className="text-right text-primary-blue">
                 <DropdownMenu>
                   <DropdownMenuTrigger className=" focus:outline-none">

@@ -104,13 +104,16 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
         <div className=" flex justify-between gap-y-1">
           <p className=" text-[30px] font-medium">
             {filter === "weekly" &&
-              weeklyData?.totalInvoicesAmountThisWeek?.toLocaleString("en-NG", {
-                style: "currency",
-                currency: "NGN",
-                minimumFractionDigits: 2,
-              })}
+              (weeklyData?.totalInvoicesAmountThisWeek / 100)?.toLocaleString(
+                "en-NG",
+                {
+                  style: "currency",
+                  currency: "NGN",
+                  minimumFractionDigits: 2,
+                }
+              )}
             {filter === "monthly" &&
-              monthlyData?.totalInvoicesAmountThisMonth?.toLocaleString(
+              (monthlyData?.totalInvoicesAmountThisMonth / 100)?.toLocaleString(
                 "en-NG",
                 {
                   style: "currency",
@@ -119,7 +122,15 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                 }
               )}
             {filter === "quarterly" &&
-              quarterlyData?.totalInvoicesAmountThisQuarter?.toLocaleString(
+              (
+                quarterlyData?.totalInvoicesAmountThisQuarter / 100
+              )?.toLocaleString("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                minimumFractionDigits: 2,
+              })}
+            {filter === "yearly" &&
+              (yearlyData?.totalInvoicesAmountThisYear / 100)?.toLocaleString(
                 "en-NG",
                 {
                   style: "currency",
@@ -127,12 +138,6 @@ const InvoiceMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
                   minimumFractionDigits: 2,
                 }
               )}
-            {filter === "yearly" &&
-              yearlyData?.totalInvoicesAmountThisYear?.toLocaleString("en-NG", {
-                style: "currency",
-                currency: "NGN",
-                minimumFractionDigits: 2,
-              })}
           </p>
           <div className=" flex items-center text-primary-greytext ">
             {filter === "weekly" &&

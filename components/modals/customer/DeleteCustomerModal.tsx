@@ -7,6 +7,7 @@ import {
   GetArchivedCustomersByBusinessDocument,
   GetCustomerByBusinessDocument,
   useDeleteCustomerMutation,
+  useGetCustomerByBusinessQuery,
 } from "@/src/generated/graphql";
 
 interface DeleteCustomerProps {
@@ -23,6 +24,18 @@ const DeleteCustomer: React.FC<DeleteCustomerProps> = ({
 }) => {
   const { toast } = useToast();
   const [deleteCustomerMutation, { loading }] = useDeleteCustomerMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getCustomerByBusiness = useGetCustomerByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfCustomers =
+    getCustomerByBusiness.data?.getCustomerByBusiness?.customerByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Deleted!",
@@ -47,6 +60,7 @@ const DeleteCustomer: React.FC<DeleteCustomerProps> = ({
           GetArchivedCustomersByBusinessDocument,
         ],
       });
+      numberOfCustomers === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

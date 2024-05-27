@@ -142,7 +142,7 @@ const InvoiceDetailPage = ({ params }: any) => {
                     <td className=" py-4">{item?.itemName}</td>
                     <td className=" text-end py-4">{item?.quantity}</td>
                     <td className=" text-end py-4">
-                      ₦{item?.price?.toLocaleString()}
+                      ₦{(item?.price / 100)?.toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -171,7 +171,7 @@ const InvoiceDetailPage = ({ params }: any) => {
               <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                 <p className=" text-primary-greytext">Sub total</p>
                 <p className=" text-base">
-                  {subtotal?.toLocaleString("en-NG", {
+                  {(subtotal / 100)?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                     minimumFractionDigits: 0,
@@ -181,7 +181,7 @@ const InvoiceDetailPage = ({ params }: any) => {
               <div className=" flex justify-between py-3 items-center">
                 <p className=" text-primary-greytext">Amount due</p>
                 <p className=" text-base">
-                  {total?.toLocaleString("en-NG", {
+                  {(total / 100)?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                     minimumFractionDigits: 0,

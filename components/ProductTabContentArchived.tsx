@@ -120,7 +120,7 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
                 {product?.productName}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {product?.price?.toLocaleString("en-NG", {
+                {(product?.price / 100)?.toLocaleString("en-NG", {
                   style: "currency",
                   currency: "NGN",
                 })}

@@ -124,7 +124,7 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
     if (selectedItem) {
       onItemSelected({
         id: selectedItem?.id,
-        price: selectedItem.price,
+        price: selectedItem.price / 100,
         name: selectedItem?.name,
         quantity: 1,
         index: selectedItem.index,
@@ -146,11 +146,15 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
 
   const onCreateProductHandler = async (data: FormData) => {
     try {
+      const modifiedData = {
+        ...data,
+        price: data.price * 100,
+      };
       await createProductMutation({
         variables: {
           businessId: businessId,
           productUnitId: productUnitId,
-          ...data,
+          ...modifiedData,
         },
         refetchQueries: [
           GetProductsByBusinessDocument,
@@ -168,11 +172,15 @@ const CreateItemSheet: React.FC<CreateItemProps> = ({
 
   const onCreateServiceHandler = async (data: ServiceFormData) => {
     try {
+      const modifiedData = {
+        ...data,
+        price: data.price * 100,
+      };
       await createServiceMutation({
         variables: {
           businessId: businessId,
           serviceUnitId: serviceUnitId,
-          ...data,
+          ...modifiedData,
         },
         refetchQueries: [
           GetServiceByBusinessDocument,

@@ -1,12 +1,14 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import localStorage from "local-storage-fallback";
 import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import {
   GetArchivedSalesByBusinessDocument,
   GetSaleByBusinessDocument,
   GetSaleByIdDocument,
+  useGetArchivedSalesByBusinessQuery,
   useUnarchiveSaleMutation,
 } from "@/src/generated/graphql";
 
@@ -25,6 +27,18 @@ const UnarchiveInvoice: React.FC<UnarchiveInvoiceProps> = ({
 }) => {
   const { toast } = useToast();
   const [unarchiveSaleMutation, { loading }] = useUnarchiveSaleMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getArchivedSalesByBusiness = useGetArchivedSalesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfArchivedSales =
+    getArchivedSalesByBusiness.data?.getArchivedSalesByBusiness?.salesByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Unarchived!",
@@ -50,6 +64,7 @@ const UnarchiveInvoice: React.FC<UnarchiveInvoiceProps> = ({
           GetArchivedSalesByBusinessDocument,
         ],
       });
+      numberOfArchivedSales === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

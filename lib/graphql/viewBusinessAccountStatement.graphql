@@ -6,8 +6,15 @@ query ViewBusinessAccountStatement($businessId: String!) {
     provider
     providerChannel
     narration
+    accountId
+    linked
     amount
     transactionDate
     valueDate
+    cardTransaction {
+      amount
+      merchantAmount
+    }
+    cardTransactionId
   }
 }

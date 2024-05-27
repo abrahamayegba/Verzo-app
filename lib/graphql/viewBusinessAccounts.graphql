@@ -6,6 +6,7 @@ query ViewBusinessAccount($businessId: String!) {
       billingAddressCity
     }
     canDebit
+    bvn
     canCredit
     accountName
     accountNumber

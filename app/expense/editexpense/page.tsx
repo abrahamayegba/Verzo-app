@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
-import { ChevronDown, Eye, MoveLeft, Plus } from "lucide-react";
+import { MoveLeft, Plus } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState, useMemo } from "react";
 import { useToast } from "@/app/hooks/use-toast";
@@ -186,8 +186,7 @@ const EditExpense = () => {
     0
   );
   const amountDue = subtotal;
-  console.log(expenseItems);
-  const onUpdateExpenseHandler = async (data: FormData) => {
+  const onUpdateExpenseHandler = async () => {
     if (!date && !initialExpenseDate) {
       showDateFailureToast("Please pick a date and try again.");
       return;

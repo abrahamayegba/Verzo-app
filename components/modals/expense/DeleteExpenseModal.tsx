@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedExpensesByBusinessDocument,
   GetExpenseByIdDocument,
@@ -12,6 +13,7 @@ import {
   GetExpenseForYearDocument,
   GetExpensesByBusinessDocument,
   useDeleteExpenseMutation,
+  useGetExpensesByBusinessQuery,
 } from "@/src/generated/graphql";
 
 interface DeleteExpenseProps {
@@ -32,6 +34,20 @@ const DeleteExpense: React.FC<DeleteExpenseProps> = ({
       expenseId: expenseId,
     },
   });
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getExpensesByBusiness = useGetExpensesByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      sets: 1,
+      cursor: null,
+    },
+  });
+  const expenseNumber =
+    getExpensesByBusiness.data?.getExpenseByBusiness?.expenseByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Deleted!",
@@ -61,6 +77,7 @@ const DeleteExpense: React.FC<DeleteExpenseProps> = ({
           GetArchivedExpensesByBusinessDocument,
         ],
       });
+      expenseNumber === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {

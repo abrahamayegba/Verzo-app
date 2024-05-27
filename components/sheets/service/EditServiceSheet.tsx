@@ -113,7 +113,7 @@ const EditServiceSheet: React.FC<EditServiceProps> = ({
         variables: {
           serviceId: serviceId,
           name: serviceData.name,
-          price: serviceData.price,
+          price: serviceData.price * 100,
           serviceUnitId: serviceData.serviceUnitId,
         },
         refetchQueries: [GetServiceByBusinessDocument],

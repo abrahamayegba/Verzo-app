@@ -62,6 +62,7 @@ const CreateCustomerSheet: React.FC<CreateCustomerProps> = ({
       onClose();
       showSuccessToast();
       reset();
+      setAddress("");
     } catch (error) {
       console.error(error);
       onClose();

@@ -8,6 +8,9 @@ query GetProductsByBusiness($businessId: String!, $cursor: String, $sets: Int) {
       productUnit {
         unitName
       }
+      businessProductUnit {
+        unitName
+      }
       productsInventory {
         quantity
       }

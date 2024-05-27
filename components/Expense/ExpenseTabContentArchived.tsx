@@ -103,19 +103,7 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {archivedExpenses.length === 0 ? (
-          <TableRow>
-            <TableCell
-              colSpan={7}
-              className="text-center text-primary-greytext py-4 h-[293px]"
-            >
-              <TableEmptyState
-                icon={<ExpenseTableEmptyIcon />}
-                emptytext="No expenses available"
-              />
-            </TableCell>
-          </TableRow>
-        ) : (
+        {archivedExpenses.length > 0 ? (
           archivedExpenses.slice(0, numberOfExpensesToShow).map((expense) => (
             <TableRow className="" key={expense?.id}>
               <TableCell className="flex gap-x-3 items-center py-[22px]">
@@ -175,6 +163,18 @@ const ExpenseTabContentArchived: React.FC<ExpenseTabContentArchivedProps> = ({
               </TableCell>
             </TableRow>
           ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={7}
+              className="text-center text-primary-greytext py-4 h-[293px]"
+            >
+              <TableEmptyState
+                icon={<ExpenseTableEmptyIcon />}
+                emptytext="No expenses available"
+              />
+            </TableCell>
+          </TableRow>
         )}
       </TableBody>
     </Table>

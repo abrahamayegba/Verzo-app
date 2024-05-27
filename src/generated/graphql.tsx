@@ -865,6 +865,8 @@ export type CreateSudoAccount = {
 export type CreateSudoAccountTransaction = {
   accountId: Scalars['String']['input'];
   amount: Scalars['BigInt']['input'];
+  cardTransactionId?: InputMaybe<Scalars['String']['input']>;
+  isCardTransaction?: InputMaybe<Scalars['Boolean']['input']>;
   narration: Scalars['String']['input'];
   paymentReference: Scalars['String']['input'];
   provider: Scalars['String']['input'];
@@ -894,6 +896,7 @@ export type CreateSudoCardAuthorization = {
   merchantCurrency: Scalars['String']['input'];
   sourceId: Scalars['String']['input'];
   status: Scalars['String']['input'];
+  transactionReference: Scalars['String']['input'];
   updatedAt: Scalars['String']['input'];
   vat: Scalars['Float']['input'];
 };
@@ -909,6 +912,7 @@ export type CreateSudoCardTransaction = {
   merchantAmount: Scalars['BigInt']['input'];
   merchantCurrency: Scalars['String']['input'];
   sourceId: Scalars['String']['input'];
+  transactionReference: Scalars['String']['input'];
   type: Scalars['String']['input'];
   updatedAt: Scalars['Date']['input'];
   vat: Scalars['Float']['input'];
@@ -5513,7 +5517,10 @@ export type SudoAccountTransaction = {
   account?: Maybe<SudoAccount>;
   accountId: Scalars['String']['output'];
   amount: Scalars['BigInt']['output'];
+  cardTransaction?: Maybe<SudoCardTransaction>;
+  cardTransactionId?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  isCardTransaction?: Maybe<Scalars['Boolean']['output']>;
   linked?: Maybe<Scalars['Boolean']['output']>;
   narration: Scalars['String']['output'];
   paymentReference: Scalars['String']['output'];
@@ -5544,6 +5551,7 @@ export type SudoCardAuthorization = {
   sourceId: Scalars['String']['output'];
   status: Scalars['String']['output'];
   sudoCardTransaction?: Maybe<SudoCardTransaction>;
+  transactionReference?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
   vat: Scalars['Float']['output'];
 };
@@ -5577,6 +5585,8 @@ export type SudoCardTransaction = {
   merchantCurrency: Scalars['String']['output'];
   requestsHistory?: Maybe<Array<Maybe<RequestHistory>>>;
   sourceId: Scalars['String']['output'];
+  sudoAccountTransaction?: Maybe<SudoAccountTransaction>;
+  transactionReference: Scalars['String']['output'];
   type: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   vat: Scalars['Float']['output'];
@@ -7074,7 +7084,7 @@ export type GetProductsByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsByBusinessQuery = { __typename?: 'Query', getProductsByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, price?: any | null, stockStatus?: string | null, productUnitId?: string | null, archived?: boolean | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null, productsInventory?: { __typename?: 'ProductInventory', quantity?: number | null } | null } | null> } | null };
+export type GetProductsByBusinessQuery = { __typename?: 'Query', getProductsByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, price?: any | null, stockStatus?: string | null, productUnitId?: string | null, archived?: boolean | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null, businessProductUnit?: { __typename?: 'BusinessProductUnit', unitName?: string | null } | null, productsInventory?: { __typename?: 'ProductInventory', quantity?: number | null } | null } | null> } | null };
 
 export type GetProductForWeekQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7686,14 +7696,14 @@ export type ViewBusinessAccountStatementQueryVariables = Exact<{
 }>;
 
 
-export type ViewBusinessAccountStatementQuery = { __typename?: 'Query', viewBusinessAccountStatement?: Array<{ __typename?: 'SudoAccountTransaction', id: string, paymentReference: string, type: string, provider: string, providerChannel: string, narration: string, amount: any, transactionDate: any, valueDate: any } | null> | null };
+export type ViewBusinessAccountStatementQuery = { __typename?: 'Query', viewBusinessAccountStatement?: Array<{ __typename?: 'SudoAccountTransaction', id: string, paymentReference: string, type: string, provider: string, providerChannel: string, narration: string, accountId: string, linked?: boolean | null, amount: any, transactionDate: any, valueDate: any, cardTransactionId?: string | null, cardTransaction?: { __typename?: 'SudoCardTransaction', amount: any, merchantAmount: any } | null } | null> | null };
 
 export type ViewBusinessAccountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
 }>;
 
 
-export type ViewBusinessAccountQuery = { __typename?: 'Query', viewBusinessAccount?: { __typename?: 'SudoAccount', id: string, canDebit: boolean, canCredit: boolean, accountName: string, accountNumber: string, accountType: string, accountBalance: any, status: string, lastSyncTime?: any | null, customer?: { __typename?: 'SudoCustomer', billingAddressLine1: string, billingAddressCity?: string | null } | null } | null };
+export type ViewBusinessAccountQuery = { __typename?: 'Query', viewBusinessAccount?: { __typename?: 'SudoAccount', id: string, canDebit: boolean, bvn: string, canCredit: boolean, accountName: string, accountNumber: string, accountType: string, accountBalance: any, status: string, lastSyncTime?: any | null, customer?: { __typename?: 'SudoCustomer', billingAddressLine1: string, billingAddressCity?: string | null } | null } | null };
 
 export type ViewCardAuthorizationsQueryVariables = Exact<{
   cardId: Scalars['String']['input'];
@@ -12291,6 +12301,9 @@ export const GetProductsByBusinessDocument = gql`
       productUnit {
         unitName
       }
+      businessProductUnit {
+        unitName
+      }
       productsInventory {
         quantity
       }
@@ -15730,9 +15743,16 @@ export const ViewBusinessAccountStatementDocument = gql`
     provider
     providerChannel
     narration
+    accountId
+    linked
     amount
     transactionDate
     valueDate
+    cardTransaction {
+      amount
+      merchantAmount
+    }
+    cardTransactionId
   }
 }
     `;
@@ -15778,6 +15798,7 @@ export const ViewBusinessAccountDocument = gql`
       billingAddressCity
     }
     canDebit
+    bvn
     canCredit
     accountName
     accountNumber

@@ -3,10 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/app/hooks/use-toast";
+import localStorage from "local-storage-fallback";
 import {
   GetArchivedServiceByBusinessDocument,
   GetServiceByBusinessDocument,
   useDeleteServiceMutation,
+  useGetServiceByBusinessQuery,
 } from "@/src/generated/graphql";
 
 interface DeleteServiceProps {
@@ -23,6 +25,18 @@ const DeleteService: React.FC<DeleteServiceProps> = ({
 }) => {
   const { toast } = useToast();
   const [deleteServiceMutation, { loading }] = useDeleteServiceMutation();
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const getServicesByBusiness = useGetServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const numberOfServices =
+    getServicesByBusiness.data?.getServiceByBusiness?.serviceByBusiness
+      .length ?? 0;
   const showSuccessToast = () => {
     toast({
       title: "Deleted!",
@@ -47,6 +61,7 @@ const DeleteService: React.FC<DeleteServiceProps> = ({
           GetArchivedServiceByBusinessDocument,
         ],
       });
+      numberOfServices === 1 && window.location.reload();
       onClose();
       showSuccessToast();
     } catch (error) {
