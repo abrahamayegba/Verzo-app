@@ -25,15 +25,9 @@ import { ChevronDown, Eye, MoveLeft, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import localStorage from "local-storage-fallback";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { IoReceiptOutline } from "react-icons/io5";
 import { IoIosLink } from "react-icons/io";
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
@@ -126,7 +120,7 @@ const AddPayment = () => {
   const expenseStatusId = expense?.expenseStatusId;
   const expenseReference = expense?.reference;
   const paymentAdded = expenseStatusId! >= 4;
-  const amount = expense?.amount;
+  const amount = expense?.amount / 100;
   const [makeExpensePaymentMutation, { loading }] =
     useMakeExpensePaymentMutation();
   const apiKey = "Am510qpybQ3i95Kv17umgz";
@@ -250,7 +244,6 @@ const AddPayment = () => {
       showFailureToast(error);
     }
   };
-
   if (getBusinessesByUserId.loading || getExpenseById.loading) {
     return <MainLoader />;
   }
@@ -431,7 +424,7 @@ const AddPayment = () => {
               </>
             )}
             {selectedTab === 2 && (
-              <div className=" flex flex-col mt-[20px] gap-y-2">
+              <div className=" flex flex-col mt-[30px] gap-y-2">
                 <p className=" text-lg text-primary-black">Link transaction</p>
                 <AlertDialog
                   open={openTransactionsModal}
@@ -440,7 +433,7 @@ const AddPayment = () => {
                   <button
                     onClick={() => setOpenTransactionsModal(true)}
                     type="button"
-                    className=" text-white bg-primary-blue rounded-md py-[12px] px-6 max-w-[500px]"
+                    className=" text-gray-600 border hover:bg-gray-100 border-gray-300 rounded-md py-[12px] px-6 max-w-[500px]"
                   >
                     Select transaction
                   </button>
@@ -480,13 +473,13 @@ const AddPayment = () => {
                                   (transaction) =>
                                     transaction?.type === "Debit" && (
                                       <button
-                                        className=" flex flex-row gap-x-7 justify-between text-start items-start border-b border-b-gray-200 py-2 px-1 hover:bg-gray-100 cursor-pointer"
+                                        className=" flex flex-row gap-x-8 justify-between text-start items-start border-b border-b-gray-200 py-2 px-1 hover:bg-gray-100 cursor-pointer"
                                         key={transaction?.id}
                                         onClick={() =>
                                           handleTransactionSelect(transaction)
                                         }
                                       >
-                                        <div className=" flex flex-col gap-y-1">
+                                        <div className=" flex flex-col gap-y-1 max-w-[350px]">
                                           <p className=" font-medium text-gray-700">
                                             {transaction?.narration}
                                           </p>
@@ -502,15 +495,27 @@ const AddPayment = () => {
                                             })}
                                           </p>
                                         </div>
-                                        <p className=" font-medium mt-1 text-[18px] text-gray-800">
-                                          {transaction?.amount?.toLocaleString(
-                                            "en-NG",
-                                            {
-                                              style: "currency",
-                                              currency: "NGN",
-                                            }
-                                          )}
-                                        </p>
+                                        <div className=" flex flex-col gap-y-1">
+                                          <p className=" font-medium mt-1 text-[18px] text-gray-800 min-w-[150px] text-end">
+                                            {transaction?.cardTransaction?.merchantAmount?.toLocaleString(
+                                              "en-NG",
+                                              {
+                                                style: "currency",
+                                                currency: "NGN",
+                                              }
+                                            )}
+                                          </p>
+                                          <p className=" text-end text-gray-600 font-light">
+                                            Fee:
+                                            {transaction?.cardTransaction?.fee?.toLocaleString(
+                                              "en-NG",
+                                              {
+                                                style: "currency",
+                                                currency: "NGN",
+                                              }
+                                            )}
+                                          </p>
+                                        </div>
                                       </button>
                                     )
                                 )}
@@ -576,7 +581,7 @@ const AddPayment = () => {
               </div>
             )}
           </div>
-          <div className=" flex flex-col gap-y-2 mt-[20px]">
+          <div className=" flex flex-col gap-y-2">
             <p>Details</p>
             <div className=" flex flex-row gap-x-6">
               <div className=" flex flex-col gap-y-2 w-1/2">

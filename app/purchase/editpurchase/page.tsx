@@ -23,6 +23,10 @@ import {
   GetArchivedPurchasesByBusinessDocument,
   GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
+  GetPurchaseForMonthDocument,
+  GetPurchaseForQuarterDocument,
+  GetPurchaseForWeekDocument,
+  GetPurchaseForYearDocument,
   useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
   useGetPurchaseByIdQuery,
@@ -252,6 +256,10 @@ const EditPurchase = () => {
           GetPurchaseByIdDocument,
           GetPurchaseByBusinessDocument,
           GetArchivedPurchasesByBusinessDocument,
+          GetPurchaseForWeekDocument,
+          GetPurchaseForMonthDocument,
+          GetPurchaseForQuarterDocument,
+          GetPurchaseForYearDocument,
         ],
       });
       client.refetchQueries({

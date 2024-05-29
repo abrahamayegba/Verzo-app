@@ -21,6 +21,10 @@ import {
   GetInvoicesByBusinessDocument,
   GetSaleByBusinessDocument,
   GetSaleByIdDocument,
+  GetSalesForMonthDocument,
+  GetSalesForQuarterDocument,
+  GetSalesForWeekDocument,
+  GetSalesForYearDocument,
   useGetBusinessesByUserIdQuery,
   useGetSaleByIdQuery,
   useUpdateSaleMutation,
@@ -396,6 +400,10 @@ const EditInvoice = () => {
           GetInvoicesByBusinessDocument,
           GetArchivedSalesByBusinessDocument,
           GetSaleByIdDocument,
+          GetSalesForWeekDocument,
+          GetSalesForMonthDocument,
+          GetSalesForQuarterDocument,
+          GetSalesForYearDocument,
         ],
       });
       showSuccessToast();

@@ -82,15 +82,16 @@ export const isAuthenticated = async (): Promise<boolean> => {
   try {
     const { exp }: { exp: number } = jwtDecode(token);
     if (Date.now() >= exp * 1000) {
-      const success = await refreshToken();
-      if (success === true) {
-        console.log("token has been refreshed");
-        return true;
-      } else {
-        return false;
-      }
+      // If the current time is greater than or equal to the expiration time
+      return false;
     }
-    return true;
+    const success = await refreshToken();
+    if (success === true) {
+      console.log("Token has been refreshed");
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     console.error("Error decoding access token:", error);
     return false;

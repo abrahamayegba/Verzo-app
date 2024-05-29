@@ -18,9 +18,14 @@ import ProfileIcon from "@/components/ui/icons/ProfileIcon";
 import { Textarea } from "@/components/ui/textarea";
 import localStorage from "local-storage-fallback";
 import {
+  GetArchivedSalesByBusinessDocument,
   GetInvoicesByBusinessDocument,
   GetSaleByBusinessDocument,
   GetSaleByIdDocument,
+  GetSalesForMonthDocument,
+  GetSalesForQuarterDocument,
+  GetSalesForWeekDocument,
+  GetSalesForYearDocument,
   useCreateSaleEntryMutation,
   useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
@@ -323,7 +328,12 @@ const CreateInvoice = () => {
         refetchQueries: [
           GetSaleByBusinessDocument,
           GetInvoicesByBusinessDocument,
+          GetArchivedSalesByBusinessDocument,
           GetSaleByIdDocument,
+          GetSalesForWeekDocument,
+          GetSalesForMonthDocument,
+          GetSalesForQuarterDocument,
+          GetSalesForYearDocument,
         ],
       });
       showSuccessToast();

@@ -13,6 +13,7 @@ query ViewBusinessAccountStatement($businessId: String!) {
     valueDate
     cardTransaction {
       amount
+      fee
       merchantAmount
     }
     cardTransactionId

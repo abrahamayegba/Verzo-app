@@ -119,7 +119,7 @@ const AddPurchasePayment = () => {
   const itemsConfirmed = true;
   const merchantInvoiceAdded = true;
   const paymentAdded = purchaseStatusId! >= 4;
-  const amount = purchase?.total;
+  const amount = purchase?.total / 100;
   const apiKey = "Am510qpybQ3i95Kv17umgz";
   const client = filestack.init(apiKey);
   const [makePurchasePaymentMutation, { loading }] =

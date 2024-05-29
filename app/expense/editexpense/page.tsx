@@ -24,6 +24,10 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import {
   GetExpenseByIdDocument,
+  GetExpenseForMonthDocument,
+  GetExpenseForQuarterDocument,
+  GetExpenseForWeekDocument,
+  GetExpenseForYearDocument,
   GetExpensesByBusinessDocument,
   useGetExpenseByIdQuery,
   useGetExpenseCategoryWithSetsQuery,
@@ -209,7 +213,14 @@ const EditExpense = () => {
             ? getValues("description")
             : expense?.description,
         },
-        refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
+        refetchQueries: [
+          GetExpenseByIdDocument,
+          GetExpensesByBusinessDocument,
+          GetExpenseForWeekDocument,
+          GetExpenseForMonthDocument,
+          GetExpenseForQuarterDocument,
+          GetExpenseForYearDocument,
+        ],
       });
       showSuccessToast();
       router.push("/dashboard/expenses");

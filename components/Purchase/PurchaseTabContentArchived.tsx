@@ -161,7 +161,7 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
                   {purchase?.merchant?.name}
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
-                  {purchase?.total?.toLocaleString("en-NG", {
+                  {(purchase?.total / 100)?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                   })}

@@ -29,6 +29,10 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import {
   GetExpenseByIdDocument,
+  GetExpenseForMonthDocument,
+  GetExpenseForQuarterDocument,
+  GetExpenseForWeekDocument,
+  GetExpenseForYearDocument,
   GetExpensesByBusinessDocument,
   useCreateExpenseMutation,
   useGetExpenseCategoryWithSetsQuery,
@@ -165,10 +169,11 @@ const CreateExpense = () => {
     expenseItems.length = 0;
   };
 
-  const subtotal = expenseItems.reduce(
-    (acc, items) => acc + items?.unitPrice * items?.quantity,
-    0
-  );
+  const subtotal =
+    expenseItems.reduce(
+      (acc, items) => acc + (items?.unitPrice || 0) * (items?.quantity || 0),
+      0
+    ) || 0;
 
   const updatedExpenseItems = expenseItems.map((item) => {
     return {
@@ -193,7 +198,14 @@ const CreateExpense = () => {
           expenseItem: updatedExpenseItems,
           ...data,
         },
-        refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
+        refetchQueries: [
+          GetExpenseByIdDocument,
+          GetExpensesByBusinessDocument,
+          GetExpenseForWeekDocument,
+          GetExpenseForMonthDocument,
+          GetExpenseForQuarterDocument,
+          GetExpenseForYearDocument,
+        ],
       });
       showSuccessToast();
       router.push("/dashboard/expenses");

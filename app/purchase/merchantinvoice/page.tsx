@@ -59,7 +59,7 @@ const AddPurchaseMerchantInvoice = () => {
   const itemsConfirmed = true;
   const merchantInvoiceAdded = purchaseStatusId! >= 3;
   const paymentAdded = purchaseStatusId! >= 4;
-  const amount = purchase?.total;
+  const amount = purchase?.total / 100;
   const apiKey = "Am510qpybQ3i95Kv17umgz";
   const client = filestack.init(apiKey);
   const showPickerSuccessToast = (filename: any) => {

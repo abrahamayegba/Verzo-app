@@ -34,7 +34,7 @@ const CardTabContentAll = () => {
   const businessId = storedBusinessId[0] || "";
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const { data, loading, error } = useGetCardsByBusinessQuery({
+  const { data } = useGetCardsByBusinessQuery({
     variables: {
       businessId: businessId,
     },
@@ -151,6 +151,7 @@ const CardTabContentAll = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                      disabled
                       //   onClick={() => openArchiveModal(customer?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >

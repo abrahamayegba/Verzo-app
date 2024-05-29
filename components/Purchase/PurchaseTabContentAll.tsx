@@ -154,18 +154,12 @@ const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
                     Pending
                   </span>
                 )}
-                {/* {row.status === "Unpaid" && (
-                  <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
-                    <span className="mr-2 text-red-500">✘</span>
-                    Canceled
-                  </span>
-                )} */}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {purchase?.merchant?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {purchase?.total?.toLocaleString("en-NG", {
+                {(purchase?.total / 100)?.toLocaleString("en-NG", {
                   style: "currency",
                   currency: "NGN",
                 })}
@@ -185,14 +179,20 @@ const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
                         View Purchase
                       </Link>
                     </DropdownMenuItem>
-                    <Link
-                      href={`/purchase/editpurchase?purchaseId=${purchase?.id}`}
+
+                    <DropdownMenuItem
+                      disabled={purchase?.purchaseStatusId! > 1}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                      <Link
+                        className=" flex flex-row gap-x-2"
+                        href={`/purchase/editpurchase?purchaseId=${purchase?.id}`}
+                      >
                         <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                         Edit Purchase
-                      </DropdownMenuItem>
-                    </Link>
+                      </Link>
+                    </DropdownMenuItem>
+
                     <DropdownMenuItem
                       onClick={() => openArchiveModal(purchase?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"

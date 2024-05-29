@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import {
   GetSaleByBusinessDocument,
   GetSaleByIdDocument,
+  ViewBusinessAccountStatementDocument,
   useGetBusinessesByUserIdQuery,
   useGetSaleByIdQuery,
   useMakeSalePaymentMutation,
@@ -227,7 +228,11 @@ const AddPayment = () => {
           transactionDate: formattedDateReceived,
           ...data,
         },
-        refetchQueries: [GetSaleByIdDocument, GetSaleByBusinessDocument],
+        refetchQueries: [
+          GetSaleByIdDocument,
+          GetSaleByBusinessDocument,
+          ViewBusinessAccountStatementDocument,
+        ],
       });
       showSuccessToast();
       router.push("/dashboard/invoices");
@@ -372,7 +377,7 @@ const AddPayment = () => {
             </div>
             {selectedTab === 1 && (
               <>
-                <div className=" flex flex-col mt-[20px] gap-y-4">
+                <div className=" flex flex-col mt-[30px] gap-y-4">
                   <div className=" flex flex-col gap-y-1 ">
                     <p className=" text-lg text-primary-black">
                       Upload payment receipt{" "}
@@ -425,7 +430,7 @@ const AddPayment = () => {
               </>
             )}
             {selectedTab === 2 && (
-              <div className=" flex flex-col mt-[20px] gap-y-2">
+              <div className=" flex flex-col mt-[30px] gap-y-2">
                 <p className=" text-lg text-primary-black">Link transaction</p>
                 <AlertDialog
                   open={openTransactionsModal}
@@ -434,7 +439,7 @@ const AddPayment = () => {
                   <button
                     onClick={() => setOpenTransactionsModal(true)}
                     type="button"
-                    className=" text-white bg-primary-blue rounded-md py-[12px] px-6 max-w-[500px]"
+                    className=" text-gray-600 border hover:bg-gray-100 border-gray-300 rounded-md py-[12px] px-6 max-w-[500px]"
                   >
                     Select transaction
                   </button>
@@ -469,7 +474,7 @@ const AddPayment = () => {
                                 />
                                 <Search className="absolute top-0 left-0 mt-3 ml-3 h-5 w-5 text-gray-400 pointer-events-none" />
                               </div>
-                              <div className=" h-[320px] mt-1 flex flex-col overflow-y-scroll gap-y-1">
+                              <div className=" max-h-[300px] mt-1 flex flex-col overflow-y-scroll gap-y-1">
                                 {filteredTransactions?.map(
                                   (transaction) =>
                                     transaction?.type === "Credit" && (
@@ -497,13 +502,12 @@ const AddPayment = () => {
                                           </p>
                                         </div>
                                         <p className=" font-medium mt-1 text-[18px] text-gray-800">
-                                          {transaction?.amount?.toLocaleString(
-                                            "en-NG",
-                                            {
-                                              style: "currency",
-                                              currency: "NGN",
-                                            }
-                                          )}
+                                          {(
+                                            transaction?.amount / 100
+                                          )?.toLocaleString("en-NG", {
+                                            style: "currency",
+                                            currency: "NGN",
+                                          })}
                                         </p>
                                       </button>
                                     )

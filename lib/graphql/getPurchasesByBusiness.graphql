@@ -8,6 +8,7 @@ query GetPurchaseByBusiness($businessId: String!, $cursor: String, $sets: Int) {
       reference
       businessId
       archived
+      purchaseStatusId
       merchant {
         name
       }

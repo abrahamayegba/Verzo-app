@@ -1897,6 +1897,7 @@ export type Mutation = {
   deleteAllSudoCards?: Maybe<Scalars['Boolean']['output']>;
   deleteBillingPlan?: Maybe<BillingPlan>;
   deleteBusiness?: Maybe<Scalars['Boolean']['output']>;
+  deleteBusinessAccount?: Maybe<Scalars['Boolean']['output']>;
   deleteBusinessCOA?: Maybe<Scalars['Boolean']['output']>;
   deleteBusinessCategory?: Maybe<Scalars['Boolean']['output']>;
   deleteBusinessProductUnit?: Maybe<Scalars['Boolean']['output']>;
@@ -2568,6 +2569,11 @@ export type MutationDeleteBillingPlanArgs = {
 export type MutationDeleteBusinessArgs = {
   businessId: Scalars['String']['input'];
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationDeleteBusinessAccountArgs = {
+  businessId: Scalars['String']['input'];
 };
 
 
@@ -6751,7 +6757,7 @@ export type GetArchivedSalesByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetArchivedSalesByBusinessQuery = { __typename?: 'Query', getArchivedSalesByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, archived?: boolean | null, reference?: string | null, saleAmount?: any | null, paid?: boolean | null, transactionDate?: any | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', amount?: any | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', amount?: any | null } | null> | null, business?: { __typename?: 'Business', businessName: string } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: any, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: any, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: any | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
+export type GetArchivedSalesByBusinessQuery = { __typename?: 'Query', getArchivedSalesByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, archived?: boolean | null, reference?: string | null, saleAmount?: any | null, paid?: boolean | null, transactionDate?: any | null, saleStatus?: { __typename?: 'SaleStatusRef', saleStatus?: string | null, id?: number | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', amount?: any | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', amount?: any | null } | null> | null, business?: { __typename?: 'Business', businessName: string } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: any, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: any, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: any | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
 
 export type GetArchivedServiceByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6938,7 +6944,7 @@ export type GetExpensesByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetExpensesByBusinessQuery = { __typename?: 'Query', getExpenseByBusiness?: { __typename?: 'GetExpenseResponse', cursorId?: string | null, expenseByBusiness: Array<{ __typename?: 'Expense', id: string, description?: string | null, amount: any, reference?: string | null, paid?: boolean | null, archived?: boolean | null, expenseDate?: any | null, recurring?: boolean | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, business?: { __typename?: 'Business', businessName: string } | null, merchant?: { __typename?: 'Merchant', name: string, id?: string | null } | null } | null> } | null };
+export type GetExpensesByBusinessQuery = { __typename?: 'Query', getExpenseByBusiness?: { __typename?: 'GetExpenseResponse', cursorId?: string | null, expenseByBusiness: Array<{ __typename?: 'Expense', id: string, description?: string | null, amount: any, reference?: string | null, paid?: boolean | null, archived?: boolean | null, expenseStatusId?: number | null, expenseDate?: any | null, recurring?: boolean | null, expenseCategory?: { __typename?: 'ExpenseCategory', name: string, id: string } | null, business?: { __typename?: 'Business', businessName: string } | null, merchant?: { __typename?: 'Merchant', name: string, id?: string | null } | null } | null> } | null };
 
 export type GetExpenseByBusinessMobileQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7115,7 +7121,7 @@ export type GetPurchaseByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetPurchaseByBusinessQuery = { __typename?: 'Query', getPurchaseByBusiness?: { __typename?: 'GetPurchaseByBusinessResponse', cursorId?: string | null, purchaseByBusiness: Array<{ __typename?: 'Purchase', id?: string | null, description?: string | null, transactionDate?: any | null, total?: any | null, reference?: string | null, businessId?: string | null, archived?: boolean | null, paid?: boolean | null, merchant?: { __typename?: 'Merchant', name: string } | null, business?: { __typename?: 'Business', businessName: string } | null, purchasePayments?: Array<{ __typename?: 'PurchasePayment', total?: any | null, file?: string | null, transactionDate?: any | null, description?: string | null } | null> | null, purchaseItems?: Array<{ __typename?: 'PurchaseItem', description: string, quantity: number, unitPrice: any, price: any, product?: { __typename?: 'Product', productName: string, price?: any | null } | null } | null> | null } | null> } | null };
+export type GetPurchaseByBusinessQuery = { __typename?: 'Query', getPurchaseByBusiness?: { __typename?: 'GetPurchaseByBusinessResponse', cursorId?: string | null, purchaseByBusiness: Array<{ __typename?: 'Purchase', id?: string | null, description?: string | null, transactionDate?: any | null, total?: any | null, reference?: string | null, businessId?: string | null, archived?: boolean | null, purchaseStatusId?: number | null, paid?: boolean | null, merchant?: { __typename?: 'Merchant', name: string } | null, business?: { __typename?: 'Business', businessName: string } | null, purchasePayments?: Array<{ __typename?: 'PurchasePayment', total?: any | null, file?: string | null, transactionDate?: any | null, description?: string | null } | null> | null, purchaseItems?: Array<{ __typename?: 'PurchaseItem', description: string, quantity: number, unitPrice: any, price: any, product?: { __typename?: 'Product', productName: string, price?: any | null } | null } | null> | null } | null> } | null };
 
 export type GetPurchaseByIdQueryVariables = Exact<{
   purchaseId: Scalars['String']['input'];
@@ -7168,7 +7174,7 @@ export type GetSaleByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetSaleByBusinessQuery = { __typename?: 'Query', getSaleByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, saleAmount?: any | null, paid?: boolean | null, reference?: string | null, archived?: boolean | null, transactionDate?: any | null, business?: { __typename?: 'Business', businessName: string } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: any, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: any, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: any | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
+export type GetSaleByBusinessQuery = { __typename?: 'Query', getSaleByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, saleAmount?: any | null, paid?: boolean | null, reference?: string | null, archived?: boolean | null, transactionDate?: any | null, business?: { __typename?: 'Business', businessName: string } | null, saleStatus?: { __typename?: 'SaleStatusRef', saleStatus?: string | null, id?: number | null } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: any, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: any, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: any | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
 
 export type GetSaleByIdQueryVariables = Exact<{
   saleId: Scalars['String']['input'];
@@ -7696,7 +7702,7 @@ export type ViewBusinessAccountStatementQueryVariables = Exact<{
 }>;
 
 
-export type ViewBusinessAccountStatementQuery = { __typename?: 'Query', viewBusinessAccountStatement?: Array<{ __typename?: 'SudoAccountTransaction', id: string, paymentReference: string, type: string, provider: string, providerChannel: string, narration: string, accountId: string, linked?: boolean | null, amount: any, transactionDate: any, valueDate: any, cardTransactionId?: string | null, cardTransaction?: { __typename?: 'SudoCardTransaction', amount: any, merchantAmount: any } | null } | null> | null };
+export type ViewBusinessAccountStatementQuery = { __typename?: 'Query', viewBusinessAccountStatement?: Array<{ __typename?: 'SudoAccountTransaction', id: string, paymentReference: string, type: string, provider: string, providerChannel: string, narration: string, accountId: string, linked?: boolean | null, amount: any, transactionDate: any, valueDate: any, cardTransactionId?: string | null, cardTransaction?: { __typename?: 'SudoCardTransaction', amount: any, fee: any, merchantAmount: any } | null } | null> | null };
 
 export type ViewBusinessAccountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -9931,6 +9937,10 @@ export const GetArchivedSalesByBusinessDocument = gql`
       archived
       reference
       saleAmount
+      saleStatus {
+        saleStatus
+        id
+      }
       saleExpenses {
         amount
       }
@@ -11304,6 +11314,7 @@ export const GetExpensesByBusinessDocument = gql`
       reference
       paid
       archived
+      expenseStatusId
       expenseCategory {
         name
         id
@@ -12523,6 +12534,7 @@ export const GetPurchaseByBusinessDocument = gql`
       reference
       businessId
       archived
+      purchaseStatusId
       merchant {
         name
       }
@@ -12953,6 +12965,10 @@ export const GetSaleByBusinessDocument = gql`
       archived
       business {
         businessName
+      }
+      saleStatus {
+        saleStatus
+        id
       }
       transactionDate
       invoice {
@@ -15750,6 +15766,7 @@ export const ViewBusinessAccountStatementDocument = gql`
     valueDate
     cardTransaction {
       amount
+      fee
       merchantAmount
     }
     cardTransactionId

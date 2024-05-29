@@ -83,7 +83,6 @@ const ViewInvoiceSheet: React.FC<ViewInvoiceProps> = ({
                   {businessName}
                 </p>
                 <p className=" text-[16px]">{businessEmail}</p>
-                <p className=" text-[16px]">{country}</p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>For</p>
@@ -91,7 +90,6 @@ const ViewInvoiceSheet: React.FC<ViewInvoiceProps> = ({
                   {customerName}
                 </p>
                 <p className=" text-[16px]">{customerEmail}</p>
-                <p className=" text-[16px]">{country}</p>
               </div>
             </div>
             <div className=" w-full flex flex-col mt-[20px] gap-y-4 max-h-[250px] overflow-y-scroll">

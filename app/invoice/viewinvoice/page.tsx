@@ -172,7 +172,6 @@ const ViewInvoice = () => {
                   {businessName}
                 </p>
                 <p className=" text-[16px]">{businessEmail}</p>
-                <p className=" text-[16px]">{country}</p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>For</p>
@@ -180,10 +179,9 @@ const ViewInvoice = () => {
                   {customerName}
                 </p>
                 <p className=" text-[16px]">{customerEmail}</p>
-                <p className=" text-[16px]">{country}</p>
               </div>
             </div>
-            <div className=" w-full flex flex-col mt-[40px] gap-y-4">
+            <div className=" w-full flex flex-col mt-[30px] gap-y-4">
               <p className=" text-lg">Invoice details</p>
               <table className=" w-full ">
                 <thead>

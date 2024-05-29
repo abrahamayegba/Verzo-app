@@ -37,7 +37,6 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
     price: item?.price,
   }));
 
-  const country = "Nigeria";
   const merchantName = purchase?.merchant?.name;
   const merchantEmail = purchase?.merchant?.email;
   const createdDate = purchase?.createdAt;
@@ -83,7 +82,6 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
                   {businessName}
                 </p>
                 <p className=" text-[16px]">{businessEmail}</p>
-                <p className=" text-[16px]">{country}</p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>For</p>
@@ -91,7 +89,6 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
                   {merchantName}
                 </p>
                 <p className=" text-[16px]">{merchantEmail}</p>
-                <p className=" text-[16px]">{country}</p>
               </div>
             </div>
             <div className=" w-full flex flex-col mt-[20px] gap-y-4 max-h-[250px] overflow-y-scroll">
@@ -110,7 +107,7 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
                       <td className=" py-4">{item?.itemName}</td>
                       <td className=" text-end py-4">{item?.quantity}</td>
                       <td className=" text-end py-4">
-                        ₦{item?.price?.toLocaleString()}
+                        ₦{(item?.price / 100)?.toLocaleString()}
                       </td>
                     </tr>
                   ))}
@@ -132,7 +129,7 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
                 <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                   <p className=" text-primary-greytext">Sub total</p>
                   <p className=" text-base">
-                    {subtotal?.toLocaleString("en-NG", {
+                    {(subtotal / 100)?.toLocaleString("en-NG", {
                       style: "currency",
                       currency: "NGN",
                       minimumFractionDigits: 0,
@@ -142,7 +139,7 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
                 <div className=" flex justify-between py-3 items-center">
                   <p className=" text-primary-greytext">Amount due</p>
                   <p className=" text-base">
-                    {total?.toLocaleString("en-NG", {
+                    {(total / 100)?.toLocaleString("en-NG", {
                       style: "currency",
                       currency: "NGN",
                       minimumFractionDigits: 0,

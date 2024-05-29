@@ -66,7 +66,6 @@ const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({
                   {businessName}
                 </p>
                 <p className=" text-[16px]">{businessEmail}</p>
-                <p className=" text-[16px]">{"Nigeria"}</p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>For</p>
@@ -74,7 +73,6 @@ const ViewExpenseSheet: React.FC<ViewExpenseProps> = ({
                   {merchantName}
                 </p>
                 <p className=" text-[16px]">{merchantEmail}</p>
-                <p className=" text-[16px]">{country}</p>
               </div>
             </div>
             <div className=" w-full flex flex-col mt-[20px] gap-y-4 max-h-[250px] overflow-y-scroll">

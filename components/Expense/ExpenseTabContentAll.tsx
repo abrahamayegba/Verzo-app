@@ -140,7 +140,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                 {expense?.merchant?.name}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {expense?.amount?.toLocaleString("en-NG", {
+                {(expense?.amount / 100)?.toLocaleString("en-NG", {
                   style: "currency",
                   currency: "NGN",
                 })}
@@ -160,14 +160,18 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                         View Expense
                       </Link>
                     </DropdownMenuItem>
-                    <Link
-                      href={`/expense/editexpense?expenseId=${expense?.id}`}
+                    <DropdownMenuItem
+                      disabled={expense?.expenseStatusId! > 1}
+                      className=" hover:cursor-pointer disabled:cursor-not-allowed hover:bg-gray-100 gap-x-2 py-2"
                     >
-                      <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
+                      <Link
+                        className=" flex flex-row gap-x-2"
+                        href={`/expense/editexpense?expenseId=${expense?.id}`}
+                      >
                         <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                         Edit Expense
-                      </DropdownMenuItem>
-                    </Link>
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => openArchiveModal(expense?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"

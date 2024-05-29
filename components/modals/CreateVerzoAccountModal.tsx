@@ -4,6 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { useToast } from "@/app/hooks/use-toast";
 import {
+  GetBusinessesByUserIdDocument,
   SendVerificationOtpDocument,
   SetUpBusinessAccountDocument,
   ViewBusinessAccountDocument,
@@ -86,6 +87,7 @@ const CreateVerzoAccount: React.FC<Props> = ({ open, openModal, onClose }) => {
         refetchQueries: [
           SetUpBusinessAccountDocument,
           ViewBusinessAccountDocument,
+          GetBusinessesByUserIdDocument,
         ],
       });
       resetInputs();

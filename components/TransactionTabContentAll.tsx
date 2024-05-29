@@ -61,6 +61,9 @@ const TransactionTabContentAll = () => {
             Amount
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
+            Fee
+          </TableHead>
+          <TableHead className=" font-normal text-sm text-primary-greytext">
             Status
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext text-right">
@@ -128,7 +131,19 @@ const TransactionTabContentAll = () => {
                 </TableCell>
 
                 <TableCell className=" text-[15px] text-gray-700">
-                  {(transaction?.amount / 100)?.toLocaleString("en-NG", {
+                  {(transaction?.cardTransaction?.merchantAmount
+                    ? transaction?.cardTransaction?.merchantAmount
+                    : transaction?.amount / 100
+                  )?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
+                </TableCell>
+                <TableCell className=" text-[15px] text-gray-700">
+                  {(transaction?.cardTransaction?.fee
+                    ? transaction?.cardTransaction?.fee
+                    : 0 / 100
+                  )?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                   })}
@@ -136,11 +151,11 @@ const TransactionTabContentAll = () => {
                 <TableCell className=" text-primary-greytext tracking-wide">
                   {transaction?.linked ? (
                     <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                      linked
+                      Linked
                     </span>
                   ) : (
                     <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">
-                      unlinked
+                      Unlinked
                     </span>
                   )}
                 </TableCell>

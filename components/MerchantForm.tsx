@@ -95,14 +95,13 @@ const MerchantForm: React.FC<MerchantFormProps> = ({
                       {merchant?.name}
                     </SelectItem>
                   ))}
-                  {merchants.length === 0 && (
-                    <button
-                      onClick={openMerchantSheet}
-                      className="hover:bg-gray-100 cursor-pointer py-2 px-2 text-[15px] w-full flex items-start"
-                    >
-                      Create merchant
-                    </button>
-                  )}
+
+                  <button
+                    onClick={openMerchantSheet}
+                    className="hover:bg-gray-100 cursor-pointer py-2 px-2 text-[15px] w-full flex items-start"
+                  >
+                    Create merchant
+                  </button>
                 </SelectGroup>
               </SelectContent>
             </Select>

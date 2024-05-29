@@ -128,6 +128,10 @@ const ConfirmItems = () => {
         refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
       });
       showSuccessToast();
+      setReceivedQuantities((prevQuantities) => ({
+        ...prevQuantities,
+        [itemId]: 0,
+      }));
     } catch (error) {
       console.error(error);
       showFailureToast(error);
@@ -291,7 +295,7 @@ const ConfirmItems = () => {
                 <div className="text-primary-greytext flex flex-col gap-y-2">
                   <p>Amount</p>
                   <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
-                    {expense?.price}
+                    {expense?.price / 100}
                   </p>
                 </div>
                 <div className="text-primary-greytext flex flex-col gap-y-2">
@@ -301,7 +305,16 @@ const ConfirmItems = () => {
                   </p>
                 </div>
                 <div className="text-primary-greytext flex flex-col gap-y-2">
-                  <p>Quantity received</p>
+                  <div className=" flex flex-row justify-between">
+                    <p className=" flex flex-row justify-between">
+                      Quantity received{" "}
+                    </p>
+                    {expense?.quantity !== expense?.quantityReceived && (
+                      <p className=" italic">
+                        {expense?.quantityReceived} items received
+                      </p>
+                    )}
+                  </div>
                   {expense?.quantity === expense?.quantityReceived ? (
                     <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
                       {expense?.quantityReceived}

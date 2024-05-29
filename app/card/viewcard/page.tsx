@@ -1,27 +1,24 @@
 "use client";
 import MainLoader from "@/components/loading/MainLoader";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import CardChipIcon from "@/components/ui/icons/CardChipIcon";
 import CreatedAtIcon from "@/components/ui/icons/CreatedAtIcon";
 import VerzoLogoWhite from "@/components/ui/icons/VerzoLogoWhite";
 import { Progress } from "@/components/ui/progress";
-import { useGetCardByIdQuery } from "@/src/generated/graphql";
+import {
+  useGetCardByIdQuery,
+  useViewCardTransactionsQuery,
+} from "@/src/generated/graphql";
 import { Eye, MoveLeft, PlusCircle, Copy, EyeOff, Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaEllipsisVertical } from "react-icons/fa6";
 import Image from "next/image";
 import VerveCardIcon from "@/components/ui/icons/VerveCardIcon";
 import { isAuthenticated } from "@/lib/auth";
 
 const ViewCard = () => {
   const cardParams = useSearchParams();
+  const router = useRouter();
   const cardId = cardParams.get("cardId");
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
@@ -33,7 +30,12 @@ const ViewCard = () => {
       cardId: cardId!,
     },
   });
-  const router = useRouter();
+  const getTransactions = useViewCardTransactionsQuery({
+    variables: {
+      cardId: cardId!,
+    },
+  });
+
   useEffect(() => {
     const checkAuth = async () => {
       const authenticated = await isAuthenticated();
@@ -46,7 +48,7 @@ const ViewCard = () => {
 
   const imageSrc = "https://i.imgur.com/kGkSg1v.png";
   const cardData = data?.getCardById;
-  const transactions = cardData?.sudoCardTransactions ?? [];
+  const transactions = getTransactions.data?.viewCardTransactions ?? [];
   const accountNumber = cardData?.account?.accountNumber;
   const cardHolder = cardData?.user?.fullname;
   const maskedPan = cardData?.maskedPan;
@@ -73,7 +75,7 @@ const ViewCard = () => {
       });
   };
 
-  if (loading) {
+  if (loading || getTransactions.loading) {
     return <MainLoader />;
   }
   return (
@@ -298,20 +300,54 @@ const ViewCard = () => {
               </th>
               <th
                 scope="col"
-                className="hidden font-medium uppercase text-gray-600 px-3 w-[300px] py-3.5 text-left text-[12px] sm:table-cell"
+                className="hidden font-medium uppercase text-gray-600 px-3 w-[200px] py-3.5 text-left text-[12px] sm:table-cell"
               >
                 Type
               </th>
               <th
                 scope="col"
-                className="hidden font-medium uppercase text-gray-600 px-3 w-[200px] py-3.5 text-end text-[12px] sm:table-cell"
+                className="hidden font-medium uppercase text-gray-600 px-3 w-[500px] py-3.5 text-end text-[12px] sm:table-cell"
               >
                 Date
               </th>
             </tr>
           </thead>
           <tbody>
-            {transactions.length === 0 ? (
+            {transactions.length > 0 ? (
+              <>
+                {transactions?.map((transaction) => (
+                  <tr key={transaction?.id}>
+                    <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                      {(transaction?.amount / 100)?.toLocaleString("en-NG", {
+                        style: "currency",
+                        currency: "NGN",
+                      })}
+                    </td>
+                    <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                      {transaction?.type}
+                    </td>
+                    <td className="hidden px-1 py-4 text-sm text-end text-gray-500 md:table-cell">
+                      {new Date(transaction?.createdAt).toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long",
+                        }
+                      )}
+                      ,{" "}
+                      {new Date(transaction?.createdAt).toLocaleTimeString(
+                        "en-US",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </>
+            ) : (
               <tr>
                 <td
                   colSpan={3}
@@ -320,22 +356,6 @@ const ViewCard = () => {
                   You currently have no transactions on this card...
                 </td>
               </tr>
-            ) : (
-              <>
-                {transactions?.map((transaction) => (
-                  <tr key={transaction?.id}>
-                    <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                      {transaction?.amount}
-                    </td>
-                    <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                      {transaction?.type}
-                    </td>
-                    <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                      {transaction?.createdAt}
-                    </td>
-                  </tr>
-                ))}
-              </>
             )}
           </tbody>
         </table>
@@ -357,13 +377,13 @@ const ViewCard = () => {
               </th>
               <th
                 scope="col"
-                className="hidden font-medium uppercase text-gray-800 px-3 w-[300px] py-3.5 text-left text-[12px] sm:table-cell"
+                className="hidden font-medium uppercase text-gray-800 px-3 w-[200px] py-3.5 text-left text-[12px] sm:table-cell"
               >
                 Interval
               </th>
               <th
                 scope="col"
-                className="hidden font-medium uppercase text-gray-800 px-3 w-[300px] py-3.5 text-end text-[12px] sm:table-cell"
+                className="hidden font-medium uppercase text-gray-800 px-3 w-[400px] py-3.5 text-end text-[12px] sm:table-cell"
               >
                 Date
               </th>
@@ -384,23 +404,25 @@ const ViewCard = () => {
                 {spendLimit?.map((limit) => (
                   <tr key={limit?.id}>
                     <td className="hidden px-3 py-2 text-sm text-gray-800 sm:table-cell">
-                      {limit?.amount}
+                      {(limit?.amount / 100)?.toLocaleString("en-NG", {
+                        style: "currency",
+                        currency: "NGN",
+                      })}
                     </td>
                     <td className="hidden px-3 capitalize py-2 text-sm text-gray-800 md:table-cell">
                       {limit?.interval}
                     </td>
-                    <td className="hidden px-3 py-2 text-sm text-end text-gray-800 md:table-cell">
-                      {limit?.createdAt
-                        ? new Date(limit.createdAt).toLocaleDateString(
-                            "en-US",
-                            {
-                              weekday: "long",
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )
-                        : ""}
+                    <td className="hidden px-1 py-4 text-sm text-end text-gray-500 md:table-cell">
+                      {new Date(limit?.createdAt).toLocaleDateString("en-US", {
+                        weekday: "long",
+                        day: "2-digit",
+                        month: "long",
+                      })}
+                      ,{" "}
+                      {new Date(limit?.createdAt).toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </td>
                   </tr>
                 ))}

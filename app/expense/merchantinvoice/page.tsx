@@ -62,7 +62,7 @@ const AddMerchantInvoice = () => {
   const expenseStatusId = expense?.expenseStatusId;
   const expenseReference = expense?.reference;
   const merchantInvoiceAdded = expenseStatusId! >= 3;
-  const amount = expense?.amount;
+  const amount = expense?.amount / 100;
   const apiKey = "Am510qpybQ3i95Kv17umgz";
   const client = filestack.init(apiKey);
   const showPickerSuccessToast = (filename: any) => {

@@ -23,6 +23,10 @@ import { Calendar } from "@/components/ui/calendar";
 import {
   GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
+  GetPurchaseForMonthDocument,
+  GetPurchaseForQuarterDocument,
+  GetPurchaseForWeekDocument,
+  GetPurchaseForYearDocument,
   useCreatePurchaseEntryMutation,
   useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
@@ -215,6 +219,10 @@ const CreatePurchase = () => {
         refetchQueries: [
           GetPurchaseByBusinessDocument,
           GetPurchaseByIdDocument,
+          GetPurchaseForWeekDocument,
+          GetPurchaseForMonthDocument,
+          GetPurchaseForQuarterDocument,
+          GetPurchaseForYearDocument,
         ],
       });
       client.refetchQueries({
