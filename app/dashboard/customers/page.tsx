@@ -11,7 +11,7 @@ import {
 import MainLoader from "@/components/loading/MainLoader";
 import localStorage from "local-storage-fallback";
 import Loader2 from "@/components/loading/Loader2";
-import { isAuthenticated } from "@/lib/auth";
+import { isAuthenticated, refreshToken } from "@/lib/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const Customers = () => {
@@ -31,6 +31,16 @@ const Customers = () => {
     };
     checkAuth();
   }, [router]);
+
+  const handleCreateButtonClick = async () => {
+    const authenticated = await isAuthenticated();
+    if (!authenticated) {
+      router.push("/auth/signin");
+      return;
+    }
+    await refreshToken();
+    setOpenCustomerSheet(true);
+  };
 
   const searchResultsParams = useSearchParams();
   const customerSearchId = searchResultsParams.get("searchResult")?.toString();
@@ -78,7 +88,7 @@ const Customers = () => {
               </div>
               <div className=" flex gap-x-[14px] max-h-[48px]">
                 <button
-                  onClick={() => setOpenCustomerSheet(true)}
+                  onClick={handleCreateButtonClick}
                   className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white"
                 >
                   Add customer

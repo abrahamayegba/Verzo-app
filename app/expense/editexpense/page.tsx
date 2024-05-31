@@ -35,6 +35,7 @@ import {
 } from "@/src/generated/graphql";
 import { useRouter, useSearchParams } from "next/navigation";
 import EditExpenseMerchantForm from "@/components/EditExpenseMerchantForm";
+import { isAuthenticated } from "@/lib/auth";
 
 interface ExpenseItemProp {
   description: string;
@@ -71,6 +72,15 @@ const EditExpense = () => {
       expenseId: expenseId!,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const expense = getExpenseById?.data?.getExpenseById;
   const initialExpenseCategoryId = expense?.expenseCategory?.id!;
   const initialExpenseItems = expense?.expenseItems;

@@ -6739,7 +6739,7 @@ export type GetArchivedProductsByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetArchivedProductsByBusinessQuery = { __typename?: 'Query', getArchivedProductByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, stockStatus?: string | null, price?: any | null, productUnitId?: string | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null, productsInventory?: { __typename?: 'ProductInventory', quantity?: number | null } | null } | null> } | null };
+export type GetArchivedProductsByBusinessQuery = { __typename?: 'Query', getArchivedProductByBusiness?: { __typename?: 'GetProductResponse', cursorId?: string | null, productByBusiness: Array<{ __typename?: 'Product', id: string, type?: string | null, productName: string, stockStatus?: string | null, price?: any | null, productUnitId?: string | null, businessId?: string | null, createdAt?: any | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null, businessProductUnit?: { __typename?: 'BusinessProductUnit', unitName?: string | null } | null, productsInventory?: { __typename?: 'ProductInventory', quantity?: number | null } | null } | null> } | null };
 
 export type GetArchivedPurchasesByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -6766,7 +6766,7 @@ export type GetArchivedServiceByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetArchivedServiceByBusinessQuery = { __typename?: 'Query', getArchivedServicesByBusiness?: { __typename?: 'GetServiceResponse', cursorId?: string | null, serviceByBusiness: Array<{ __typename?: 'Service', id: string, name: string, price: any, type?: string | null, serviceUnitId?: string | null, businessId: string, archived?: boolean | null, createdAt?: any | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null } | null> } | null };
+export type GetArchivedServiceByBusinessQuery = { __typename?: 'Query', getArchivedServicesByBusiness?: { __typename?: 'GetServiceResponse', cursorId?: string | null, serviceByBusiness: Array<{ __typename?: 'Service', id: string, name: string, price: any, type?: string | null, serviceUnitId?: string | null, businessId: string, archived?: boolean | null, createdAt?: any | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null, businessServiceUnit?: { __typename?: 'BusinessServiceUnit', unitName?: string | null } | null } | null> } | null };
 
 export type GetBusinessCoaByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7066,7 +7066,7 @@ export type GetProductByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetProductByIdQuery = { __typename?: 'Query', getProductById?: { __typename?: 'Product', productName: string, price?: any | null, productUnitId?: string | null, reorderLevel?: number | null, trackReorderLevel?: boolean | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null } | null };
+export type GetProductByIdQuery = { __typename?: 'Query', getProductById?: { __typename?: 'Product', productName: string, price?: any | null, productUnitId?: string | null, reorderLevel?: number | null, trackReorderLevel?: boolean | null, productUnit?: { __typename?: 'ProductUnit', unitName?: string | null } | null, businessProductUnit?: { __typename?: 'BusinessProductUnit', unitName?: string | null, id?: string | null } | null } | null };
 
 export type GetProductOrServiceByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7228,7 +7228,7 @@ export type GetServiceByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetServiceByIdQuery = { __typename?: 'Query', getServiceById?: { __typename?: 'Service', name: string, price: any, serviceUnitId?: string | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null } | null };
+export type GetServiceByIdQuery = { __typename?: 'Query', getServiceById?: { __typename?: 'Service', name: string, price: any, serviceUnitId?: string | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null, businessServiceUnit?: { __typename?: 'BusinessServiceUnit', unitName?: string | null, id?: string | null } | null } | null };
 
 export type GetServiceForWeekQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7250,7 +7250,7 @@ export type GetServiceByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetServiceByBusinessQuery = { __typename?: 'Query', getServiceByBusiness?: { __typename?: 'GetServiceResponse', cursorId?: string | null, serviceByBusiness: Array<{ __typename?: 'Service', id: string, name: string, price: any, type?: string | null, serviceUnitId?: string | null, businessId: string, archived?: boolean | null, createdAt?: any | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null } | null> } | null };
+export type GetServiceByBusinessQuery = { __typename?: 'Query', getServiceByBusiness?: { __typename?: 'GetServiceResponse', cursorId?: string | null, serviceByBusiness: Array<{ __typename?: 'Service', id: string, name: string, price: any, type?: string | null, serviceUnitId?: string | null, businessId: string, archived?: boolean | null, createdAt?: any | null, serviceUnit?: { __typename?: 'ServiceUnit', unitName?: string | null } | null, businessServiceUnit?: { __typename?: 'BusinessServiceUnit', unitName?: string | null } | null } | null> } | null };
 
 export type GetSubscriptionByBusinessQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -9816,6 +9816,9 @@ export const GetArchivedProductsByBusinessDocument = gql`
       productUnit {
         unitName
       }
+      businessProductUnit {
+        unitName
+      }
       productsInventory {
         quantity
       }
@@ -10054,6 +10057,9 @@ export const GetArchivedServiceByBusinessDocument = gql`
       price
       type
       serviceUnit {
+        unitName
+      }
+      businessServiceUnit {
         unitName
       }
       serviceUnitId
@@ -12143,6 +12149,10 @@ export const GetProductByIdDocument = gql`
     productUnit {
       unitName
     }
+    businessProductUnit {
+      unitName
+      id
+    }
     productUnitId
     reorderLevel
     trackReorderLevel
@@ -13442,6 +13452,10 @@ export const GetServiceByIdDocument = gql`
     serviceUnit {
       unitName
     }
+    businessServiceUnit {
+      unitName
+      id
+    }
     serviceUnitId
   }
 }
@@ -13571,6 +13585,9 @@ export const GetServiceByBusinessDocument = gql`
       price
       type
       serviceUnit {
+        unitName
+      }
+      businessServiceUnit {
         unitName
       }
       serviceUnitId

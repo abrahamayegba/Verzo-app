@@ -27,7 +27,7 @@ const Receivables: React.FC<MetricsProps> = ({ filter }) => {
       <div className=" flex flex-col">
         <div className=" flex justify-between gap-y-1">
           <p className=" text-[30px] font-medium">
-            {receivables?.toLocaleString("en-NG", {
+            {(receivables / 100)?.toLocaleString("en-NG", {
               style: "currency",
               currency: "NGN",
               minimumFractionDigits: 2,

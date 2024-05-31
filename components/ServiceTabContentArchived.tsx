@@ -117,7 +117,9 @@ const ServiceTabContentArchived: React.FC<ServiceTabContentArchivedProps> = ({
                 })}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {service?.serviceUnit?.unitName}
+                {service?.businessServiceUnit?.unitName
+                  ? service?.businessServiceUnit?.unitName
+                  : service?.serviceUnit?.unitName}
               </TableCell>
               <TableCell className="text-right text-primary-blue">
                 <DropdownMenu>

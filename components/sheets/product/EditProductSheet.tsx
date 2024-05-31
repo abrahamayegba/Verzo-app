@@ -44,7 +44,7 @@ const EditProductSheet: React.FC<EditProductProps> = ({
     productUnitName: "",
     productUnitId: "",
   });
-  const [reorderLevel, setReorderLevel] = useState(0);
+  const [reorderLevel, setReorderLevel] = useState("");
   const [isReorderChecked, setIsReorderChecked] = useState(false);
   const [updateProductMutation, { loading }] = useUpdateProductMutation();
   const getProductsById = useGetProductByIdQuery({
@@ -57,7 +57,10 @@ const EditProductSheet: React.FC<EditProductProps> = ({
       businessId: businessId,
     },
   });
-  const allProductUnits = combinedProductUnits.data?.getCombinedProductUnits;
+  const allProductUnits =
+    combinedProductUnits.data?.getCombinedProductUnits?.filter(
+      (unit) => unit?.unitName !== "Other"
+    );
 
   const showSuccessToast = () => {
     toast({
@@ -83,11 +86,15 @@ const EditProductSheet: React.FC<EditProductProps> = ({
       setProductData((prevData) => ({
         ...prevData,
         productName: getProductsById.data?.getProductById?.productName || "",
-        price: getProductsById.data?.getProductById?.price || 0,
-        productUnitId:
-          getProductsById.data?.getProductById?.productUnitId || "",
-        productUnitName:
-          getProductsById.data?.getProductById?.productUnit?.unitName || "",
+        price: getProductsById.data?.getProductById?.price / 100 || 0,
+        productUnitId: getProductsById.data?.getProductById?.businessProductUnit
+          ?.id
+          ? getProductsById?.data?.getProductById?.businessProductUnit?.id
+          : getProductsById?.data?.getProductById?.productUnitId || "",
+        productUnitName: getProductsById.data?.getProductById
+          ?.businessProductUnit?.unitName
+          ? getProductsById?.data?.getProductById?.businessProductUnit?.unitName
+          : getProductsById?.data?.getProductById?.productUnit?.unitName || "",
       }));
     }
   }, [getProductsById.data]);
@@ -100,10 +107,15 @@ const EditProductSheet: React.FC<EditProductProps> = ({
     }
   }, [productId, getProductsById]);
 
-  const handleFieldChange = (field: string, value: string | number) => {
+  const handleFieldChange = (field: string, value: string) => {
     setProductData((prevData) => ({
       ...prevData,
-      [field]: field === "price" ? parseFloat(value as string) : value,
+      [field]:
+        field === "price"
+          ? isNaN(parseFloat(value))
+            ? value
+            : parseFloat(value)
+          : value,
     }));
   };
 
@@ -122,7 +134,7 @@ const EditProductSheet: React.FC<EditProductProps> = ({
           productName: productData.productName,
           price: productData.price * 100,
           productUnitId: productData.productUnitId,
-          reorderLevel: reorderLevel,
+          reorderLevel: parseFloat(reorderLevel),
         },
         refetchQueries: [GetProductsByBusinessDocument],
       });
@@ -175,10 +187,10 @@ const EditProductSheet: React.FC<EditProductProps> = ({
             <div className=" flex flex-col gap-y-1">
               <label htmlFor="price">Price</label>
               <input
-                className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                type="number"
+                className="w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
+                type="text"
                 required
-                value={productData.price}
+                value={productData.price.toString()} // Ensure value is always a string
                 onChange={(e) => handleFieldChange("price", e.target.value)}
                 placeholder="Price"
               />
@@ -186,7 +198,7 @@ const EditProductSheet: React.FC<EditProductProps> = ({
             <div className=" flex flex-col gap-y-1">
               <label htmlFor="productunit">Product unit</label>
               <Select
-                value={productData.productUnitId}
+                value={productData?.productUnitId}
                 onValueChange={handleProductUnitChange}
               >
                 <SelectTrigger className="border border-gray-200 bg-transparent rounded-lg h-10 text-sm focus:outline-none px-3 py-2">
@@ -220,11 +232,9 @@ const EditProductSheet: React.FC<EditProductProps> = ({
                   <label htmlFor="reorderLevel">Reorder Level</label>
                   <input
                     className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                    type="number"
+                    type="text"
                     value={reorderLevel}
-                    onChange={(e) =>
-                      setReorderLevel(parseFloat(e.target.value))
-                    }
+                    onChange={(e) => setReorderLevel(e.target.value)}
                   />
                 </div>
               )}

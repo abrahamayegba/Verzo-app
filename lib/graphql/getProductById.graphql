@@ -5,6 +5,10 @@ query GetProductById($productId: String!) {
     productUnit {
       unitName
     }
+    businessProductUnit {
+      unitName
+      id
+    }
     productUnitId
     reorderLevel
     trackReorderLevel

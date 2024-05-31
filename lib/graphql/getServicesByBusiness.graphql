@@ -8,6 +8,9 @@ query GetServiceByBusiness($businessId: String!, $cursor: String, $sets: Int) {
       serviceUnit {
         unitName
       }
+      businessServiceUnit {
+        unitName
+      }
       serviceUnitId
       businessId
       archived

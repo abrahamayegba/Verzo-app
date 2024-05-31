@@ -37,6 +37,7 @@ import {
 import { IoReceiptOutline } from "react-icons/io5";
 import { IoIosLink } from "react-icons/io";
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
+import { isAuthenticated } from "@/lib/auth";
 
 interface UploadedFile {
   filename: string;
@@ -83,6 +84,15 @@ const AddPurchasePayment = () => {
       businessId: businessId,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const transactions = data?.viewBusinessAccountStatement;
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTransactions, setFilteredTransactions] =

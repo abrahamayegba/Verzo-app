@@ -16,6 +16,9 @@ query GetArchivedServiceByBusiness(
       serviceUnit {
         unitName
       }
+      businessServiceUnit {
+        unitName
+      }
       serviceUnitId
       businessId
       archived

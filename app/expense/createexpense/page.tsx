@@ -24,7 +24,7 @@ import localStorage from "local-storage-fallback";
 import { format } from "date-fns";
 import { ChevronDown, Eye, MoveLeft, Plus } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import {
@@ -38,6 +38,7 @@ import {
   useGetExpenseCategoryWithSetsQuery,
 } from "@/src/generated/graphql";
 import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/auth";
 
 interface ExpenseItemProp {
   description: string;
@@ -68,6 +69,15 @@ const CreateExpense = () => {
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   const [createExpenseMutation, { loading: createexpenseloading }] =
     useCreateExpenseMutation();

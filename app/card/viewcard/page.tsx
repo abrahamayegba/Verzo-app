@@ -46,7 +46,8 @@ const ViewCard = () => {
     checkAuth();
   }, [router]);
 
-  const imageSrc = "https://i.imgur.com/kGkSg1v.png";
+  const imageSrc =
+    "https://verzo.fra1.cdn.digitaloceanspaces.com/undefined%20-%20Imgur.png";
   const cardData = data?.getCardById;
   const transactions = getTransactions.data?.viewCardTransactions ?? [];
   const accountNumber = cardData?.account?.accountNumber;
@@ -171,7 +172,7 @@ const ViewCard = () => {
               <p className=" font-medium text-gray-600"> Total balance</p>
               <div className=" flex flex-col gap-y-3">
                 <p className=" text-3xl tracking-wide flex items-center font-medium">
-                  {accountBalance?.toLocaleString("en-NG", {
+                  {(accountBalance / 100)?.toLocaleString("en-NG", {
                     style: "currency",
                     currency: "NGN",
                     minimumFractionDigits: 2,
@@ -212,7 +213,8 @@ const ViewCard = () => {
                 <div className=" flex flex-col gap-y-1">
                   <Progress className=" h-[10px]" value={1} />
                   <p className=" text-gray-500">
-                    ₦0 spent of ₦{spendLimit?.map((limit) => limit?.amount)}
+                    ₦0 spent of ₦
+                    {spendLimit?.map((limit) => limit?.amount / 100)}
                   </p>
                 </div>
                 <p className=" text-gray-500">
@@ -227,7 +229,7 @@ const ViewCard = () => {
         </div>
         <div className=" w-2/6">
           <div className=" px-3.5">
-            <div className=" h-[190px] m-auto rounded-lg relative shadow-2xl overflow-hidden">
+            <div className=" h-[190px] max-w-[320px] rounded-lg relative shadow-2xl overflow-hidden">
               <div className="w-full h-full absolute top-0 left-0">
                 <div className="w-full h-full absolute top-0 left-0 transform transition-transform ">
                   <Image

@@ -27,12 +27,7 @@ interface CreateServiceProps {
 }
 
 type FormData = {
-  name: string;
   price: number;
-};
-
-type UnitData = {
-  unitName: string;
 };
 
 const CreateServiceSheet: React.FC<CreateServiceProps> = ({
@@ -45,12 +40,10 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
   const { register, reset, handleSubmit } = useForm<FormData>();
-  const {
-    register: registerUnit,
-    reset: resetUnit,
-    handleSubmit: handleUnitSubmit,
-  } = useForm<UnitData>();
+  const { handleSubmit: handleUnitSubmit } = useForm();
   const [serviceUnitId, setServiceUnitId] = useState("");
+  const [serviceName, setServiceName] = useState("");
+  const [serviceUnitName, setServiceUnitName] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
 
   const handleNext = () => {
@@ -65,7 +58,10 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
     },
   });
 
-  const allServiceUnits = combinedServiceUnits.data?.getCombinedServiceUnits;
+  const allServiceUnits =
+    combinedServiceUnits.data?.getCombinedServiceUnits?.filter(
+      (unit) => unit?.unitName !== "Other"
+    );
 
   const showSuccessToast = () => {
     toast({
@@ -93,14 +89,15 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
         variables: {
           businessId: businessId,
           serviceUnitId: serviceUnitId,
+          name: serviceName,
           ...modifiedData,
         },
         refetchQueries: [GetServiceByBusinessDocument],
       });
       onClose();
+      setServiceName("");
       reset({
         price: 0, // Default value for "price"
-        name: "",
       });
       setServiceUnitId("");
       showSuccessToast();
@@ -111,22 +108,23 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
     }
   };
 
-  const onCreateServiceUnitHandler = async (data: UnitData) => {
+  const onCreateServiceUnitHandler = async () => {
     try {
       await createBusinessServiceUnitMutation({
         variables: {
           businessId: businessId,
-          ...data,
+          unitName: serviceUnitName,
         },
         refetchQueries: [
           GetServiceByBusinessDocument,
           GetCombinesServiceUnitsDocument,
         ],
       });
-      resetUnit();
+      setServiceUnitName("");
       setCurrentStep(1);
     } catch (error) {
       console.error(error);
+      onClose();
       showFailureToast(error);
     }
   };
@@ -167,7 +165,8 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
                   type="text"
                   placeholder="Service name"
                   required
-                  {...register("name")}
+                  value={serviceName}
+                  onChange={(e) => setServiceName(e.target.value)}
                 />
               </div>
               <div className=" flex flex-col gap-y-1">
@@ -234,7 +233,8 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
                   type="text"
                   placeholder="Unit name"
                   required
-                  {...registerUnit("unitName")}
+                  value={serviceUnitName}
+                  onChange={(e) => setServiceUnitName(e.target.value)}
                 />
               </div>
               <button

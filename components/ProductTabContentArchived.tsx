@@ -134,7 +134,9 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
                 {product?.productsInventory?.quantity}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {product?.productUnit?.unitName}
+                {product?.businessProductUnit?.unitName
+                  ? product?.businessProductUnit?.unitName
+                  : product?.productUnit?.unitName}
               </TableCell>
               <TableCell className="text-right text-primary-blue">
                 <DropdownMenu>

@@ -66,7 +66,10 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
     },
   });
 
-  const allProductUnits = combinedProductUnits.data?.getCombinedProductUnits;
+  const allProductUnits =
+    combinedProductUnits.data?.getCombinedProductUnits?.filter(
+      (unit) => unit?.unitName !== "Other"
+    );
 
   const showSuccessToast = () => {
     toast({
@@ -130,6 +133,7 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
       setCurrentStep(1);
     } catch (error) {
       console.error(error);
+      onClose();
       showFailureToast(error);
     }
   };

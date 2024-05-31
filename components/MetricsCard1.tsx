@@ -128,19 +128,19 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       quarterlyRevenue:
         totalQuarterlyInvoicesAmount.data?.totalQuarterlyInvoicesAmount
-          ?.totalPaidInvoiceAmountThisQuarter,
+          ?.totalPaidInvoiceAmountThisQuarter / 100,
       percentageQuarterlyRevenue:
         totalQuarterlyInvoicesAmount.data?.totalQuarterlyInvoicesAmount
           ?.percentageIncreaseInInvoiceThisQuarter,
       totalExpenseAmountThisQuarter:
         getExpenseForQuarter.data?.getExpensesForQuarter
-          ?.totalExpenseAmountThisQuarter,
+          ?.totalExpenseAmountThisQuarter / 100,
       percentageIncreaseInExpenseThisQuarter:
         getExpenseForQuarter.data?.getExpensesForQuarter
           ?.percentageIncreaseInExpensesThisQuarter,
       totalPurchaseAmountThisQuarter:
         getPurchaseForQuarter.data?.getPurchaseForQuarter
-          ?.totalPurchaseAmountThisQuarter,
+          ?.totalPurchaseAmountThisQuarter / 100,
     };
   };
 

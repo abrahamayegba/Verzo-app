@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UpdateBusinessSheet from "../sheets/settings/businessprofile/UpdateBusinessSheet";
 import UpdateBusinessSheet2 from "../sheets/settings/businessprofile/UpdateBusinessSheet2";
 import UpdateExpenseCategorySheet from "../sheets/settings/businessprofile/UpdateExpenseCategorySheet";
@@ -20,12 +20,17 @@ import {
 } from "../ui/select";
 import {
   useCreateUserInviteMutation,
+  useGetBusinessesByUserIdQuery,
   useGetRolesQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/app/hooks/use-toast";
 import ViewVerzoAccount from "../sheets/settings/businessprofile/ViewVerzoAccountSheet";
+import { isAuthenticated } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import CreateVerzoAccount from "../modals/CreateVerzoAccountModal";
+import useModal from "@/app/hooks/useModal";
 
 type FormData = {
   email: string;
@@ -33,14 +38,30 @@ type FormData = {
 };
 
 const BusinessProfileContent = () => {
-  const { register, handleSubmit, reset, getValues } = useForm<FormData>();
+  const { register, handleSubmit, reset } = useForm<FormData>();
   const { toast } = useToast();
+  const router = useRouter();
   const [openUpdateBusinessSheet, setOpenUpdateBusinessSheet] = useState(false);
   const [openInviteModal, setOpenInviteModal] = useState(false);
+  const {
+    isOpen: isCreateVerzoAccountModalOpen,
+    openModal: openVerzoAccountModal,
+    closeModal: closeVerzoAccountModal,
+  } = useModal();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
+  const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, []);
   const [roleId, setRoleId] = useState("");
   const [openUpdateBusinessSheet2, setOpenUpdateBusinessSheet2] =
     useState(false);
@@ -52,7 +73,14 @@ const BusinessProfileContent = () => {
     setOpenViewBusinessAccountSheet(false);
   };
   const handleOpenViewBusinessSheet = () => {
-    setOpenViewBusinessAccountSheet(true);
+    if (
+      getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.[0]
+        ?.sudoAccount
+    ) {
+      setOpenViewBusinessAccountSheet(true);
+    } else {
+      openVerzoAccountModal();
+    }
   };
   const handleCloseUpdateBusinessSheet = () => {
     setOpenUpdateBusinessSheet(false);
@@ -313,6 +341,11 @@ const BusinessProfileContent = () => {
         open={openUpdateExpenseCategorySheet}
         onClose={handleCloseUpdateExpenseCategorySheet}
         openSheet={handleOpenUpdateExpenseCategorySheet}
+      />
+      <CreateVerzoAccount
+        open={isCreateVerzoAccountModalOpen}
+        onClose={closeVerzoAccountModal}
+        openModal={openVerzoAccountModal}
       />
     </>
   );

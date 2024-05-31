@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   GetExpenseByIdDocument,
   GetExpensesByBusinessDocument,
+  ViewBusinessAccountStatementDocument,
   useGetBusinessesByUserIdQuery,
   useGetExpenseByIdQuery,
   useMakeExpensePaymentMutation,
@@ -31,6 +32,7 @@ import localStorage from "local-storage-fallback";
 import { IoReceiptOutline } from "react-icons/io5";
 import { IoIosLink } from "react-icons/io";
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
+import { isAuthenticated } from "@/lib/auth";
 
 interface UploadedFile {
   filename: string;
@@ -57,6 +59,15 @@ const AddPayment = () => {
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
   const router = useRouter();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [selectedTransaction, setSelectedTransaction] = useState("");
   const [transactionId, setTransactionId] = useState("");
@@ -151,7 +162,7 @@ const AddPayment = () => {
     setOpenTransactionsModal(false);
     setTransactionId(transaction?.id);
     setSelectedTransaction(transaction);
-    setTransactionAmount(transaction.amount);
+    setTransactionAmount(transaction.cardTransaction.merchantAmount);
     setTransactionDate(transaction.transactionDate);
     const transactionDate = new Date(transaction.transactionDate);
     const transactionDateWithoutTime = new Date(
@@ -211,6 +222,8 @@ const AddPayment = () => {
     });
   };
 
+  console.log(amount);
+
   const formattedExpenseDate = date
     ? format(date, "yyyy-MM-dd")
     : "Pick a date";
@@ -232,10 +245,14 @@ const AddPayment = () => {
           sudoTransactionId: selectedTab === 2 ? transactionId : null,
           file: uploadedFiles[0]?.url || null,
           transactionDate: formattedExpenseDate,
-          total: amount!,
+          total: amount * 100!,
           description: getValues("description"),
         },
-        refetchQueries: [GetExpenseByIdDocument, GetExpensesByBusinessDocument],
+        refetchQueries: [
+          GetExpenseByIdDocument,
+          GetExpensesByBusinessDocument,
+          ViewBusinessAccountStatementDocument,
+        ],
       });
       showSuccessToast();
       router.push("/dashboard/expenses");
@@ -497,23 +514,23 @@ const AddPayment = () => {
                                         </div>
                                         <div className=" flex flex-col gap-y-1">
                                           <p className=" font-medium mt-1 text-[18px] text-gray-800 min-w-[150px] text-end">
-                                            {transaction?.cardTransaction?.merchantAmount?.toLocaleString(
-                                              "en-NG",
-                                              {
-                                                style: "currency",
-                                                currency: "NGN",
-                                              }
-                                            )}
+                                            {(
+                                              transaction?.cardTransaction
+                                                ?.merchantAmount / 100
+                                            )?.toLocaleString("en-NG", {
+                                              style: "currency",
+                                              currency: "NGN",
+                                            })}
                                           </p>
                                           <p className=" text-end text-gray-600 font-light">
                                             Fee:
-                                            {transaction?.cardTransaction?.fee?.toLocaleString(
-                                              "en-NG",
-                                              {
-                                                style: "currency",
-                                                currency: "NGN",
-                                              }
-                                            )}
+                                            {(
+                                              transaction?.cardTransaction
+                                                ?.fee / 100
+                                            )?.toLocaleString("en-NG", {
+                                              style: "currency",
+                                              currency: "NGN",
+                                            })}
                                           </p>
                                         </div>
                                       </button>
@@ -540,7 +557,7 @@ const AddPayment = () => {
                         Transaction amount
                       </label>
                       <p className="border border-gray-100 bg-gray-50 cursor-not-allowed rounded-md px-3 py-2 w-full">
-                        {transactionAmount.toLocaleString("en-NG", {
+                        {(transactionAmount / 100)?.toLocaleString("en-NG", {
                           style: "currency",
                           currency: "NGN",
                         })}

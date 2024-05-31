@@ -9,6 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { isAuthenticated } from "@/lib/auth";
 import {
   GetSaleByIdDocument,
   useEffectSaleExpenseMutation,
@@ -18,8 +19,8 @@ import {
 import { format } from "date-fns";
 import { ChevronDown, MoveLeft } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const RecordSaleExpense = () => {
   const [date, setDate] = React.useState<Date>();
@@ -29,6 +30,7 @@ const RecordSaleExpense = () => {
     [expenseId: string]: boolean;
   }>({});
   const currentStep = 2;
+  const router = useRouter();
   const invoiceIdParams = useSearchParams();
   const invoiceId = invoiceIdParams.get("invoiceId")?.toString();
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
@@ -37,6 +39,15 @@ const RecordSaleExpense = () => {
       saleId: invoiceId!,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const [effectSaleExpenseMutation] = useEffectSaleExpenseMutation();
   const sales = getSaleById.data?.getSaleById;
   const saleStatusId = sales?.saleStatus?.id;

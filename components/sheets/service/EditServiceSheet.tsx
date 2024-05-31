@@ -31,7 +31,6 @@ const EditServiceSheet: React.FC<EditServiceProps> = ({
   onClose,
   serviceId,
 }) => {
-  console.log(serviceId);
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
@@ -50,7 +49,10 @@ const EditServiceSheet: React.FC<EditServiceProps> = ({
       businessId: businessId,
     },
   });
-  const allServiceUnits = combinedServiceUnits.data?.getCombinedServiceUnits;
+  const allServiceUnits =
+    combinedServiceUnits.data?.getCombinedServiceUnits?.filter(
+      (unit) => unit?.unitName !== "Other"
+    );
   const getServicesById = useGetServiceByIdQuery({
     variables: {
       serviceId: serviceId,
@@ -77,10 +79,14 @@ const EditServiceSheet: React.FC<EditServiceProps> = ({
         ...prevData,
         name: getServicesById.data?.getServiceById?.name || "",
         price: getServicesById.data?.getServiceById?.price || 0,
-        serviceUnitId:
-          getServicesById.data?.getServiceById?.serviceUnitId || "",
-        serviceUnitName:
-          getServicesById.data?.getServiceById?.serviceUnit?.unitName || "",
+        serviceUnitId: getServicesById.data?.getServiceById?.businessServiceUnit
+          ?.id
+          ? getServicesById?.data?.getServiceById?.businessServiceUnit?.id
+          : getServicesById?.data?.getServiceById?.serviceUnitId || "",
+        serviceUnitName: getServicesById.data?.getServiceById
+          ?.businessServiceUnit?.unitName
+          ? getServicesById?.data?.getServiceById?.businessServiceUnit?.unitName
+          : getServicesById?.data?.getServiceById?.serviceUnit?.unitName || "",
       }));
     }
   }, [getServicesById.data]);
@@ -93,10 +99,15 @@ const EditServiceSheet: React.FC<EditServiceProps> = ({
     }
   }, [serviceId, getServicesById]);
 
-  const handleFieldChange = (field: string, value: string | number) => {
+  const handleFieldChange = (field: string, value: string) => {
     setServiceData((prevData) => ({
       ...prevData,
-      [field]: field === "price" ? parseFloat(value as string) : value,
+      [field]:
+        field === "price"
+          ? isNaN(parseFloat(value))
+            ? value
+            : parseFloat(value)
+          : value,
     }));
   };
 
@@ -166,9 +177,9 @@ const EditServiceSheet: React.FC<EditServiceProps> = ({
               <label htmlFor="price">Price</label>
               <input
                 className=" w-full rounded-lg border border-gray-200 p-[8px] pl-3 text-[15px] focus:outline-none"
-                type="number"
+                type="text"
                 required
-                value={serviceData.price}
+                value={serviceData.price.toString()}
                 onChange={(e) => handleFieldChange("price", e.target.value)}
                 placeholder="Price"
               />

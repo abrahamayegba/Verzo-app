@@ -13,7 +13,7 @@ import { ChevronDown, Eye, MoveLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import localStorage from "local-storage-fallback";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useToast } from "@/app/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as filestack from "filestack-js";
@@ -25,6 +25,7 @@ import {
   useUploadMerchantInvoiceToPurchaseMutation,
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
+import { isAuthenticated } from "@/lib/auth";
 
 interface UploadedFile {
   filename: string;
@@ -54,6 +55,15 @@ const AddPurchaseMerchantInvoice = () => {
       purchaseId: purchaseId!,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const purchase = getPurchaseById?.data?.getPurchaseById;
   const purchaseStatusId = purchase?.purchaseStatusId;
   const itemsConfirmed = true;

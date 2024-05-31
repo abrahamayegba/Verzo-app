@@ -33,7 +33,7 @@ import {
 import { ChevronDown, Eye, Info, MoveLeft, Phone, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -45,6 +45,7 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import UpdateBusinessSheet from "@/components/sheets/settings/businessprofile/UpdateBusinessSheet";
+import { isAuthenticated } from "@/lib/auth";
 
 interface InvoiceItem {
   id: string;
@@ -99,6 +100,15 @@ const CreateInvoice = () => {
       businessId: businessId,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const businessName =
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.map(
       (business) => business?.businessName

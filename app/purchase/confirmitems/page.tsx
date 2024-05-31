@@ -11,8 +11,8 @@ import localStorage from "local-storage-fallback";
 import { format } from "date-fns";
 import { Check, ChevronDown, MoveLeft } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   GetPurchaseByBusinessDocument,
   GetPurchaseByIdDocument,
@@ -21,13 +21,24 @@ import {
   useMarkPurchaseItemAsReceivedMutation,
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
+import { isAuthenticated } from "@/lib/auth";
 
 const ConfirmPurchaseItems = () => {
   const [date, setDate] = React.useState<Date>();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
+  const router = useRouter();
   const businessId = storedBusinessId[0] || "";
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const { toast } = useToast();
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
   const [receivedQuantities, setReceivedQuantities] = useState<{

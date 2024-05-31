@@ -5,6 +5,10 @@ query GetServiceById($serviceId: String!) {
     serviceUnit {
       unitName
     }
+    businessServiceUnit {
+      unitName
+      id
+    }
     serviceUnitId
   }
 }

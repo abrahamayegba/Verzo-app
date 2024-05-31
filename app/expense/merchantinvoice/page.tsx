@@ -13,7 +13,7 @@ import { format } from "date-fns";
 import { ChevronDown, Eye, MoveLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import localStorage from "local-storage-fallback";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as filestack from "filestack-js";
@@ -25,6 +25,7 @@ import {
   useUploadMerchantInvoiceMutation,
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
+import { isAuthenticated } from "@/lib/auth";
 
 interface UploadedFile {
   filename: string;
@@ -38,6 +39,15 @@ const AddMerchantInvoice = () => {
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
   const router = useRouter();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const currentStep = 3;
   const itemsConfirmed = true;
   const paymentAdded = false;

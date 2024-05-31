@@ -35,28 +35,28 @@ const FilterDataDropdown: React.FC<FilterDataDropdownProps> = ({
           onClick={() => handleFilterSelection("weekly")}
         >
           <Checkbox id="weekly" checked={selectedFilter === "weekly"} />
-          Last 7 days
+          This Week
         </DropdownMenuItem>
         <DropdownMenuItem
           className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
           onClick={() => handleFilterSelection("monthly")}
         >
           <Checkbox id="monthly" checked={selectedFilter === "monthly"} />
-          Last 30 days
+          This Month
         </DropdownMenuItem>
         <DropdownMenuItem
           className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
           onClick={() => handleFilterSelection("quarterly")}
         >
           <Checkbox id="quarterly" checked={selectedFilter === "quarterly"} />
-          Last 3 months
+          This Quarter
         </DropdownMenuItem>
         <DropdownMenuItem
           className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
           onClick={() => handleFilterSelection("yearly")}
         >
           <Checkbox id="yearly" checked={selectedFilter === "yearly"} />
-          Last 12 months
+          This Year
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

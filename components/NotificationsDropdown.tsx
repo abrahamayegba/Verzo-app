@@ -28,6 +28,7 @@ interface Message {
   title: string;
   message: string;
   key: string;
+  id: string;
   type: string;
   dateTime: string;
 }
@@ -42,6 +43,7 @@ const NotificationsDropdown = () => {
       newMessage(topic: $topic) {
         title
         message
+        id
         key
         type
         dateTime
@@ -51,8 +53,6 @@ const NotificationsDropdown = () => {
   const { data } = useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
     variables: { topic: userId },
   });
-  const router = useRouter();
-
   const client = new ApolloClient({
     uri: "https://queue.api2.verzo.app/graphql", // replace with your GraphQL endpoint
     cache: new InMemoryCache(),
@@ -63,6 +63,7 @@ const NotificationsDropdown = () => {
       getMessages(topic: $topic) {
         title
         message
+        id
         key
         type
         dateTime
@@ -162,7 +163,7 @@ const NotificationsDropdown = () => {
                         <AccordionItem
                           key={index}
                           className="border-b border-b-gray-200"
-                          value={message.message}
+                          value={message.id}
                         >
                           <AccordionTrigger className="flex flex-row justify-between hover:no-underline items-start p-4 data-[state=open]:pb-2 [&[data-state=open]>svg]:rotate-180">
                             <div className="flex items-start gap-x-3">

@@ -48,18 +48,19 @@ const AccountBalanceCard: React.FC<MetricsProps> = ({ filter }) => {
     return {
       weeklyRevenue:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
-          ?.totalPaidInvoiceAmountThisWeek,
+          ?.totalPaidInvoiceAmountThisWeek / 100,
       percentageWeeklyRevenue:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
           ?.percentageOfIncreaseInInvoicesThisWeek,
       totalExpenseAmountThisWeek:
-        getExpenseForWeek.data?.getExpensesForWeek?.totalExpenseAmountThisWeek,
+        getExpenseForWeek.data?.getExpensesForWeek?.totalExpenseAmountThisWeek /
+        100,
       percentageIncreaseInExpenseThisWeek:
         getExpenseForWeek.data?.getExpensesForWeek
           ?.percentageIncreaseInExpenseThisWeek,
       totalPurchaseAmountThisWeek:
         getPurchaseForWeek.data?.getPurchasesForWeek
-          ?.totalPurchaseAmountThisWeek,
+          ?.totalPurchaseAmountThisWeek / 100,
     };
   };
 

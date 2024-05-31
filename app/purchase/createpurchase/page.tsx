@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ChevronDown, Eye, MoveLeft, Phone, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import localStorage from "local-storage-fallback";
 import MerchantForm from "@/components/MerchantForm";
 import {
@@ -37,6 +37,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { client } from "@/src/apollo/ApolloClient";
 import UpdateBusinessSheet from "@/components/sheets/settings/businessprofile/UpdateBusinessSheet";
+import { isAuthenticated } from "@/lib/auth";
 
 interface PurchaseItemProp {
   productId: string;
@@ -75,6 +76,15 @@ const CreatePurchase = () => {
       businessId: businessId,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const [createPurchaseEntryMutation, { loading }] =
     useCreatePurchaseEntryMutation();
   const businessName =

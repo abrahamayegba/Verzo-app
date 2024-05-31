@@ -34,7 +34,7 @@ const ViewVerzoAccount: React.FC<ViewVerzoAccountProps> = ({
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className=" pt-[50px]">
+        <SheetContent className=" pt-[40px]">
           <button
             type="button"
             onClick={onClose}

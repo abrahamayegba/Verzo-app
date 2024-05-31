@@ -15,12 +15,15 @@ import {
   useUpdateNotificationPreferencesMutation,
 } from "@/src/generated/graphql";
 import CustomCheckbox from "../Checkbox";
+import { isAuthenticated } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 const ProfileContent = () => {
   const [openProfileSheet, setOpenProfileSheet] = useState(false);
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
+  const router = useRouter();
   const businessId = storedBusinessId[0] || "";
   const [openSecuritySheet, setOpenSecuritySheet] = useState(false);
   const getNotifications = useGetNotificationPreferencesQuery({
@@ -74,6 +77,15 @@ const ProfileContent = () => {
       });
     }
   }, [getNotifications?.data]);
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, []);
 
   const handleCloseProfileSheet = () => {
     setOpenProfileSheet(false);

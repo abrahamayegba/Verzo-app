@@ -18,15 +18,17 @@ import {
 import { format } from "date-fns";
 import { Check, ChevronDown, MoveLeft } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useToast } from "@/app/hooks/use-toast";
+import { isAuthenticated } from "@/lib/auth";
 
 const ConfirmItems = () => {
   const [date, setDate] = React.useState<Date>();
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
+  const router = useRouter();
   const businessId = storedBusinessId[0] || "";
   const { toast } = useToast();
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
@@ -48,6 +50,15 @@ const ConfirmItems = () => {
       expenseId: expenseId!,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const [markAsReceivedMutation] = useMarkExpenseItemAsReceivedMutation();
   const expense = getExpenseById?.data?.getExpenseById;
   const expenseStatusId = expense?.expenseStatusId;

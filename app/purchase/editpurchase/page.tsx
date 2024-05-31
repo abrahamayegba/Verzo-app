@@ -39,6 +39,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { client } from "@/src/apollo/ApolloClient";
 import EditPurchaseMerchantForm from "@/components/EditPurchaseMerchantForm";
 import UpdateBusinessSheet from "@/components/sheets/settings/businessprofile/UpdateBusinessSheet";
+import { isAuthenticated } from "@/lib/auth";
 
 interface PurchaseItemProp {
   productId: string;
@@ -99,6 +100,15 @@ const EditPurchase = () => {
       purchaseId: purchaseId!,
     },
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
   const purchase = getPurchaseById?.data?.getPurchaseById;
   const businessLogo = getBusinessById.data?.getBusinessById?.logo;
   const initialPurchaseItems = purchase?.purchaseItems;

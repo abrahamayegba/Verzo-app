@@ -45,6 +45,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import EditInvoiceCustomerForm from "@/components/EditInvoiceCustomerForm";
 import UpdateBusinessSheet from "@/components/sheets/settings/businessprofile/UpdateBusinessSheet";
+import { isAuthenticated } from "@/lib/auth";
 
 interface InvoiceItem {
   id: string;
@@ -101,6 +102,15 @@ const EditInvoice = () => {
       (business) => business?.businessMobile
     ) || [];
   const [updateSaleMutation, { loading }] = useUpdateSaleMutation();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        router.push("/auth/signin");
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   const invoiceIdParams = useSearchParams();
   const invoiceId = invoiceIdParams.get("invoiceId")?.toString();
