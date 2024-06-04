@@ -222,7 +222,7 @@ const CreatePurchaseItemSheet: React.FC<CreateItemProps> = ({
                   </button>
                   <div className=" flex flex-col gap-y-[6px]">
                     <label className=" text-primary-black" htmlFor="newitem">
-                      Create new item
+                      Create a new product
                     </label>
                     <Select onValueChange={handleNext}>
                       <SelectTrigger className=" w-full rounded-lg border border-gray-200">

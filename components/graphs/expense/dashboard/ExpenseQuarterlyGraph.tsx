@@ -44,7 +44,7 @@ const ExpenseQuarterlyGraph = () => {
                 {new Intl.NumberFormat("en-NG", {
                   style: "currency",
                   currency: "NGN",
-                }).format(category.value)}
+                }).format(category.value / 100)}
               </p>
             </div>
           </div>
@@ -67,8 +67,6 @@ const ExpenseQuarterlyGraph = () => {
       setChartData(data?.getExpensesForQuarter?.quarterExpenseAmounts);
     }
   }, [data]);
-
-  console.log(chartData);
 
   return (
     <div className=" w-full">

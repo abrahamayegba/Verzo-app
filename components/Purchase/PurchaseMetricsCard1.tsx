@@ -8,7 +8,6 @@ import {
 } from "@/src/generated/graphql";
 import Link from "next/link";
 import { Plus, TrendingUp } from "lucide-react";
-import PurchaseDashboardPaidWeeklyGraph from "../graphs/purchase/purchasedashboard/weekly/PurchaseDashboardPaidWeeklyGraph";
 import PurchaseDashboardTotalWeeklyGraph from "../graphs/purchase/purchasedashboard/weekly/PurchaseDashboardTotalWeeklyGraph";
 import PurchaseDashboardTotalMonthlyGraph from "../graphs/purchase/purchasedashboard/monthly/PurchaseDashboardTotalMonthlyGraph";
 import PurchaseDashboardTotalQuarterlyGraph from "../graphs/purchase/purchasedashboard/quarterly/PurchaseDashboardTotalQuarterlyGraph";
@@ -34,7 +33,7 @@ const PurchaseMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPurchaseAmountThisWeek:
         getPurchaseForWeek.data?.getPurchasesForWeek
-          ?.totalPurchaseAmountThisWeek,
+          ?.totalPurchaseAmountThisWeek / 100,
       percentageIncreaseInPurchaseThisWeek:
         getPurchaseForWeek.data?.getPurchasesForWeek
           ?.percentageIncreaseInPurchaseThisWeek,
@@ -51,7 +50,7 @@ const PurchaseMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPurchaseAmountThisMonth:
         getPurchaseForMonth.data?.getPurchaseForMonth
-          ?.totalPurchaseAmountThisMonth,
+          ?.totalPurchaseAmountThisMonth / 100,
       percentageIncreaseInPurchaseThisMonth:
         getPurchaseForMonth.data?.getPurchaseForMonth
           ?.percentageIncreaseInPurchaseThisMonth,
@@ -68,7 +67,7 @@ const PurchaseMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPurchaseAmountThisQuarter:
         getPurchaseForQuarter.data?.getPurchaseForQuarter
-          ?.totalPurchaseAmountThisQuarter,
+          ?.totalPurchaseAmountThisQuarter / 100,
       percentageIncreaseInPurchaseThisQuarter:
         getPurchaseForQuarter.data?.getPurchaseForQuarter
           ?.percentageIncreaseInPurchaseThisQuarter,
@@ -85,7 +84,7 @@ const PurchaseMetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPurchaseAmountThisYear:
         getPurchaseForYear.data?.getPurchaseForYear
-          ?.totalPurchaseAmountThisYear,
+          ?.totalPurchaseAmountThisYear / 100,
       percentageIncreaseInPurchaseThisYear:
         getPurchaseForYear.data?.getPurchaseForYear
           ?.percentageIncreaseInPurchaseThisYear,

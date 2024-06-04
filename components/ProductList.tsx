@@ -10,9 +10,14 @@ import localStorage from "local-storage-fallback";
 import ProductTabContentArchived from "./ProductTabContentArchived";
 import {
   useGetArchivedProductsByBusinessQuery,
+  useGetArchivedServiceByBusinessQuery,
+  useGetProductOrServiceByBusinessQuery,
   useGetProductsByBusinessQuery,
+  useGetServiceByBusinessQuery,
 } from "@/src/generated/graphql";
 import EditProductSheet from "./sheets/product/EditProductSheet";
+import ServiceTabContentAll from "./ServiceTabContentAll";
+import ItemTabContentAll from "./ItemTabContentAll";
 
 interface ProductlistProps {
   productSearchId: string;
@@ -44,6 +49,12 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
     closeModal: closeEditModal,
   } = useModal();
 
+  const getProductOrServiceByBusiness = useGetProductOrServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+
   const getProductsByBusiness = useGetProductsByBusinessQuery({
     variables: {
       businessId: businessId,
@@ -51,6 +62,16 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
       sets: 1,
     },
   });
+
+  const getServicesByBusiness = useGetServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+  const services =
+    getServicesByBusiness.data?.getServiceByBusiness?.serviceByBusiness ?? [];
 
   const getArchivedProductsByBusiness = useGetArchivedProductsByBusinessQuery({
     variables: {
@@ -60,18 +81,30 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
     },
   });
 
-  const archivedProducts =
+  const archivedItems =
     getArchivedProductsByBusiness.data?.getArchivedProductByBusiness
       ?.productByBusiness ?? [];
 
-  const products =
+  const items =
     getProductsByBusiness.data?.getProductsByBusiness?.productByBusiness ?? [];
 
-  const productSearchResult = products.find(
+  const getArchivedServicesByBusiness = useGetArchivedServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+
+  const archivedServices =
+    getArchivedServicesByBusiness.data?.getArchivedServicesByBusiness
+      ?.serviceByBusiness ?? [];
+
+  const productSearchResult = items.find(
     (product) => product?.id === productSearchId
   );
 
-  const archivedProductSearchResult = archivedProducts.find(
+  const archivedProductSearchResult = archivedItems.find(
     (product) => product?.id === productSearchId
   );
 
@@ -81,8 +114,14 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
     ? "archived"
     : "all";
 
+  const products =
+    getProductOrServiceByBusiness.data?.getProductOrServiceByBusiness
+      ?.productOrServiceByBusiness ?? [];
   const allProducts = products.length;
-  const allArchivedProducts = archivedProducts.length;
+
+  const allItems = items.length;
+  const allArchivedProducts = archivedItems.length + archivedServices.length;
+  const allServices = services.length;
 
   const handleToggleSelectAll = (isChecked: boolean) => {
     setIsChecked(isChecked);
@@ -120,6 +159,19 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
               <span className=" text-primary-mainGrey">({allProducts})</span>
             </TabsTrigger>
             <TabsTrigger
+              className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
+              value="item"
+            >
+              Item <span className=" text-primary-mainGrey">({allItems})</span>
+            </TabsTrigger>
+            <TabsTrigger
+              className=" text-[17px]  data-[state=active]:text-primary-black data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400  text-primary-greytext"
+              value="service"
+            >
+              Service{" "}
+              <span className=" text-primary-mainGrey">({allServices})</span>
+            </TabsTrigger>
+            <TabsTrigger
               className=" text-[17px]  data-[state=active]:text-primary-black text-primary-greytext data-[state=active]:border-b-2 data-[state=active]:border-b-gray-400"
               value="archived"
             >
@@ -154,6 +206,24 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
             openEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
             productSearchId={productSearchId}
+          />
+        </TabsContent>
+        <TabsContent value="item">
+          <ItemTabContentAll
+            openDeleteModal={handleOpenDeleteModal}
+            openArchiveModal={handleOpenArchiveModal}
+            openEditModal={handleOpenEditModal}
+            onToggleSelectAll={handleToggleSelectAll}
+            productSearchId={productSearchId}
+          />
+        </TabsContent>
+        <TabsContent value="service">
+          <ServiceTabContentAll
+            openDeleteModal={handleOpenDeleteModal}
+            openArchiveModal={handleOpenArchiveModal}
+            openEditModal={handleOpenEditModal}
+            onToggleSelectAll={handleToggleSelectAll}
+            serviceSearchId={productSearchId}
           />
         </TabsContent>
         <TabsContent value="archived">

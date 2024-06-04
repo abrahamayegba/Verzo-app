@@ -184,7 +184,7 @@ const AddPurchaseMerchantInvoice = () => {
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
             <p className=" text-[28px] text-primary-black ">
-              Purchase #{purchase?.reference}{" "}
+              Purchase {purchase?.reference}{" "}
             </p>
             <p className=" text-primary-greytext font-light text-lg">
               Upload the merchant invoice linked to this purchase
@@ -221,7 +221,7 @@ const AddPurchaseMerchantInvoice = () => {
               </div>
               <div className=" flex flex-col">
                 <p className=" text-xl text-primary-black">
-                  Purchase #{purchase?.reference}
+                  Purchase {purchase?.reference}
                 </p>
                 <p className=" text-lg text-primary-greytext font-light">
                   {purchase?.description}

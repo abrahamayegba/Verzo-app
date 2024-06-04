@@ -282,7 +282,7 @@ const AddPayment = () => {
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
             <p className=" text-[28px] text-primary-black ">
-              Invoice #{saleReference}
+              Invoice {saleReference}
             </p>
             <p className=" text-primary-greytext font-light text-lg">
               Record the payment process for this invoice
@@ -322,7 +322,7 @@ const AddPayment = () => {
               </div>
               <div className=" flex flex-col">
                 <p className=" text-xl text-primary-black">
-                  Invoice #{saleReference}
+                  Invoice {saleReference}
                 </p>
                 <p className=" text-lg text-primary-greytext font-light">
                   {saleDescription}
@@ -512,6 +512,43 @@ const AddPayment = () => {
                                           </p>
                                         </div>
                                         <p className=" font-medium mt-1 text-[18px] text-gray-800">
+                                          {(
+                                            transaction?.amount / 100
+                                          )?.toLocaleString("en-NG", {
+                                            style: "currency",
+                                            currency: "NGN",
+                                          })}
+                                        </p>
+                                      </button>
+                                    )
+                                )}
+                                {filteredTransactions?.map(
+                                  (transaction) =>
+                                    transaction?.type === "Credit" && (
+                                      <button
+                                        className=" flex flex-row gap-x-8 justify-between text-start items-start border-b border-b-gray-200 py-2 px-1 hover:bg-gray-100 cursor-pointer"
+                                        key={transaction?.id}
+                                        onClick={() =>
+                                          handleTransactionSelect(transaction)
+                                        }
+                                      >
+                                        <div className=" flex flex-col gap-y-1 max-w-[350px]">
+                                          <p className=" font-medium text-gray-700">
+                                            {transaction?.narration}
+                                          </p>
+                                          <p className=" text-gray-600 text-sm font-light">
+                                            {new Date(
+                                              transaction?.transactionDate
+                                            ).toLocaleString("en-US", {
+                                              year: "numeric",
+                                              month: "short",
+                                              day: "numeric",
+                                              hour: "numeric",
+                                              minute: "numeric",
+                                            })}
+                                          </p>
+                                        </div>
+                                        <p className=" font-medium mt-1 text-[18px] text-gray-800 min-w-[150px] text-end">
                                           {(
                                             transaction?.amount / 100
                                           )?.toLocaleString("en-NG", {

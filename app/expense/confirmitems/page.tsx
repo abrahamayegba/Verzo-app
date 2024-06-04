@@ -172,7 +172,7 @@ const ConfirmItems = () => {
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
           <p className=" text-[30px] text-primary-black ">
-            Expense #{expense?.reference}{" "}
+            Expense {expense?.reference}{" "}
           </p>
           <p className=" text-primary-greytext font-light text-lg">
             Confirm the items for this expense

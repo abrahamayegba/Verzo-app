@@ -221,7 +221,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
                   </button>
                 </div>
               </div>
-              <div className="mt-5 h-[180px] m-auto rounded-lg relative shadow-2xl overflow-hidden">
+              <div className="mt-5 h-[180px] m-auto max-w-[310px] rounded-lg relative shadow-2xl overflow-hidden">
                 <div className="w-full h-full absolute top-0 left-0">
                   {cards?.map((card, index) => (
                     <div

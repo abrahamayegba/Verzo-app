@@ -67,7 +67,7 @@ const Pdf = () => {
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>Purchase</p>
               <p className=" text-primary-black font-normal">
-                #{purchase?.reference}
+                {purchase?.reference}
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">

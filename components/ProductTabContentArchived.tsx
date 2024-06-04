@@ -16,10 +16,13 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import localStorage from "local-storage-fallback";
-import { ArchiveRestore, Trash2 } from "lucide-react";
+import { ArchiveRestore, Minus, Trash2 } from "lucide-react";
 import TableEmptyState from "./emptystates/TableEmptyState";
 import ProductTableEmptyIcon from "./ui/icons/ProductTableEmptyIcon";
-import { useGetArchivedProductsByBusinessQuery } from "@/src/generated/graphql";
+import {
+  useGetArchivedProductsByBusinessQuery,
+  useGetArchivedServiceByBusinessQuery,
+} from "@/src/generated/graphql";
 
 interface ProductTabContentArchivedProps {
   openUnarchiveModal: (productId: string) => void;
@@ -44,11 +47,24 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
       sets: 1,
     },
   });
-  const archivedProducts =
+  const archivedItems =
     getArchivedProductsByBusiness.data?.getArchivedProductByBusiness
       ?.productByBusiness ?? [];
-  const productSearchResult = archivedProducts.find(
+  const productSearchResult = archivedItems.find(
     (product) => product?.id === productSearchId
+  );
+  const getArchivedServicesByBusiness = useGetArchivedServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+  const archivedServices =
+    getArchivedServicesByBusiness.data?.getArchivedServicesByBusiness
+      ?.serviceByBusiness ?? [];
+  const serviceSearchResult = archivedServices.find(
+    (service) => service?.id === productSearchId
   );
   const handleRowSelect = (rowId: string) => {
     if (selectedRows.includes(rowId)) {
@@ -78,7 +94,13 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
             Name
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
+            Type
+          </TableHead>
+          <TableHead className=" font-normal text-sm text-primary-greytext">
             Amount
+          </TableHead>
+          <TableHead className=" font-normal text-sm text-primary-greytext">
+            Product unit
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Stock status
@@ -86,16 +108,14 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Stock count
           </TableHead>
-          <TableHead className=" font-normal text-sm text-primary-greytext">
-            Product unit
-          </TableHead>
+
           <TableHead className="text-right font-normal text-sm text-primary-greytext">
             Action
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {archivedProducts.length === 0 ? (
+        {archivedItems.length === 0 && archivedServices.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -108,61 +128,121 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          archivedProducts.map((product) => (
-            <TableRow className="" key={product?.id}>
-              <TableCell className="flex gap-x-3 items-center py-[22px]">
-                <Checkbox
-                  className=" w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
-                  checked={selectedRows.includes(product?.id!)}
-                  onCheckedChange={() => handleRowSelect(product?.id!)}
-                />
+          <>
+            {archivedItems.map((product) => (
+              <TableRow className="" key={product?.id}>
+                <TableCell className="flex gap-x-3 items-center py-[22px]">
+                  <Checkbox
+                    className="w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                    checked={selectedRows.includes(product?.id!)}
+                    onCheckedChange={() => handleRowSelect(product?.id!)}
+                  />
+                  {product?.productName}
+                </TableCell>
+                <TableCell className="text-primary-greytext">
+                  {product?.type === "P" ? "Product" : ""}
+                </TableCell>
+                <TableCell className="text-primary-greytext">
+                  {(product?.price / 100)?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
+                </TableCell>
+                <TableCell className="text-primary-greytext">
+                  {product?.businessProductUnit?.unitName ||
+                    product?.productUnit?.unitName ||
+                    "—"}
+                </TableCell>
+                <TableCell className="text-primary-greytext">
+                  {product?.productsInventory?.quantity! > 0
+                    ? "In stock"
+                    : "Out of stock"}
+                </TableCell>
+                <TableCell className="text-primary-greytext">
+                  {product?.productsInventory?.quantity}
+                </TableCell>
 
-                {product?.productName}
-              </TableCell>
-              <TableCell className=" text-primary-greytext">
-                {(product?.price / 100)?.toLocaleString("en-NG", {
-                  style: "currency",
-                  currency: "NGN",
-                })}
-              </TableCell>
-              <TableCell className=" text-primary-greytext">
-                {product?.productsInventory?.quantity! > 0
-                  ? "In stock"
-                  : "Out of stock"}
-              </TableCell>
-              <TableCell className=" text-primary-greytext">
-                {product?.productsInventory?.quantity}
-              </TableCell>
-              <TableCell className=" text-primary-greytext">
-                {product?.businessProductUnit?.unitName
-                  ? product?.businessProductUnit?.unitName
-                  : product?.productUnit?.unitName}
-              </TableCell>
-              <TableCell className="text-right text-primary-blue">
-                <DropdownMenu>
-                  <DropdownMenuTrigger className=" focus:outline-none">
-                    More
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext mr-1 shadow1 w-[170px]">
-                    <DropdownMenuItem
-                      onClick={() => openUnarchiveModal(product?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <ArchiveRestore className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Unarchive Product
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => openDeleteModal(product?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <Trash2 className=" w-4 h-4 text-opacity-80" />
-                      Delete Product
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))
+                <TableCell className="text-right text-primary-blue">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="focus:outline-none">
+                      More
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-white mt-1 text-primary-greytext mr-1 shadow1 w-[170px]">
+                      <DropdownMenuItem
+                        onClick={() => openUnarchiveModal(product?.id!)}
+                        className="hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <ArchiveRestore className="w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Unarchive Product
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => openDeleteModal(product?.id!)}
+                        className="hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <Trash2 className="w-4 h-4 text-opacity-80" />
+                        Delete Product
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+            {archivedServices.map((service) => (
+              <TableRow className="" key={service?.id}>
+                <TableCell className="flex gap-x-3 items-center py-[22px]">
+                  <Checkbox
+                    className="w-5 h-5 text-primary-greytext rounded bg-white data-[state=checked]:bg-primary-blue data-[state=checked]:text-white"
+                    checked={selectedRows.includes(service?.id!)}
+                    onCheckedChange={() => handleRowSelect(service?.id!)}
+                  />
+                  {service?.name}
+                </TableCell>
+                <TableCell className="text-primary-greytext">
+                  {service?.type === "S" ? "Service" : ""}
+                </TableCell>
+                <TableCell className="text-primary-greytext">
+                  {(service?.price / 100)?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  })}
+                </TableCell>
+                <TableCell className="text-primary-greytext">
+                  {service?.businessServiceUnit?.unitName ||
+                    service?.serviceUnit?.unitName ||
+                    "—"}
+                </TableCell>
+                <TableHead className=" font-normal text-sm text-primary-greytext">
+                  <Minus className=" text-gray-400" />
+                </TableHead>
+                <TableHead className=" font-normal text-sm text-primary-greytext">
+                  <Minus className=" text-gray-400" />
+                </TableHead>
+                <TableCell className="text-right text-primary-blue">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="focus:outline-none">
+                      More
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-white mt-1 mr-1 text-primary-greytext shadow1 w-[170px]">
+                      <DropdownMenuItem
+                        onClick={() => openUnarchiveModal(service?.id!)}
+                        className="hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <ArchiveRestore className="w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Unarchive Service
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => openDeleteModal(service?.id!)}
+                        className="hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <Trash2 className="w-4 h-4 text-opacity-80" />
+                        Delete Service
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </>
         )}
       </TableBody>
     </Table>

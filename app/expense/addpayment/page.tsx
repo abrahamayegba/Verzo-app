@@ -283,7 +283,7 @@ const AddPayment = () => {
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
             <p className=" text-[28px] text-primary-black ">
-              Expense #{expenseReference}
+              Expense {expenseReference}
             </p>
             <p className=" text-primary-greytext font-light text-lg">
               Record the payment process for this expense
@@ -323,7 +323,7 @@ const AddPayment = () => {
               </div>
               <div className=" flex flex-col">
                 <p className=" text-xl text-primary-black">
-                  Expense #{expense?.reference}
+                  Expense {expense?.reference}
                 </p>
                 <p className=" text-lg text-primary-greytext font-light">
                   {expense?.description}

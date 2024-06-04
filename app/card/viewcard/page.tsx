@@ -317,37 +317,40 @@ const ViewCard = () => {
           <tbody>
             {transactions.length > 0 ? (
               <>
-                {transactions?.map((transaction) => (
-                  <tr key={transaction?.id}>
-                    <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                      {(transaction?.amount / 100)?.toLocaleString("en-NG", {
-                        style: "currency",
-                        currency: "NGN",
-                      })}
-                    </td>
-                    <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                      {transaction?.type}
-                    </td>
-                    <td className="hidden px-1 py-4 text-sm text-end text-gray-500 md:table-cell">
-                      {new Date(transaction?.createdAt).toLocaleDateString(
-                        "en-US",
-                        {
-                          weekday: "long",
-                          day: "2-digit",
-                          month: "long",
-                        }
-                      )}
-                      ,{" "}
-                      {new Date(transaction?.createdAt).toLocaleTimeString(
-                        "en-US",
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {transactions
+                  ?.slice(0)
+                  .reverse()
+                  .map((transaction) => (
+                    <tr key={transaction?.id}>
+                      <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                        {(transaction?.amount / 100)?.toLocaleString("en-NG", {
+                          style: "currency",
+                          currency: "NGN",
+                        })}
+                      </td>
+                      <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                        {transaction?.type}
+                      </td>
+                      <td className="hidden px-1 py-4 text-sm text-end text-gray-500 md:table-cell">
+                        {new Date(transaction?.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "long",
+                            day: "2-digit",
+                            month: "long",
+                          }
+                        )}
+                        ,{" "}
+                        {new Date(transaction?.createdAt).toLocaleTimeString(
+                          "en-US",
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </td>
+                    </tr>
+                  ))}
               </>
             ) : (
               <tr>
@@ -403,31 +406,40 @@ const ViewCard = () => {
               </tr>
             ) : (
               <>
-                {spendLimit?.map((limit) => (
-                  <tr key={limit?.id}>
-                    <td className="hidden px-3 py-2 text-sm text-gray-800 sm:table-cell">
-                      {(limit?.amount / 100)?.toLocaleString("en-NG", {
-                        style: "currency",
-                        currency: "NGN",
-                      })}
-                    </td>
-                    <td className="hidden px-3 capitalize py-2 text-sm text-gray-800 md:table-cell">
-                      {limit?.interval}
-                    </td>
-                    <td className="hidden px-1 py-4 text-sm text-end text-gray-500 md:table-cell">
-                      {new Date(limit?.createdAt).toLocaleDateString("en-US", {
-                        weekday: "long",
-                        day: "2-digit",
-                        month: "long",
-                      })}
-                      ,{" "}
-                      {new Date(limit?.createdAt).toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                  </tr>
-                ))}
+                {spendLimit
+                  ?.slice(0)
+                  .reverse()
+                  .map((limit) => (
+                    <tr key={limit?.id}>
+                      <td className="hidden px-3 py-2 text-sm text-gray-800 sm:table-cell">
+                        {(limit?.amount / 100)?.toLocaleString("en-NG", {
+                          style: "currency",
+                          currency: "NGN",
+                        })}
+                      </td>
+                      <td className="hidden px-3 capitalize py-2 text-sm text-gray-800 md:table-cell">
+                        {limit?.interval}
+                      </td>
+                      <td className="hidden px-1 py-4 text-sm text-end text-gray-500 md:table-cell">
+                        {new Date(limit?.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "long",
+                            day: "2-digit",
+                            month: "long",
+                          }
+                        )}
+                        ,{" "}
+                        {new Date(limit?.createdAt).toLocaleTimeString(
+                          "en-US",
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </td>
+                    </tr>
+                  ))}
               </>
             )}
           </tbody>

@@ -53,18 +53,19 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       weeklyRevenue:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
-          ?.totalPaidInvoiceAmountThisWeek,
+          ?.totalPaidInvoiceAmountThisWeek / 100,
       percentageWeeklyRevenue:
         totalWeeklyInvoicesAmountQuery.data?.totalWeeklyInvoicesAmount
           ?.percentageIncreaseInPaidInvoicesThisWeek,
       totalExpenseAmountThisWeek:
-        getExpenseForWeek.data?.getExpensesForWeek?.totalExpenseAmountThisWeek,
+        getExpenseForWeek.data?.getExpensesForWeek?.totalExpenseAmountThisWeek /
+        100,
       percentageIncreaseInExpenseThisWeek:
         getExpenseForWeek.data?.getExpensesForWeek
           ?.percentageIncreaseInExpenseThisWeek,
       totalPurchaseAmountThisWeek:
         getPurchaseForWeek.data?.getPurchasesForWeek
-          ?.totalPurchaseAmountThisWeek,
+          ?.totalPurchaseAmountThisWeek / 100,
     };
   };
 
@@ -90,19 +91,19 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       monthlyRevenue:
         totalMonthlyInvoicesAmount.data?.totalMonthlyInvoicesAmount
-          ?.totalPaidInvoiceAmountThisMonth,
+          ?.totalPaidInvoiceAmountThisMonth / 100,
       percentageMonthlyRevenue:
         totalMonthlyInvoicesAmount.data?.totalMonthlyInvoicesAmount
           ?.percentageIncreaseInInvoicesThisMonth,
       totalExpenseAmountThisMonth:
         getExpenseForMonth.data?.getExpensesForMonth
-          ?.totalExpenseAmountThisMonth,
+          ?.totalExpenseAmountThisMonth / 100,
       percentageIncreaseInExpenseThisMonth:
         getExpenseForMonth.data?.getExpensesForMonth
           ?.percentageIncreaseInExpenseThisMonth,
       totalPurchaseAmountThisMonth:
         getPurchaseForMonth.data?.getPurchaseForMonth
-          ?.totalPurchaseAmountThisMonth,
+          ?.totalPurchaseAmountThisMonth / 100,
     };
   };
 
@@ -166,18 +167,19 @@ const MetricsCard1: React.FC<MetricsProps> = ({ filter }) => {
     return {
       yearlyRevenue:
         totalYearlyInvoicesAmount.data?.totalYearlyInvoicesAmount
-          ?.totalPaidInvoiceAmountThisYear,
+          ?.totalPaidInvoiceAmountThisYear / 100,
       percentageYearlyRevenue:
         totalYearlyInvoicesAmount.data?.totalYearlyInvoicesAmount
           ?.percentageIncreaseInInvoiceThisYear,
       totalExpenseAmountThisYear:
-        getExpenseForYear.data?.getExpensesForYear?.totalExpenseAmountThisYear,
+        getExpenseForYear.data?.getExpensesForYear?.totalExpenseAmountThisYear /
+        100,
       percentageIncreaseInExpenseThisYear:
         getExpenseForYear.data?.getExpensesForYear
           ?.percentageIncreaseInExpensesThisYear,
       totalPurchaseAmountThisYear:
         getPurchaseForYear.data?.getPurchaseForYear
-          ?.totalPurchaseAmountThisYear,
+          ?.totalPurchaseAmountThisYear / 100,
     };
   };
 

@@ -57,7 +57,6 @@ const ViewPurchase = () => {
   const businessName = businesses?.map((business) => business?.businessName);
   const businessEmail = businesses?.map((business) => business?.businessEmail);
   const businessLogo = businesses?.[0]?.logo || "";
-  const country = "Nigeria";
 
   const merchantName = purchase?.merchant?.name;
   const merchantEmail = purchase?.merchant?.email;
@@ -94,7 +93,7 @@ const ViewPurchase = () => {
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
             <p className=" text-[30px] text-primary-black ">
-              #{purchase?.reference}
+              {purchase?.reference}
             </p>
             <p className=" text-primary-greytext font-light text-lg">
               Add extra information to the purchase
@@ -122,45 +121,39 @@ const ViewPurchase = () => {
           itemsConfirmed={itemsConfirmed}
           paymentAdded={paymentAdded}
         />
-        <div className=" w-full flex flex-col shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 py-[36px] px-[44px]">
-          <div className=" flex justify-between items-center">
-            {businessLogo ? (
-              <Image alt="Logo" src={businessLogo} width={100} height={80} />
-            ) : null}
-            <Link href={`/purchase/editpurchase?purchaseId=${purchaseId}`}>
-              <button
-                disabled={purchaseStatusId >= 2}
-                className=" px-8 py-3 hover:border-gray-400 rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed flex border border-gray-200 items-center justify-center"
-              >
-                Edit purchase
-              </button>
-            </Link>
+        <div className=" w-full flex flex-col max-w-[850px] bg-white shadow-xl border mt-[40px] border-gray-200 pt-[30px] pb-[36px] px-[44px]">
+          <div className=" flex flex-row justify-between items-center">
+            <div>
+              {businessLogo ? (
+                <Image
+                  alt="Logo"
+                  className=" ml-[-15px]"
+                  src={businessLogo!}
+                  width={120}
+                  height={90}
+                />
+              ) : null}
+            </div>
+            <p className=" text-3xl">PURCHASE</p>
           </div>
-          <div className=" flex flex-col border-t border-t-[#f4f4f4] mt-2">
-            <div className="grid grid-cols-3 pt-8">
+          <div className=" flex flex-col border-t border-t-gray-200 mt-2">
+            <div className="grid grid-cols-3 pt-8 gap-4">
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>Purchase</p>
                 <p className=" text-primary-black font-normal">
-                  #{purchase?.reference}
+                  {purchase?.reference}
                 </p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-                <p>Created date</p>
-                <p className=" text-primary-black font-normal">
-                  {createdDate ? new Date(createdDate).toDateString() : ""}
-                </p>
-              </div>
-              <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
                 <p>Transaction date</p>
                 <p className=" text-primary-black font-normal">
-                  {" "}
                   {transactionDate
                     ? new Date(transactionDate).toDateString()
                     : ""}
                 </p>
               </div>
             </div>
-            <div className=" grid grid-cols-3 w-full pt-8">
+            <div className=" grid grid-cols-3 gap-4 w-full pt-8">
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>From</p>
                 <p className=" text-primary-black font-normal">
@@ -177,10 +170,10 @@ const ViewPurchase = () => {
               </div>
             </div>
             <div className=" w-full flex flex-col mt-[30px] gap-y-4">
-              <p className=" text-lg">Purchase details</p>
+              <p className=" text-lg">Invoice details</p>
               <table className=" w-full ">
                 <thead>
-                  <tr className=" text-sm text-primary-greytext border-y border-y-gray-100">
+                  <tr className=" text-sm text-primary-greytext border-y border-y-gray-200">
                     <th className=" text-start font-normal py-3">Item</th>
                     <th className=" text-end font-normal py-3">Qty</th>
                     <th className=" text-end font-normal py-3">Unit price</th>
@@ -200,22 +193,7 @@ const ViewPurchase = () => {
               </table>
             </div>
             <div className=" flex justify-between items-center mt-3">
-              <div className=" text-sm text-[#c4c4c4] max-w-[250px] flex flex-col gap-y-2">
-                <p>Thanks for your patronage</p>
-                <div className=" flex flex-row">
-                  Reach out to us{" "}
-                  <Link href="mailto:info@verzo.app">
-                    <p className="text-primary-blue focus:underline underline-offset-2 ml-1 font-medium">
-                      info@verzo.app
-                    </p>
-                  </Link>
-                </div>
-                <p>
-                  Purchase created with{" "}
-                  <span className=" text-primary-blue">Verzo</span>{" "}
-                </p>
-              </div>
-              <div className=" flex flex-col text-sm text-primary-black">
+              <div className=" flex flex-col text-sm text-primary-black ml-auto">
                 <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                   <p className=" text-primary-greytext">Sub total</p>
                   <p className=" text-base">
@@ -227,7 +205,7 @@ const ViewPurchase = () => {
                   </p>
                 </div>
                 <div className=" flex justify-between py-3 items-center">
-                  <p className=" text-primary-greytext">Amount due</p>
+                  <p className=" text-gray-800 font-medium">Amount due</p>
                   <p className=" text-base">
                     {(total / 100)?.toLocaleString("en-NG", {
                       style: "currency",
@@ -237,6 +215,12 @@ const ViewPurchase = () => {
                   </p>
                 </div>
               </div>
+            </div>
+            <div className=" flex flex-col mt-4 gap-y-1">
+              <p>Description</p>
+              <p className=" font-light text-gray-700">
+                {purchase?.description}
+              </p>
             </div>
           </div>
         </div>

@@ -385,6 +385,7 @@ const CreateExpense = () => {
         </div>
         <div className=" flex flex-row items-center gap-x-5 mt-2">
           <button
+            onClick={() => router.push("/dashboard/expenses")}
             type="button"
             className=" px-9 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
           >

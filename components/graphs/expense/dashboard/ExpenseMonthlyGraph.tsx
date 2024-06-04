@@ -43,7 +43,7 @@ const ExpenseMonthlyGraph = () => {
                 {new Intl.NumberFormat("en-NG", {
                   style: "currency",
                   currency: "NGN",
-                }).format(category.value)}
+                }).format(category.value / 100)}
               </p>
             </div>
           </div>

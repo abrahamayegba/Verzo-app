@@ -111,7 +111,7 @@ const ExpenseTabContentAll: React.FC<ExpenseTabContentAllProps> = ({
                   checked={selectedRows.includes(expense?.id!)}
                   onCheckedChange={() => handleRowSelect(expense?.id!)}
                 />
-                #{expense?.reference}
+                {expense?.reference}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {expense?.expenseDate

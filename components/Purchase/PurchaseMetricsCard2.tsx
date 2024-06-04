@@ -33,7 +33,7 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPaidPurchaseAmountThisWeek:
         getPurchaseForWeek?.data?.getPurchasesForWeek
-          ?.totalPaidPurchaseAmountThisWeek,
+          ?.totalPaidPurchaseAmountThisWeek / 100,
       percentageIncreaseInPaidPurchaseThisWeek:
         getPurchaseForWeek.data?.getPurchasesForWeek
           ?.percentageIncreaseInPaidPurchases,
@@ -50,7 +50,7 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPaidPurchaseAmountThisMonth:
         getPurchaseForMonth?.data?.getPurchaseForMonth
-          ?.totalPaidPurchaseAmountThisMonth,
+          ?.totalPaidPurchaseAmountThisMonth / 100,
       percentageIncreaseInPaidPurchaseThisMonth:
         getPurchaseForMonth.data?.getPurchaseForMonth
           ?.percentageIncreaseInPaidPurchasesThisMonth,
@@ -67,7 +67,7 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPaidPurchaseAmountThisQuarter:
         getPurchaseForQuarter?.data?.getPurchaseForQuarter
-          ?.totalPaidPurchaseAmountThisQuarter,
+          ?.totalPaidPurchaseAmountThisQuarter / 100,
       percentageIncreaseInPaidPurchasesThisQuarter:
         getPurchaseForQuarter.data?.getPurchaseForQuarter
           ?.percentageIncreaseInPaidPurchasesThisQuarter,
@@ -84,7 +84,7 @@ const PurchaseMetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPaidPurchaseAmountThisYear:
         getPurchaseForYear?.data?.getPurchaseForYear
-          ?.totalPaidPurchaseAmountThisYear,
+          ?.totalPaidPurchaseAmountThisYear / 100,
       percentageIncreaseInPaidPurchasesThisYear:
         getPurchaseForYear.data?.getPurchaseForYear
           ?.percentageIncreaseInPaidPurchasesThisYear,

@@ -124,7 +124,7 @@ const InvoiceTabContentArchived: React.FC<InvoiceTabContentArchivedProps> = ({
                   checked={selectedRows.includes(invoice?.id!)}
                   onCheckedChange={() => handleRowSelect(invoice?.id!)}
                 />
-                #{invoice?.reference}
+                {invoice?.reference}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {invoice?.transactionDate

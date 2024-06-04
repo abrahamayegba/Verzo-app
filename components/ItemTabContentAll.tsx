@@ -16,12 +16,12 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import localStorage from "local-storage-fallback";
-import { Archive, Minus, Pen, Trash2 } from "lucide-react";
-import { useGetProductOrServiceByBusinessQuery } from "@/src/generated/graphql";
+import { Archive, Pen, Trash2 } from "lucide-react";
+import { useGetProductsByBusinessQuery } from "@/src/generated/graphql";
 import TableEmptyState from "./emptystates/TableEmptyState";
 import ProductTableEmptyIcon from "./ui/icons/ProductTableEmptyIcon";
 
-interface ProductTabContentAllProps {
+interface ItemTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
   openArchiveModal: (productId: string) => void;
   openDeleteModal: (productId: string) => void;
@@ -29,7 +29,7 @@ interface ProductTabContentAllProps {
   productSearchId: string;
 }
 
-const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
+const ItemTabContentAll: React.FC<ItemTabContentAllProps> = ({
   onToggleSelectAll,
   openArchiveModal,
   openDeleteModal,
@@ -41,15 +41,16 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
   );
   const businessId = storedBusinessId[0] || "";
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const getProductOrServiceByBusiness = useGetProductOrServiceByBusinessQuery({
+  const getProductsByBusiness = useGetProductsByBusinessQuery({
     variables: {
       businessId: businessId,
+      cursor: null,
+      sets: 1,
     },
   });
   const products =
-    getProductOrServiceByBusiness.data?.getProductOrServiceByBusiness
-      ?.productOrServiceByBusiness ?? [];
-
+    getProductsByBusiness.data?.getProductsByBusiness?.productByBusiness ?? [];
+  console.log(products);
   const productSearchResult = products.find(
     (product) => product?.id === productSearchId
   );
@@ -85,13 +86,10 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
             Name
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Type
-          </TableHead>
-          <TableHead className=" font-normal text-sm text-primary-greytext">
             Amount
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
-            Unit
+            Product unit
           </TableHead>
           <TableHead className=" font-normal text-sm text-primary-greytext">
             Stock status
@@ -134,10 +132,7 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
                   checked={selectedRows.includes(product?.id!)}
                   onCheckedChange={() => handleRowSelect(product?.id!)}
                 />
-                {product?.title}
-              </TableCell>
-              <TableCell className=" text-primary-greytext">
-                {product?.type === "P" ? "Product" : "Service"}
+                {product?.productName}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {(product?.price / 100)?.toLocaleString("en-NG", {
@@ -146,34 +141,17 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
                 })}
               </TableCell>
               <TableCell className="text-primary-greytext">
-                {product?.type === "P"
-                  ? product?.product?.businessProductUnit?.unitName ||
-                    product?.product?.productUnit?.unitName
-                  : product?.service?.businessServiceUnit?.unitName
-                  ? product?.service?.businessServiceUnit?.unitName
-                  : product?.service?.serviceUnit?.unitName}
+                {product?.businessProductUnit?.unitName
+                  ? product.businessProductUnit.unitName
+                  : product?.productUnit?.unitName}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {product?.type === "P" ? (
-                  product?.product?.productsInventory?.quantity! > 0 ? (
-                    "In stock"
-                  ) : (
-                    "Out of stock"
-                  )
-                ) : (
-                  <span>
-                    <Minus className=" text-gray-400" />
-                  </span>
-                )}
+                {product?.productsInventory?.quantity! > 0
+                  ? "In stock"
+                  : "Out of stock"}
               </TableCell>
               <TableCell className=" text-primary-greytext">
-                {product?.type === "P" ? (
-                  product?.product?.productsInventory?.quantity
-                ) : (
-                  <span>
-                    <Minus className=" text-gray-400" />
-                  </span>
-                )}
+                {product?.productsInventory?.quantity}
               </TableCell>
 
               <TableCell className="text-right text-primary-blue">
@@ -214,4 +192,4 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
   );
 };
 
-export default ProductTabContentAll;
+export default ItemTabContentAll;

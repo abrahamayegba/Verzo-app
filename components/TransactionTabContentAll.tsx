@@ -37,7 +37,6 @@ const TransactionTabContentAll = () => {
       setSelectedRows((prevSelectedRows) => [...prevSelectedRows, rowId]);
     }
   };
-  console.log(transactions.length);
 
   return (
     <Table>

@@ -15,8 +15,6 @@ import {
 import Link from "next/link";
 import React from "react";
 import localStorage from "local-storage-fallback";
-
-import { TrendingUp } from "lucide-react";
 import ExpenseWeeklyGraph from "./graphs/expense/dashboard/ExpenseWeeklyGraph";
 import ExpenseMonthlyGraph from "./graphs/expense/dashboard/ExpenseMonthlyGraph";
 import ExpenseQuarterlyGraph from "./graphs/expense/dashboard/ExpenseQuarterlyGraph";
@@ -92,19 +90,19 @@ const MetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
     return {
       monthlyRevenue:
         totalMonthlyInvoicesAmount.data?.totalMonthlyInvoicesAmount
-          ?.totalPaidInvoiceAmountThisMonth,
+          ?.totalPaidInvoiceAmountThisMonth / 100,
       percentageMonthlyRevenue:
         totalMonthlyInvoicesAmount.data?.totalMonthlyInvoicesAmount
           ?.percentageIncreaseInInvoicesThisMonth,
       totalExpenseAmountThisMonth:
         getExpenseForMonth.data?.getExpensesForMonth
-          ?.totalExpenseAmountThisMonth,
+          ?.totalExpenseAmountThisMonth / 100,
       percentageIncreaseInExpenseThisMonth:
         getExpenseForMonth.data?.getExpensesForMonth
           ?.percentageIncreaseInExpenseThisMonth,
       totalPurchaseAmountThisMonth:
         getPurchaseForMonth.data?.getPurchaseForMonth
-          ?.totalPurchaseAmountThisMonth,
+          ?.totalPurchaseAmountThisMonth / 100,
     };
   };
 
@@ -130,19 +128,19 @@ const MetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
     return {
       quarterlyRevenue:
         totalQuarterlyInvoicesAmount.data?.totalQuarterlyInvoicesAmount
-          ?.totalPaidInvoiceAmountThisQuarter,
+          ?.totalPaidInvoiceAmountThisQuarter / 100,
       percentageQuarterlyRevenue:
         totalQuarterlyInvoicesAmount.data?.totalQuarterlyInvoicesAmount
           ?.percentageIncreaseInInvoiceThisQuarter,
       totalExpenseAmountThisQuarter:
         getExpenseForQuarter.data?.getExpensesForQuarter
-          ?.totalExpenseAmountThisQuarter,
+          ?.totalExpenseAmountThisQuarter / 100,
       percentageIncreaseInExpenseThisQuarter:
         getExpenseForQuarter.data?.getExpensesForQuarter
           ?.percentageIncreaseInExpensesThisQuarter,
       totalPurchaseAmountThisQuarter:
         getPurchaseForQuarter.data?.getPurchaseForQuarter
-          ?.totalPurchaseAmountThisQuarter,
+          ?.totalPurchaseAmountThisQuarter / 100,
     };
   };
 
@@ -168,18 +166,19 @@ const MetricsCard2: React.FC<MetricsProps> = ({ filter }) => {
     return {
       yearlyRevenue:
         totalYearlyInvoicesAmount.data?.totalYearlyInvoicesAmount
-          ?.totalPaidInvoiceAmountThisYear,
+          ?.totalPaidInvoiceAmountThisYear / 100,
       percentageYearlyRevenue:
         totalYearlyInvoicesAmount.data?.totalYearlyInvoicesAmount
           ?.percentageIncreaseInInvoiceThisYear,
       totalExpenseAmountThisYear:
-        getExpenseForYear.data?.getExpensesForYear?.totalExpenseAmountThisYear,
+        getExpenseForYear.data?.getExpensesForYear?.totalExpenseAmountThisYear /
+        100,
       percentageIncreaseInExpenseThisYear:
         getExpenseForYear.data?.getExpensesForYear
           ?.percentageIncreaseInExpensesThisYear,
       totalPurchaseAmountThisYear:
         getPurchaseForYear.data?.getPurchaseForYear
-          ?.totalPurchaseAmountThisYear,
+          ?.totalPurchaseAmountThisYear / 100,
     };
   };
 

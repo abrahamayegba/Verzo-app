@@ -5,6 +5,7 @@ import ActiveProductIcon from "@/components/ui/icons/ActiveProductIcon";
 import {
   GetCombinedProductUnitsDocument,
   GetCombinesServiceUnitsDocument,
+  GetProductOrServiceByBusinessDocument,
   GetProductUnitsDocument,
   GetProductsByBusinessDocument,
   useCreateBusinessProductUnitMutation,
@@ -100,7 +101,10 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
           productUnitId: productUnitId,
           ...modifiedData,
         },
-        refetchQueries: [GetProductsByBusinessDocument],
+        refetchQueries: [
+          GetProductsByBusinessDocument,
+          GetProductOrServiceByBusinessDocument,
+        ],
       });
       onClose();
       reset({

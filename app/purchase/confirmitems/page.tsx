@@ -172,7 +172,7 @@ const ConfirmPurchaseItems = () => {
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
           <p className=" text-[28px] text-primary-black ">
-            Purchase #{purchase?.reference}{" "}
+            Purchase {purchase?.reference}{" "}
           </p>
           <p className=" text-primary-greytext font-light text-lg">
             Confirm the items of this purchase

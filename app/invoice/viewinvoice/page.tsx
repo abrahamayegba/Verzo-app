@@ -5,7 +5,7 @@ import MainLoader from "@/components/loading/MainLoader";
 import SendInvoice from "@/components/modals/invoice/SendInvoice";
 import { isAuthenticated } from "@/lib/auth";
 import { useGetSaleByIdQuery } from "@/src/generated/graphql";
-import { MoveLeft } from "lucide-react";
+import { MoveLeft, Pen, Send, Share } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -67,12 +67,12 @@ const ViewInvoice = () => {
   const businessName = sales?.business?.businessName;
   const businessEmail = sales?.business?.businessEmail;
   const businessLogo = sales?.business?.logo;
-  const country = "Nigeria";
   const customerName = sales?.invoice?.customer?.name;
   const customerEmail = sales?.invoice?.customer?.email;
   const transactionDate = sales?.transactionDate;
   const dueDate = sales?.dueDate;
   const subtotal = sales?.invoice?.subtotal;
+  const description = sales?.description;
   const total = sales?.saleAmount;
   let nextRoute = "";
   if (!saleExpenseRecorded) {
@@ -98,22 +98,32 @@ const ViewInvoice = () => {
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
             <p className=" text-[30px] text-primary-black ">
-              #{sales?.reference}
+              {sales?.reference}
             </p>
             <p className=" text-primary-greytext font-light text-lg">
               Add extra information to the invoice
             </p>
           </div>
-          <div className=" flex flex-row gap-x-4">
+          <div className=" flex flex-row gap-x-4 items-center mt-6">
+            <Link href={`/invoice/editinvoice?invoiceId=${invoiceId}`}>
+              <button
+                disabled={saleStatusId >= 2}
+                className=" px-4 py-[10px] text-blue-600 gap-x-2 rounded-[8px] disabled:cursor-not-allowed disabled:opacity-50 flex border border-blue-500 items-center justify-center"
+              >
+                <Pen className=" w-4 h-4" />
+                Edit
+              </button>
+            </Link>
             <button
               onClick={openSendModal}
-              className=" px-8 hover:border-gray-400 py-[10px] mt-6 rounded-[10px] flex border border-gray-200 items-center justify-center"
+              className=" px-4 py-[10px] text-blue-600 gap-x-2 rounded-[8px] disabled:cursor-not-allowed flex border border-blue-500 items-center justify-center"
             >
-              Send invoice
+              <Send className=" w-4 h-4" />
+              Send
             </button>
             {nextRoute && (
               <Link href={nextRoute}>
-                <button className="px-12 py-[10px] mt-6 rounded-[10px] flex bg-primary-blue text-white items-center justify-center">
+                <button className="px-8 py-[10px] rounded-[8px] flex bg-primary-blue text-white items-center justify-center">
                   Next
                 </button>
               </Link>
@@ -126,24 +136,23 @@ const ViewInvoice = () => {
           currentStep={currentStep}
           paymentAdded={paymentAdded}
         />
-        <div className=" w-full flex flex-col shadow2 rounded-[18px] mt-[40px] border-t border-t-gray-100 py-[36px] px-[44px]">
-          <div className=" flex justify-between items-center">
-            {businessLogo ? (
-              <Image alt="Logo" src={businessLogo} width={100} height={80} />
-            ) : null}
-            <div className=" flex flex-row gap-x-5">
-              <Link href={`/invoice/editinvoice?invoiceId=${invoiceId}`}>
-                <button
-                  disabled={saleStatusId >= 2}
-                  className=" px-6 py-3 rounded-[10px] hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed flex border border-gray-200 items-center justify-center"
-                >
-                  Edit invoice
-                </button>
-              </Link>
+        <div className=" w-full flex flex-col max-w-[850px] bg-white shadow-xl border mt-[40px] border-gray-200 pt-[30px] pb-[36px] px-[44px]">
+          <div className=" flex flex-row justify-between items-center">
+            <div>
+              {businessLogo ? (
+                <Image
+                  alt="Logo"
+                  className=" ml-[-15px]"
+                  src={businessLogo!}
+                  width={120}
+                  height={90}
+                />
+              ) : null}
             </div>
+            <p className=" text-3xl">INVOICE</p>
           </div>
-          <div className=" flex flex-col border-t border-t-[#f4f4f4] mt-2">
-            <div className="grid grid-cols-3 pt-8">
+          <div className=" flex flex-col border-t border-t-gray-200 mt-2">
+            <div className="grid grid-cols-3 pt-8 gap-4">
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>Invoice</p>
                 <p className=" text-primary-black font-normal">
@@ -165,7 +174,7 @@ const ViewInvoice = () => {
                 </p>
               </div>
             </div>
-            <div className=" grid grid-cols-3 w-full pt-8">
+            <div className=" grid grid-cols-3 gap-4 w-full pt-8">
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>From</p>
                 <p className=" text-primary-black font-normal">
@@ -185,7 +194,7 @@ const ViewInvoice = () => {
               <p className=" text-lg">Invoice details</p>
               <table className=" w-full ">
                 <thead>
-                  <tr className=" text-sm text-primary-greytext border-y border-y-gray-100">
+                  <tr className=" text-sm text-primary-greytext border-y border-y-gray-200">
                     <th className=" text-start font-normal py-3">Item</th>
                     <th className=" text-end font-normal py-3">Qty</th>
                     <th className=" text-end font-normal py-3">Unit price</th>
@@ -205,22 +214,7 @@ const ViewInvoice = () => {
               </table>
             </div>
             <div className=" flex justify-between items-center mt-3">
-              <div className=" text-sm text-[#c4c4c4] max-w-[250px] flex flex-col gap-y-2">
-                <p>Thanks for your patronage</p>
-                <div className=" flex flex-row">
-                  Reach out to us{" "}
-                  <Link href="mailto:info@verzo.app">
-                    <p className="text-primary-blue focus:underline underline-offset-2 ml-1 font-medium">
-                      info@verzo.app
-                    </p>
-                  </Link>
-                </div>
-                <p>
-                  Invoice created with{" "}
-                  <span className=" text-primary-blue">Verzo</span>{" "}
-                </p>
-              </div>
-              <div className=" flex flex-col text-sm text-primary-black">
+              <div className=" flex flex-col text-sm text-primary-black ml-auto">
                 <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                   <p className=" text-primary-greytext">Sub total</p>
                   <p className=" text-base">
@@ -232,7 +226,7 @@ const ViewInvoice = () => {
                   </p>
                 </div>
                 <div className=" flex justify-between py-3 items-center">
-                  <p className=" text-primary-greytext">Amount due</p>
+                  <p className=" text-gray-800 font-medium">Amount due</p>
                   <p className=" text-base">
                     {(total / 100)?.toLocaleString("en-NG", {
                       style: "currency",
@@ -243,6 +237,16 @@ const ViewInvoice = () => {
                 </div>
               </div>
             </div>
+            <div className=" flex flex-col mt-4 gap-y-1">
+              <p>Description</p>
+              <p className=" font-light text-gray-700">{description}</p>
+            </div>
+            {sales?.note && (
+              <div className=" flex flex-col my-4 gap-y-1 max-w-[600px]">
+                <p>Notes / Terms</p>
+                <p className=" font-light text-gray-700">{sales?.note}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -194,6 +194,7 @@ export type BusinessProductUnit = {
   business?: Maybe<Business>;
   businessId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
@@ -205,6 +206,7 @@ export type BusinessServiceUnit = {
   business?: Maybe<Business>;
   businessId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
@@ -336,6 +338,7 @@ export type CombinedProductUnit = {
   __typename?: 'CombinedProductUnit';
   archived?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
@@ -345,6 +348,7 @@ export type CombinedServiceUnit = {
   __typename?: 'CombinedServiceUnit';
   archived?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
@@ -398,11 +402,13 @@ export type CreateBusinessForTesting = {
 
 export type CreateBusinessProductUnit = {
   businessId: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
   unitName: Scalars['String']['input'];
 };
 
 export type CreateBusinessServiceUnit = {
   businessId: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
   unitName: Scalars['String']['input'];
 };
 
@@ -671,6 +677,7 @@ export type CreateProductSaleItem = {
 };
 
 export type CreateProductUnit = {
+  description?: InputMaybe<Scalars['String']['input']>;
   unitName: Scalars['String']['input'];
 };
 
@@ -751,6 +758,7 @@ export type CreateSaleCsvData = {
 export type CreateSaleEntry = {
   description: Scalars['String']['input'];
   invoiceInput: CreateCompleteInvoiceB;
+  note?: InputMaybe<Scalars['String']['input']>;
   saleExpense?: InputMaybe<Array<SaleExpenseItem>>;
   saleServiceExpense?: InputMaybe<Array<SaleServiceExpenseEntry>>;
 };
@@ -785,6 +793,7 @@ export type CreateServiceSaleItem = {
 };
 
 export type CreateServiceUnit = {
+  description?: InputMaybe<Scalars['String']['input']>;
   unitName: Scalars['String']['input'];
 };
 
@@ -2031,6 +2040,7 @@ export type Mutation = {
   updateServiceSaleItem?: Maybe<ServiceSaleItem>;
   updateServiceUnit?: Maybe<ServiceUnit>;
   updateSettlementAccount?: Maybe<SettlementAccount>;
+  updateSudoCard?: Maybe<BusinessSudoCard>;
   updateUser?: Maybe<User>;
   updateUserInWaitlist?: Maybe<UserWaitlist>;
   uploadBusinessLogo?: Maybe<Scalars['Boolean']['output']>;
@@ -3295,6 +3305,11 @@ export type MutationUpdateSettlementAccountArgs = {
 };
 
 
+export type MutationUpdateSudoCardArgs = {
+  input: UpdateSudoCard;
+};
+
+
 export type MutationUpdateUserArgs = {
   input?: InputMaybe<UpdateUser>;
 };
@@ -3597,6 +3612,7 @@ export type ProductUnit = {
   __typename?: 'ProductUnit';
   archived?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
@@ -5118,6 +5134,7 @@ export type Sale = {
   id: Scalars['String']['output'];
   invoice?: Maybe<Invoice>;
   invoiceId?: Maybe<Scalars['String']['output']>;
+  note?: Maybe<Scalars['String']['output']>;
   paid?: Maybe<Scalars['Boolean']['output']>;
   paidAt?: Maybe<Scalars['Date']['output']>;
   productSaleItems?: Maybe<Array<Maybe<ProductSaleItem>>>;
@@ -5358,6 +5375,7 @@ export type ServiceUnit = {
   __typename?: 'ServiceUnit';
   archived?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
@@ -5562,6 +5580,13 @@ export type SudoCardAuthorization = {
   vat: Scalars['Float']['output'];
 };
 
+export type SudoCardChannels = {
+  atm: Scalars['Boolean']['input'];
+  mobile: Scalars['Boolean']['input'];
+  pos: Scalars['Boolean']['input'];
+  web: Scalars['Boolean']['input'];
+};
+
 export enum SudoCardSpendingInterval {
   Daily = 'daily',
   Monthly = 'monthly',
@@ -5573,6 +5598,11 @@ export type SudoCardSpendingLimits = {
   amount: Scalars['Float']['input'];
   interval: SudoCardSpendingInterval;
 };
+
+export enum SudoCardStatus {
+  Active = 'active',
+  Inactive = 'inactive'
+}
 
 export type SudoCardTransaction = {
   __typename?: 'SudoCardTransaction';
@@ -5892,11 +5922,13 @@ export type UpdateBusinessCategory = {
 };
 
 export type UpdateBusinessProductUnit = {
+  description?: InputMaybe<Scalars['String']['input']>;
   productUnitId: Scalars['String']['input'];
   unitName: Scalars['String']['input'];
 };
 
 export type UpdateBusinessServiceUnit = {
+  description?: InputMaybe<Scalars['String']['input']>;
   serviceUnitId: Scalars['String']['input'];
   unitName: Scalars['String']['input'];
 };
@@ -6039,6 +6071,7 @@ export type UpdateProductSaleItem = {
 
 export type UpdateProductUnit = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   unitName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -6064,6 +6097,7 @@ export type UpdateSale = {
 
 export type UpdateSaleEntry = {
   description?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
   saleExpense?: InputMaybe<Array<SaleExpenseItem>>;
   saleServiceExpense?: InputMaybe<Array<SaleServiceExpenseEntry>>;
   updateInvoiceInput: UpdateCompleteInvoiceB;
@@ -6093,6 +6127,7 @@ export type UpdateServiceSaleItem = {
 
 export type UpdateServiceUnit = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   unitName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -6107,6 +6142,13 @@ export type UpdateSubscription = {
   offerId?: InputMaybe<Scalars['String']['input']>;
   subscribeAfterTrial?: InputMaybe<Scalars['Boolean']['input']>;
   validTo?: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type UpdateSudoCard = {
+  cardId: Scalars['String']['input'];
+  channels?: InputMaybe<SudoCardChannels>;
+  spendingLimits?: InputMaybe<Array<InputMaybe<SudoCardSpendingLimits>>>;
+  status: SudoCardStatus;
 };
 
 export type UpdateUser = {
@@ -7076,7 +7118,7 @@ export type GetProductOrServiceByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetProductOrServiceByBusinessQuery = { __typename?: 'Query', getProductOrServiceByBusiness?: { __typename?: 'GetProductOrServiceResponse', cursorId?: string | null, type?: string | null, productOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, title: string, type: string, price?: any | null, archived?: boolean | null, createdAt?: any | null, product?: { __typename?: 'Product', productName: string, price?: any | null, id: string, type?: string | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null, service?: { __typename?: 'Service', name: string, price: any, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null, business?: { __typename?: 'Business', businessName: string } | null } | null> } | null };
+export type GetProductOrServiceByBusinessQuery = { __typename?: 'Query', getProductOrServiceByBusiness?: { __typename?: 'GetProductOrServiceResponse', cursorId?: string | null, type?: string | null, productOrServiceByBusiness: Array<{ __typename?: 'ProductOrService', id: string, title: string, type: string, price?: any | null, archived?: boolean | null, createdAt?: any | null, product?: { __typename?: 'Product', productName: string, price?: any | null, id: string, type?: string | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null, businessProductUnit?: { __typename?: 'BusinessProductUnit', id?: string | null, unitName?: string | null } | null, productsInventory?: { __typename?: 'ProductInventory', quantity?: number | null } | null } | null, service?: { __typename?: 'Service', name: string, price: any, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null, businessServiceUnit?: { __typename?: 'BusinessServiceUnit', id?: string | null, unitName?: string | null } | null } | null, business?: { __typename?: 'Business', businessName: string } | null } | null> } | null };
 
 export type GetProductUnitsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -7174,14 +7216,14 @@ export type GetSaleByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetSaleByBusinessQuery = { __typename?: 'Query', getSaleByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, saleAmount?: any | null, paid?: boolean | null, reference?: string | null, archived?: boolean | null, transactionDate?: any | null, business?: { __typename?: 'Business', businessName: string } | null, saleStatus?: { __typename?: 'SaleStatusRef', saleStatus?: string | null, id?: number | null } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: any, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: any, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: any | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
+export type GetSaleByBusinessQuery = { __typename?: 'Query', getSaleByBusiness?: { __typename?: 'GetSaleByBusinessResponse', cursorId?: string | null, salesByBusiness: Array<{ __typename?: 'Sale', id: string, description?: string | null, saleAmount?: any | null, paid?: boolean | null, note?: string | null, reference?: string | null, archived?: boolean | null, transactionDate?: any | null, business?: { __typename?: 'Business', businessName: string } | null, saleStatus?: { __typename?: 'SaleStatusRef', saleStatus?: string | null, id?: number | null } | null, invoice?: { __typename?: 'Invoice', id: string, totalAmount: any, createdAt?: any | null, VAT?: number | null, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null } | null, business?: { __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', unitPrice: any, quantity: number, product?: { __typename?: 'Product', type?: string | null, productName: string, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', unitPrice?: any | null, quantity?: number | null, service?: { __typename?: 'Service', type?: string | null, name: string, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null> } | null };
 
 export type GetSaleByIdQueryVariables = Exact<{
   saleId: Scalars['String']['input'];
 }>;
 
 
-export type GetSaleByIdQuery = { __typename?: 'Query', getSaleById?: { __typename?: 'Sale', id: string, description?: string | null, reference?: string | null, paid?: boolean | null, saleAmount?: any | null, transactionDate?: any | null, dueDate?: any | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, businessMobile?: string | null, logo?: string | null } | null, saleStatus?: { __typename?: 'SaleStatusRef', id?: number | null, saleStatus?: string | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', id?: string | null, index?: number | null, saleId?: string | null, description?: string | null, amount?: any | null, effected?: boolean | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', id?: string | null, effected?: boolean | null, description?: string | null, amount?: any | null, index?: number | null, service?: { __typename?: 'Service', name: string, id: string } | null } | null> | null, invoice?: { __typename?: 'Invoice', totalAmount: any, VAT?: number | null, id: string, createdAt?: any | null, subtotal: any, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null, mobile: string } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: any, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: any, quantity: number, price: any, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: any | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: any | null, quantity?: number | null, price: any, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: any, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null };
+export type GetSaleByIdQuery = { __typename?: 'Query', getSaleById?: { __typename?: 'Sale', id: string, description?: string | null, reference?: string | null, note?: string | null, paid?: boolean | null, saleAmount?: any | null, transactionDate?: any | null, dueDate?: any | null, business?: { __typename?: 'Business', businessName: string, businessEmail?: string | null, businessMobile?: string | null, logo?: string | null } | null, saleStatus?: { __typename?: 'SaleStatusRef', id?: number | null, saleStatus?: string | null } | null, saleExpenses?: Array<{ __typename?: 'SaleExpense', id?: string | null, index?: number | null, saleId?: string | null, description?: string | null, amount?: any | null, effected?: boolean | null } | null> | null, saleServiceExpenses?: Array<{ __typename?: 'SaleServiceExpense', id?: string | null, effected?: boolean | null, description?: string | null, amount?: any | null, index?: number | null, service?: { __typename?: 'Service', name: string, id: string } | null } | null> | null, invoice?: { __typename?: 'Invoice', totalAmount: any, VAT?: number | null, id: string, createdAt?: any | null, subtotal: any, paidFully?: boolean | null, discount?: number | null, dateOfIssue?: any | null, dueDate?: any | null, customer?: { __typename?: 'Customer', id: string, name: string, email: string, address?: string | null, mobile: string } | null, invoiceDetails?: Array<{ __typename?: 'InvoiceDetail', id: string, type: string, cost: any, index?: number | null, productInvoiceDetail?: { __typename?: 'ProductInvoiceDetail', type: string, unitPrice: any, quantity: number, price: any, product?: { __typename?: 'Product', id: string, type?: string | null, productName: string, price?: any | null, productUnit?: { __typename?: 'ProductUnit', id?: string | null, unitName?: string | null } | null } | null } | null, serviceInvoiceDetail?: { __typename?: 'ServiceInvoiceDetail', type: string, unitPrice?: any | null, quantity?: number | null, price: any, service?: { __typename?: 'Service', id: string, type?: string | null, name: string, price: any, serviceUnit?: { __typename?: 'ServiceUnit', id?: string | null, unitName?: string | null } | null } | null } | null } | null> | null } | null } | null };
 
 export type GetSalesForMonthQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -12215,11 +12257,22 @@ export const GetProductOrServiceByBusinessDocument = gql`
           id
           unitName
         }
+        businessProductUnit {
+          id
+          unitName
+        }
+        productsInventory {
+          quantity
+        }
       }
       service {
         name
         price
         serviceUnit {
+          id
+          unitName
+        }
+        businessServiceUnit {
           id
           unitName
         }
@@ -12971,6 +13024,7 @@ export const GetSaleByBusinessDocument = gql`
       description
       saleAmount
       paid
+      note
       reference
       archived
       business {
@@ -13076,6 +13130,7 @@ export const GetSaleByIdDocument = gql`
     id
     description
     reference
+    note
     business {
       businessName
       businessEmail

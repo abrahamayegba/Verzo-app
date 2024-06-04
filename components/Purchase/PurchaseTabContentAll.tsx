@@ -127,7 +127,7 @@ const PurchaseTabContentAll: React.FC<PurchaseTabContentAllProps> = ({
                   checked={selectedRows.includes(purchase?.id!)}
                   onCheckedChange={() => handleRowSelect(purchase?.id!)}
                 />
-                #{purchase?.reference}
+                {purchase?.reference}
               </TableCell>
               <TableCell className=" text-primary-greytext">
                 {purchase?.transactionDate

@@ -7,6 +7,7 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import {
   GetCombinesServiceUnitsDocument,
+  GetProductOrServiceByBusinessDocument,
   GetServiceByBusinessDocument,
   useCreateBusinessServiceUnitMutation,
   useCreateServiceMutation,
@@ -92,7 +93,10 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
           name: serviceName,
           ...modifiedData,
         },
-        refetchQueries: [GetServiceByBusinessDocument],
+        refetchQueries: [
+          GetServiceByBusinessDocument,
+          GetProductOrServiceByBusinessDocument,
+        ],
       });
       onClose();
       setServiceName("");

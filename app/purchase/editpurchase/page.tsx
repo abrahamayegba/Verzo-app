@@ -64,10 +64,7 @@ const EditPurchase = () => {
   const [openCreateCategorySheet, setOpenCreateCategorySheet] = useState(false);
   const [purchaseDate, setPurchaseDate] = useState("");
   const [openUpdateBusinessSheet, setOpenUpdateBusinessSheet] = useState(false);
-  const [purchaseDueDate, setPurchaseDueDate] = useState("");
   const [date, setDate] = React.useState<Date | null>(null);
-  const [dueDate, setDueDate] = React.useState<Date | null>(null);
-  const [openDueDate, setOpenDueDate] = React.useState(false);
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -119,7 +116,7 @@ const EditPurchase = () => {
       ? initialPurchaseItems.map((item) => ({
           itemDescription: item?.description!,
           quantity: item?.quantity!,
-          unitPrice: item?.unitPrice!,
+          unitPrice: item?.unitPrice! / 100,
           index: item?.index!,
           productId: item?.productId!,
         }))
@@ -133,7 +130,6 @@ const EditPurchase = () => {
     setPurchaseItems(mappedPurchaseItems);
   }, [mappedPurchaseItems]);
 
-  const createdDate = purchase?.createdAt;
   const transactionDate = purchase?.transactionDate;
 
   const handleCloseMerchantSheet = () => {
@@ -162,13 +158,6 @@ const EditPurchase = () => {
       setPurchaseDate(formattedDate);
     }
   }, [date]);
-
-  React.useEffect(() => {
-    if (dueDate) {
-      const formattedDueDate = format(dueDate, "yyyy-MM-dd").toString();
-      setPurchaseDueDate(formattedDueDate);
-    }
-  }, [dueDate]);
 
   const deleteItem = (index: number) => {
     const updatedItems = [...purchaseItems];
@@ -236,7 +225,7 @@ const EditPurchase = () => {
   };
 
   const onUpdatePurchaseHandler = async (data: FormData) => {
-    if (!dueDate && !transactionDate) {
+    if (!date && !transactionDate) {
       showDateFailureToast("Please pick a date and try again.");
       return;
     }
@@ -245,7 +234,6 @@ const EditPurchase = () => {
       return;
     }
     try {
-      // Multiply unitPrice by 100 for each item
       const updatedPurchaseItems = purchaseItems?.map((item) => {
         return {
           ...item,
@@ -255,7 +243,7 @@ const EditPurchase = () => {
       await updatePurchaseMutation({
         variables: {
           purchaseId: purchaseId!,
-          transactionDate: purchaseDueDate ? purchaseDueDate : transactionDate,
+          transactionDate: purchaseDate ? purchaseDate : transactionDate,
           merchantId: merchantId ? merchantId : initialMerchantId,
           purchaseItem: updatedPurchaseItems,
           description: getValues("description")
@@ -354,13 +342,13 @@ const EditPurchase = () => {
       />
       <div className=" flex flex-row gap-x-6">
         <div className=" flex flex-col gap-y-[6px] w-1/2">
-          <label className="" htmlFor="issuedate">
-            Issue date
+          <label className="" htmlFor="purchasedate">
+            Purchase date
           </label>
           <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
             <PopoverTrigger asChild>
               <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
-                {purchaseDate ? purchaseDate : createdDate}
+                {purchaseDate ? purchaseDate : transactionDate}
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0 bg-white">
@@ -370,29 +358,6 @@ const EditPurchase = () => {
                 onSelect={(date) => {
                   setDate(date!);
                   setOpenIssueDate(false);
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className=" flex flex-col gap-y-[6px] w-1/2">
-          <label className="" htmlFor="duedate">
-            Due date
-          </label>
-          <Popover open={openDueDate} onOpenChange={setOpenDueDate}>
-            <PopoverTrigger asChild>
-              <button className=" text-left text-sm font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
-                {purchaseDueDate ? purchaseDueDate : transactionDate}
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-full p-0 bg-white">
-              <Calendar
-                mode="single"
-                selected={dueDate!}
-                onSelect={(dueDate) => {
-                  setDueDate(dueDate!);
-                  setOpenDueDate(false);
                 }}
                 initialFocus
               />
@@ -468,6 +433,9 @@ const EditPurchase = () => {
           </div>
           <div className=" flex flex-row items-center gap-x-5 mt-2">
             <button
+              onClick={() =>
+                router.push(`/purchase/viewpurchase?purchaseId=${purchaseId}`)
+              }
               type="button"
               className=" px-9 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
             >

@@ -36,7 +36,7 @@ const ExpenseMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPendingExpenseAmountThisWeek:
         getExpenseForWeek.data?.getExpensesForWeek
-          ?.totalPendingExpenseAmountThisWeek,
+          ?.totalPendingExpenseAmountThisWeek / 100,
       percentageIncreaseInPendingExpenseThisWeek:
         getExpenseForWeek.data?.getExpensesForWeek
           ?.percentageIncreaseInPendingExpensesThisWeek,
@@ -53,7 +53,7 @@ const ExpenseMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPendingExpenseAmountThisMonth:
         getExpenseForMonth.data?.getExpensesForMonth
-          ?.totalPendingExpensesThisMonth,
+          ?.totalPendingExpensesThisMonth / 100,
       percentageIncreaseInPendingExpenseThisMonth:
         getExpenseForMonth.data?.getExpensesForMonth
           ?.percentageIncreaseInPendingExpensesThisMonth,
@@ -70,7 +70,7 @@ const ExpenseMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPendingExpenseAmountThisQuarter:
         getExpenseForQuarter.data?.getExpensesForQuarter
-          ?.totalPendingExpensesThisQuarter,
+          ?.totalPendingExpensesThisQuarter / 100,
       percentageIncreaseInPendingExpenseThisQuarter:
         getExpenseForQuarter.data?.getExpensesForQuarter
           ?.percentageIncreaseInPendingExpensesThisQuarter,
@@ -87,7 +87,7 @@ const ExpenseMetricsCard3: React.FC<MetricsProps> = ({ filter }) => {
     return {
       totalPendingExpenseAmountThisYear:
         getExpenseForYear.data?.getExpensesForYear
-          ?.totalPendingExpenseAmountThisYear,
+          ?.totalPendingExpenseAmountThisYear / 100,
       percentageIncreaseInPendingExpenseThisYear:
         getExpenseForYear.data?.getExpensesForYear
           ?.percentageIncreaseInPendingExpensesThisYear,

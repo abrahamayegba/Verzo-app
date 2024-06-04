@@ -182,7 +182,7 @@ const AddMerchantInvoice = () => {
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
             <p className=" text-[28px] text-primary-black ">
-              Expense #{expenseReference}
+              Expense {expenseReference}
             </p>
             <p className=" text-primary-greytext font-light text-lg">
               Upload the merchant invoice linked to this expense
@@ -219,7 +219,7 @@ const AddMerchantInvoice = () => {
               </div>
               <div className=" flex flex-col">
                 <p className=" text-xl text-primary-black">
-                  Expense #{expenseReference}
+                  Expense {expenseReference}
                 </p>
                 <p className=" text-lg text-primary-greytext font-light">
                   {expense?.description}

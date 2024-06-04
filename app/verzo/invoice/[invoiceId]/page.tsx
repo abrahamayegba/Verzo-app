@@ -5,7 +5,6 @@ import React from "react";
 import Image from "next/image";
 import MainLoader from "@/components/loading/MainLoader";
 import Verzologoblue from "@/components/ui/icons/Verzologoblue";
-import Link from "next/link";
 
 const InvoiceDetailPage = ({ params }: any) => {
   const saleId = params?.invoiceId;
@@ -40,7 +39,6 @@ const InvoiceDetailPage = ({ params }: any) => {
   const businessName = sales?.business?.businessName;
   const businessEmail = sales?.business?.businessEmail;
   const businessLogo = sales?.business?.logo;
-  const country = "Nigeria";
   const customerName = sales?.invoice?.customer?.name;
   const customerEmail = sales?.invoice?.customer?.email;
   const transactionDate = sales?.transactionDate;
@@ -94,7 +92,7 @@ const InvoiceDetailPage = ({ params }: any) => {
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>Invoice</p>
               <p className=" text-primary-black font-normal">
-                #{sales?.reference}
+                {sales?.reference}
               </p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
@@ -147,25 +145,8 @@ const InvoiceDetailPage = ({ params }: any) => {
               </tbody>
             </table>
           </div>
-          <div className=" flex justify-between items-center mt-3">
-            <div className=" text-sm text-[#c4c4c4] max-w-[250px] flex flex-col gap-y-2">
-              <p>Thanks for your patronage</p>
-              <div className="flex">
-                Reach out to us{" "}
-                <Link href="mailto:info@verzo.com">
-                  <p className="text-primary-blue focus:underline underline-offset-2 ml-1 font-medium">
-                    info@verzo.com
-                  </p>
-                </Link>
-              </div>
-              <p>
-                Invoice created with{" "}
-                <Link href="https://alpha.verzo.app/">
-                  <span className=" text-primary-blue">Verzo</span>{" "}
-                </Link>
-              </p>
-            </div>
-            <div className=" flex flex-col text-sm text-primary-black">
+          <div className=" flex items-center mt-3">
+            <div className=" flex flex-col text-sm text-primary-black ml-auto">
               <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                 <p className=" text-primary-greytext">Sub total</p>
                 <p className=" text-base">
@@ -188,6 +169,16 @@ const InvoiceDetailPage = ({ params }: any) => {
               </div>
             </div>
           </div>
+          <div className=" flex flex-col mt-4 gap-y-1">
+            <p>Description</p>
+            <p className=" font-light text-gray-700">{sales?.description}</p>
+          </div>
+          {sales?.note && (
+            <div className=" flex flex-col my-4 gap-y-1 max-w-[600px]">
+              <p>Notes / Terms</p>
+              <p className=" font-light text-gray-700">{sales?.note}</p>
+            </div>
+          )}
         </div>
         <p className=" mt-auto text-sm text-gray-500 text-center tracking-wide">
           Thank you for your business.

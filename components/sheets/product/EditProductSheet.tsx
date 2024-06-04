@@ -3,6 +3,7 @@ import { ChevronLeft, Plus } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import ActiveProductIcon from "@/components/ui/icons/ActiveProductIcon";
 import {
+  GetProductOrServiceByBusinessDocument,
   GetProductsByBusinessDocument,
   useGetCombinedProductUnitsQuery,
   useGetProductByIdQuery,
@@ -136,7 +137,10 @@ const EditProductSheet: React.FC<EditProductProps> = ({
           productUnitId: productData.productUnitId,
           reorderLevel: parseFloat(reorderLevel),
         },
-        refetchQueries: [GetProductsByBusinessDocument],
+        refetchQueries: [
+          GetProductsByBusinessDocument,
+          GetProductOrServiceByBusinessDocument,
+        ],
       });
       onClose();
       showSuccessToast();

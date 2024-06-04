@@ -63,8 +63,6 @@ const CreatePurchase = () => {
   const [openCreateCategorySheet, setOpenCreateCategorySheet] = useState(false);
   const [purchaseDate, setPurchaseDate] = useState("");
   const [date, setDate] = React.useState<Date | null>(null);
-  const [dueDate, setDueDate] = React.useState<Date | null>(null);
-  const [openDueDate, setOpenDueDate] = React.useState(false);
   const [openIssueDate, setOpenIssueDate] = React.useState(false);
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
@@ -198,7 +196,6 @@ const CreatePurchase = () => {
   const resetFormState = () => {
     reset();
     setDate(null);
-    setDueDate(null);
     setPurchaseDate("");
     setMerchantId("");
     setPurchaseItems([]);
@@ -315,12 +312,12 @@ const CreatePurchase = () => {
       />
       <div className=" flex flex-row gap-x-6">
         <div className=" flex flex-col gap-y-[6px] w-1/2">
-          <label className="" htmlFor="issuedate">
-            Issue date
+          <label className="" htmlFor="purchasedate">
+            Purchase date
           </label>
           <Popover open={openIssueDate} onOpenChange={setOpenIssueDate}>
             <PopoverTrigger asChild>
-              <button className=" text-left text-[15px] font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
+              <button className=" text-left text-[15px] max-w-[413px] font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
                 {date ? (
                   format(date, "PPP")
                 ) : (
@@ -338,36 +335,6 @@ const CreatePurchase = () => {
                 onSelect={(date) => {
                   setDate(date!);
                   setOpenIssueDate(false);
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className=" flex flex-col gap-y-[6px] w-1/2">
-          <label className="" htmlFor="duedate">
-            Due date
-          </label>
-          <Popover open={openDueDate} onOpenChange={setOpenDueDate}>
-            <PopoverTrigger asChild>
-              <button className=" text-left text-[15px] font-normal flex items-center border border-gray-200 h-[40px] px-3 rounded-[8px]">
-                {dueDate ? (
-                  format(dueDate, "PPP")
-                ) : (
-                  <div className=" justify-between flex items-center w-full">
-                    <span className=" text-[15px]">Pick a date</span>
-                    <ChevronDown className=" w-4 h-4 text-primary-greytext" />
-                  </div>
-                )}
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-full p-0 bg-white">
-              <Calendar
-                mode="single"
-                selected={dueDate!}
-                onSelect={(dueDate) => {
-                  setDueDate(dueDate!);
-                  setOpenDueDate(false);
                 }}
                 initialFocus
               />
@@ -442,6 +409,7 @@ const CreatePurchase = () => {
           </div>
           <div className=" flex flex-row items-center gap-x-5 mt-2">
             <button
+              onClick={() => router.push("/dashboard/purchases")}
               type="button"
               className=" px-9 py-3 rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
             >
@@ -468,10 +436,6 @@ const CreatePurchase = () => {
         onClose={handleCloseCreateItemSheet}
         onItemSelected={setSideSheetCallback}
       />
-      {/* <ViewPurchaseSheet
-        open={openViewPurchaseSheet}
-        onClose={handleCloseViewPurchaseSheet}
-      /> */}
       <CreateMerchantSheet
         open={openMerchantSheet}
         onClose={handleCloseMerchantSheet}

@@ -19,7 +19,7 @@ const PurchaseDashboardTotalYearlyGraph = () => {
     if (!active || !payload) return null;
     const month = payload[0]?.payload?.month;
     return (
-      <div className="w-[190px] rounded-tremor-default border border-tremor-border bg-tremor-background p-2 ml-[280px] mt-[-150px] text-tremor-default shadow-tremor-dropdown">
+      <div className="w-[190px] rounded-tremor-default border border-tremor-border bg-tremor-background p-2 ml-[200px] mt-[-150px] text-tremor-default shadow-tremor-dropdown">
         <div className="font-medium text-tremor-content-emphasis ml-1 mb-1">
           {month}
         </div>
@@ -41,7 +41,7 @@ const PurchaseDashboardTotalYearlyGraph = () => {
                 {new Intl.NumberFormat("en-NG", {
                   style: "currency",
                   currency: "NGN",
-                }).format(category.value)}
+                }).format(category.value / 100)}
               </p>
             </div>
           </div>

@@ -86,7 +86,7 @@ const Services = () => {
                 onClick={handleCreateButtonClick}
                 className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white"
               >
-                Add service
+                Add Service
                 <PlusCircle className=" w-5 h-5" />
               </button>
             </div>

@@ -164,7 +164,7 @@ const RecordSaleExpense = () => {
         </Link>
         <div className=" flex flex-col gap-y-[4px] mt-9">
           <p className=" text-[30px] text-primary-black ">
-            Invoice #{sales?.reference}{" "}
+            Invoice {sales?.reference}{" "}
           </p>
           <p className=" text-primary-greytext font-light text-lg">
             Record the sale expenses for this invoice

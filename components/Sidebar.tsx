@@ -85,13 +85,13 @@ const sidebarItems = [
     text: "Products",
     path: "/dashboard/products",
   },
-  {
-    id: 7,
-    icon: <ServiceIcon />,
-    activeicon: <ActiveServiceIcon />,
-    text: "Services",
-    path: "/dashboard/services",
-  },
+  // {
+  //   id: 7,
+  //   icon: <ServiceIcon />,
+  //   activeicon: <ActiveServiceIcon />,
+  //   text: "Services",
+  //   path: "/dashboard/services",
+  // },
 ];
 
 const Sidebar = () => {

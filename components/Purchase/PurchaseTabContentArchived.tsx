@@ -129,7 +129,7 @@ const PurchaseTabContentArchived: React.FC<PurchaseTabContentArchivedProps> = ({
                     checked={selectedRows.includes(purchase?.id!)}
                     onCheckedChange={() => handleRowSelect(purchase?.id!)}
                   />
-                  #{purchase?.reference}
+                  {purchase?.reference}
                 </TableCell>
                 <TableCell className=" text-primary-greytext">
                   {purchase?.transactionDate

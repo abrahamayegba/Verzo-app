@@ -28,12 +28,6 @@ import {
   useMakePurchasePaymentMutation,
   useViewBusinessAccountStatementQuery,
 } from "@/src/generated/graphql";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { IoReceiptOutline } from "react-icons/io5";
 import { IoIosLink } from "react-icons/io";
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
@@ -156,11 +150,14 @@ const AddPurchasePayment = () => {
       duration: 3000,
     });
   };
+  const handleCloseViewPurchaseSheet = () => {
+    setOpenViewPurchaseSheet(false);
+  };
   const handleTransactionSelect = (transaction: any) => {
     setOpenTransactionsModal(false);
     setTransactionId(transaction?.id);
     setSelectedTransaction(transaction);
-    setTransactionAmount(transaction.amount);
+    setTransactionAmount(transaction.cardTransaction.merchantAmount);
     setTransactionDate(transaction.transactionDate);
     const transactionDate = new Date(transaction.transactionDate);
     const transactionDateWithoutTime = new Date(
@@ -245,7 +242,7 @@ const AddPurchasePayment = () => {
           sudoTransactionId: selectedTab === 2 ? transactionId : null,
           file: uploadedFiles[0]?.url || null,
           transactionDate: formattedPurchaseDate,
-          total: amount!,
+          total: amount * 100!,
           description: getValues("description"),
         },
         refetchQueries: [
@@ -279,7 +276,7 @@ const AddPurchasePayment = () => {
           </Link>
           <div className=" flex flex-col gap-y-[4px] mt-9">
             <p className=" text-[28px] text-primary-black ">
-              Purchase #{purchase?.reference}{" "}
+              Purchase {purchase?.reference}{" "}
             </p>
             <p className=" text-primary-greytext font-light text-lg">
               Record the payment process for this purchase
@@ -319,7 +316,7 @@ const AddPurchasePayment = () => {
               </div>
               <div className=" flex flex-col">
                 <p className=" text-xl text-primary-black">
-                  Purchase #{purchase?.reference}
+                  Purchase {purchase?.reference}
                 </p>
                 <p className=" text-lg text-primary-greytext font-light">
                   {purchase?.description}
@@ -484,15 +481,15 @@ const AddPurchasePayment = () => {
                               <div className=" h-[320px] mt-1 flex flex-col overflow-y-scroll gap-y-1">
                                 {filteredTransactions?.map(
                                   (transaction) =>
-                                    transaction?.type === "Credit" && (
+                                    transaction?.type === "Debit" && (
                                       <button
-                                        className=" flex flex-row gap-x-5 justify-between text-start items-start border-b border-b-gray-200 py-2 px-1 hover:bg-gray-100 cursor-pointer"
+                                        className=" flex flex-row gap-x-8 justify-between text-start items-start border-b border-b-gray-200 py-2 px-1 hover:bg-gray-100 cursor-pointer"
                                         key={transaction?.id}
                                         onClick={() =>
                                           handleTransactionSelect(transaction)
                                         }
                                       >
-                                        <div className=" flex flex-col gap-y-1">
+                                        <div className=" flex flex-col gap-y-1 max-w-[350px]">
                                           <p className=" font-medium text-gray-700">
                                             {transaction?.narration}
                                           </p>
@@ -508,15 +505,27 @@ const AddPurchasePayment = () => {
                                             })}
                                           </p>
                                         </div>
-                                        <p className=" font-medium mt-1 text-[18px] text-gray-800">
-                                          {transaction?.amount?.toLocaleString(
-                                            "en-NG",
-                                            {
+                                        <div className=" flex flex-col gap-y-1">
+                                          <p className=" font-medium mt-1 text-[18px] text-gray-800 min-w-[150px] text-end">
+                                            {(
+                                              transaction?.cardTransaction
+                                                ?.merchantAmount / 100
+                                            )?.toLocaleString("en-NG", {
                                               style: "currency",
                                               currency: "NGN",
-                                            }
-                                          )}
-                                        </p>
+                                            })}
+                                          </p>
+                                          <p className=" text-end text-gray-600 font-light">
+                                            Fee:
+                                            {(
+                                              transaction?.cardTransaction
+                                                ?.fee / 100
+                                            )?.toLocaleString("en-NG", {
+                                              style: "currency",
+                                              currency: "NGN",
+                                            })}
+                                          </p>
+                                        </div>
                                       </button>
                                     )
                                 )}
@@ -541,7 +550,7 @@ const AddPurchasePayment = () => {
                         Transaction amount
                       </label>
                       <p className="border border-gray-100 bg-gray-50 cursor-not-allowed rounded-md px-3 py-2 w-full">
-                        {transactionAmount.toLocaleString("en-NG", {
+                        {(transactionAmount / 100).toLocaleString("en-NG", {
                           style: "currency",
                           currency: "NGN",
                         })}
@@ -642,10 +651,11 @@ const AddPurchasePayment = () => {
           </div>
         </div>
       </form>
-      {/* <ViewPurchaseSheet
+      <ViewPurchaseSheet
         open={openViewPurchaseSheet}
+        purchaseId={purchaseId!}
         onClose={handleCloseViewPurchaseSheet}
-      /> */}
+      />
     </>
   );
 };

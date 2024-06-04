@@ -12,19 +12,11 @@ import RecentMetricEmptyState from "./emptystates/RecentMetricEmptyState";
 import RecentInvoiceEmptyIcon from "./ui/icons/RecentInvoiceEmptyIcon";
 import localStorage from "local-storage-fallback";
 import Link from "next/link";
-import SendInvoice from "./modals/invoice/SendInvoice";
-import useModal from "@/app/hooks/useModal";
 
 const RecentInvoices = () => {
   const storedBusinessId = JSON.parse(
     localStorage.getItem("businessId") || "[]"
   );
-  const [selectedId, setSelectedId] = useState("");
-  const {
-    isOpen: isSendModalOpen,
-    openModal: openSendModal,
-    closeModal: closeSendModal,
-  } = useModal();
 
   const businessId = storedBusinessId[0] || "";
   const getSalesByBusiness = useGetSaleByBusinessQuery({

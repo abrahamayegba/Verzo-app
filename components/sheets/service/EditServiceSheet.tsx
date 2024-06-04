@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ChevronLeft, Plus } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
+  GetProductOrServiceByBusinessDocument,
   GetServiceByBusinessDocument,
   useGetCombinesServiceUnitsQuery,
   useGetServiceByIdQuery,
@@ -127,7 +128,10 @@ const EditServiceSheet: React.FC<EditServiceProps> = ({
           price: serviceData.price * 100,
           serviceUnitId: serviceData.serviceUnitId,
         },
-        refetchQueries: [GetServiceByBusinessDocument],
+        refetchQueries: [
+          GetServiceByBusinessDocument,
+          GetProductOrServiceByBusinessDocument,
+        ],
       });
       onClose();
       showSuccessToast();

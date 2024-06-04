@@ -3,6 +3,7 @@ query GetSaleById($saleId: String!) {
     id
     description
     reference
+    note
     business {
       businessName
       businessEmail

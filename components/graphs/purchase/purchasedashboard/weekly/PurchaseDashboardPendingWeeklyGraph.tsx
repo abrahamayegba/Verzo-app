@@ -20,7 +20,7 @@ const PurchaseDashboardPendingWeeklyGraph = () => {
     const { payload, active } = props;
     if (!active || !payload) return null;
     return (
-      <div className="w-[190px] rounded-tremor-default border border-tremor-border bg-tremor-background p-2 ml-[280px] mt-[-150px] text-tremor-default shadow-tremor-dropdown">
+      <div className="w-[190px] rounded-tremor-default border border-tremor-border bg-tremor-background p-2 ml-[220px] mt-[-150px] text-tremor-default shadow-tremor-dropdown">
         <div className="font-medium text-tremor-content-emphasis ml-1 mb-1">
           {new Date(payload[0]?.payload?.date).toDateString()}
         </div>
@@ -42,7 +42,7 @@ const PurchaseDashboardPendingWeeklyGraph = () => {
                 {new Intl.NumberFormat("en-NG", {
                   style: "currency",
                   currency: "NGN",
-                }).format(category.value)}
+                }).format(category.value / 100)}
               </p>
             </div>
           </div>

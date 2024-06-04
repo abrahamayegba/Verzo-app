@@ -4,8 +4,8 @@ const ServiceIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="22"
+      height="22"
       viewBox="0 0 24 24"
       fill="none"
       style={{ opacity: 0.6 }} // Adjust the value as needed (0.0 to 1.0)

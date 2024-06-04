@@ -25,11 +25,22 @@ query GetProductOrServiceByBusiness(
           id
           unitName
         }
+        businessProductUnit {
+          id
+          unitName
+        }
+        productsInventory {
+          quantity
+        }
       }
       service {
         name
         price
         serviceUnit {
+          id
+          unitName
+        }
+        businessServiceUnit {
           id
           unitName
         }

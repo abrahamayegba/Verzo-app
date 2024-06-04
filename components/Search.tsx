@@ -158,7 +158,7 @@ const SearchBar = () => {
               <div key={index}>
                 {collectionResult.map((hit) => (
                   <Link
-                    href={`/dashboard/services?searchResult=${hit.document.id}`}
+                    href={`/dashboard/products?searchResult=${hit.document.id}`}
                     key={hit.document.id}
                     className="flex cursor-pointer flex-row justify-between items-center border-b border-b-gray-100 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                     onClick={() => setShowDropdown(false)}

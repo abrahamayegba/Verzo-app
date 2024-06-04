@@ -57,6 +57,7 @@ interface InvoiceItem {
 }
 type FormData = {
   description: string;
+  note: string;
 };
 
 interface Expense {
@@ -638,15 +639,18 @@ const CreateInvoice = () => {
         ))}
         <div className=" flex flex-col mt-2">
           <p className=" text-lg text-primary-black">Description</p>
-          <p className=" text-primary-greytext mt-[2px]">
-            Say more to your customer
-          </p>
+          <p className=" text-primary-greytext">Say more to your customer</p>
           <Textarea
             {...register("description")}
             id="description"
             required
-            className=" mt-5"
+            className=" mt-3"
           />
+        </div>
+        <div className=" flex flex-col">
+          <p className=" text-lg text-primary-black">Note</p>
+          <p className=" text-primary-greytext">Add notes / payment details</p>
+          <Textarea {...register("note")} id="notes" className=" mt-3" />
         </div>
         <div className=" flex flex-row items-center gap-x-5 mt-2">
           <button

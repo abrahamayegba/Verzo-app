@@ -22,7 +22,6 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
       purchaseId: purchaseId!,
     },
   });
-  const businessId = getPurchaseById.data?.getPurchaseById?.businessId;
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const businesses =
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses;
@@ -34,21 +33,20 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
     id: item?.id,
     itemName: item?.description,
     quantity: item?.quantity,
-    price: item?.price,
+    price: item?.price / 100,
   }));
 
   const merchantName = purchase?.merchant?.name;
   const merchantEmail = purchase?.merchant?.email;
-  const createdDate = purchase?.createdAt;
   const transactionDate = purchase?.transactionDate;
-  const subtotal = purchase?.total;
+  const subtotal = purchase?.total / 100;
   const total = subtotal;
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
         <SheetContent
           side="bottom"
-          className=" w-[679px] min-h-[700px] mx-auto py-[40px] px-[32px] rounded-[16px] overflow-y-scroll focus:outline-none"
+          className=" w-[679px] max-h-[700px] mx-auto py-[40px] px-[32px] rounded-[16px] overflow-y-scroll focus:outline-none"
         >
           <span>
             <Verzologoblue />
@@ -57,15 +55,11 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
             <div className="grid grid-cols-3 pt-5">
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>Purchase</p>
-                <p className=" text-primary-black font-normal">#001</p>
-              </div>
-              <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
-                <p>Created date</p>
                 <p className=" text-primary-black font-normal">
-                  {createdDate ? new Date(createdDate).toDateString() : ""}
+                  {purchase?.reference}
                 </p>
               </div>
-              <div className=" text-primary-greytext col-span-1 text-end font-light flex flex-col gap-y-2">
+              <div className=" text-primary-greytext col-span-1 text-start font-light flex flex-col gap-y-2">
                 <p>Transaction date</p>
                 <p className=" text-primary-black font-normal">
                   {" "}
@@ -107,7 +101,7 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
                       <td className=" py-4">{item?.itemName}</td>
                       <td className=" text-end py-4">{item?.quantity}</td>
                       <td className=" text-end py-4">
-                        ₦{(item?.price / 100)?.toLocaleString()}
+                        ₦{item?.price?.toLocaleString()}
                       </td>
                     </tr>
                   ))}
@@ -115,21 +109,11 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
               </table>
             </div>
             <div className=" flex justify-between items-center mt-3">
-              <div className=" text-sm text-[#c4c4c4] max-w-[250px] flex flex-col gap-y-2">
-                <p>Thanks for your patronage</p>
-                <p>
-                  Reach out to us{" "}
-                  <span className=" text-primary-blue focus:underline underline-offset-2 ml-1">
-                    info@verzo.io
-                  </span>
-                </p>
-                <p>Purchase created with Verzo</p>
-              </div>
-              <div className=" flex flex-col text-sm text-primary-black">
+              <div className=" flex flex-col text-sm text-primary-black ml-auto">
                 <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
                   <p className=" text-primary-greytext">Sub total</p>
                   <p className=" text-base">
-                    {(subtotal / 100)?.toLocaleString("en-NG", {
+                    {subtotal?.toLocaleString("en-NG", {
                       style: "currency",
                       currency: "NGN",
                       minimumFractionDigits: 0,
@@ -139,7 +123,7 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
                 <div className=" flex justify-between py-3 items-center">
                   <p className=" text-primary-greytext">Amount due</p>
                   <p className=" text-base">
-                    {(total / 100)?.toLocaleString("en-NG", {
+                    {total?.toLocaleString("en-NG", {
                       style: "currency",
                       currency: "NGN",
                       minimumFractionDigits: 0,
@@ -147,6 +131,12 @@ const ViewPurchaseSheet: React.FC<ViewPurchaseProps> = ({
                   </p>
                 </div>
               </div>
+            </div>
+            <div className=" flex flex-col mt-4 gap-y-1">
+              <p>Description</p>
+              <p className=" font-light text-gray-700">
+                {purchase?.description}
+              </p>
             </div>
           </div>
         </SheetContent>
