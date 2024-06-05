@@ -246,10 +246,12 @@ export type BusinessSudoCard = {
 export type Card = {
   __typename?: 'Card';
   address?: Maybe<Scalars['String']['output']>;
+  archived?: Maybe<Scalars['Boolean']['output']>;
   business?: Maybe<Business>;
   businessId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   cvv?: Maybe<Scalars['String']['output']>;
+  default?: Maybe<Scalars['Boolean']['output']>;
   expiry?: Maybe<Scalars['String']['output']>;
   first6Digits?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
@@ -3975,6 +3977,7 @@ export type Query = {
   getSubscriptionsByPlanId: Array<Maybe<Subscription>>;
   getTaskTypes?: Maybe<Array<Maybe<TaskType>>>;
   getUserById: User;
+  getUserCards?: Maybe<Array<Maybe<Card>>>;
   getUserCardsByBusiness?: Maybe<Array<Maybe<BusinessSudoCard>>>;
   getUserInvites: Array<Maybe<UserInvite>>;
   getUserInvitesByBusiness: Array<Maybe<UserInvite>>;
@@ -4697,6 +4700,11 @@ export type QueryGetSubscriptionsByPlanIdArgs = {
 
 export type QueryGetUserByIdArgs = {
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetUserCardsArgs = {
+  businessId: Scalars['String']['input'];
 };
 
 
@@ -7358,6 +7366,13 @@ export type GetUserCardsByBusinessQueryVariables = Exact<{
 
 
 export type GetUserCardsByBusinessQuery = { __typename?: 'Query', getUserCardsByBusiness?: Array<{ __typename?: 'BusinessSudoCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null } | null> | null };
+
+export type GetUserCardsQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetUserCardsQuery = { __typename?: 'Query', getUserCards?: Array<{ __typename?: 'Card', first6Digits?: string | null, last4Digits?: string | null, type?: string | null, id: string, default?: boolean | null, expiry?: string | null } | null> | null };
 
 export type InvoiceAndExpenseGraphMonthlyQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -14161,6 +14176,51 @@ export type GetUserCardsByBusinessQueryHookResult = ReturnType<typeof useGetUser
 export type GetUserCardsByBusinessLazyQueryHookResult = ReturnType<typeof useGetUserCardsByBusinessLazyQuery>;
 export type GetUserCardsByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetUserCardsByBusinessSuspenseQuery>;
 export type GetUserCardsByBusinessQueryResult = Apollo.QueryResult<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>;
+export const GetUserCardsDocument = gql`
+    query getUserCards($businessId: String!) {
+  getUserCards(businessId: $businessId) {
+    first6Digits
+    last4Digits
+    type
+    id
+    default
+    expiry
+  }
+}
+    `;
+
+/**
+ * __useGetUserCardsQuery__
+ *
+ * To run a query within a React component, call `useGetUserCardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserCardsQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetUserCardsQuery(baseOptions: Apollo.QueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
+      }
+export function useGetUserCardsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
+        }
+export function useGetUserCardsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
+        }
+export type GetUserCardsQueryHookResult = ReturnType<typeof useGetUserCardsQuery>;
+export type GetUserCardsLazyQueryHookResult = ReturnType<typeof useGetUserCardsLazyQuery>;
+export type GetUserCardsSuspenseQueryHookResult = ReturnType<typeof useGetUserCardsSuspenseQuery>;
+export type GetUserCardsQueryResult = Apollo.QueryResult<GetUserCardsQuery, GetUserCardsQueryVariables>;
 export const InvoiceAndExpenseGraphMonthlyDocument = gql`
     query InvoiceAndExpenseGraphMonthly($businessId: String!, $monthly: Boolean) {
   invoiceAndExpenseGraphMonthly(businessId: $businessId, monthly: $monthly) {

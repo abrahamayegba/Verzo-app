@@ -1,0 +1,10 @@
+query getUserCards($businessId: String!) {
+  getUserCards(businessId: $businessId) {
+    first6Digits
+    last4Digits
+    type
+    id
+    default
+    expiry
+  }
+}

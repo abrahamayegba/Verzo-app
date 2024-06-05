@@ -16,6 +16,31 @@ import Image from "next/image";
 import VerveCardIcon from "@/components/ui/icons/VerveCardIcon";
 import { isAuthenticated } from "@/lib/auth";
 
+interface Transaction {
+  id: string;
+  amount: number;
+  fee: number;
+  vat: number;
+  currency: string;
+  type: string;
+  merchantAmount: number;
+  merchantCurrency: string;
+  authorization: {
+    authorizationFeeDetails: {
+      amount: number;
+      description: string;
+    }[];
+    requestsHistory: {
+      amount: number;
+      currency: string;
+      approved: boolean;
+      reason: string;
+    }[];
+  };
+  createdAt: string; // Assuming date is in ISO format
+  updatedAt: string;
+}
+
 const ViewCard = () => {
   const cardParams = useSearchParams();
   const router = useRouter();
@@ -75,6 +100,61 @@ const ViewCard = () => {
         console.error("Failed to copy:", error);
       });
   };
+
+  const calculateSpentAmount = (
+    transactions: Transaction[],
+    interval: string
+  ): number => {
+    const now = new Date();
+    const filteredTransactions = transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.createdAt);
+
+      if (interval === "daily") {
+        return (
+          transactionDate.getDate() === now.getDate() &&
+          transactionDate.getMonth() === now.getMonth() &&
+          transactionDate.getFullYear() === now.getFullYear()
+        );
+      }
+
+      if (interval === "weekly") {
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay());
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        return transactionDate >= weekStart && transactionDate <= weekEnd;
+      }
+
+      if (interval === "monthly") {
+        return (
+          transactionDate.getMonth() === now.getMonth() &&
+          transactionDate.getFullYear() === now.getFullYear()
+        );
+      }
+
+      return false;
+    });
+    return filteredTransactions.reduce(
+      (sum, transaction) => sum + Math.abs(transaction.merchantAmount),
+      0
+    );
+  };
+
+  const [spentAmount, setSpentAmount] = useState<number>(0);
+  useEffect(() => {
+    if (spendLimit?.length > 0) {
+      const currentLimit = spendLimit[0]; // Assuming one limit for simplicity
+      const validTransactions = transactions.filter(
+        (transaction): transaction is Transaction => transaction !== null
+      );
+      const totalSpent = calculateSpentAmount(
+        validTransactions,
+        currentLimit?.interval!
+      );
+      setSpentAmount(totalSpent);
+    }
+  }, [spendLimit, transactions]);
+  const currentLimit = spendLimit?.length > 0 ? spendLimit[0] : null;
 
   if (loading || getTransactions.loading) {
     return <MainLoader />;
@@ -192,34 +272,31 @@ const ViewCard = () => {
             <div className=" w-1/2 border border-gray-200 rounded-lg px-6 flex flex-col justify-center gap-y-5">
               <div className=" flex flex-row justify-between">
                 <p className=" font-medium text-gray-600"> Spending limit</p>
-                {/* <DropdownMenu>
-                  <DropdownMenuTrigger className=" focus:outline-none">
-                    <FaEllipsisVertical className=" text-gray-500" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className=" bg-white w-[40px]">
-                    <DropdownMenuItem className=" cursor-pointer hover:bg-gray-100">
-                      Daily limit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className=" cursor-pointer hover:bg-gray-100">
-                      Monthly limit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className=" cursor-pointer hover:bg-gray-100">
-                      Yearly limit
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu> */}
               </div>
               <div className=" flex flex-col gap-y-3">
                 <div className=" flex flex-col gap-y-1">
-                  <Progress className=" h-[10px]" value={1} />
-                  <p className=" text-gray-500">
-                    ₦0 spent of ₦
-                    {spendLimit?.map((limit) => limit?.amount / 100)}
+                  <Progress
+                    className="h-[10px]"
+                    value={
+                      (spentAmount / (currentLimit ? currentLimit.amount : 1)) *
+                      100
+                    }
+                  />
+                  <p className="text-gray-500">
+                    ₦
+                    {(spentAmount / 100).toLocaleString("en-NG", {
+                      maximumFractionDigits: 2,
+                    })}{" "}
+                    spent of ₦
+                    {(currentLimit
+                      ? currentLimit.amount / 100
+                      : 0
+                    ).toLocaleString("en-NG", { maximumFractionDigits: 2 })}
                   </p>
                 </div>
-                <p className=" text-gray-500">
-                  <span className=" capitalize">
-                    {spendLimit.map((limit) => limit?.interval)}
+                <p className="text-gray-500">
+                  <span className="capitalize">
+                    {currentLimit ? currentLimit.interval : ""}
                   </span>{" "}
                   transaction limit
                 </p>
@@ -269,18 +346,15 @@ const ViewCard = () => {
               </div>
             </div>
             <div className=" min-h-[80px] gap-x-8 flex flex-row py-2 items-center px-1 mt-7 ">
-              <div className="  gap-y-[6px] justify-center items-center flex flex-col">
-                <span className=" px-4 py-3 rounded-lg border border-gray-200">
-                  <PlusCircle className=" w-5 h-5 text-primary-blue" />
-                </span>
-                <p className=" text-sm ">Withdraw</p>
-              </div>
-              <div className="  gap-y-[6px] justify-center items-center flex flex-col">
+              <button
+                disabled
+                className="  gap-y-[6px] disabled:opacity-50 disabled:cursor-not-allowed justify-center items-center flex flex-col"
+              >
                 <span className=" px-4 py-3 rounded-lg border border-gray-200">
                   <Lock className=" w-5 h-5 text-primary-blue" />
                 </span>
-                <p className=" text-sm ">Freeze</p>
-              </div>
+                <p className=" text-sm ">Lock</p>
+              </button>
             </div>
           </div>
         </div>
