@@ -101,7 +101,7 @@ export type Authorization = {
 export type AuthorizationFeeDetails = {
   __typename?: 'AuthorizationFeeDetails';
   amount: Scalars['BigInt']['output'];
-  authorization?: Maybe<SudoCardAuthorization>;
+  authorization?: Maybe<BankCardAuthorization>;
   authorizationId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   currency: Scalars['String']['output'];
@@ -117,6 +117,157 @@ export type BvnVerificationResponse = {
   statusCode?: Maybe<Scalars['Int']['output']>;
 };
 
+export type BankAccount = {
+  __typename?: 'BankAccount';
+  accountBalance: Scalars['BigInt']['output'];
+  accountName: Scalars['String']['output'];
+  accountNumber: Scalars['String']['output'];
+  accountProduct?: Maybe<Scalars['String']['output']>;
+  accountType: Scalars['String']['output'];
+  allowOverdraft: Scalars['Boolean']['output'];
+  bankAccountTransactions?: Maybe<Array<Maybe<BankAccountTransaction>>>;
+  bookBalance: Scalars['BigInt']['output'];
+  business?: Maybe<Business>;
+  businessBankCards?: Maybe<Array<Maybe<BusinessBankCard>>>;
+  businessId: Scalars['String']['output'];
+  bvn: Scalars['String']['output'];
+  canCredit: Scalars['Boolean']['output'];
+  canDebit: Scalars['Boolean']['output'];
+  chargeStampDuty: Scalars['Boolean']['output'];
+  chargeValueAddedTax: Scalars['Boolean']['output'];
+  chargeWithHoldingTax: Scalars['Boolean']['output'];
+  client?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  currencyCode: Scalars['String']['output'];
+  customer?: Maybe<BankCustomer>;
+  customerId: Scalars['String']['output'];
+  externalReference: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  interestBalance: Scalars['BigInt']['output'];
+  interestCalculationDaysInYearType: Scalars['String']['output'];
+  interestCalculationType: Scalars['String']['output'];
+  interestCompoundingPeriod: Scalars['String']['output'];
+  interestPostingPeriod: Scalars['String']['output'];
+  isDefault: Scalars['Boolean']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  isSubAccount: Scalars['Boolean']['output'];
+  lastSyncTime?: Maybe<Scalars['DateTime']['output']>;
+  lockinPeriodFrequency: Scalars['Float']['output'];
+  lockinPeriodFrequencyType: Scalars['String']['output'];
+  minRequiredOpeningBalance: Scalars['BigInt']['output'];
+  nominalAnnualInterestRate: Scalars['Float']['output'];
+  overdraftLimit: Scalars['Float']['output'];
+  sourceId: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  withHoldingTaxBalance: Scalars['BigInt']['output'];
+};
+
+export type BankAccountTransaction = {
+  __typename?: 'BankAccountTransaction';
+  account?: Maybe<BankAccount>;
+  accountId: Scalars['String']['output'];
+  amount: Scalars['BigInt']['output'];
+  cardTransaction?: Maybe<BankCardTransaction>;
+  cardTransactionId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isCardTransaction?: Maybe<Scalars['Boolean']['output']>;
+  linked?: Maybe<Scalars['Boolean']['output']>;
+  narration: Scalars['String']['output'];
+  paymentReference: Scalars['String']['output'];
+  provider: Scalars['String']['output'];
+  providerChannel: Scalars['String']['output'];
+  sourceId: Scalars['String']['output'];
+  transactionDate: Scalars['DateTime']['output'];
+  type: Scalars['String']['output'];
+  valueDate: Scalars['DateTime']['output'];
+};
+
+export type BankCardAuthorization = {
+  __typename?: 'BankCardAuthorization';
+  amount: Scalars['BigInt']['output'];
+  approved: Scalars['Boolean']['output'];
+  authorizationFeeDetails?: Maybe<Array<Maybe<AuthorizationFeeDetails>>>;
+  authorizationMethod: Scalars['String']['output'];
+  bankCardTransaction?: Maybe<BankCardTransaction>;
+  card?: Maybe<BusinessBankCard>;
+  cardId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  currency: Scalars['String']['output'];
+  fee: Scalars['BigInt']['output'];
+  id: Scalars['String']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  merchantAmount: Scalars['BigInt']['output'];
+  merchantCurrency: Scalars['String']['output'];
+  requestsHistory?: Maybe<Array<Maybe<RequestHistory>>>;
+  sourceId: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  transactionReference?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  vat: Scalars['Float']['output'];
+};
+
+export type BankCardTransaction = {
+  __typename?: 'BankCardTransaction';
+  amount: Scalars['BigInt']['output'];
+  authorization?: Maybe<BankCardAuthorization>;
+  authorizationId: Scalars['String']['output'];
+  bankAccountTransaction?: Maybe<BankAccountTransaction>;
+  card?: Maybe<BusinessBankCard>;
+  cardId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  currency: Scalars['String']['output'];
+  fee: Scalars['BigInt']['output'];
+  id: Scalars['String']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  linked?: Maybe<Scalars['Boolean']['output']>;
+  merchantAmount: Scalars['BigInt']['output'];
+  merchantCurrency: Scalars['String']['output'];
+  requestsHistory?: Maybe<Array<Maybe<RequestHistory>>>;
+  sourceId: Scalars['String']['output'];
+  transactionReference: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  vat: Scalars['Float']['output'];
+};
+
+export type BankCustomer = {
+  __typename?: 'BankCustomer';
+  bankAccount?: Maybe<BankAccount>;
+  bankDocument?: Maybe<BankDocument>;
+  billingAddressCity?: Maybe<Scalars['String']['output']>;
+  billingAddressCountry?: Maybe<Scalars['String']['output']>;
+  billingAddressLine1: Scalars['String']['output'];
+  billingAddressLine2?: Maybe<Scalars['String']['output']>;
+  billingAddressPostalCode?: Maybe<Scalars['String']['output']>;
+  billingAddressState?: Maybe<Scalars['String']['output']>;
+  business?: Maybe<Business>;
+  businessId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  individualDob: Scalars['DateTime']['output'];
+  individualIdentityNumber: Scalars['String']['output'];
+  individualIdentityType: Scalars['String']['output'];
+  sourceId: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type BankDocument = {
+  __typename?: 'BankDocument';
+  addressVerificationUrl: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  customer: BankCustomer;
+  customerId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  idBackUrl: Scalars['String']['output'];
+  idFrontUrl: Scalars['String']['output'];
+  incorporationCertificateUrl: Scalars['String']['output'];
+  sourceId: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
 export type BillingPlan = {
   __typename?: 'BillingPlan';
   createdAt?: Maybe<Scalars['Date']['output']>;
@@ -127,6 +278,9 @@ export type BillingPlan = {
 
 export type Business = {
   __typename?: 'Business';
+  bankAccount?: Maybe<BankAccount>;
+  bankCustomer?: Maybe<BankCustomer>;
+  businessBankCards?: Maybe<Array<Maybe<BusinessBankCard>>>;
   businessCategory?: Maybe<BusinessCategory>;
   businessCategoryId: Scalars['String']['output'];
   businessEmail?: Maybe<Scalars['String']['output']>;
@@ -134,7 +288,6 @@ export type Business = {
   businessMobile?: Maybe<Scalars['String']['output']>;
   businessName: Scalars['String']['output'];
   businessNotifications?: Maybe<BusinessNotification>;
-  businessSudoCards?: Maybe<Array<Maybe<BusinessSudoCard>>>;
   cards?: Maybe<Array<Maybe<Card>>>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   createdBy?: Maybe<User>;
@@ -142,11 +295,40 @@ export type Business = {
   id: Scalars['String']['output'];
   logo?: Maybe<Scalars['String']['output']>;
   settlementAccounts?: Maybe<Array<Maybe<SettlementAccount>>>;
-  sudoAccount?: Maybe<SudoAccount>;
-  sudoCustomer?: Maybe<SudoCustomer>;
   tasks?: Maybe<Array<Maybe<Task>>>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
   userBusinesses?: Maybe<Array<Maybe<UserBusiness>>>;
+};
+
+export type BusinessBankCard = {
+  __typename?: 'BusinessBankCard';
+  account?: Maybe<BankAccount>;
+  accountId: Scalars['String']['output'];
+  authorizationLastSyncTime?: Maybe<Scalars['DateTime']['output']>;
+  bankCardAuthorizations?: Maybe<Array<Maybe<BankCardAuthorization>>>;
+  bankCardTransactions?: Maybe<Array<Maybe<BankCardTransaction>>>;
+  brand?: Maybe<Scalars['String']['output']>;
+  business?: Maybe<Business>;
+  businessId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  currency?: Maybe<Scalars['String']['output']>;
+  disposable?: Maybe<Scalars['Boolean']['output']>;
+  expiryDate?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  is2FAEnrolled?: Maybe<Scalars['Boolean']['output']>;
+  isDefaultPINChanged?: Maybe<Scalars['Boolean']['output']>;
+  isDeleted?: Maybe<Scalars['Boolean']['output']>;
+  maskedPan?: Maybe<Scalars['String']['output']>;
+  refundAccount?: Maybe<Scalars['String']['output']>;
+  sourceId: Scalars['String']['output'];
+  spendingControl?: Maybe<SpendingControl>;
+  spendingLimits?: Maybe<Array<Maybe<SpendingLimit>>>;
+  status?: Maybe<Scalars['String']['output']>;
+  transactionLastSyncTime?: Maybe<Scalars['DateTime']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+  userId: Scalars['String']['output'];
 };
 
 export type BusinessCategory = {
@@ -210,37 +392,6 @@ export type BusinessServiceUnit = {
   id?: Maybe<Scalars['String']['output']>;
   unitName?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Date']['output']>;
-};
-
-export type BusinessSudoCard = {
-  __typename?: 'BusinessSudoCard';
-  account?: Maybe<SudoAccount>;
-  accountId: Scalars['String']['output'];
-  authorizationLastSyncTime?: Maybe<Scalars['DateTime']['output']>;
-  brand?: Maybe<Scalars['String']['output']>;
-  business?: Maybe<Business>;
-  businessId: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  currency?: Maybe<Scalars['String']['output']>;
-  disposable?: Maybe<Scalars['Boolean']['output']>;
-  expiryDate?: Maybe<Scalars['String']['output']>;
-  id: Scalars['String']['output'];
-  is2FAEnrolled?: Maybe<Scalars['Boolean']['output']>;
-  isDefaultPINChanged?: Maybe<Scalars['Boolean']['output']>;
-  isDeleted?: Maybe<Scalars['Boolean']['output']>;
-  maskedPan?: Maybe<Scalars['String']['output']>;
-  refundAccount?: Maybe<Scalars['String']['output']>;
-  sourceId: Scalars['String']['output'];
-  spendingControl?: Maybe<SpendingControl>;
-  spendingLimits?: Maybe<Array<Maybe<SpendingLimit>>>;
-  status?: Maybe<Scalars['String']['output']>;
-  sudoCardAuthorizations?: Maybe<Array<Maybe<SudoCardAuthorization>>>;
-  sudoCardTransactions?: Maybe<Array<Maybe<SudoCardTransaction>>>;
-  transactionLastSyncTime?: Maybe<Scalars['DateTime']['output']>;
-  type?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-  user: User;
-  userId: Scalars['String']['output'];
 };
 
 export type Card = {
@@ -369,6 +520,56 @@ export type CreateAccountCategoryType = {
 export type CreateAddOnOption = {
   addOnName: Scalars['String']['input'];
   addOnPrice: Scalars['BigInt']['input'];
+};
+
+export type CreateBankAccountTransaction = {
+  accountId: Scalars['String']['input'];
+  amount: Scalars['BigInt']['input'];
+  cardTransactionId?: InputMaybe<Scalars['String']['input']>;
+  isCardTransaction?: InputMaybe<Scalars['Boolean']['input']>;
+  narration: Scalars['String']['input'];
+  paymentReference: Scalars['String']['input'];
+  provider: Scalars['String']['input'];
+  providerChannel: Scalars['String']['input'];
+  sourceId: Scalars['String']['input'];
+  transactionDate: Scalars['Date']['input'];
+  type: Scalars['String']['input'];
+  valueDate: Scalars['Date']['input'];
+};
+
+export type CreateBankCardAuthorization = {
+  amount: Scalars['BigInt']['input'];
+  approved: Scalars['Boolean']['input'];
+  authorizationMethod: Scalars['String']['input'];
+  cardId: Scalars['String']['input'];
+  createdAt: Scalars['String']['input'];
+  currency: Scalars['String']['input'];
+  fee: Scalars['BigInt']['input'];
+  isDeleted: Scalars['Boolean']['input'];
+  merchantAmount: Scalars['BigInt']['input'];
+  merchantCurrency: Scalars['String']['input'];
+  sourceId: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  transactionReference: Scalars['String']['input'];
+  updatedAt: Scalars['String']['input'];
+  vat: Scalars['Float']['input'];
+};
+
+export type CreateBankCardTransaction = {
+  amount: Scalars['BigInt']['input'];
+  authorizationId: Scalars['String']['input'];
+  cardId: Scalars['String']['input'];
+  createdAt: Scalars['Date']['input'];
+  currency: Scalars['String']['input'];
+  fee: Scalars['BigInt']['input'];
+  isDeleted: Scalars['Boolean']['input'];
+  merchantAmount: Scalars['BigInt']['input'];
+  merchantCurrency: Scalars['String']['input'];
+  sourceId: Scalars['String']['input'];
+  transactionReference: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+  updatedAt: Scalars['Date']['input'];
+  vat: Scalars['Float']['input'];
 };
 
 export type CreateBillingPlan = {
@@ -873,60 +1074,10 @@ export type CreateSudoAccount = {
   state: Scalars['String']['input'];
 };
 
-export type CreateSudoAccountTransaction = {
-  accountId: Scalars['String']['input'];
-  amount: Scalars['BigInt']['input'];
-  cardTransactionId?: InputMaybe<Scalars['String']['input']>;
-  isCardTransaction?: InputMaybe<Scalars['Boolean']['input']>;
-  narration: Scalars['String']['input'];
-  paymentReference: Scalars['String']['input'];
-  provider: Scalars['String']['input'];
-  providerChannel: Scalars['String']['input'];
-  sourceId: Scalars['String']['input'];
-  transactionDate: Scalars['Date']['input'];
-  type: Scalars['String']['input'];
-  valueDate: Scalars['Date']['input'];
-};
-
 export type CreateSudoCard = {
   assignedUserId?: InputMaybe<Scalars['String']['input']>;
   businessId: Scalars['String']['input'];
   spendingLimits?: InputMaybe<Array<InputMaybe<SudoCardSpendingLimits>>>;
-};
-
-export type CreateSudoCardAuthorization = {
-  amount: Scalars['BigInt']['input'];
-  approved: Scalars['Boolean']['input'];
-  authorizationMethod: Scalars['String']['input'];
-  cardId: Scalars['String']['input'];
-  createdAt: Scalars['String']['input'];
-  currency: Scalars['String']['input'];
-  fee: Scalars['BigInt']['input'];
-  isDeleted: Scalars['Boolean']['input'];
-  merchantAmount: Scalars['BigInt']['input'];
-  merchantCurrency: Scalars['String']['input'];
-  sourceId: Scalars['String']['input'];
-  status: Scalars['String']['input'];
-  transactionReference: Scalars['String']['input'];
-  updatedAt: Scalars['String']['input'];
-  vat: Scalars['Float']['input'];
-};
-
-export type CreateSudoCardTransaction = {
-  amount: Scalars['BigInt']['input'];
-  authorizationId: Scalars['String']['input'];
-  cardId: Scalars['String']['input'];
-  createdAt: Scalars['Date']['input'];
-  currency: Scalars['String']['input'];
-  fee: Scalars['BigInt']['input'];
-  isDeleted: Scalars['Boolean']['input'];
-  merchantAmount: Scalars['BigInt']['input'];
-  merchantCurrency: Scalars['String']['input'];
-  sourceId: Scalars['String']['input'];
-  transactionReference: Scalars['String']['input'];
-  type: Scalars['String']['input'];
-  updatedAt: Scalars['Date']['input'];
-  vat: Scalars['Float']['input'];
 };
 
 export type CreateUserInvite = {
@@ -1871,7 +2022,7 @@ export type Mutation = {
   createSubscriptionNewCardA?: Maybe<SeerbitStandardCheckoutResponse>;
   createSubscriptionNewCardB?: Maybe<Subscription>;
   createSubscriptionTokenized?: Maybe<Subscription>;
-  createSudoCard?: Maybe<BusinessSudoCard>;
+  createSudoCard?: Maybe<BusinessBankCard>;
   createUserInvite?: Maybe<UserInvite>;
   deleteAccountCategory?: Maybe<Scalars['Boolean']['output']>;
   deleteAccountCategoryType?: Maybe<Scalars['Boolean']['output']>;
@@ -2042,7 +2193,7 @@ export type Mutation = {
   updateServiceSaleItem?: Maybe<ServiceSaleItem>;
   updateServiceUnit?: Maybe<ServiceUnit>;
   updateSettlementAccount?: Maybe<SettlementAccount>;
-  updateSudoCard?: Maybe<BusinessSudoCard>;
+  updateSudoCard?: Maybe<BusinessBankCard>;
   updateUser?: Maybe<User>;
   updateUserInWaitlist?: Maybe<UserWaitlist>;
   uploadBusinessLogo?: Maybe<Scalars['Boolean']['output']>;
@@ -3856,9 +4007,9 @@ export type Query = {
   getBusinessTasksMobile?: Maybe<GetTaskResponse>;
   getBusinesses: Array<Maybe<Business>>;
   getBusinessesByUserId?: Maybe<GetBusinessByUser>;
-  getCardById?: Maybe<BusinessSudoCard>;
-  getCards?: Maybe<Array<Maybe<BusinessSudoCard>>>;
-  getCardsByBusiness?: Maybe<Array<Maybe<BusinessSudoCard>>>;
+  getCardById?: Maybe<BusinessBankCard>;
+  getCards?: Maybe<Array<Maybe<BusinessBankCard>>>;
+  getCardsByBusiness?: Maybe<Array<Maybe<BusinessBankCard>>>;
   getCategories: Array<Maybe<Category>>;
   getCategoryByBusiness: Array<Maybe<Category>>;
   getCategoryById?: Maybe<Category>;
@@ -3978,7 +4129,7 @@ export type Query = {
   getTaskTypes?: Maybe<Array<Maybe<TaskType>>>;
   getUserById: User;
   getUserCards?: Maybe<Array<Maybe<Card>>>;
-  getUserCardsByBusiness?: Maybe<Array<Maybe<BusinessSudoCard>>>;
+  getUserCardsByBusiness?: Maybe<Array<Maybe<BusinessBankCard>>>;
   getUserInvites: Array<Maybe<UserInvite>>;
   getUserInvitesByBusiness: Array<Maybe<UserInvite>>;
   getUsers: Array<Maybe<User>>;
@@ -4021,12 +4172,12 @@ export type Query = {
   userGetTasksMobile?: Maybe<GetTaskResponse>;
   userJoinStrapiWaitlistEmail?: Maybe<Scalars['Boolean']['output']>;
   verzoPlusSubscriptionCheckerForFrontend?: Maybe<Scalars['Boolean']['output']>;
-  viewBusinessAccount?: Maybe<SudoAccount>;
-  viewBusinessAccountStatement?: Maybe<Array<Maybe<SudoAccountTransaction>>>;
-  viewBusinessAccounts?: Maybe<Array<Maybe<SudoAccount>>>;
-  viewCardAuthorizations?: Maybe<Array<Maybe<SudoCardAuthorization>>>;
-  viewCardTransactions?: Maybe<Array<Maybe<SudoCardTransaction>>>;
-  viewTransaction?: Maybe<SudoCardTransaction>;
+  viewBusinessAccount?: Maybe<BankAccount>;
+  viewBusinessAccountStatement?: Maybe<Array<Maybe<BankAccountTransaction>>>;
+  viewBusinessAccounts?: Maybe<Array<Maybe<BankAccount>>>;
+  viewCardAuthorizations?: Maybe<Array<Maybe<BankCardAuthorization>>>;
+  viewCardTransactions?: Maybe<Array<Maybe<BankCardTransaction>>>;
+  viewTransaction?: Maybe<BankCardTransaction>;
 };
 
 
@@ -4945,7 +5096,7 @@ export type RequestHistory = {
   __typename?: 'RequestHistory';
   amount: Scalars['BigInt']['output'];
   approved: Scalars['Boolean']['output'];
-  authorization?: Maybe<SudoCardAuthorization>;
+  authorization?: Maybe<BankCardAuthorization>;
   authorizationId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   currency: Scalars['String']['output'];
@@ -4953,7 +5104,7 @@ export type RequestHistory = {
   merchantAmount: Scalars['BigInt']['output'];
   merchantCurrency: Scalars['String']['output'];
   reason: Scalars['String']['output'];
-  transaction?: Maybe<SudoCardTransaction>;
+  transaction?: Maybe<BankCardTransaction>;
   transactionId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -5420,7 +5571,7 @@ export type SignUpDetails = {
 export type SpendingControl = {
   __typename?: 'SpendingControl';
   atm: Scalars['Boolean']['output'];
-  card?: Maybe<BusinessSudoCard>;
+  card?: Maybe<BusinessBankCard>;
   cardId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -5433,7 +5584,7 @@ export type SpendingControl = {
 export type SpendingLimit = {
   __typename?: 'SpendingLimit';
   amount: Scalars['BigInt']['output'];
-  card?: Maybe<BusinessSudoCard>;
+  card?: Maybe<BusinessBankCard>;
   cardId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
@@ -5498,96 +5649,6 @@ export type SuccessInfo = {
   success?: Maybe<Scalars['Boolean']['output']>;
 };
 
-export type SudoAccount = {
-  __typename?: 'SudoAccount';
-  accountBalance: Scalars['BigInt']['output'];
-  accountName: Scalars['String']['output'];
-  accountNumber: Scalars['String']['output'];
-  accountProduct?: Maybe<Scalars['String']['output']>;
-  accountType: Scalars['String']['output'];
-  allowOverdraft: Scalars['Boolean']['output'];
-  bookBalance: Scalars['BigInt']['output'];
-  business?: Maybe<Business>;
-  businessId: Scalars['String']['output'];
-  businessSudoCards?: Maybe<Array<Maybe<BusinessSudoCard>>>;
-  bvn: Scalars['String']['output'];
-  canCredit: Scalars['Boolean']['output'];
-  canDebit: Scalars['Boolean']['output'];
-  chargeStampDuty: Scalars['Boolean']['output'];
-  chargeValueAddedTax: Scalars['Boolean']['output'];
-  chargeWithHoldingTax: Scalars['Boolean']['output'];
-  client?: Maybe<Scalars['String']['output']>;
-  createdAt: Scalars['DateTime']['output'];
-  currencyCode: Scalars['String']['output'];
-  customer?: Maybe<SudoCustomer>;
-  customerId: Scalars['String']['output'];
-  externalReference: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  interestBalance: Scalars['BigInt']['output'];
-  interestCalculationDaysInYearType: Scalars['String']['output'];
-  interestCalculationType: Scalars['String']['output'];
-  interestCompoundingPeriod: Scalars['String']['output'];
-  interestPostingPeriod: Scalars['String']['output'];
-  isDefault: Scalars['Boolean']['output'];
-  isDeleted: Scalars['Boolean']['output'];
-  isSubAccount: Scalars['Boolean']['output'];
-  lastSyncTime?: Maybe<Scalars['DateTime']['output']>;
-  lockinPeriodFrequency: Scalars['Float']['output'];
-  lockinPeriodFrequencyType: Scalars['String']['output'];
-  minRequiredOpeningBalance: Scalars['BigInt']['output'];
-  nominalAnnualInterestRate: Scalars['Float']['output'];
-  overdraftLimit: Scalars['Float']['output'];
-  sourceId: Scalars['String']['output'];
-  status: Scalars['String']['output'];
-  sudoAccountTransactions?: Maybe<Array<Maybe<SudoAccountTransaction>>>;
-  updatedAt: Scalars['DateTime']['output'];
-  withHoldingTaxBalance: Scalars['BigInt']['output'];
-};
-
-export type SudoAccountTransaction = {
-  __typename?: 'SudoAccountTransaction';
-  account?: Maybe<SudoAccount>;
-  accountId: Scalars['String']['output'];
-  amount: Scalars['BigInt']['output'];
-  cardTransaction?: Maybe<SudoCardTransaction>;
-  cardTransactionId?: Maybe<Scalars['String']['output']>;
-  id: Scalars['String']['output'];
-  isCardTransaction?: Maybe<Scalars['Boolean']['output']>;
-  linked?: Maybe<Scalars['Boolean']['output']>;
-  narration: Scalars['String']['output'];
-  paymentReference: Scalars['String']['output'];
-  provider: Scalars['String']['output'];
-  providerChannel: Scalars['String']['output'];
-  sourceId: Scalars['String']['output'];
-  transactionDate: Scalars['DateTime']['output'];
-  type: Scalars['String']['output'];
-  valueDate: Scalars['DateTime']['output'];
-};
-
-export type SudoCardAuthorization = {
-  __typename?: 'SudoCardAuthorization';
-  amount: Scalars['BigInt']['output'];
-  approved: Scalars['Boolean']['output'];
-  authorizationFeeDetails?: Maybe<Array<Maybe<AuthorizationFeeDetails>>>;
-  authorizationMethod: Scalars['String']['output'];
-  card?: Maybe<BusinessSudoCard>;
-  cardId: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  currency: Scalars['String']['output'];
-  fee: Scalars['BigInt']['output'];
-  id: Scalars['String']['output'];
-  isDeleted: Scalars['Boolean']['output'];
-  merchantAmount: Scalars['BigInt']['output'];
-  merchantCurrency: Scalars['String']['output'];
-  requestsHistory?: Maybe<Array<Maybe<RequestHistory>>>;
-  sourceId: Scalars['String']['output'];
-  status: Scalars['String']['output'];
-  sudoCardTransaction?: Maybe<SudoCardTransaction>;
-  transactionReference?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-  vat: Scalars['Float']['output'];
-};
-
 export type SudoCardChannels = {
   atm: Scalars['Boolean']['input'];
   mobile: Scalars['Boolean']['input'];
@@ -5611,67 +5672,6 @@ export enum SudoCardStatus {
   Active = 'active',
   Inactive = 'inactive'
 }
-
-export type SudoCardTransaction = {
-  __typename?: 'SudoCardTransaction';
-  amount: Scalars['BigInt']['output'];
-  authorization?: Maybe<SudoCardAuthorization>;
-  authorizationId: Scalars['String']['output'];
-  card?: Maybe<BusinessSudoCard>;
-  cardId: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  currency: Scalars['String']['output'];
-  fee: Scalars['BigInt']['output'];
-  id: Scalars['String']['output'];
-  isDeleted: Scalars['Boolean']['output'];
-  linked?: Maybe<Scalars['Boolean']['output']>;
-  merchantAmount: Scalars['BigInt']['output'];
-  merchantCurrency: Scalars['String']['output'];
-  requestsHistory?: Maybe<Array<Maybe<RequestHistory>>>;
-  sourceId: Scalars['String']['output'];
-  sudoAccountTransaction?: Maybe<SudoAccountTransaction>;
-  transactionReference: Scalars['String']['output'];
-  type: Scalars['String']['output'];
-  updatedAt: Scalars['DateTime']['output'];
-  vat: Scalars['Float']['output'];
-};
-
-export type SudoCustomer = {
-  __typename?: 'SudoCustomer';
-  billingAddressCity?: Maybe<Scalars['String']['output']>;
-  billingAddressCountry?: Maybe<Scalars['String']['output']>;
-  billingAddressLine1: Scalars['String']['output'];
-  billingAddressLine2?: Maybe<Scalars['String']['output']>;
-  billingAddressPostalCode?: Maybe<Scalars['String']['output']>;
-  billingAddressState?: Maybe<Scalars['String']['output']>;
-  business?: Maybe<Business>;
-  businessId: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  individualDob: Scalars['DateTime']['output'];
-  individualIdentityNumber: Scalars['String']['output'];
-  individualIdentityType: Scalars['String']['output'];
-  sourceId: Scalars['String']['output'];
-  status: Scalars['String']['output'];
-  sudoAccount?: Maybe<SudoAccount>;
-  sudoDocument?: Maybe<SudoDocument>;
-  type: Scalars['String']['output'];
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-export type SudoDocument = {
-  __typename?: 'SudoDocument';
-  addressVerificationUrl: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  customer: SudoCustomer;
-  customerId: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  idBackUrl: Scalars['String']['output'];
-  idFrontUrl: Scalars['String']['output'];
-  incorporationCertificateUrl: Scalars['String']['output'];
-  sourceId: Scalars['String']['output'];
-  updatedAt: Scalars['DateTime']['output'];
-};
 
 export type Task = {
   __typename?: 'Task';
@@ -6201,7 +6201,7 @@ export type UploadMerchantInvoiceToPurchaseResponse = {
 export type User = {
   __typename?: 'User';
   business?: Maybe<Array<Maybe<Business>>>;
-  businessSudoCards?: Maybe<Array<Maybe<BusinessSudoCard>>>;
+  businessBankCards?: Maybe<Array<Maybe<BusinessBankCard>>>;
   code?: Maybe<Scalars['Float']['output']>;
   codeExpiry?: Maybe<Scalars['Date']['output']>;
   createdAt: Scalars['Date']['output'];
@@ -6656,7 +6656,7 @@ export type CreateSudoCardMutationVariables = Exact<{
 }>;
 
 
-export type CreateSudoCardMutation = { __typename?: 'Mutation', createSudoCard?: { __typename?: 'BusinessSudoCard', id: string, maskedPan?: string | null, brand?: string | null, expiryDate?: string | null } | null };
+export type CreateSudoCardMutation = { __typename?: 'Mutation', createSudoCard?: { __typename?: 'BusinessBankCard', id: string, maskedPan?: string | null, brand?: string | null, expiryDate?: string | null } | null };
 
 export type CreateUserInviteMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -6835,7 +6835,7 @@ export type GetBusinessByIdQuery = { __typename?: 'Query', getBusinessById?: { _
 export type GetBusinessesByUserIdQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBusinessesByUserIdQuery = { __typename?: 'Query', getBusinessesByUserId?: { __typename?: 'GetBusinessByUser', user?: { __typename?: 'User', code?: number | null, verified?: boolean | null, email: string, id: string, fullname: string, role?: { __typename?: 'Role', roleName: string } | null } | null, businesses?: Array<{ __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null, businessMobile?: string | null, logo?: string | null, sudoAccount?: { __typename?: 'SudoAccount', id: string } | null } | null> | null } | null };
+export type GetBusinessesByUserIdQuery = { __typename?: 'Query', getBusinessesByUserId?: { __typename?: 'GetBusinessByUser', user?: { __typename?: 'User', code?: number | null, verified?: boolean | null, email: string, id: string, fullname: string, role?: { __typename?: 'Role', roleName: string } | null } | null, businesses?: Array<{ __typename?: 'Business', id: string, businessName: string, businessEmail?: string | null, businessMobile?: string | null, logo?: string | null, bankAccount?: { __typename?: 'BankAccount', id: string } | null } | null> | null } | null };
 
 export type GetBusinessCoAsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6882,14 +6882,14 @@ export type GetCardsByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetCardsByBusinessQuery = { __typename?: 'Query', getCardsByBusiness?: Array<{ __typename?: 'BusinessSudoCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, createdAt: any, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null, user: { __typename?: 'User', fullname: string } } | null> | null };
+export type GetCardsByBusinessQuery = { __typename?: 'Query', getCardsByBusiness?: Array<{ __typename?: 'BusinessBankCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, createdAt: any, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null, user: { __typename?: 'User', fullname: string } } | null> | null };
 
 export type GetCardByIdQueryVariables = Exact<{
   cardId: Scalars['String']['input'];
 }>;
 
 
-export type GetCardByIdQuery = { __typename?: 'Query', getCardById?: { __typename?: 'BusinessSudoCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, createdAt: any, updatedAt: any, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, account?: { __typename?: 'SudoAccount', id: string, accountNumber: string, accountBalance: any, accountName: string } | null, sudoCardTransactions?: Array<{ __typename?: 'SudoCardTransaction', id: string, amount: any, type: string, createdAt: any } | null> | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string, createdAt: any, id: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null, user: { __typename?: 'User', fullname: string } } | null };
+export type GetCardByIdQuery = { __typename?: 'Query', getCardById?: { __typename?: 'BusinessBankCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, createdAt: any, updatedAt: any, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, account?: { __typename?: 'BankAccount', id: string, accountNumber: string, accountBalance: any, accountName: string } | null, bankCardTransactions?: Array<{ __typename?: 'BankCardTransaction', id: string, amount: any, type: string, createdAt: any } | null> | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string, createdAt: any, id: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null, user: { __typename?: 'User', fullname: string } } | null };
 
 export type GetChartOfAccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -7365,7 +7365,7 @@ export type GetUserCardsByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetUserCardsByBusinessQuery = { __typename?: 'Query', getUserCardsByBusiness?: Array<{ __typename?: 'BusinessSudoCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null } | null> | null };
+export type GetUserCardsByBusinessQuery = { __typename?: 'Query', getUserCardsByBusiness?: Array<{ __typename?: 'BusinessBankCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null } | null> | null };
 
 export type GetUserCardsQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7759,28 +7759,28 @@ export type ViewBusinessAccountStatementQueryVariables = Exact<{
 }>;
 
 
-export type ViewBusinessAccountStatementQuery = { __typename?: 'Query', viewBusinessAccountStatement?: Array<{ __typename?: 'SudoAccountTransaction', id: string, paymentReference: string, type: string, provider: string, providerChannel: string, narration: string, accountId: string, linked?: boolean | null, amount: any, transactionDate: any, valueDate: any, cardTransactionId?: string | null, cardTransaction?: { __typename?: 'SudoCardTransaction', amount: any, fee: any, merchantAmount: any } | null } | null> | null };
+export type ViewBusinessAccountStatementQuery = { __typename?: 'Query', viewBusinessAccountStatement?: Array<{ __typename?: 'BankAccountTransaction', id: string, paymentReference: string, type: string, provider: string, providerChannel: string, narration: string, accountId: string, linked?: boolean | null, amount: any, transactionDate: any, valueDate: any, cardTransactionId?: string | null, cardTransaction?: { __typename?: 'BankCardTransaction', amount: any, fee: any, merchantAmount: any } | null } | null> | null };
 
 export type ViewBusinessAccountQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
 }>;
 
 
-export type ViewBusinessAccountQuery = { __typename?: 'Query', viewBusinessAccount?: { __typename?: 'SudoAccount', id: string, canDebit: boolean, bvn: string, canCredit: boolean, accountName: string, accountNumber: string, accountType: string, accountBalance: any, status: string, lastSyncTime?: any | null, customer?: { __typename?: 'SudoCustomer', billingAddressLine1: string, billingAddressCity?: string | null } | null } | null };
+export type ViewBusinessAccountQuery = { __typename?: 'Query', viewBusinessAccount?: { __typename?: 'BankAccount', id: string, canDebit: boolean, bvn: string, canCredit: boolean, accountName: string, accountNumber: string, accountType: string, accountBalance: any, status: string, lastSyncTime?: any | null, customer?: { __typename?: 'BankCustomer', billingAddressLine1: string, billingAddressCity?: string | null } | null } | null };
 
 export type ViewCardAuthorizationsQueryVariables = Exact<{
   cardId: Scalars['String']['input'];
 }>;
 
 
-export type ViewCardAuthorizationsQuery = { __typename?: 'Query', viewCardAuthorizations?: Array<{ __typename?: 'SudoCardAuthorization', id: string, amount: any, fee: any, vat: number, approved: boolean, status: string, merchantAmount: any, merchantCurrency: string, authorizationFeeDetails?: Array<{ __typename?: 'AuthorizationFeeDetails', amount: any, description: string } | null> | null, requestsHistory?: Array<{ __typename?: 'RequestHistory', amount: any, currency: string, approved: boolean, reason: string } | null> | null } | null> | null };
+export type ViewCardAuthorizationsQuery = { __typename?: 'Query', viewCardAuthorizations?: Array<{ __typename?: 'BankCardAuthorization', id: string, amount: any, fee: any, vat: number, approved: boolean, status: string, merchantAmount: any, merchantCurrency: string, authorizationFeeDetails?: Array<{ __typename?: 'AuthorizationFeeDetails', amount: any, description: string } | null> | null, requestsHistory?: Array<{ __typename?: 'RequestHistory', amount: any, currency: string, approved: boolean, reason: string } | null> | null } | null> | null };
 
 export type ViewCardTransactionsQueryVariables = Exact<{
   cardId: Scalars['String']['input'];
 }>;
 
 
-export type ViewCardTransactionsQuery = { __typename?: 'Query', viewCardTransactions?: Array<{ __typename?: 'SudoCardTransaction', id: string, amount: any, fee: any, vat: number, currency: string, type: string, merchantAmount: any, merchantCurrency: string, createdAt: any, updatedAt: any, authorization?: { __typename?: 'SudoCardAuthorization', authorizationFeeDetails?: Array<{ __typename?: 'AuthorizationFeeDetails', amount: any, description: string } | null> | null, requestsHistory?: Array<{ __typename?: 'RequestHistory', amount: any, currency: string, approved: boolean, reason: string } | null> | null } | null } | null> | null };
+export type ViewCardTransactionsQuery = { __typename?: 'Query', viewCardTransactions?: Array<{ __typename?: 'BankCardTransaction', id: string, amount: any, fee: any, vat: number, currency: string, type: string, merchantAmount: any, merchantCurrency: string, createdAt: any, updatedAt: any, authorization?: { __typename?: 'BankCardAuthorization', authorizationFeeDetails?: Array<{ __typename?: 'AuthorizationFeeDetails', amount: any, description: string } | null> | null, requestsHistory?: Array<{ __typename?: 'RequestHistory', amount: any, currency: string, approved: boolean, reason: string } | null> | null } | null } | null> | null };
 
 
 export const CreateBusinessServiceUnitDocument = gql`
@@ -10269,7 +10269,7 @@ export const GetBusinessesByUserIdDocument = gql`
     }
     businesses {
       id
-      sudoAccount {
+      bankAccount {
         id
       }
       businessName
@@ -10639,7 +10639,7 @@ export const GetCardByIdDocument = gql`
     createdAt
     updatedAt
     status
-    sudoCardTransactions {
+    bankCardTransactions {
       id
       amount
       type

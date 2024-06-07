@@ -210,7 +210,7 @@ const Dashboard = () => {
   });
   const userHasSudoAccount =
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.[0]
-      ?.sudoAccount?.id;
+      ?.bankAccount?.id;
 
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;

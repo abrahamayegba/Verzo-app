@@ -90,117 +90,6 @@ const BusinessSetup = () => {
       <div className="w-full flex flex-row">
         <AuthSidebar />
         <div className="flex-1 ml-0 lg:ml-[34%] overflow-y-auto pt-[50px]">
-          {/* <div className="flex flex-col ">
-            {businessPresent && (
-              <Link href="/dashboard">
-                <button className="flex gap-x-2 mb-3 items-center text-gray-700">
-                  <MoveRight className="w-5 h-5 text-primary-greytext" /> Go to
-                  Dashboard
-                </button>
-              </Link>
-            )}
-            <p className="text-primary-black text-[32px]">Business profile</p>
-            <p className="text-primary-greytext text-lg">
-              Complete these steps to get your business up and running
-            </p>
-          </div>
-          <div className="flex gap-x-[40px] gap-y-[50px] flex-wrap ">
-            <div className=" w-1/2 flex flex-col rounded-[10px] max-w-[250px] ">
-              <div
-                className={` h-[84px] rounded-t-[10px] px-6 flex items-center ${
-                  businessPresent ? " bg-green-500" : "purplegradient"
-                }`}
-              >
-                <div className=" flex">
-                  <span className=" border border-white rounded-full p-3">
-                    <WhiteBankIcon />
-                  </span>
-                </div>
-              </div>
-              <div className=" flex flex-col gap-y-2 py-6 border-x min-h-[217px] border-gray-200 border-b rounded-b-[10px] px-[25px]">
-                <p className=" text-primary-black text-lg gap-x-2 flex flex-row items-center">
-                  Business profile{" "}
-                  {businessPresent ? (
-                    <span className="">
-                      <CheckCircle2 className=" text-green-500" />
-                    </span>
-                  ) : (
-                    <span className="  text-[15px] text-gray-700">
-                      (required)
-                    </span>
-                  )}
-                </p>
-                <p className=" text-primary-greytext font-light">
-                  Provide your business details and the category
-                </p>
-                <div className=" flex mt-auto">
-                  {businessPresent ? (
-                    <Link href="/dashboard">
-                      <button
-                        disabled
-                        className="rounded-[10px] mt-[10px] text-primary-black text-opacity-50 cursor-not-allowed flex justify-center px-8 py-[8px] items-center border bg-gray-100 border-primary-border"
-                      >
-                        Completed
-                      </button>
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={() => setOpenBusinessSheet(true)}
-                      className="rounded-[10px] mt-[10px] text-primary-black flex justify-center px-10 py-[8px] items-center border border-primary-border"
-                    >
-                      Set up
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className=" w-1/2 flex flex-col rounded-[10px] max-w-[250px] ">
-              <div className=" purplegradient h-[84px] rounded-t-[10px] px-6 flex items-center">
-                <div className=" flex">
-                  <span className=" border border-white rounded-full p-3">
-                    <IoWalletOutline className=" text-white w-6 h-6" />
-                  </span>
-                </div>
-              </div>
-              <div className=" flex flex-col gap-y-2 py-6 border-x min-h-[217px] border-gray-200 border-b rounded-b-[10px] px-[25px]">
-                <p className=" text-primary-black text-lg">Verzo wallet</p>
-                <p className=" text-primary-greytext font-light">
-                  Provide details to create a verzo wallet
-                </p>
-                <div className=" flex mt-auto">
-                  <button
-                    onClick={() => setOpenVerzoWalletSheet(true)}
-                    className="rounded-[10px] mt-[10px] text-primary-black flex justify-center px-10 py-[8px] items-center border border-primary-border"
-                  >
-                    Set up
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className=" w-1/2 flex flex-col rounded-[10px] max-w-[250px] ">
-              <div className=" purplegradient h-[84px] rounded-t-[10px] px-6 flex items-center">
-                <div className=" flex">
-                  <span className=" border border-white rounded-full p-3">
-                    <WhiteMoneyIcon />
-                  </span>
-                </div>
-              </div>
-              <div className=" flex flex-col gap-y-2 py-6 border-x min-h-[217px] border-gray-200 border-b rounded-b-[10px] px-[25px]">
-                <p className=" text-primary-black text-lg">Billing</p>
-                <p className=" text-primary-greytext font-light">
-                  Provide card details, select a plan and billing frequency,
-                </p>
-                <div className=" flex mt-auto">
-                  <button
-                    onClick={() => setOpenBillingSheet(true)}
-                    className="rounded-[10px] mt-[10px] text-primary-black flex justify-center px-10 py-[8px] items-center border border-primary-border"
-                  >
-                    Set up
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div> */}
           <div className=" w-full flex justify-end items-center gap-x-6 pl-[140px] pr-[60px]">
             <p className=" text-primary-greytext text-lg">
               Already have an account?
@@ -315,19 +204,6 @@ const BusinessSetup = () => {
           </p>
         </div>
       </div>
-      {/* <CreateBusinessSheet
-        open={openBusinessSheet}
-        onClose={handleCloseBusinessSheet}
-      />
-      <BillingSheet
-        open={openBillingSheet}
-        onClose={handleCloseBillingSheet}
-        confirmPlan={confirmBilling}
-      /> */}
-      {/* <VerzoWalletSheet
-        open={openVerzoWalletSheet}
-        onClose={() => setOpenVerzoWalletSheet(false)}
-      /> */}
     </>
   );
 };

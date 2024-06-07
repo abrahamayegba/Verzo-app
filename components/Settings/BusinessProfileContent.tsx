@@ -75,7 +75,7 @@ const BusinessProfileContent = () => {
   const handleOpenViewBusinessSheet = () => {
     if (
       getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.[0]
-        ?.sudoAccount
+        ?.bankAccount
     ) {
       setOpenViewBusinessAccountSheet(true);
     } else {

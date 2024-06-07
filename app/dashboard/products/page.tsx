@@ -6,8 +6,11 @@ import localStorage from "local-storage-fallback";
 import CreateProductSheet from "@/components/sheets/product/CreateProductSheet";
 import {
   useGetArchivedProductsByBusinessQuery,
+  useGetArchivedServiceByBusinessQuery,
   useGetBusinessesByUserIdQuery,
+  useGetProductOrServiceByBusinessQuery,
   useGetProductsByBusinessQuery,
+  useGetServiceByBusinessQuery,
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
 import Loader2 from "@/components/loading/Loader2";
@@ -69,6 +72,28 @@ const Products = () => {
       sets: 1,
     },
   });
+  const getServicesByBusiness = useGetServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+  const getArchivedServices = useGetArchivedServiceByBusinessQuery({
+    variables: {
+      businessId: businessId,
+      cursor: null,
+      sets: 1,
+    },
+  });
+  const getProductsOrServicesByBusiness = useGetProductOrServiceByBusinessQuery(
+    {
+      variables: {
+        businessId: businessId,
+        cursor: null,
+      },
+    }
+  );
 
   const handleCloseProductSheet = () => {
     setOpenCreateProductSheet(false);
@@ -81,7 +106,11 @@ const Products = () => {
     return <MainLoader />;
   }
   const productsLoading =
-    getProductsByBusiness.loading || getArchivedProducts.loading;
+    getProductsByBusiness.loading ||
+    getArchivedProducts.loading ||
+    getServicesByBusiness.loading ||
+    getArchivedServices.loading ||
+    getProductsOrServicesByBusiness.loading;
 
   return (
     <>

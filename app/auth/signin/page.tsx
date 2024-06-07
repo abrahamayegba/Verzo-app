@@ -21,7 +21,7 @@ const GET_BUSINESSES_BY_USER_ID_QUERY = gql`
       businesses {
         id
         businessName
-        sudoAccount {
+        bankAccount {
           id
         }
         businessEmail
@@ -44,24 +44,6 @@ const SignIn = () => {
     setError(null);
   };
   const [signInMutation, { loading }] = useSignInMutation();
-  // const SignInHandler = async (form: FormData) => {
-  //   try {
-  //     const response = await signInMutation({
-  //       variables: form,
-  //     });
-  //     if (response.data?.signIn.token.access_token) {
-  //       saveToken(response.data.signIn.token.access_token);
-  //       saveRefreshToken(response?.data?.signIn?.token?.refresh_token);
-  //       if (response.data.signIn.verified) {
-  //         router.push("/dashboard");
-  //       } else {
-  //         router.push("/auth/verifyemail");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     setError("Incorrect email or password");
-  //   }
-  // };
   const SignInHandler = async (form: FormData) => {
     try {
       const response = await signInMutation({
@@ -182,15 +164,6 @@ const SignIn = () => {
               >
                 {loading ? "Loading..." : "Sign in"}
               </button>
-              {/* <div className="flex space-x-[11px] py-6 items-center">
-                <hr className="w-[182px] h-[1px] bg-primary-borderGrey" />
-                <span className="text-sm text-primary-greytext">Or</span>
-                <hr className="w-[182px] h-[1px] bg-primary-borderGrey" />
-              </div>
-              <button className="w-[400px] py-[10px] rounded-[10px] border  border-gray-300 bg-white text-lg flex items-center justify-center gap-x-3">
-                <GoogleIcon />
-                Sign in with Google
-              </button> */}
             </div>
           </form>
         </div>

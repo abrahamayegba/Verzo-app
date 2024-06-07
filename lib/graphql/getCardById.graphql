@@ -14,7 +14,7 @@ query GetCardById($cardId: String!) {
     createdAt
     updatedAt
     status
-    sudoCardTransactions {
+    bankCardTransactions {
       id
       amount
       type
