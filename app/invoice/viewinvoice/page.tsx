@@ -59,6 +59,7 @@ const ViewInvoice = () => {
         : item?.serviceInvoiceDetail?.unitPrice,
   }));
   const saleExpenseRecorded = saleStatusId! >= 2;
+  const saleExpense = sales?.saleExpenses?.length ?? 0;
   const paymentAdded = saleStatusId! >= 3;
   const hasStep2 =
     (sales?.saleExpenses?.length ?? 0) > 0 ||
@@ -107,7 +108,7 @@ const ViewInvoice = () => {
           <div className=" flex flex-row gap-x-4 items-center mt-6">
             <Link href={`/invoice/editinvoice?invoiceId=${invoiceId}`}>
               <button
-                disabled={saleStatusId >= 2}
+                disabled={saleExpense ? saleStatusId > 1 : saleStatusId > 2}
                 className=" px-4 py-[10px] text-blue-600 gap-x-2 rounded-[8px] disabled:cursor-not-allowed disabled:opacity-50 flex border border-blue-500 items-center justify-center"
               >
                 <Pen className=" w-4 h-4" />

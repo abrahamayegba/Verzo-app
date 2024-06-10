@@ -15,9 +15,9 @@ import {
 import CardChipIcon from "./ui/icons/CardChipIcon";
 import VerzoLogoWhite from "./ui/icons/VerzoLogoWhite";
 import {
+  BankCardSpendingInterval,
   CreateSudoCardDocument,
   GetCardsByBusinessDocument,
-  SudoCardSpendingInterval,
   useCreateSudoCardMutation,
   useGetCardsByBusinessQuery,
   useGetUsersByBusinessQuery,
@@ -45,7 +45,7 @@ interface MetricsProps {
 
 type SpendingLimitType = {
   amount: number;
-  interval: SudoCardSpendingInterval;
+  interval: BankCardSpendingInterval;
 };
 
 const Metrics: React.FC<MetricsProps> = ({ filter }) => {
@@ -62,7 +62,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
   const [assignedId, setAssignedId] = useState("");
   const [spendingLimit, setSpendingLimit] = useState<SpendingLimitType>({
     amount: 0,
-    interval: SudoCardSpendingInterval.Daily,
+    interval: BankCardSpendingInterval.Daily,
   });
   const businessId = storedBusinessId[0] || "";
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -117,7 +117,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
   const handleIntervalChange = (value: string) => {
     setSpendingLimit((prev) => ({
       ...prev,
-      interval: value as SudoCardSpendingInterval, // Cast the value to SudoCardSpendingInterval enum
+      interval: value as BankCardSpendingInterval, // Cast the value to SudoCardSpendingInterval enum
     }));
   };
 
@@ -152,7 +152,7 @@ const Metrics: React.FC<MetricsProps> = ({ filter }) => {
       showSuccessToast();
       setSpendingLimit({
         amount: 0,
-        interval: SudoCardSpendingInterval.Daily,
+        interval: BankCardSpendingInterval.Daily,
       });
       setAssignedId("");
     } catch (error) {

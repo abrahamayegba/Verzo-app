@@ -150,17 +150,17 @@ const ServiceList: React.FC<ServicelistProps> = ({ serviceSearchId }) => {
         </TabsList>
         <TabsContent value="all">
           <ServiceTabContentAll
-            openDeleteModal={handleOpenDeleteModal}
-            openArchiveModal={handleOpenArchiveModal}
-            openEditModal={handleOpenEditModal}
+            openServiceDeleteModal={handleOpenDeleteModal}
+            openServiceArchiveModal={handleOpenArchiveModal}
+            openServiceEditModal={handleOpenEditModal}
             onToggleSelectAll={handleToggleSelectAll}
             serviceSearchId={serviceSearchId}
           />
         </TabsContent>
         <TabsContent value="archived">
           <ServiceTabContentArchived
-            openDeleteModal={handleOpenDeleteModal}
-            openUnarchiveModal={handleOpenUnarchiveModal}
+            openDeleteServiceModal={handleOpenDeleteModal}
+            openUnarchiveServiceModal={handleOpenUnarchiveModal}
             serviceSearchId={serviceSearchId}
           />
         </TabsContent>

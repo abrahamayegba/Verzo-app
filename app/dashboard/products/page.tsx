@@ -90,7 +90,6 @@ const Products = () => {
     {
       variables: {
         businessId: businessId,
-        cursor: null,
       },
     }
   );
@@ -106,11 +105,11 @@ const Products = () => {
     return <MainLoader />;
   }
   const productsLoading =
+    getProductsOrServicesByBusiness.loading ||
     getProductsByBusiness.loading ||
     getArchivedProducts.loading ||
     getServicesByBusiness.loading ||
-    getArchivedServices.loading ||
-    getProductsOrServicesByBusiness.loading;
+    getArchivedServices.loading;
 
   return (
     <>

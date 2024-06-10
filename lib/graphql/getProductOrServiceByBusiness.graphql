@@ -35,6 +35,7 @@ query GetProductOrServiceByBusiness(
       }
       service {
         name
+        id
         price
         serviceUnit {
           id

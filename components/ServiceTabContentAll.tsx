@@ -23,17 +23,17 @@ import ServiceTableEmptyIcon from "./ui/icons/ServiceTableEmptyIcon";
 
 interface ServiceTabContentAllProps {
   onToggleSelectAll: (isChecked: boolean) => void;
-  openArchiveModal: (serviceId: string) => void;
-  openDeleteModal: (serviceId: string) => void;
-  openEditModal: (serviceId: string) => void;
+  openServiceArchiveModal: (serviceId: string) => void;
+  openServiceDeleteModal: (serviceId: string) => void;
+  openServiceEditModal: (serviceId: string) => void;
   serviceSearchId: string;
 }
 
 const ServiceTabContentAll: React.FC<ServiceTabContentAllProps> = ({
   onToggleSelectAll,
-  openArchiveModal,
-  openDeleteModal,
-  openEditModal,
+  openServiceArchiveModal,
+  openServiceDeleteModal,
+  openServiceEditModal,
   serviceSearchId,
 }) => {
   const storedBusinessId = JSON.parse(
@@ -159,21 +159,21 @@ const ServiceTabContentAll: React.FC<ServiceTabContentAllProps> = ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className=" bg-white mt-1 mr-1 text-primary-greytext shadow1 w-[170px]">
                     <DropdownMenuItem
-                      onClick={() => openArchiveModal(service?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Archive Service
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => openEditModal(service?.id!)}
+                      onClick={() => openServiceEditModal(service?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
                       <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
                       Edit Service
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => openDeleteModal(service?.id!)}
+                      onClick={() => openServiceArchiveModal(service?.id!)}
+                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                    >
+                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                      Archive Service
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => openServiceDeleteModal(service?.id!)}
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
                       <Trash2 className=" w-4 h-4 text-opacity-80" />

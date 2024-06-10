@@ -3,8 +3,8 @@ import CardList from "@/components/Card/CardList";
 import Loader2 from "@/components/loading/Loader2";
 import MainLoader from "@/components/loading/MainLoader";
 import {
+  BankCardSpendingInterval,
   CreateSudoCardDocument,
-  SudoCardSpendingInterval,
   useCreateSudoCardMutation,
   useGetBusinessesByUserIdQuery,
   useGetCardsByBusinessQuery,
@@ -31,7 +31,7 @@ import { useRouter } from "next/navigation";
 
 type SpendingLimitType = {
   amount: number;
-  interval: SudoCardSpendingInterval;
+  interval: BankCardSpendingInterval;
 };
 
 const Cards = () => {
@@ -62,7 +62,7 @@ const Cards = () => {
 
   const [spendingLimit, setSpendingLimit] = useState<SpendingLimitType>({
     amount: 0,
-    interval: SudoCardSpendingInterval.Daily,
+    interval: BankCardSpendingInterval.Daily,
   });
 
   const [createSudoCardMutation, { loading }] = useCreateSudoCardMutation();
@@ -115,7 +115,7 @@ const Cards = () => {
   const handleIntervalChange = (value: string) => {
     setSpendingLimit((prev) => ({
       ...prev,
-      interval: value as SudoCardSpendingInterval, // Cast the value to SudoCardSpendingInterval enum
+      interval: value as BankCardSpendingInterval, // Cast the value to SudoCardSpendingInterval enum
     }));
   };
   const handleCreateCardClick = () => {
@@ -140,7 +140,7 @@ const Cards = () => {
       showSuccessToast();
       setSpendingLimit({
         amount: 0,
-        interval: SudoCardSpendingInterval.Daily,
+        interval: BankCardSpendingInterval.Daily,
       });
       setAssignedId("");
     } catch (error) {

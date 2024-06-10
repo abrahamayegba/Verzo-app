@@ -239,7 +239,7 @@ const AddPurchasePayment = () => {
         variables: {
           purchaseId: purchaseId!,
           businessId: businessId,
-          sudoTransactionId: selectedTab === 2 ? transactionId : null,
+          transactionId: selectedTab === 2 ? transactionId : null,
           file: uploadedFiles[0]?.url || null,
           transactionDate: formattedPurchaseDate,
           total: amount * 100!,

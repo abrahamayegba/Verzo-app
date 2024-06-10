@@ -27,12 +27,16 @@ import {
 interface ProductTabContentArchivedProps {
   openUnarchiveModal: (productId: string) => void;
   openDeleteModal: (productId: string) => void;
+  openUnarchiveServiceModal: (serviceId: string) => void;
+  openDeleteServiceModal: (serviceId: string) => void;
   productSearchId: string;
 }
 
 const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
   openUnarchiveModal,
   openDeleteModal,
+  openUnarchiveServiceModal,
+  openDeleteServiceModal,
   productSearchId,
 }) => {
   const storedBusinessId = JSON.parse(
@@ -224,14 +228,14 @@ const ProductTabContentArchived: React.FC<ProductTabContentArchivedProps> = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-white mt-1 mr-1 text-primary-greytext shadow1 w-[170px]">
                       <DropdownMenuItem
-                        onClick={() => openUnarchiveModal(service?.id!)}
+                        onClick={() => openUnarchiveServiceModal(service?.id!)}
                         className="hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                       >
                         <ArchiveRestore className="w-4 h-4 text-primary-greytext text-opacity-80" />
                         Unarchive Service
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => openDeleteModal(service?.id!)}
+                        onClick={() => openDeleteServiceModal(service?.id!)}
                         className="hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                       >
                         <Trash2 className="w-4 h-4 text-opacity-80" />

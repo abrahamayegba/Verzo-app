@@ -5,6 +5,7 @@ import ArchiveInvoiceIcon from "@/components/ui/icons/ArchiveInvoiceIcon";
 import { useToast } from "@/app/hooks/use-toast";
 import {
   GetArchivedServiceByBusinessDocument,
+  GetProductOrServiceByBusinessDocument,
   GetServiceByBusinessDocument,
   GetServiceByIdDocument,
   useGetArchivedServiceByBusinessQuery,
@@ -61,6 +62,7 @@ const UnarchiveService: React.FC<UnarchiveServiceProps> = ({
         refetchQueries: [
           GetServiceByBusinessDocument,
           GetArchivedServiceByBusinessDocument,
+          GetProductOrServiceByBusinessDocument,
           GetServiceByIdDocument,
         ],
       });

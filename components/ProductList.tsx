@@ -18,6 +18,10 @@ import {
 import EditProductSheet from "./sheets/product/EditProductSheet";
 import ServiceTabContentAll from "./ServiceTabContentAll";
 import ItemTabContentAll from "./ItemTabContentAll";
+import ArchiveService from "./modals/service/ArchiveServiceModal";
+import EditServiceSheet from "./sheets/service/EditServiceSheet";
+import UnarchiveService from "./modals/service/UnarchiveServiceModal";
+import DeleteService from "./modals/service/DeleteServiceModal";
 
 interface ProductlistProps {
   productSearchId: string;
@@ -41,6 +45,30 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
     isOpen: isUnarchiveOpen,
     openModal: openUnarchiveModal,
     closeModal: closeUnarchiveModal,
+  } = useModal();
+
+  const {
+    isOpen: isUnarchiveServiceOpen,
+    openModal: openUnarchiveServiceModal,
+    closeModal: closeUnarchiveServiceModal,
+  } = useModal();
+
+  const {
+    isOpen: isEditServiceModalOpen,
+    openModal: openEditServiceModal,
+    closeModal: closeEditServiceModal,
+  } = useModal();
+
+  const {
+    isOpen: isDeleteServiceOpen,
+    openModal: openDeleteServiceModal,
+    closeModal: closeDeleteServiceModal,
+  } = useModal();
+
+  const {
+    isOpen: isArchiveServiceModalOpen,
+    openModal: openArchiveServiceModal,
+    closeModal: closeArchiveServiceModal,
   } = useModal();
 
   const {
@@ -146,6 +174,26 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
     setSelectedId(customerId);
     openEditModal();
   };
+
+  const handleOpenServiceArchiveModal = (serviceId: string) => {
+    setSelectedId(serviceId);
+    openArchiveServiceModal();
+  };
+  const handleOpenUnarchiveServiceModal = (serviceId: string) => {
+    setSelectedId(serviceId);
+    openUnarchiveServiceModal();
+  };
+
+  const handleOpenServiceDeleteModal = (serviceId: string) => {
+    setSelectedId(serviceId);
+    openDeleteServiceModal();
+  };
+
+  const handleOpenServiceEditModal = (serviceId: string) => {
+    setSelectedId(serviceId);
+    openEditServiceModal();
+  };
+
   return (
     <div className=" w-full flex flex-col">
       <Tabs defaultValue={defaultValue} className="w-full">
@@ -204,6 +252,9 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
             openDeleteModal={handleOpenDeleteModal}
             openArchiveModal={handleOpenArchiveModal}
             openEditModal={handleOpenEditModal}
+            openServiceArchiveModal={handleOpenServiceArchiveModal}
+            openServiceDeleteModal={handleOpenServiceDeleteModal}
+            openServiceEditModal={handleOpenServiceEditModal}
             onToggleSelectAll={handleToggleSelectAll}
             productSearchId={productSearchId}
           />
@@ -219,9 +270,9 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
         </TabsContent>
         <TabsContent value="service">
           <ServiceTabContentAll
-            openDeleteModal={handleOpenDeleteModal}
-            openArchiveModal={handleOpenArchiveModal}
-            openEditModal={handleOpenEditModal}
+            openServiceArchiveModal={handleOpenServiceArchiveModal}
+            openServiceDeleteModal={handleOpenServiceDeleteModal}
+            openServiceEditModal={handleOpenServiceEditModal}
             onToggleSelectAll={handleToggleSelectAll}
             serviceSearchId={productSearchId}
           />
@@ -230,6 +281,8 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
           <ProductTabContentArchived
             openDeleteModal={handleOpenDeleteModal}
             openUnarchiveModal={handleOpenUnarchiveModal}
+            openDeleteServiceModal={handleOpenServiceDeleteModal}
+            openUnarchiveServiceModal={handleOpenUnarchiveServiceModal}
             productSearchId={productSearchId}
           />
         </TabsContent>
@@ -256,6 +309,29 @@ const ProductList: React.FC<ProductlistProps> = ({ productSearchId }) => {
         openModal={openDeleteProductModal}
         onClose={closeDeleteProductModal}
         productId={selectedId}
+      />
+      <ArchiveService
+        open={isArchiveServiceModalOpen}
+        openModal={openArchiveServiceModal}
+        onClose={closeArchiveServiceModal}
+        serviceId={selectedId}
+      />
+      <EditServiceSheet
+        open={isEditServiceModalOpen}
+        onClose={closeEditServiceModal}
+        serviceId={selectedId}
+      />
+      <UnarchiveService
+        open={isUnarchiveServiceOpen}
+        openModal={openUnarchiveServiceModal}
+        onClose={closeUnarchiveServiceModal}
+        serviceId={selectedId}
+      />
+      <DeleteService
+        open={isDeleteServiceOpen}
+        openModal={openDeleteServiceModal}
+        onClose={closeDeleteServiceModal}
+        serviceId={selectedId}
       />
     </div>
   );

@@ -4,7 +4,6 @@ import { notFound, useSearchParams } from "next/navigation";
 import React from "react";
 import Image from "next/image";
 import MainLoader from "@/components/loading/MainLoader";
-import Link from "next/link";
 
 const Pdf = () => {
   const invoiceParams = useSearchParams();
@@ -158,7 +157,7 @@ const Pdf = () => {
             <p className=" font-light text-gray-700">{sales?.description}</p>
           </div>
           {sales?.note && (
-            <div className=" flex flex-col my-4 gap-y-1 max-w-[600px]">
+            <div className=" flex flex-col my-4 gap-y-1 max-w-[600px] px-[44px]">
               <p>Notes / Terms</p>
               <p className=" font-light text-gray-700">{sales?.note}</p>
             </div>

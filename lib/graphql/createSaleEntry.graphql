@@ -2,12 +2,14 @@ mutation CreateSaleEntry(
   $description: String!
   $invoiceInput: CreateCompleteInvoiceB!
   $saleExpense: [SaleExpenseItem!]
+  $note: String
   $saleServiceExpense: [SaleServiceExpenseEntry!]
 ) {
   createSaleEntry(
     input: {
       invoiceInput: $invoiceInput
       description: $description
+      note: $note
       saleExpense: $saleExpense
       saleServiceExpense: $saleServiceExpense
     }

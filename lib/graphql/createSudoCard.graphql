@@ -1,9 +1,9 @@
 mutation CreateSudoCard(
   $businessId: String!
   $assignedUserId: String
-  $spendingLimits: [SudoCardSpendingLimits]
+  $spendingLimits: [BankCardSpendingLimits]
 ) {
-  createSudoCard(
+  createBankCard(
     input: {
       businessId: $businessId
       assignedUserId: $assignedUserId

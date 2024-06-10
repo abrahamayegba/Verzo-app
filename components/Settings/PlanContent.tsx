@@ -14,17 +14,11 @@ import {
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
 import PaymentLoader from "../loading/Paymentloader";
+import VerveIcon from "../ui/icons/VerveIcon";
+import MastercardIcon from "../ui/icons/MastercardIcon";
+import VisaIcon from "../ui/icons/VisaIcon";
+import { Mail } from "lucide-react";
 
 interface PlanProps {
   reference: string;
@@ -62,7 +56,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const [mutationInProgress, setMutationInProgress] = useState(false);
   const [openPlanSheet, setOpenPlanSheet] = useState(false);
   const [openCardSheet, setOpenCardSheet] = useState(false);
-  // const [openBillingModal, setOpenBillingModal] = useState(false);
 
   const showSuccessToast = () => {
     toast({
@@ -110,7 +103,14 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   });
 
   const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
+  const dateSubscribed = new Date(
+    data?.getCurrentSubscriptionByBusiness?.dateSubscribed
+  );
+  const validTo = new Date(data?.getCurrentSubscriptionByBusiness?.validTo);
 
+  const subscriptionDaysLeft = Math.ceil(
+    (validTo.getTime() - dateSubscribed.getTime()) / (1000 * 60 * 60 * 24)
+  );
   const [createSubscriptionNewCardBMutation, { loading }] =
     useCreateSubscriptionNewCardBMutation();
 
@@ -145,6 +145,14 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
       isMutationInProgress = false;
     }
   };
+  const cardType = "Visa";
+
+  const validToDate = new Date(data?.getCurrentSubscriptionByBusiness?.validTo);
+  const expiryDate = validToDate.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
 
   useEffect(() => {
     if (reference && !mutationExecuted && !mutationInProgress) {
@@ -158,10 +166,48 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   return (
     <>
       {loading && <PaymentLoader />}
-      <div className=" flex flex-col w-full pt-[20px] gap-y-3">
-        <p className=" text-sm text-primary-greytext px-6">
-          Manage subscription
-        </p>
+      {planName == "Basic" && (
+        <div className=" w-full flex flex-col border rounded-lg bg-white mt-[30px]">
+          <div className=" flex flex-row justify-between px-6 mb-[-5px] py-3 w-full bg-gray-100 bg-opacity-80 items-center">
+            <p className=" font-medium text-[22px] flex gap-x-3 items-center">
+              {planName}{" "}
+              <span className="inline-flex items-center mt-[2px] rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                {"Billed monthly"}
+              </span>
+            </p>
+            <p>
+              {subscriptionDaysLeft}{" "}
+              {subscriptionDaysLeft === 1 ? "day" : "days"} remaining
+            </p>
+          </div>
+          <div className=" flex flex-row bg-white px-3 mb-1 py-2 justify-between items-center">
+            <div className=" flex flex-row">
+              <span>
+                {cardType?.trim().toLowerCase() === "verve" && <VerveIcon />}
+                {cardType?.trim().toLowerCase() === "mastercard" && (
+                  <MastercardIcon />
+                )}
+                {cardType?.trim().toLowerCase() === "visa" && <VisaIcon />}
+              </span>
+              <div className=" flex flex-col text-[15px]">
+                <p>{"Visa ending in 2342"}</p>
+                <p className=" font-light text-gray-600">
+                  Plan expires {expiryDate}
+                </p>
+                <p className=" flex items-center mt-1.5 font-light text-gray-600 gap-x-1.5">
+                  <Mail className=" w-4 h-4 text-gray-600" /> {"mail@mail.com"}
+                </p>
+              </div>
+            </div>
+            <div className=" pr-4">
+              <button className=" bg-gray-100 border hover:bg-gray-200 border-gray-200 rounded-lg flex items-center justify-center py-[10px] px-4">
+                Cancel subscription
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className=" flex w-full pt-[20px]">
         <div className=" bg-white min-h-[185px] flex flex-col rounded-b-[16px] w-full">
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[8px]">
@@ -183,38 +229,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
             >
               Update
             </button>
-            {/* <AlertDialog
-              open={openBillingModal}
-              onOpenChange={() => setOpenBillingModal(true)}
-            >
-              <button
-                onClick={() => setOpenBillingModal(true)}
-                className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
-              >
-                Update
-              </button>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    You are on the Beta testing plan!
-                  </AlertDialogTitle>
-                  <p className=" text-sm text-gray-700 leading-6">
-                    Please be informed that our billing and payment
-                    functionalities are currently disabled as part of our
-                    ongoing beta testing phase. We appreciate your patience and
-                    understanding as we work to enhance our platform.
-                  </p>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <button
-                    className=" border border-gray-200 px-5 hover:border-gray-500 py-2 text-[15px] rounded-md"
-                    onClick={() => setOpenBillingModal(false)}
-                  >
-                    Close
-                  </button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog> */}
           </div>
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[6px]">
@@ -225,7 +239,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
             </div>
             <button
               onClick={() => setOpenCardSheet(true)}
-              // onClick={() => setOpenBillingModal(true)}
               className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
             >
               Update

@@ -5,7 +5,7 @@ mutation MakePurchasePayment(
   $description: String!
   $total: BigInt!
   $file: String
-  $sudoTransactionId: String
+  $transactionId: String
 ) {
   makePurchasePayment(
     input: {
@@ -15,7 +15,7 @@ mutation MakePurchasePayment(
       description: $description
       total: $total
       file: $file
-      sudoTransactionId: $sudoTransactionId
+      transactionId: $transactionId
     }
   ) {
     paid

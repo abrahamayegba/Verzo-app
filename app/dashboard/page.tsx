@@ -64,6 +64,11 @@ const Dashboard = () => {
     closeModal: closeImportCustomerModal,
   } = useModal();
   const [isVisible, setIsVisible] = useState(true);
+  const [isPlanExpiredModalVisible, setIsPlanExpiredModalVisible] =
+    useState(true);
+  const handleClosePlanExpiredModal = () => {
+    setIsPlanExpiredModalVisible(false);
+  };
   const handleCloseBanner = () => {
     setIsVisible(false);
   };
@@ -249,6 +254,7 @@ const Dashboard = () => {
               openModal={openVerzoAccountModal}
             />
           )}
+
           <div
             className={` px-[52px] bg-primary-whiteTint ${
               !userHasSudoAccount && isVisible ? " pt-[70px]" : "pt-[47px]"

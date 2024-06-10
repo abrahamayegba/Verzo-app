@@ -8,10 +8,10 @@ import {
   useGetCardByIdQuery,
   useViewCardTransactionsQuery,
 } from "@/src/generated/graphql";
-import { Eye, MoveLeft, PlusCircle, Copy, EyeOff, Lock } from "lucide-react";
+import { Eye, MoveLeft, Copy, EyeOff, Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import VerveCardIcon from "@/components/ui/icons/VerveCardIcon";
 import { isAuthenticated } from "@/lib/auth";
@@ -70,11 +70,12 @@ const ViewCard = () => {
     };
     checkAuth();
   }, [router]);
-
   const imageSrc =
     "https://verzo.fra1.cdn.digitaloceanspaces.com/undefined%20-%20Imgur.png";
   const cardData = data?.getCardById;
-  const transactions = getTransactions.data?.viewCardTransactions ?? [];
+  const transactions = useMemo(() => {
+    return getTransactions.data?.viewCardTransactions ?? [];
+  }, [getTransactions.data?.viewCardTransactions]);
   const accountNumber = cardData?.account?.accountNumber;
   const cardHolder = cardData?.user?.fullname;
   const maskedPan = cardData?.maskedPan;

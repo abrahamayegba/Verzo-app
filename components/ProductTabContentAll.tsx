@@ -26,6 +26,9 @@ interface ProductTabContentAllProps {
   openArchiveModal: (productId: string) => void;
   openDeleteModal: (productId: string) => void;
   openEditModal: (productId: string) => void;
+  openServiceArchiveModal: (serviceId: string) => void;
+  openServiceDeleteModal: (serviceId: string) => void;
+  openServiceEditModal: (serviceId: string) => void;
   productSearchId: string;
 }
 
@@ -34,6 +37,9 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
   openArchiveModal,
   openDeleteModal,
   openEditModal,
+  openServiceArchiveModal,
+  openServiceDeleteModal,
+  openServiceEditModal,
   productSearchId,
 }) => {
   const storedBusinessId = JSON.parse(
@@ -106,7 +112,7 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody className=" bg-white">
-        {products?.length === 0 ? (
+        {products?.length == 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -175,36 +181,73 @@ const ProductTabContentAll: React.FC<ProductTabContentAllProps> = ({
                   </span>
                 )}
               </TableCell>
-
               <TableCell className="text-right text-primary-blue">
-                <DropdownMenu>
-                  <DropdownMenuTrigger className=" focus:outline-none">
-                    More
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
-                    <DropdownMenuItem
-                      onClick={() => openEditModal(product?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Edit Product
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => openArchiveModal(product?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
-                      Archive Product
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => openDeleteModal(product?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
-                      <Trash2 className=" w-4 h-4 text-opacity-80" />
-                      Delete Product
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {product?.type === "P" ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className=" focus:outline-none">
+                      More
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[160px]">
+                      <DropdownMenuItem
+                        onClick={() => openEditModal(product?.id!)}
+                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Edit Product
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => openArchiveModal(product?.id!)}
+                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Archive Product
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => openDeleteModal(product?.id!)}
+                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <Trash2 className=" w-4 h-4 text-opacity-80" />
+                        Delete Product
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className=" focus:outline-none">
+                      More
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className=" bg-white mt-1 mr-1 text-primary-greytext shadow1 w-[170px]">
+                      <DropdownMenuItem
+                        onClick={() =>
+                          openServiceEditModal(product?.service?.id!)
+                        }
+                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <Pen className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Edit Service
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          openServiceArchiveModal(product?.service?.id!)
+                        }
+                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <Archive className=" w-4 h-4 text-primary-greytext text-opacity-80" />
+                        Archive Service
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem
+                        onClick={() =>
+                          openServiceDeleteModal(product?.service?.id!)
+                        }
+                        className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
+                      >
+                        <Trash2 className=" w-4 h-4 text-opacity-80" />
+                        Delete Service
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </TableCell>
             </TableRow>
           ))

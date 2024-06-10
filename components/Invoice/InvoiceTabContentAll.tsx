@@ -180,7 +180,11 @@ const InvoiceTabContentAll: React.FC<InvoiceTabContentAllProps> = ({
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      disabled={invoice?.saleStatus?.id! > 1}
+                      disabled={
+                        invoice?.saleExpenses?.length! > 0
+                          ? invoice?.saleStatus?.id! > 1
+                          : invoice?.saleStatus?.id! > 2
+                      }
                       className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
                     >
                       <Link

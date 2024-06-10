@@ -29,7 +29,7 @@ import {
   useGetSaleByIdQuery,
   useUpdateSaleMutation,
 } from "@/src/generated/graphql";
-import { ChevronDown, Eye, Info, MoveLeft, Phone, Plus } from "lucide-react";
+import { Info, MoveLeft, Phone, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -58,6 +58,7 @@ interface InvoiceItem {
 
 type FormData = {
   description: string;
+  note: string;
 };
 
 interface Expense {
@@ -138,8 +139,8 @@ const EditInvoice = () => {
               : item?.serviceInvoiceDetail?.service?.name!,
           price:
             item?.type === "P"
-              ? item?.productInvoiceDetail?.unitPrice!
-              : item?.serviceInvoiceDetail?.unitPrice!,
+              ? item?.productInvoiceDetail?.unitPrice / 100!
+              : item?.serviceInvoiceDetail?.unitPrice / 100!,
           type: item?.type!,
           quantity:
             item?.type === "P"
@@ -154,7 +155,7 @@ const EditInvoice = () => {
     return initialSaleExpenses
       ? initialSaleExpenses.map((expense) => ({
           description: expense?.description!,
-          amount: expense?.amount!,
+          amount: expense?.amount / 100!,
           index: expense?.index!,
         }))
       : [];
@@ -164,7 +165,7 @@ const EditInvoice = () => {
     return initialSaleServiceExpenses
       ? initialSaleServiceExpenses.map((expense) => ({
           description: expense?.description!,
-          amount: expense?.amount!,
+          amount: expense?.amount / 100!,
           index: expense?.index!,
           serviceId: expense?.service?.id!,
         }))
@@ -389,7 +390,9 @@ const EditInvoice = () => {
       showOtherFailureToast("Please pick a date before saving the invoice.");
       return;
     }
-    if (invoiceDueDate || initialDueDate < invoiceDate || initialIssueDate) {
+    const actualDueDate = invoiceDueDate ? invoiceDueDate : initialDueDate;
+    const actualIssueDate = invoiceDate ? invoiceDate : initialIssueDate;
+    if (actualIssueDate > actualDueDate) {
       showOtherFailureToast("Due date cannot be earlier than the Issue date.");
       return;
     }
@@ -400,6 +403,7 @@ const EditInvoice = () => {
           description: getValues("description")
             ? getValues("description")
             : sale?.description,
+          note: getValues("note") ? getValues("note") : sale?.note,
           saleExpense: expenses.length > 0 ? expenses : null,
           saleServiceExpense:
             serviceExpenses.length > 0 ? serviceExpenses : null,
@@ -703,7 +707,20 @@ const EditInvoice = () => {
             id="description"
             defaultValue={sale?.description!}
             required
-            className=" mt-5"
+            className=" mt-3"
+          />
+        </div>
+        <div className=" flex flex-col mt-2">
+          <p className=" text-lg text-primary-black">Notes / Terms</p>
+          <p className=" text-primary-greytext mt-[2px]">
+            Add notes / payment details
+          </p>
+          <Textarea
+            {...register("note")}
+            id="description"
+            defaultValue={sale?.note!}
+            required
+            className=" mt-3"
           />
         </div>
         <div className=" flex flex-row items-center gap-x-5 mt-2">

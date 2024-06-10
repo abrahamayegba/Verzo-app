@@ -218,7 +218,7 @@ const PlanSheet: React.FC<PlanProps> = ({ open, onClose, confirmPlan }) => {
               </TabsContent>
             </Tabs>
             <button
-              disabled={!selectedOption.id || !selectedOption.name}
+              disabled={selectedOption?.id === planId}
               onClick={() => {
                 onClose();
                 confirmPlan(selectedOption!);
