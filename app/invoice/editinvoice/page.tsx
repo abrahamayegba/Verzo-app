@@ -396,6 +396,18 @@ const EditInvoice = () => {
       showOtherFailureToast("Due date cannot be earlier than the Issue date.");
       return;
     }
+    const updatedSaleExpenses = expenses?.map((item) => {
+      return {
+        ...item,
+        amount: item?.amount * 100,
+      };
+    });
+    const updatedSaleServiceExpenses = serviceExpenses?.map((item) => {
+      return {
+        ...item,
+        amount: item?.amount * 100,
+      };
+    });
     try {
       await updateSaleMutation({
         variables: {
@@ -404,9 +416,12 @@ const EditInvoice = () => {
             ? getValues("description")
             : sale?.description,
           note: getValues("note") ? getValues("note") : sale?.note,
-          saleExpense: expenses.length > 0 ? expenses : null,
+          saleExpense:
+            updatedSaleExpenses.length > 0 ? updatedSaleExpenses : null,
           saleServiceExpense:
-            serviceExpenses.length > 0 ? serviceExpenses : null,
+            updatedSaleServiceExpenses.length > 0
+              ? updatedSaleServiceExpenses
+              : null,
           updateInvoiceInput: invoiceInput,
         },
         refetchQueries: [
@@ -427,6 +442,8 @@ const EditInvoice = () => {
       showFailureToast(error);
     }
   };
+
+  console.log(expenses.length);
 
   return (
     <div className=" pt-[40px] flex flex-col max-w-[850px] gap-y-[36px]">

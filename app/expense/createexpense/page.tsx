@@ -216,6 +216,7 @@ const CreateExpense = () => {
           GetExpenseForQuarterDocument,
           GetExpenseForYearDocument,
         ],
+        awaitRefetchQueries: true,
       });
       showSuccessToast();
       router.push("/dashboard/expenses");

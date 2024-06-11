@@ -43,7 +43,10 @@ const Signup = () => {
   const SignUpHandler = async (form: FormData) => {
     try {
       const response = await signUpMutation({
-        variables: form,
+        variables: {
+          ...form,
+          email: form.email.toLowerCase(),
+        },
       });
       saveToken(response.data?.signUp.access_token!);
       router.push("/auth/verifyemail");

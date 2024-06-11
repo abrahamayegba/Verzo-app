@@ -105,6 +105,8 @@ const EditExpense = () => {
     setExpenseItems(mappedExpenseItems);
   }, [mappedExpenseItems]);
 
+  console.log(mappedExpenseItems);
+
   const initialExpenseDate = expense?.expenseDate;
   const initialSubtotal = expense?.amount;
   const initialTotal = initialSubtotal;
@@ -200,6 +202,7 @@ const EditExpense = () => {
     0
   );
   const amountDue = subtotal;
+
   const onUpdateExpenseHandler = async () => {
     if (!date && !initialExpenseDate) {
       showDateFailureToast("Please pick a date and try again.");
@@ -210,6 +213,12 @@ const EditExpense = () => {
       return;
     }
     try {
+      const updatedExpenseItems = expenseItems?.map((item) => {
+        return {
+          ...item,
+          unitPrice: item?.unitPrice * 100,
+        };
+      });
       await updateExpenseMutation({
         variables: {
           expenseId: expenseId!,
@@ -218,7 +227,7 @@ const EditExpense = () => {
             : initialExpenseCategoryId,
           expenseDate: expenseDate ? expenseDate : initialExpenseDate,
           merchantId: merchantId ? merchantId : initialMerchantId,
-          expenseItem: expenseItems,
+          expenseItem: updatedExpenseItems,
           description: getValues("description")
             ? getValues("description")
             : expense?.description,

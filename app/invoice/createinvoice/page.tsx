@@ -327,12 +327,27 @@ const CreateInvoice = () => {
       showOtherFailureToast("Due date cannot be earlier than the Issue date.");
       return;
     }
+    const updatedSaleExpenses = expenses?.map((item) => {
+      return {
+        ...item,
+        amount: item?.amount * 100,
+      };
+    });
+    const updatedSaleServiceExpenses = serviceExpenses?.map((item) => {
+      return {
+        ...item,
+        amount: item?.amount * 100,
+      };
+    });
     try {
       await createSaleEntryMutation({
         variables: {
-          saleExpense: expenses.length > 0 ? expenses : null,
+          saleExpense:
+            updatedSaleExpenses.length > 0 ? updatedSaleExpenses : null,
           saleServiceExpense:
-            serviceExpenses.length > 0 ? serviceExpenses : null,
+            updatedSaleServiceExpenses.length > 0
+              ? updatedSaleServiceExpenses
+              : null,
           invoiceInput: invoiceInput,
           ...data,
         },

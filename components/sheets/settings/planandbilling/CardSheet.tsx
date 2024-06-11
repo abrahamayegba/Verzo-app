@@ -35,15 +35,18 @@ const CardSheet: React.FC<CardProps> = ({
   });
   useEffect(() => {
     if (data) {
-      const defaultCard = data?.getUserCards?.find((card) => card?.id);
+      const defaultCard = data?.getUserCards?.find((card) => card?.default);
       if (defaultCard) {
         setDefaultCardId(defaultCard.id);
       }
     }
   }, [data]);
+  console.log(defaultCardId);
   const handleCardSelection = (cardId: string) => {
     setSelectedCardId(cardId);
   };
+
+  console.log(data?.getUserCards);
 
   return (
     <>
@@ -120,7 +123,7 @@ const CardSheet: React.FC<CardProps> = ({
                 saveAsDefault();
               }}
               className="bg-primary-blue text-white disabled:opacity-50 disabled:cursor-not-allowed mt-1 rounded-[10px] py-[10px]"
-              disabled={selectedCardId === defaultCardId}
+              disabled={selectedCardId === defaultCardId || !selectedCardId}
             >
               Save as default
             </button>

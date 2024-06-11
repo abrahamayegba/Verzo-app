@@ -20,6 +20,7 @@ import {
   useGetPurchaseForWeekQuery,
   useGetPurchaseForYearQuery,
   useGetSaleByBusinessQuery,
+  useSubscriptionCheckerQuery,
   useTotalMonthlyInvoicesAmountQuery,
   useTotalQuarterlyInvoicesAmountQuery,
   useTotalWeeklyInvoicesAmountQuery,
@@ -36,6 +37,7 @@ import UploadProductCSV from "@/components/modals/product/UploadProductModal";
 import UploadServiceCSV from "@/components/modals/service/UploadServiceModal";
 import CompleteAccountBanner from "@/components/CompleteAccountBanner";
 import CreateVerzoAccount from "@/components/modals/CreateVerzoAccountModal";
+import SubscriptionExpiredModal from "@/components/modals/SubscriptionExpiredModal";
 
 const Dashboard = () => {
   const {
@@ -79,6 +81,12 @@ const Dashboard = () => {
   );
   const businessId = storedBusinessId[0] || "";
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
+  const businessName =
+    getBusinessesByUserId?.data?.getBusinessesByUserId?.businesses?.[0]
+      ?.businessName;
+  const subscriptionChecker = useSubscriptionCheckerQuery();
+  const userHasSubscription =
+    subscriptionChecker?.data?.subscriptionCheckerForFrontend;
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -254,7 +262,13 @@ const Dashboard = () => {
               openModal={openVerzoAccountModal}
             />
           )}
-
+          {!userHasSubscription && (
+            <SubscriptionExpiredModal
+              open={isPlanExpiredModalVisible}
+              onClose={handleClosePlanExpiredModal}
+              businessName={businessName!}
+            />
+          )}
           <div
             className={` px-[52px] bg-primary-whiteTint ${
               !userHasSudoAccount && isVisible ? " pt-[70px]" : "pt-[47px]"

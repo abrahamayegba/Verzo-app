@@ -47,7 +47,10 @@ const SignIn = () => {
   const SignInHandler = async (form: FormData) => {
     try {
       const response = await signInMutation({
-        variables: form,
+        variables: {
+          ...form,
+          email: form.email.toLowerCase(),
+        },
       });
       if (response.data?.signIn.token.access_token) {
         saveToken(response.data.signIn.token.access_token);
