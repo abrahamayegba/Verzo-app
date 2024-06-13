@@ -316,7 +316,16 @@ const ConfirmPurchaseItems = () => {
                   </p>
                 </div>
                 <div className="text-primary-greytext flex flex-col gap-y-2">
-                  <p>Quantity received</p>
+                  <div className=" flex flex-row justify-between">
+                    <p className=" flex flex-row justify-between">
+                      Quantity received{" "}
+                    </p>
+                    {purchase?.quantity !== purchase?.quantityReceived && (
+                      <p className=" italic">
+                        {purchase?.quantityReceived} items received
+                      </p>
+                    )}
+                  </div>
                   {purchase?.quantity === purchase?.quantityReceived ? (
                     <p className="border cursor-not-allowed text-gray-700 border-gray-100 px-3 bg-gray-50 py-2 rounded-[8px]">
                       {purchase?.quantityReceived}

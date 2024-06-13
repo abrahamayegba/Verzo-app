@@ -71,7 +71,6 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
     combinedProductUnits.data?.getCombinedProductUnits?.filter(
       (unit) => unit?.unitName !== "Other"
     );
-
   const showSuccessToast = () => {
     toast({
       title: "Product Successfully Created!",
@@ -208,7 +207,10 @@ const CreateProductSheet: React.FC<CreateProductProps> = ({
                           key={productUnit?.id}
                           value={productUnit?.id!}
                         >
-                          {productUnit?.unitName}
+                          {productUnit?.unitName}{" "}
+                          {productUnit?.description && (
+                            <span> - {productUnit?.description}</span>
+                          )}
                         </SelectItem>
                       ))}
                       <button

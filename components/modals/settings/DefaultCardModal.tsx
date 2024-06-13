@@ -1,19 +1,66 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import localStorage from "local-storage-fallback";
 import CardIcon from "@/components/ui/icons/CardIcon";
+import {
+  GetUserCardsDocument,
+  useSetCardAsDefaultMutation,
+} from "@/src/generated/graphql";
+import { useToast } from "@/app/hooks/use-toast";
 
 interface DefaultCardProps {
   open: boolean;
   openModal: () => void;
   onClose: () => void;
+  cardId: string;
 }
 
 const DefaultCardModal: React.FC<DefaultCardProps> = ({
   open,
   openModal,
+  cardId,
   onClose,
 }) => {
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const { toast } = useToast();
+  const [setCardAsDefaultMutation, { loading }] = useSetCardAsDefaultMutation();
+  const showSuccessToast = () => {
+    toast({
+      title: "Successful!",
+      description: "Your default card has been successfully changed",
+      duration: 3000,
+    });
+  };
+
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+  const handleSetAsDefault = async () => {
+    try {
+      await setCardAsDefaultMutation({
+        variables: {
+          businessId: businessId,
+          cardId: cardId,
+        },
+        refetchQueries: [GetUserCardsDocument],
+      });
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      onClose();
+      showFailureToast(error);
+      console.error(error);
+    }
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -58,8 +105,14 @@ const DefaultCardModal: React.FC<DefaultCardProps> = ({
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-                      Proceed
+                    <button
+                      disabled={loading}
+                      onClick={handleSetAsDefault}
+                      className={` px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white ${
+                        loading ? " opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading" : "Proceed"}
                     </button>
                   </div>
                 </div>

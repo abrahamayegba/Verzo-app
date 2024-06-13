@@ -1,0 +1,12 @@
+mutation EndSubscription($subscriptionId: String!) {
+  endSubscription(subscriptionId: $subscriptionId) {
+    dateSubscribed
+    dateUnsubscribed
+    id
+    currentPlanId
+    plan {
+      planName
+      currentPrice
+    }
+  }
+}

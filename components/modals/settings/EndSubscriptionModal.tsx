@@ -1,31 +1,65 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import Logout from "../ui/icons/Logout";
-import { useLogOutMutation } from "@/src/generated/graphql";
-import { clearToken, isAuthenticated } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import { AlertTriangle, Trash2 } from "lucide-react";
+import { useToast } from "@/app/hooks/use-toast";
+import {
+  GetCurrentSubscriptionByBusinessDocument,
+  GetSubscriptionByBusinessDocument,
+  useEndSubscriptionMutation,
+} from "@/src/generated/graphql";
 
-interface LogoutProps {
+interface EndSubscriptionProps {
   open: boolean;
   openModal: () => void;
+  subscriptionId: string;
   onClose: () => void;
 }
-const LogoutModal: React.FC<LogoutProps> = ({ open, onClose }) => {
-  const router = useRouter();
-  const [logOutMutation, { loading }] = useLogOutMutation();
-  const handleLogout = async () => {
+const EndSubscriptionModal: React.FC<EndSubscriptionProps> = ({
+  open,
+  openModal,
+  subscriptionId,
+  onClose,
+}) => {
+  const { toast } = useToast();
+  const [endSubscriptionMutation, { data, loading, error }] =
+    useEndSubscriptionMutation({
+      variables: {
+        subscriptionId: subscriptionId,
+      },
+    });
+  const showSuccessToast = () => {
+    toast({
+      title: "Successful!",
+      description: "Your card has been successfully deleted",
+      duration: 3000,
+    });
+  };
+
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+  const handleEndSubscription = async () => {
     try {
-      const authenticated = await isAuthenticated();
-      if (!authenticated) {
-        router.push("/auth/signin");
-        return;
-      }
-      await logOutMutation();
-      clearToken();
-      localStorage.removeItem("businessId");
-      router.push("/auth/signin");
+      await endSubscriptionMutation({
+        variables: {
+          subscriptionId: subscriptionId,
+        },
+        refetchQueries: [
+          GetSubscriptionByBusinessDocument,
+          GetCurrentSubscriptionByBusinessDocument,
+        ],
+      });
+      onClose();
+      showSuccessToast();
     } catch (error) {
+      onClose();
+      showFailureToast(error);
       console.error(error);
     }
   };
@@ -58,12 +92,13 @@ const LogoutModal: React.FC<LogoutProps> = ({ open, onClose }) => {
                 <div className=" flex flex-col gap-y-3">
                   <div className=" flex">
                     <span className=" rounded-full p-3 bg-[#FFF1F1] flex">
-                      <Logout />
+                      <AlertTriangle className=" text-primary-red" />
                     </span>
                   </div>
-                  <p className=" text-lg text-[#121212]">Log out?</p>
+                  <p className=" text-lg text-[#121212]">End subscription</p>
                   <p className=" text-primary-greytext">
-                    Are you sure you want to logout?
+                    Are you sure you want to end your subscription plan? You
+                    can’t undo this action
                   </p>
                   <div className=" flex justify-between mt-6">
                     <button
@@ -73,13 +108,13 @@ const LogoutModal: React.FC<LogoutProps> = ({ open, onClose }) => {
                       Cancel
                     </button>
                     <button
-                      onClick={() => handleLogout()}
+                      onClick={handleEndSubscription}
                       disabled={loading}
                       className={`px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white ${
                         loading ? " opacity-50" : ""
                       }`}
                     >
-                      {loading ? "Loading" : "Log out"}
+                      {loading ? "Loading" : "Proceed"}
                     </button>
                   </div>
                 </div>
@@ -92,4 +127,4 @@ const LogoutModal: React.FC<LogoutProps> = ({ open, onClose }) => {
   );
 };
 
-export default LogoutModal;
+export default EndSubscriptionModal;

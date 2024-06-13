@@ -129,8 +129,8 @@ const Products = () => {
             <div className=" flex gap-x-[14px] max-h-[48px]">
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <div className=" px-6 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
-                    Add Product
+                  <div className=" px-8 py-3 rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-blue text-white">
+                    Create
                     <PlusCircle className=" w-5 h-5" />
                   </div>
                 </DropdownMenuTrigger>

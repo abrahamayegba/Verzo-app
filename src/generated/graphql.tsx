@@ -311,7 +311,7 @@ export type Business = {
   businessInitials?: Maybe<Scalars['String']['output']>;
   businessMobile?: Maybe<Scalars['String']['output']>;
   businessName: Scalars['String']['output'];
-  businessNotifications?: Maybe<BusinessNotification>;
+  businessNotification?: Maybe<BusinessNotification>;
   cards?: Maybe<Array<Maybe<Card>>>;
   createdAt?: Maybe<Scalars['Date']['output']>;
   createdBy?: Maybe<User>;
@@ -1083,6 +1083,7 @@ export type CreateSubscriptionTokenizedInput = {
   cardId: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
+  recurring?: InputMaybe<Scalars['Boolean']['input']>;
   tax: Scalars['BigInt']['input'];
 };
 
@@ -1092,6 +1093,7 @@ export type CreateSubscriptionWithCard = {
   businessId: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
+  recurring?: InputMaybe<Scalars['Boolean']['input']>;
   tax: Scalars['BigInt']['input'];
 };
 
@@ -1101,6 +1103,7 @@ export type CreateSubscriptionWithCardB = {
   businessId: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
+  recurring?: InputMaybe<Scalars['Boolean']['input']>;
   reference: Scalars['String']['input'];
   tax: Scalars['BigInt']['input'];
 };
@@ -2089,6 +2092,7 @@ export type Mutation = {
   deleteBusinessCategory?: Maybe<Scalars['Boolean']['output']>;
   deleteBusinessProductUnit?: Maybe<Scalars['Boolean']['output']>;
   deleteBusinessServiceUnit?: Maybe<Scalars['Boolean']['output']>;
+  deleteCard?: Maybe<Scalars['Boolean']['output']>;
   deleteCategory?: Maybe<Scalars['Boolean']['output']>;
   deleteChartOfAccount?: Maybe<Scalars['Boolean']['output']>;
   deleteCustomer?: Maybe<Scalars['Boolean']['output']>;
@@ -2219,6 +2223,7 @@ export type Mutation = {
   updateServiceSaleItem?: Maybe<ServiceSaleItem>;
   updateServiceUnit?: Maybe<ServiceUnit>;
   updateSettlementAccount?: Maybe<SettlementAccount>;
+  updateSubscriptionRecurringState?: Maybe<Scalars['Boolean']['output']>;
   updateUser?: Maybe<User>;
   updateUserInWaitlist?: Maybe<UserWaitlist>;
   uploadBusinessLogo?: Maybe<Scalars['Boolean']['output']>;
@@ -2783,6 +2788,11 @@ export type MutationDeleteBusinessProductUnitArgs = {
 
 export type MutationDeleteBusinessServiceUnitArgs = {
   serviceUnitId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteCardArgs = {
+  cardId: Scalars['String']['input'];
 };
 
 
@@ -3488,6 +3498,11 @@ export type MutationUpdateSettlementAccountArgs = {
 };
 
 
+export type MutationUpdateSubscriptionRecurringStateArgs = {
+  input: UpdateSubscriptionRecurringState;
+};
+
+
 export type MutationUpdateUserArgs = {
   input?: InputMaybe<UpdateUser>;
 };
@@ -4005,6 +4020,7 @@ export type Query = {
   getAccountCategoryTypes: Array<Maybe<AccountCategoryType>>;
   getAccounts?: Maybe<Array<Maybe<BankAccount>>>;
   getAddOnOptions: Array<Maybe<AddOnOption>>;
+  getAllCards?: Maybe<Array<Maybe<Card>>>;
   getArchivedCustomerByBusiness?: Maybe<GetCustomerResponse>;
   getArchivedCustomerByBusinessMobile?: Maybe<GetCustomerResponse>;
   getArchivedExpenseByBusiness?: Maybe<GetExpenseResponse>;
@@ -6154,11 +6170,10 @@ export type UpdateSettlementAccount = {
   bankName?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateSubscription = {
-  currentPlanId?: InputMaybe<Scalars['String']['input']>;
-  offerId?: InputMaybe<Scalars['String']['input']>;
-  subscribeAfterTrial?: InputMaybe<Scalars['Boolean']['input']>;
-  validTo?: InputMaybe<Scalars['Date']['input']>;
+export type UpdateSubscriptionRecurringState = {
+  businessId: Scalars['String']['input'];
+  recurring: Scalars['Boolean']['input'];
+  subscriptionId: Scalars['String']['input'];
 };
 
 export type UpdateUser = {
@@ -6341,14 +6356,14 @@ export type GetCombinedProductUnitsQueryVariables = Exact<{
 }>;
 
 
-export type GetCombinedProductUnitsQuery = { __typename?: 'Query', getCombinedProductUnits?: Array<{ __typename?: 'CombinedProductUnit', id?: string | null, unitName?: string | null } | null> | null };
+export type GetCombinedProductUnitsQuery = { __typename?: 'Query', getCombinedProductUnits?: Array<{ __typename?: 'CombinedProductUnit', id?: string | null, unitName?: string | null, description?: string | null } | null> | null };
 
 export type GetCombinesServiceUnitsQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
 }>;
 
 
-export type GetCombinesServiceUnitsQuery = { __typename?: 'Query', getCombinedServiceUnits?: Array<{ __typename?: 'CombinedServiceUnit', id?: string | null, unitName?: string | null } | null> | null };
+export type GetCombinesServiceUnitsQuery = { __typename?: 'Query', getCombinedServiceUnits?: Array<{ __typename?: 'CombinedServiceUnit', id?: string | null, unitName?: string | null, description?: string | null } | null> | null };
 
 export type UnarchiveCustomerByBusinessMutationVariables = Exact<{
   customerId: Scalars['String']['input'];
@@ -6685,6 +6700,13 @@ export type DeleteAddOnOptionMutationVariables = Exact<{
 
 export type DeleteAddOnOptionMutation = { __typename?: 'Mutation', deleteAddOnOption?: boolean | null };
 
+export type DeleteCardMutationVariables = Exact<{
+  cardId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteCardMutation = { __typename?: 'Mutation', deleteCard?: boolean | null };
+
 export type DeleteCustomerMutationVariables = Exact<{
   customerId: Scalars['String']['input'];
 }>;
@@ -6737,6 +6759,13 @@ export type EmployeeSignUpAfterInviteMutationVariables = Exact<{
 
 
 export type EmployeeSignUpAfterInviteMutation = { __typename?: 'Mutation', employeeSignUpAfterInvite: { __typename?: 'Token', access_token: string, refresh_token: string } };
+
+export type EndSubscriptionMutationVariables = Exact<{
+  subscriptionId: Scalars['String']['input'];
+}>;
+
+
+export type EndSubscriptionMutation = { __typename?: 'Mutation', endSubscription?: { __typename?: 'Subscription', dateSubscribed: any, dateUnsubscribed?: any | null, id: string, currentPlanId: string, plan?: { __typename?: 'Plan', planName: string, currentPrice: any } | null } | null };
 
 export type UploadMutationVariables = Exact<{
   image: Scalars['Any']['input'];
@@ -7363,19 +7392,19 @@ export type GetUserByIdQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetUserByIdQuery = { __typename?: 'Query', getUserById: { __typename?: 'User', id: string, fullname: string, email: string, business?: Array<{ __typename?: 'Business', id: string } | null> | null } };
 
-export type GetUserCardsByBusinessQueryVariables = Exact<{
-  businessId: Scalars['String']['input'];
-}>;
-
-
-export type GetUserCardsByBusinessQuery = { __typename?: 'Query', getUserCardsByBusiness?: Array<{ __typename?: 'BusinessBankCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null } | null> | null };
-
 export type GetUserCardsQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
 }>;
 
 
 export type GetUserCardsQuery = { __typename?: 'Query', getUserCards?: Array<{ __typename?: 'Card', first6Digits?: string | null, last4Digits?: string | null, type?: string | null, id: string, default?: boolean | null, expiry?: string | null } | null> | null };
+
+export type GetUserCardsByBusinessQueryVariables = Exact<{
+  businessId: Scalars['String']['input'];
+}>;
+
+
+export type GetUserCardsByBusinessQuery = { __typename?: 'Query', getUserCardsByBusiness?: Array<{ __typename?: 'BusinessBankCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null } | null> | null };
 
 export type InvoiceAndExpenseGraphMonthlyQueryVariables = Exact<{
   businessId: Scalars['String']['input'];
@@ -7543,6 +7572,14 @@ export type SendVerificationOtpMutationVariables = Exact<{
 
 export type SendVerificationOtpMutation = { __typename?: 'Mutation', sendVerificationOTP?: { __typename?: 'SafeHavenOtpResponse', statusCode: number, message: string, data: { __typename?: 'SafeHavenOtpResponseData', _id: string, otpVerified: boolean, otpId: string } } | null };
 
+export type SetCardAsDefaultMutationVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  cardId: Scalars['String']['input'];
+}>;
+
+
+export type SetCardAsDefaultMutation = { __typename?: 'Mutation', setCardAsDefault?: boolean | null };
+
 export type SetUpBusinessAccountMutationVariables = Exact<{
   dob: Scalars['Date']['input'];
   identityId: Scalars['String']['input'];
@@ -7678,6 +7715,15 @@ export type UpdatePurchaseMutationVariables = Exact<{
 
 
 export type UpdatePurchaseMutation = { __typename?: 'Mutation', updatePurchaseEntry?: { __typename?: 'Purchase', id?: string | null, description?: string | null, transactionDate?: any | null, total?: any | null, businessId?: string | null } | null };
+
+export type UpdateSubscriptionRecurringStateMutationVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
+  recurring: Scalars['Boolean']['input'];
+}>;
+
+
+export type UpdateSubscriptionRecurringStateMutation = { __typename?: 'Mutation', updateSubscriptionRecurringState?: boolean | null };
 
 export type UpdateSaleMutationVariables = Exact<{
   saleId: Scalars['String']['input'];
@@ -7865,6 +7911,7 @@ export const GetCombinedProductUnitsDocument = gql`
   getCombinedProductUnits(businessId: $businessId) {
     id
     unitName
+    description
   }
 }
     `;
@@ -7906,6 +7953,7 @@ export const GetCombinesServiceUnitsDocument = gql`
   getCombinedServiceUnits(businessId: $businessId) {
     id
     unitName
+    description
   }
 }
     `;
@@ -9329,6 +9377,37 @@ export function useDeleteAddOnOptionMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteAddOnOptionMutationHookResult = ReturnType<typeof useDeleteAddOnOptionMutation>;
 export type DeleteAddOnOptionMutationResult = Apollo.MutationResult<DeleteAddOnOptionMutation>;
 export type DeleteAddOnOptionMutationOptions = Apollo.BaseMutationOptions<DeleteAddOnOptionMutation, DeleteAddOnOptionMutationVariables>;
+export const DeleteCardDocument = gql`
+    mutation DeleteCard($cardId: String!) {
+  deleteCard(cardId: $cardId)
+}
+    `;
+export type DeleteCardMutationFn = Apollo.MutationFunction<DeleteCardMutation, DeleteCardMutationVariables>;
+
+/**
+ * __useDeleteCardMutation__
+ *
+ * To run a mutation, you first call `useDeleteCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCardMutation, { data, loading, error }] = useDeleteCardMutation({
+ *   variables: {
+ *      cardId: // value for 'cardId'
+ *   },
+ * });
+ */
+export function useDeleteCardMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCardMutation, DeleteCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCardMutation, DeleteCardMutationVariables>(DeleteCardDocument, options);
+      }
+export type DeleteCardMutationHookResult = ReturnType<typeof useDeleteCardMutation>;
+export type DeleteCardMutationResult = Apollo.MutationResult<DeleteCardMutation>;
+export type DeleteCardMutationOptions = Apollo.BaseMutationOptions<DeleteCardMutation, DeleteCardMutationVariables>;
 export const DeleteCustomerDocument = gql`
     mutation DeleteCustomer($customerId: String!) {
   deleteCustomer(customerId: $customerId)
@@ -9558,6 +9637,46 @@ export function useEmployeeSignUpAfterInviteMutation(baseOptions?: Apollo.Mutati
 export type EmployeeSignUpAfterInviteMutationHookResult = ReturnType<typeof useEmployeeSignUpAfterInviteMutation>;
 export type EmployeeSignUpAfterInviteMutationResult = Apollo.MutationResult<EmployeeSignUpAfterInviteMutation>;
 export type EmployeeSignUpAfterInviteMutationOptions = Apollo.BaseMutationOptions<EmployeeSignUpAfterInviteMutation, EmployeeSignUpAfterInviteMutationVariables>;
+export const EndSubscriptionDocument = gql`
+    mutation EndSubscription($subscriptionId: String!) {
+  endSubscription(subscriptionId: $subscriptionId) {
+    dateSubscribed
+    dateUnsubscribed
+    id
+    currentPlanId
+    plan {
+      planName
+      currentPrice
+    }
+  }
+}
+    `;
+export type EndSubscriptionMutationFn = Apollo.MutationFunction<EndSubscriptionMutation, EndSubscriptionMutationVariables>;
+
+/**
+ * __useEndSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useEndSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEndSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [endSubscriptionMutation, { data, loading, error }] = useEndSubscriptionMutation({
+ *   variables: {
+ *      subscriptionId: // value for 'subscriptionId'
+ *   },
+ * });
+ */
+export function useEndSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<EndSubscriptionMutation, EndSubscriptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EndSubscriptionMutation, EndSubscriptionMutationVariables>(EndSubscriptionDocument, options);
+      }
+export type EndSubscriptionMutationHookResult = ReturnType<typeof useEndSubscriptionMutation>;
+export type EndSubscriptionMutationResult = Apollo.MutationResult<EndSubscriptionMutation>;
+export type EndSubscriptionMutationOptions = Apollo.BaseMutationOptions<EndSubscriptionMutation, EndSubscriptionMutationVariables>;
 export const UploadDocument = gql`
     mutation Upload($image: Any!) {
   uploadFile(image: $image)
@@ -14134,6 +14253,51 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
+export const GetUserCardsDocument = gql`
+    query getUserCards($businessId: String!) {
+  getUserCards(businessId: $businessId) {
+    first6Digits
+    last4Digits
+    type
+    id
+    default
+    expiry
+  }
+}
+    `;
+
+/**
+ * __useGetUserCardsQuery__
+ *
+ * To run a query within a React component, call `useGetUserCardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserCardsQuery({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *   },
+ * });
+ */
+export function useGetUserCardsQuery(baseOptions: Apollo.QueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
+      }
+export function useGetUserCardsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
+        }
+export function useGetUserCardsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
+        }
+export type GetUserCardsQueryHookResult = ReturnType<typeof useGetUserCardsQuery>;
+export type GetUserCardsLazyQueryHookResult = ReturnType<typeof useGetUserCardsLazyQuery>;
+export type GetUserCardsSuspenseQueryHookResult = ReturnType<typeof useGetUserCardsSuspenseQuery>;
+export type GetUserCardsQueryResult = Apollo.QueryResult<GetUserCardsQuery, GetUserCardsQueryVariables>;
 export const GetUserCardsByBusinessDocument = gql`
     query GetUserCardsByBusiness($businessId: String!) {
   getUserCardsByBusiness(businessId: $businessId) {
@@ -14190,51 +14354,6 @@ export type GetUserCardsByBusinessQueryHookResult = ReturnType<typeof useGetUser
 export type GetUserCardsByBusinessLazyQueryHookResult = ReturnType<typeof useGetUserCardsByBusinessLazyQuery>;
 export type GetUserCardsByBusinessSuspenseQueryHookResult = ReturnType<typeof useGetUserCardsByBusinessSuspenseQuery>;
 export type GetUserCardsByBusinessQueryResult = Apollo.QueryResult<GetUserCardsByBusinessQuery, GetUserCardsByBusinessQueryVariables>;
-export const GetUserCardsDocument = gql`
-    query getUserCards($businessId: String!) {
-  getUserCards(businessId: $businessId) {
-    first6Digits
-    last4Digits
-    type
-    id
-    default
-    expiry
-  }
-}
-    `;
-
-/**
- * __useGetUserCardsQuery__
- *
- * To run a query within a React component, call `useGetUserCardsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserCardsQuery({
- *   variables: {
- *      businessId: // value for 'businessId'
- *   },
- * });
- */
-export function useGetUserCardsQuery(baseOptions: Apollo.QueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
-      }
-export function useGetUserCardsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
-        }
-export function useGetUserCardsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserCardsQuery, GetUserCardsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetUserCardsQuery, GetUserCardsQueryVariables>(GetUserCardsDocument, options);
-        }
-export type GetUserCardsQueryHookResult = ReturnType<typeof useGetUserCardsQuery>;
-export type GetUserCardsLazyQueryHookResult = ReturnType<typeof useGetUserCardsLazyQuery>;
-export type GetUserCardsSuspenseQueryHookResult = ReturnType<typeof useGetUserCardsSuspenseQuery>;
-export type GetUserCardsQueryResult = Apollo.QueryResult<GetUserCardsQuery, GetUserCardsQueryVariables>;
 export const InvoiceAndExpenseGraphMonthlyDocument = gql`
     query InvoiceAndExpenseGraphMonthly($businessId: String!, $monthly: Boolean) {
   invoiceAndExpenseGraphMonthly(businessId: $businessId, monthly: $monthly) {
@@ -15020,6 +15139,38 @@ export function useSendVerificationOtpMutation(baseOptions?: Apollo.MutationHook
 export type SendVerificationOtpMutationHookResult = ReturnType<typeof useSendVerificationOtpMutation>;
 export type SendVerificationOtpMutationResult = Apollo.MutationResult<SendVerificationOtpMutation>;
 export type SendVerificationOtpMutationOptions = Apollo.BaseMutationOptions<SendVerificationOtpMutation, SendVerificationOtpMutationVariables>;
+export const SetCardAsDefaultDocument = gql`
+    mutation SetCardAsDefault($businessId: String!, $cardId: String!) {
+  setCardAsDefault(businessId: $businessId, cardId: $cardId)
+}
+    `;
+export type SetCardAsDefaultMutationFn = Apollo.MutationFunction<SetCardAsDefaultMutation, SetCardAsDefaultMutationVariables>;
+
+/**
+ * __useSetCardAsDefaultMutation__
+ *
+ * To run a mutation, you first call `useSetCardAsDefaultMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetCardAsDefaultMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setCardAsDefaultMutation, { data, loading, error }] = useSetCardAsDefaultMutation({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      cardId: // value for 'cardId'
+ *   },
+ * });
+ */
+export function useSetCardAsDefaultMutation(baseOptions?: Apollo.MutationHookOptions<SetCardAsDefaultMutation, SetCardAsDefaultMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetCardAsDefaultMutation, SetCardAsDefaultMutationVariables>(SetCardAsDefaultDocument, options);
+      }
+export type SetCardAsDefaultMutationHookResult = ReturnType<typeof useSetCardAsDefaultMutation>;
+export type SetCardAsDefaultMutationResult = Apollo.MutationResult<SetCardAsDefaultMutation>;
+export type SetCardAsDefaultMutationOptions = Apollo.BaseMutationOptions<SetCardAsDefaultMutation, SetCardAsDefaultMutationVariables>;
 export const SetUpBusinessAccountDocument = gql`
     mutation SetUpBusinessAccount($dob: Date!, $identityId: String!, $identityNumber: String!, $otp: String!, $idFrontUrl: String, $idBackUrl: String, $incorporationCertificateUrl: String, $addressVerificationUrl: String, $addressLine1: String!, $addressLine2: String, $city: String!, $state: String!, $postalCode: String!) {
   setUpBusinessAccount(
@@ -15568,6 +15719,41 @@ export function useUpdatePurchaseMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdatePurchaseMutationHookResult = ReturnType<typeof useUpdatePurchaseMutation>;
 export type UpdatePurchaseMutationResult = Apollo.MutationResult<UpdatePurchaseMutation>;
 export type UpdatePurchaseMutationOptions = Apollo.BaseMutationOptions<UpdatePurchaseMutation, UpdatePurchaseMutationVariables>;
+export const UpdateSubscriptionRecurringStateDocument = gql`
+    mutation UpdateSubscriptionRecurringState($businessId: String!, $subscriptionId: String!, $recurring: Boolean!) {
+  updateSubscriptionRecurringState(
+    input: {businessId: $businessId, subscriptionId: $subscriptionId, recurring: $recurring}
+  )
+}
+    `;
+export type UpdateSubscriptionRecurringStateMutationFn = Apollo.MutationFunction<UpdateSubscriptionRecurringStateMutation, UpdateSubscriptionRecurringStateMutationVariables>;
+
+/**
+ * __useUpdateSubscriptionRecurringStateMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionRecurringStateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionRecurringStateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionRecurringStateMutation, { data, loading, error }] = useUpdateSubscriptionRecurringStateMutation({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      subscriptionId: // value for 'subscriptionId'
+ *      recurring: // value for 'recurring'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionRecurringStateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionRecurringStateMutation, UpdateSubscriptionRecurringStateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubscriptionRecurringStateMutation, UpdateSubscriptionRecurringStateMutationVariables>(UpdateSubscriptionRecurringStateDocument, options);
+      }
+export type UpdateSubscriptionRecurringStateMutationHookResult = ReturnType<typeof useUpdateSubscriptionRecurringStateMutation>;
+export type UpdateSubscriptionRecurringStateMutationResult = Apollo.MutationResult<UpdateSubscriptionRecurringStateMutation>;
+export type UpdateSubscriptionRecurringStateMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionRecurringStateMutation, UpdateSubscriptionRecurringStateMutationVariables>;
 export const UpdateSaleDocument = gql`
     mutation UpdateSale($saleId: String!, $updateInvoiceInput: UpdateCompleteInvoiceB!, $description: String, $saleExpense: [SaleExpenseItem!], $note: String, $saleServiceExpense: [SaleServiceExpenseEntry!]) {
   updateSaleEntry(

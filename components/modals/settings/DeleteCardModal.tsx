@@ -2,17 +2,63 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { Trash2 } from "lucide-react";
+import localStorage from "local-storage-fallback";
+import { useToast } from "@/app/hooks/use-toast";
+import {
+  GetUserCardsDocument,
+  useDeleteCardMutation,
+} from "@/src/generated/graphql";
 
 interface DeleteCardProps {
   open: boolean;
   openModal: () => void;
+  cardId: string;
   onClose: () => void;
 }
 const DeleteCard: React.FC<DeleteCardProps> = ({
   open,
   openModal,
+  cardId,
   onClose,
 }) => {
+  const storedBusinessId = JSON.parse(
+    localStorage.getItem("businessId") || "[]"
+  );
+  const businessId = storedBusinessId[0] || "";
+  const { toast } = useToast();
+  const [deleteCardMutation, { loading }] = useDeleteCardMutation();
+  const showSuccessToast = () => {
+    toast({
+      title: "Successful!",
+      description: "Your card has been successfully deleted",
+      duration: 3000,
+    });
+  };
+
+  const showFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: error?.message,
+      duration: 3000,
+    });
+  };
+  const handleDeleteCard = async () => {
+    try {
+      await deleteCardMutation({
+        variables: {
+          cardId: cardId,
+        },
+        refetchQueries: [GetUserCardsDocument],
+      });
+      onClose();
+      showSuccessToast();
+    } catch (error) {
+      onClose();
+      showFailureToast(error);
+      console.error(error);
+    }
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={onClose}>
@@ -57,8 +103,14 @@ const DeleteCard: React.FC<DeleteCardProps> = ({
                     >
                       Cancel
                     </button>
-                    <button className=" px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white">
-                      Delete
+                    <button
+                      onClick={handleDeleteCard}
+                      disabled={loading}
+                      className={`px-7 py-[10px] rounded-[10px] flex gap-x-2 items-center justify-center bg-primary-red text-white ${
+                        loading ? " opacity-50" : ""
+                      }`}
+                    >
+                      {loading ? "Loading" : "Delete"}
                     </button>
                   </div>
                 </div>

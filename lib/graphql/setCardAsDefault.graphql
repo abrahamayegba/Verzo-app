@@ -1,0 +1,3 @@
+mutation SetCardAsDefault($businessId: String!, $cardId: String!) {
+  setCardAsDefault(businessId: $businessId, cardId: $cardId)
+}

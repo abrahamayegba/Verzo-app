@@ -202,6 +202,9 @@ const CreateServiceSheet: React.FC<CreateServiceProps> = ({
                           value={serviceUnit?.id!}
                         >
                           {serviceUnit?.unitName}
+                          {serviceUnit?.description && (
+                            <span> - {serviceUnit?.description}</span>
+                          )}
                         </SelectItem>
                       ))}
                       <button

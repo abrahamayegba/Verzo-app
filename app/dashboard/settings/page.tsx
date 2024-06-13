@@ -9,6 +9,8 @@ import {
   useGetBusinessByIdQuery,
   useGetBusinessesByUserIdQuery,
   useGetCurrentSubscriptionByBusinessQuery,
+  useGetNotificationPreferencesQuery,
+  useGetUserCardsQuery,
   useViewBusinessAccountQuery,
 } from "@/src/generated/graphql";
 import MainLoader from "@/components/loading/MainLoader";
@@ -31,9 +33,19 @@ const Settings = () => {
         businessId: businessId,
       },
     });
+  const getNotifications = useGetNotificationPreferencesQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
 
   const getBusinessesByUserId = useGetBusinessesByUserIdQuery();
   const viewBusinessAccount = useViewBusinessAccountQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const getUserCards = useGetUserCardsQuery({
     variables: {
       businessId: businessId,
     },
@@ -56,7 +68,9 @@ const Settings = () => {
     getBusinessesByUserId.loading ||
     getBusinessById.loading ||
     getCurrentSubscriptionByBusiness.loading ||
-    viewBusinessAccount.loading
+    viewBusinessAccount.loading ||
+    getNotifications.loading ||
+    getUserCards.loading
   ) {
     return <MainLoader />;
   }

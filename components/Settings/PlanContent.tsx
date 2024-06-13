@@ -10,15 +10,14 @@ import {
   GetCurrentSubscriptionByBusinessDocument,
   useCreateSubscriptionNewCardBMutation,
   useGetCurrentSubscriptionByBusinessQuery,
+  useGetUserCardsQuery,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import PaymentLoader from "../loading/Paymentloader";
-import VerveIcon from "../ui/icons/VerveIcon";
-import MastercardIcon from "../ui/icons/MastercardIcon";
-import VisaIcon from "../ui/icons/VisaIcon";
-import { Mail } from "lucide-react";
+import { Switch } from "@headlessui/react";
+import EndSubscriptionModal from "../modals/settings/EndSubscriptionModal";
 
 interface PlanProps {
   reference: string;
@@ -31,6 +30,12 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     isOpen: isConfirmPlanModalOpen,
     openModal: openConfirmPlanModal,
     closeModal: closeConfirmPlanModal,
+  } = useModal();
+
+  const {
+    isOpen: isEndSubscriptionModalOpen,
+    openModal: openEndSubscriptionModal,
+    closeModal: closeEndSubscrptionModal,
   } = useModal();
 
   const {
@@ -49,14 +54,23 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
-
+  const [enabled, setEnabled] = useState(false);
+  function classNames(...classes: any) {
+    return classes.filter(Boolean).join(" ");
+  }
+  const getUserCards = useGetUserCardsQuery({
+    variables: {
+      businessId: businessId,
+    },
+  });
+  const userCards = getUserCards?.data?.getUserCards ?? [];
   const [selectedPlanId, setSelectedPlanId] = useState<string>("");
   const [selectedPlanName, setSelectedPlanName] = useState<string>("");
   const [mutationExecuted, setMutationExecuted] = useState(false);
   const [mutationInProgress, setMutationInProgress] = useState(false);
   const [openPlanSheet, setOpenPlanSheet] = useState(false);
   const [openCardSheet, setOpenCardSheet] = useState(false);
-
+  const [cardId, setCardId] = useState("");
   const showSuccessToast = () => {
     toast({
       title: "Successful!",
@@ -87,13 +101,14 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     setSelectedPlanName(selectedOption.name);
     openConfirmPlanModal();
   };
-
-  const deleteCard = () => {
+  const deleteCard = (cardId: string) => {
     openDeleteCardModal();
+    setCardId(cardId);
   };
 
-  const setDefaultCard = () => {
+  const setDefaultCard = (cardId: string) => {
     openDefaultCardModal();
+    setCardId(cardId);
   };
 
   const { data } = useGetCurrentSubscriptionByBusinessQuery({
@@ -103,10 +118,12 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   });
 
   const planName = data?.getCurrentSubscriptionByBusiness?.plan?.planName;
+  const planPrice = data?.getCurrentSubscriptionByBusiness?.plan?.currentPrice;
   const dateSubscribed = new Date(
     data?.getCurrentSubscriptionByBusiness?.dateSubscribed
   );
   const validTo = new Date(data?.getCurrentSubscriptionByBusiness?.validTo);
+  const subscriptionId = data?.getCurrentSubscriptionByBusiness?.id!;
 
   const subscriptionDaysLeft = Math.ceil(
     (validTo.getTime() - dateSubscribed.getTime()) / (1000 * 60 * 60 * 24)
@@ -166,83 +183,95 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   return (
     <>
       {loading && <PaymentLoader />}
-      {planName == "Basic" && (
-        <div className=" w-full flex flex-col border rounded-lg bg-white mt-[30px]">
-          <div className=" flex flex-row justify-between px-6 mb-[-5px] py-3 w-full bg-gray-100 bg-opacity-80 items-center">
-            <p className=" font-medium text-[22px] flex gap-x-3 items-center">
-              {planName}{" "}
-              <span className="inline-flex items-center mt-[2px] rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                {"Billed monthly"}
-              </span>
-            </p>
-            <p>
-              {subscriptionDaysLeft}{" "}
-              {subscriptionDaysLeft === 1 ? "day" : "days"} remaining
-            </p>
-          </div>
-          <div className=" flex flex-row bg-white px-3 mb-1 py-2 justify-between items-center">
-            <div className=" flex flex-row">
-              <span>
-                {cardType?.trim().toLowerCase() === "verve" && <VerveIcon />}
-                {cardType?.trim().toLowerCase() === "mastercard" && (
-                  <MastercardIcon />
-                )}
-                {cardType?.trim().toLowerCase() === "visa" && <VisaIcon />}
-              </span>
-              <div className=" flex flex-col text-[15px]">
-                <p>{"Visa ending in 2342"}</p>
-                <p className=" font-light text-gray-600">
-                  Plan expires {expiryDate}
-                </p>
-                <p className=" flex items-center mt-1.5 font-light text-gray-600 gap-x-1.5">
-                  <Mail className=" w-4 h-4 text-gray-600" /> {"mail@mail.com"}
-                </p>
+      <div className=" w-full flex flex-col pt-[20px]">
+        <p className=" text-sm text-primary-greytext px-6">Manage biling</p>
+        <div className=" w-full flex flex-col bg-white rounded px-8 py-6 mt-3">
+          <div className=" flex justify-between ">
+            <div className=" flex gap-x-[120px] items-center">
+              <div className=" flex flex-col">
+                <div className=" font-light text-sm">Plan</div>
+                <div className=" text-[22px] font-medium">{planName}</div>
+              </div>
+              <div className=" flex flex-col">
+                <div className=" font-light text-sm">Payment</div>
+                <div className=" text-[22px] font-medium">
+                  {planPrice?.toLocaleString("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 0,
+                  })}
+                  <span className=" font-light text-[15px] ml-1">
+                    per month
+                  </span>
+                </div>
+              </div>
+              <div className=" flex flex-col">
+                <div className=" font-light text-sm">Validity</div>
+                <div className=" text-[22px] font-medium">
+                  {subscriptionDaysLeft}
+                  <span className=" font-light text-[15px] ml-1">
+                    {subscriptionDaysLeft > 1
+                      ? "days remaining"
+                      : "day remaining"}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className=" pr-4">
-              <button className=" bg-gray-100 border hover:bg-gray-200 border-gray-200 rounded-lg flex items-center justify-center py-[10px] px-4">
+            <div className=" flex text-[15px] items-center gap-x-5">
+              <button onClick={() => openEndSubscriptionModal()}>
                 Cancel subscription
+              </button>
+              <button
+                onClick={() => setOpenPlanSheet(true)}
+                className=" text-primary-blue"
+              >
+                Upgrade
               </button>
             </div>
           </div>
-        </div>
-      )}
-      <div className=" flex w-full pt-[20px]">
-        <div className=" bg-white min-h-[185px] flex flex-col rounded-b-[16px] w-full">
-          <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
-            <div className=" flex flex-col gap-y-[8px]">
-              <p className=" text-primary-black gap-x-3 flex items-center">
-                Plan
-                {planName && (
-                  <span className="inline-flex items-center mt-[2px] rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    {planName}
-                  </span>
+          <div className=" flex flex-col mt-5">
+            <div className=" flex gap-x-8 items-center">
+              <p className=" text-lg text-gray-800">Enable auto renew</p>
+              <Switch
+                checked={enabled}
+                onChange={setEnabled}
+                className={classNames(
+                  enabled ? "bg-primary-blue" : "bg-gray-200",
+                  "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2"
                 )}
-              </p>
-              <p className=" text-sm text-primary-greytext">
-                Update your Verzo plan
-              </p>
+              >
+                <span
+                  aria-hidden="true"
+                  className={classNames(
+                    enabled ? "translate-x-5" : "translate-x-0",
+                    "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                  )}
+                />
+              </Switch>
             </div>
-            <button
-              onClick={() => setOpenPlanSheet(true)}
-              className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
-            >
-              Update
-            </button>
+            <p></p>
           </div>
-          <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
+        </div>
+      </div>
+      <div className=" flex w-full pt-[20px]">
+        <div className=" bg-white flex flex-col w-full">
+          <div className=" flex flex-row justify-between p-6 items-center">
             <div className=" flex flex-col gap-y-[6px]">
               <p className=" text-primary-black">Card details</p>
               <p className=" text-sm text-primary-greytext">
                 Provide your card details
               </p>
             </div>
-            <button
-              onClick={() => setOpenCardSheet(true)}
-              className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
-            >
-              Update
-            </button>
+            {userCards.length > 0 ? (
+              <button
+                onClick={() => setOpenCardSheet(true)}
+                className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
+              >
+                Update
+              </button>
+            ) : (
+              <span className=" text-[15px]">No cards saved</span>
+            )}
           </div>
         </div>
       </div>
@@ -264,15 +293,23 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
         planId={selectedPlanId}
         planName={selectedPlanName}
       />
+      <EndSubscriptionModal
+        open={isEndSubscriptionModalOpen}
+        openModal={openEndSubscriptionModal}
+        onClose={closeEndSubscrptionModal}
+        subscriptionId={subscriptionId}
+      />
       <DefaultCardModal
         open={isDefaultCardModalOpen}
         openModal={openDefaultCardModal}
         onClose={closeDefaultCardModal}
+        cardId={cardId}
       />
       <DeleteCard
         open={isDeleteCardModalOpen}
         openModal={openDeleteCardModal}
         onClose={closeDeleteCardModal}
+        cardId={cardId}
       />
     </>
   );

@@ -58,13 +58,21 @@ const ViewInvoice = () => {
         ? item?.productInvoiceDetail?.unitPrice
         : item?.serviceInvoiceDetail?.unitPrice,
   }));
+  const VAT = sales?.invoice?.VAT;
   const saleExpenseRecorded = saleStatusId! >= 2;
   const saleExpense = sales?.saleExpenses?.length ?? 0;
+
+  const totalSaleExpenses = sales?.saleExpenses?.reduce(
+    (total, expense) => total + expense?.amount,
+    0
+  );
+
   const paymentAdded = saleStatusId! >= 3;
   const hasStep2 =
     (sales?.saleExpenses?.length ?? 0) > 0 ||
     (sales?.saleServiceExpenses?.length ?? 0) > 0;
 
+  console.log(saleExpense);
   const businessName = sales?.business?.businessName;
   const businessEmail = sales?.business?.businessEmail;
   const businessLogo = sales?.business?.logo;
@@ -216,7 +224,7 @@ const ViewInvoice = () => {
             </div>
             <div className=" flex justify-between items-center mt-3">
               <div className=" flex flex-col text-sm text-primary-black ml-auto">
-                <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
+                <div className=" flex justify-between gap-x-[96px] items-center py-2">
                   <p className=" text-primary-greytext">Sub total</p>
                   <p className=" text-base">
                     {(subtotal / 100)?.toLocaleString("en-NG", {
@@ -226,7 +234,19 @@ const ViewInvoice = () => {
                     })}
                   </p>
                 </div>
-                <div className=" flex justify-between py-3 items-center">
+                <div className=" flex justify-between gap-x-[96px] items-center py-2 ">
+                  <p className=" text-primary-greytext">VAT</p>
+                  <p className=" text-base">+{VAT}%</p>
+                </div>
+                {saleExpense > 0 && (
+                  <div className=" flex gap-x-[180px] py-2">
+                    <p className=" text-primary-greytext">Sale expenses</p>
+                    <p className=" text-base">
+                      ₦{(totalSaleExpenses! / 100)?.toLocaleString("en-NG")}
+                    </p>
+                  </div>
+                )}
+                <div className=" flex justify-between py-3 items-center border-t border-t-gray-100">
                   <p className=" text-gray-800 font-medium">Amount due</p>
                   <p className=" text-base">
                     {(total / 100)?.toLocaleString("en-NG", {
@@ -238,6 +258,24 @@ const ViewInvoice = () => {
                 </div>
               </div>
             </div>
+            {sales?.saleExpenses?.length! > 0 && (
+              <div className=" w-full flex flex-col mt-5">
+                <p className=" text-lg border-b border-b-gray-200 pb-2">
+                  Sale expenses
+                </p>
+                {sales?.saleExpenses?.map((saleExpense) => (
+                  <div
+                    key={saleExpense?.id}
+                    className=" flex flex-row justify-between py-3 border-b font-light"
+                  >
+                    <div>{saleExpense?.description}</div>
+                    <div className=" font-normal">
+                      ₦{(saleExpense?.amount / 100)?.toLocaleString()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className=" flex flex-col mt-4 gap-y-1">
               <p>Description</p>
               <p className=" font-light text-gray-700">{description}</p>

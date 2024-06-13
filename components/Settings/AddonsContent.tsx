@@ -24,26 +24,13 @@ const AddonsContent = () => {
               </p>
             </div>
             <button
+              disabled
               onClick={() => setOpenAddonSheet(true)}
-              className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
+              className=" px-6 py-3 rounded-[10px] flex disabled:cursor-not-allowed disabled:opacity-50 text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
             >
-              Purchase
+              Coming soon
             </button>
           </div>
-          {/* <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
-            <div className=" flex flex-col gap-y-[6px]">
-              <p className=" text-primary-black">Custom sync</p>
-              <p className=" text-sm text-primary-greytext">
-                Sync account applications
-              </p>
-            </div>
-            <button
-              disabled
-              className=" px-6 py-3 rounded-[10px] text-sm disabled:cursor-not-allowed disabled:opacity-50 text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
-            >
-              Purchase
-            </button>
-          </div> */}
           <div className=" flex flex-row justify-between p-6 items-center border-b border-b-gray-100">
             <div className=" flex flex-col gap-y-[6px]">
               <p className=" text-primary-black">Weekly reports</p>
@@ -55,7 +42,7 @@ const AddonsContent = () => {
               disabled
               className=" px-6 py-3 rounded-[10px] text-sm disabled:cursor-not-allowed disabled:opacity-50 text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
             >
-              Purchase
+              Coming soon
             </button>
           </div>
         </div>

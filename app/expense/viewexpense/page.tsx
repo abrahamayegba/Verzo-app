@@ -176,7 +176,7 @@ const ViewExpense = () => {
                     <td className=" py-4">{item?.description}</td>
                     <td className=" text-end py-4">{item?.quantity}</td>
                     <td className=" text-end py-4">
-                      ₦{(item?.price / 100)?.toLocaleString()}
+                      ₦{(item?.unitPrice / 100)?.toLocaleString()}
                     </td>
                   </tr>
                 ))}

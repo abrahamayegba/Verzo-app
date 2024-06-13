@@ -1,0 +1,13 @@
+mutation UpdateSubscriptionRecurringState(
+  $businessId: String!
+  $subscriptionId: String!
+  $recurring: Boolean!
+) {
+  updateSubscriptionRecurringState(
+    input: {
+      businessId: $businessId
+      subscriptionId: $subscriptionId
+      recurring: $recurring
+    }
+  )
+}

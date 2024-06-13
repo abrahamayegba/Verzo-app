@@ -79,7 +79,7 @@ const EditServiceSheet: React.FC<EditServiceProps> = ({
       setServiceData((prevData) => ({
         ...prevData,
         name: getServicesById.data?.getServiceById?.name || "",
-        price: getServicesById.data?.getServiceById?.price || 0,
+        price: getServicesById.data?.getServiceById?.price / 100 || 0,
         serviceUnitId: getServicesById.data?.getServiceById?.businessServiceUnit
           ?.id
           ? getServicesById?.data?.getServiceById?.businessServiceUnit?.id

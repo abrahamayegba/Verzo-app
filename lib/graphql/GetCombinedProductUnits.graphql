@@ -2,5 +2,6 @@ query GetCombinedProductUnits($businessId: String!) {
   getCombinedProductUnits(businessId: $businessId) {
     id
     unitName
+    description
   }
 }

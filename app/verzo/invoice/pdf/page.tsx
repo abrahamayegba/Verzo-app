@@ -36,10 +36,15 @@ const Pdf = () => {
         ? item?.productInvoiceDetail?.unitPrice
         : item?.serviceInvoiceDetail?.unitPrice,
   }));
+  const saleExpense = sales?.saleExpenses?.length ?? 0;
+  const totalSaleExpenses = sales?.saleExpenses?.reduce(
+    (total, expense) => total + expense?.amount,
+    0
+  );
   const businessName = sales?.business?.businessName;
   const businessEmail = sales?.business?.businessEmail;
   const businessLogo = sales?.business?.logo;
-  const country = "Nigeria";
+  const VAT = sales?.invoice?.VAT;
   const customerName = sales?.invoice?.customer?.name;
   const customerEmail = sales?.invoice?.customer?.email;
   const transactionDate = sales?.transactionDate;
@@ -130,7 +135,7 @@ const Pdf = () => {
           </div>
           <div className=" flex justify-between items-center mt-3 px-[44px]">
             <div className=" flex flex-col text-sm text-primary-black ml-auto">
-              <div className=" flex justify-between gap-x-[96px] items-center py-3 border-b border-b-gray-100">
+              <div className=" flex justify-between gap-x-[96px] items-center py-2">
                 <p className=" text-primary-greytext">Sub total</p>
                 <p className=" text-base">
                   {(subtotal / 100)?.toLocaleString("en-NG", {
@@ -140,7 +145,19 @@ const Pdf = () => {
                   })}
                 </p>
               </div>
-              <div className=" flex justify-between py-3 items-center">
+              <div className=" flex justify-between gap-x-[96px] items-center py-2 ">
+                <p className=" text-primary-greytext">VAT</p>
+                <p className=" text-base">+{VAT}%</p>
+              </div>
+              {saleExpense > 0 && (
+                <div className=" flex gap-x-[180px] py-2">
+                  <p className=" text-primary-greytext">Sale expenses</p>
+                  <p className=" text-base">
+                    ₦{(totalSaleExpenses! / 100)?.toLocaleString("en-NG")}
+                  </p>
+                </div>
+              )}
+              <div className=" flex justify-between py-3 items-center border-t border-t-gray-100">
                 <p className=" text-primary-greytext">Amount due</p>
                 <p className=" text-base">
                   {(total / 100)?.toLocaleString("en-NG", {
@@ -152,6 +169,24 @@ const Pdf = () => {
               </div>
             </div>
           </div>
+          {sales?.saleExpenses && (
+            <div className=" w-full flex flex-col mt-5 ">
+              <p className=" text-lg border-b border-b-gray-200 px-[44px] pb-2">
+                Sale expenses
+              </p>
+              {sales?.saleExpenses.map((saleExpense) => (
+                <div
+                  key={saleExpense?.id}
+                  className=" flex flex-row justify-between py-3 border-b font-light px-[44px]"
+                >
+                  <div>{saleExpense?.description}</div>
+                  <div className=" font-normal">
+                    ₦{(saleExpense?.amount / 100)?.toLocaleString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           <div className=" flex flex-col mt-4 gap-y-1 px-[44px]">
             <p>Description</p>
             <p className=" font-light text-gray-700">{sales?.description}</p>

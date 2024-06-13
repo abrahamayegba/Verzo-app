@@ -12,8 +12,8 @@ import VisaIcon from "@/components/ui/icons/VisaIcon";
 interface CardProps {
   open: boolean;
   onClose: () => void;
-  deleteCard: () => void;
-  saveAsDefault: () => void;
+  deleteCard: (cardId: string) => void;
+  saveAsDefault: (cardId: string) => void;
 }
 
 const CardSheet: React.FC<CardProps> = ({
@@ -41,12 +41,9 @@ const CardSheet: React.FC<CardProps> = ({
       }
     }
   }, [data]);
-  console.log(defaultCardId);
   const handleCardSelection = (cardId: string) => {
     setSelectedCardId(cardId);
   };
-
-  console.log(data?.getUserCards);
 
   return (
     <>
@@ -68,7 +65,7 @@ const CardSheet: React.FC<CardProps> = ({
           <p className="font-light text-primary-greytext mt-2">
             Update your payment cards
           </p>
-          <div className="w-full mt-[30px] flex flex-col gap-y-6">
+          <div className="w-full mt-[30px] flex flex-col gap-y-6 max-h-[300px] overflow-y-scroll">
             {data?.getUserCards?.map((card, index) => (
               <div
                 key={index}
@@ -111,23 +108,23 @@ const CardSheet: React.FC<CardProps> = ({
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent the click event from propagating to the card container
                     onClose();
-                    deleteCard();
+                    deleteCard(selectedCardId!);
                   }}
                   className="w-[18px] h-[18px] text-primary-red absolute right-4 cursor-pointer"
                 />
               </div>
             ))}
-            <button
-              onClick={() => {
-                onClose();
-                saveAsDefault();
-              }}
-              className="bg-primary-blue text-white disabled:opacity-50 disabled:cursor-not-allowed mt-1 rounded-[10px] py-[10px]"
-              disabled={selectedCardId === defaultCardId || !selectedCardId}
-            >
-              Save as default
-            </button>
           </div>
+          <button
+            onClick={() => {
+              onClose();
+              saveAsDefault(selectedCardId!);
+            }}
+            className="bg-primary-blue w-full text-white disabled:opacity-50 disabled:cursor-not-allowed mt-10 rounded-[10px] py-[10px]"
+            disabled={selectedCardId === defaultCardId || !selectedCardId}
+          >
+            Save as default
+          </button>
         </SheetContent>
       </Sheet>
     </>
