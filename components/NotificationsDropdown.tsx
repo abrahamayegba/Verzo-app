@@ -54,7 +54,8 @@ const NotificationsDropdown = () => {
     variables: { topic: userId },
   });
   const client = new ApolloClient({
-    uri: "https://queue.api2.verzo.app/graphql", // replace with your GraphQL endpoint
+    // uri: "https://queue.api2.verzo.app/graphql",
+    uri: process.env.NOTIFICATION_URL,
     cache: new InMemoryCache(),
   });
 
