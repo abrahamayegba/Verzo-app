@@ -205,10 +205,11 @@ const BusinessProfileContent = () => {
             >
               <button
                 type="button"
+                disabled
                 onClick={() => setOpenInviteModal(true)}
-                className=" px-6 py-3 rounded-[10px] text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
+                className=" px-6 py-3 rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed text-sm text-primary-black flex gap-x-2 items-center justify-center border border-primary-border"
               >
-                Invite
+                Coming soon
               </button>
               <AlertDialogContent className="sm:max-w-[470px] shadow-md">
                 <form onSubmit={handleSubmit(createUserInviteHandler)}>
@@ -317,7 +318,7 @@ const BusinessProfileContent = () => {
               disabled
               className=" px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed text-sm text-primary-black rounded-[10px] flex gap-x-2 items-center justify-center border border-primary-border"
             >
-              Download
+              Coming soon
             </button>
           </div>
         </div>

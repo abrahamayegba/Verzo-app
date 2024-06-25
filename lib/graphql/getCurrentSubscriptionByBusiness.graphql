@@ -3,6 +3,7 @@ query GetCurrentSubscriptionByBusiness($businessId: String!) {
     id
     dateSubscribed
     validTo
+    recurring
     plan {
       id
       planName

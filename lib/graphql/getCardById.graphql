@@ -5,6 +5,7 @@ query GetCardById($cardId: String!) {
     type
     brand
     expiryDate
+    sourceId
     account {
       id
       accountNumber

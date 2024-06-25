@@ -168,6 +168,13 @@ const CreateExpense = () => {
       duration: 3000,
     });
   };
+  const showOtherFailureToast = (error: any) => {
+    toast({
+      variant: "destructive",
+      description: error,
+      duration: 3000,
+    });
+  };
 
   const resetFormState = () => {
     reset();
@@ -198,6 +205,16 @@ const CreateExpense = () => {
   const amountDue = subtotal;
 
   const onCreateExpenseHandler = async (data: FormData) => {
+    if (!merchantId) {
+      showOtherFailureToast(
+        "Please select a merchant before saving the expense."
+      );
+      return;
+    }
+    if (!expenseDate) {
+      showOtherFailureToast("Please pick a date before saving the expense.");
+      return;
+    }
     try {
       await createExpenseMutation({
         variables: {

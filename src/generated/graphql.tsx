@@ -1083,7 +1083,6 @@ export type CreateSubscriptionTokenizedInput = {
   cardId: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
-  recurring?: InputMaybe<Scalars['Boolean']['input']>;
   tax: Scalars['BigInt']['input'];
 };
 
@@ -1093,7 +1092,6 @@ export type CreateSubscriptionWithCard = {
   businessId: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
-  recurring?: InputMaybe<Scalars['Boolean']['input']>;
   tax: Scalars['BigInt']['input'];
 };
 
@@ -1103,7 +1101,6 @@ export type CreateSubscriptionWithCardB = {
   businessId: Scalars['String']['input'];
   currentPlanId: Scalars['String']['input'];
   offerId?: InputMaybe<Scalars['String']['input']>;
-  recurring?: InputMaybe<Scalars['Boolean']['input']>;
   reference: Scalars['String']['input'];
   tax: Scalars['BigInt']['input'];
 };
@@ -1562,6 +1559,11 @@ export type GetBusinessByUser = {
   __typename?: 'GetBusinessByUser';
   businesses?: Maybe<Array<Maybe<Business>>>;
   user?: Maybe<User>;
+};
+
+export type GetCardToken = {
+  businessId: Scalars['String']['input'];
+  cardId: Scalars['String']['input'];
 };
 
 export type GetCustomerResponse = {
@@ -2144,6 +2146,7 @@ export type Mutation = {
   endSubscription?: Maybe<Subscription>;
   extendBetaTesting?: Maybe<Scalars['Boolean']['output']>;
   forgotPassword?: Maybe<Scalars['Boolean']['output']>;
+  generateCardToken?: Maybe<Scalars['String']['output']>;
   generateQrCodeDataURL?: Maybe<Scalars['String']['output']>;
   generateTwoFactorAuthSecret?: Maybe<TwoFactorAuthResponse>;
   logOut?: Maybe<Scalars['Boolean']['output']>;
@@ -3050,6 +3053,11 @@ export type MutationExtendBetaTestingArgs = {
 
 export type MutationForgotPasswordArgs = {
   email: Scalars['String']['input'];
+};
+
+
+export type MutationGenerateCardTokenArgs = {
+  input: GetCardToken;
 };
 
 
@@ -5648,6 +5656,7 @@ export type Subscription = {
   offerId?: Maybe<Scalars['String']['output']>;
   offerStartDate?: Maybe<Scalars['Date']['output']>;
   plan?: Maybe<Plan>;
+  recurring?: Maybe<Scalars['Boolean']['output']>;
   subscriptionInvoice?: Maybe<Array<Maybe<SubscriptionInvoice>>>;
   subscriptionPayment?: Maybe<SubscriptionPayment>;
   trialPeriodEnd?: Maybe<Scalars['Date']['output']>;
@@ -6781,6 +6790,14 @@ export type ForgotPasswordMutationVariables = Exact<{
 
 export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword?: boolean | null };
 
+export type GenerateCardTokenMutationVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  cardId: Scalars['String']['input'];
+}>;
+
+
+export type GenerateCardTokenMutation = { __typename?: 'Mutation', generateCardToken?: string | null };
+
 export type GetAccountCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -6921,7 +6938,7 @@ export type GetCardByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCardByIdQuery = { __typename?: 'Query', getCardById?: { __typename?: 'BusinessBankCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, createdAt: any, updatedAt: any, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, account?: { __typename?: 'BankAccount', id: string, accountNumber: string, accountBalance: any, accountName: string } | null, bankCardTransactions?: Array<{ __typename?: 'BankCardTransaction', id: string, amount: any, type: string, createdAt: any } | null> | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string, createdAt: any, id: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null, user: { __typename?: 'User', fullname: string } } | null };
+export type GetCardByIdQuery = { __typename?: 'Query', getCardById?: { __typename?: 'BusinessBankCard', id: string, maskedPan?: string | null, type?: string | null, brand?: string | null, expiryDate?: string | null, sourceId: string, createdAt: any, updatedAt: any, status?: string | null, authorizationLastSyncTime?: any | null, transactionLastSyncTime?: any | null, account?: { __typename?: 'BankAccount', id: string, accountNumber: string, accountBalance: any, accountName: string } | null, bankCardTransactions?: Array<{ __typename?: 'BankCardTransaction', id: string, amount: any, type: string, createdAt: any } | null> | null, spendingLimits?: Array<{ __typename?: 'SpendingLimit', amount: any, interval: string, createdAt: any, id: string } | null> | null, spendingControl?: { __typename?: 'SpendingControl', atm: boolean, web: boolean, pos: boolean } | null, user: { __typename?: 'User', fullname: string } } | null };
 
 export type GetChartOfAccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6940,7 +6957,7 @@ export type GetCurrentSubscriptionByBusinessQueryVariables = Exact<{
 }>;
 
 
-export type GetCurrentSubscriptionByBusinessQuery = { __typename?: 'Query', getCurrentSubscriptionByBusiness?: { __typename?: 'Subscription', id: string, dateSubscribed: any, validTo: any, plan?: { __typename?: 'Plan', id: string, planName: string, currentPrice: any, optionIncluded?: Array<{ __typename?: 'OptionIncluded', limit?: number | null, option?: { __typename?: 'Option', optionName: string } | null } | null> | null } | null } | null };
+export type GetCurrentSubscriptionByBusinessQuery = { __typename?: 'Query', getCurrentSubscriptionByBusiness?: { __typename?: 'Subscription', id: string, dateSubscribed: any, validTo: any, recurring?: boolean | null, plan?: { __typename?: 'Plan', id: string, planName: string, currentPrice: any, optionIncluded?: Array<{ __typename?: 'OptionIncluded', limit?: number | null, option?: { __typename?: 'Option', optionName: string } | null } | null> | null } | null } | null };
 
 export type GetCustomerByIdQueryVariables = Exact<{
   customerId: Scalars['String']['input'];
@@ -9739,6 +9756,38 @@ export function useForgotPasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ForgotPasswordMutationHookResult = ReturnType<typeof useForgotPasswordMutation>;
 export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
 export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
+export const GenerateCardTokenDocument = gql`
+    mutation GenerateCardToken($businessId: String!, $cardId: String!) {
+  generateCardToken(input: {businessId: $businessId, cardId: $cardId})
+}
+    `;
+export type GenerateCardTokenMutationFn = Apollo.MutationFunction<GenerateCardTokenMutation, GenerateCardTokenMutationVariables>;
+
+/**
+ * __useGenerateCardTokenMutation__
+ *
+ * To run a mutation, you first call `useGenerateCardTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGenerateCardTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generateCardTokenMutation, { data, loading, error }] = useGenerateCardTokenMutation({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      cardId: // value for 'cardId'
+ *   },
+ * });
+ */
+export function useGenerateCardTokenMutation(baseOptions?: Apollo.MutationHookOptions<GenerateCardTokenMutation, GenerateCardTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GenerateCardTokenMutation, GenerateCardTokenMutationVariables>(GenerateCardTokenDocument, options);
+      }
+export type GenerateCardTokenMutationHookResult = ReturnType<typeof useGenerateCardTokenMutation>;
+export type GenerateCardTokenMutationResult = Apollo.MutationResult<GenerateCardTokenMutation>;
+export type GenerateCardTokenMutationOptions = Apollo.BaseMutationOptions<GenerateCardTokenMutation, GenerateCardTokenMutationVariables>;
 export const GetAccountCategoriesDocument = gql`
     query getAccountCategories {
   getAccountCategories {
@@ -10759,6 +10808,7 @@ export const GetCardByIdDocument = gql`
     type
     brand
     expiryDate
+    sourceId
     account {
       id
       accountNumber
@@ -10919,6 +10969,7 @@ export const GetCurrentSubscriptionByBusinessDocument = gql`
     id
     dateSubscribed
     validTo
+    recurring
     plan {
       id
       planName

@@ -4,6 +4,7 @@ import PlanSheet from "../sheets/settings/planandbilling/PlanSheet";
 import ConfirmPlanModal from "../modals/settings/ConfirmPlan";
 import useModal from "@/app/hooks/useModal";
 import CardSheet from "../sheets/settings/planandbilling/CardSheet";
+import { toast as Sonner } from "sonner";
 import DeleteCard from "../modals/settings/DeleteCardModal";
 import DefaultCardModal from "../modals/settings/DefaultCardModal";
 import {
@@ -11,6 +12,7 @@ import {
   useCreateSubscriptionNewCardBMutation,
   useGetCurrentSubscriptionByBusinessQuery,
   useGetUserCardsQuery,
+  useUpdateSubscriptionRecurringStateMutation,
 } from "@/src/generated/graphql";
 import localStorage from "local-storage-fallback";
 import { useToast } from "@/app/hooks/use-toast";
@@ -54,7 +56,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
     localStorage.getItem("businessId") || "[]"
   );
   const businessId = storedBusinessId[0] || "";
-  const [enabled, setEnabled] = useState(false);
   function classNames(...classes: any) {
     return classes.filter(Boolean).join(" ");
   }
@@ -131,6 +132,38 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
   const [createSubscriptionNewCardBMutation, { loading }] =
     useCreateSubscriptionNewCardBMutation();
 
+  const [updateSubscriptionRecurringStateMutation] =
+    useUpdateSubscriptionRecurringStateMutation();
+
+  const initialRecurringState = data
+    ? data?.getCurrentSubscriptionByBusiness?.recurring!
+    : false;
+  const [enabled, setEnabled] = useState(initialRecurringState);
+
+  const handleToggle = async () => {
+    const previousState = enabled; // Store the current state
+    setEnabled(!enabled); // Toggle the state
+    try {
+      await updateSubscriptionRecurringStateMutation({
+        variables: {
+          businessId: businessId,
+          subscriptionId: subscriptionId,
+          recurring: !enabled, // Use the new state value
+        },
+      });
+      Sonner("Auto renew updated", {
+        cancel: {
+          label: "✕",
+          onClick: () => {},
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      setEnabled(previousState);
+      showFailureToast(error);
+    }
+  };
+
   let isMutationInProgress = false;
   const handlePaymentVerification = async (reference: string) => {
     try {
@@ -162,14 +195,6 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
       isMutationInProgress = false;
     }
   };
-  const cardType = "Visa";
-
-  const validToDate = new Date(data?.getCurrentSubscriptionByBusiness?.validTo);
-  const expiryDate = validToDate.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
 
   useEffect(() => {
     if (reference && !mutationExecuted && !mutationInProgress) {
@@ -185,75 +210,99 @@ const PlanContent: React.FC<PlanProps> = ({ reference }) => {
       {loading && <PaymentLoader />}
       <div className=" w-full flex flex-col pt-[20px]">
         <p className=" text-sm text-primary-greytext px-6">Manage biling</p>
-        <div className=" w-full flex flex-col bg-white rounded px-8 py-6 mt-3">
-          <div className=" flex justify-between ">
-            <div className=" flex gap-x-[120px] items-center">
-              <div className=" flex flex-col">
-                <div className=" font-light text-sm">Plan</div>
-                <div className=" text-[22px] font-medium">{planName}</div>
-              </div>
-              <div className=" flex flex-col">
-                <div className=" font-light text-sm">Payment</div>
-                <div className=" text-[22px] font-medium">
-                  {planPrice?.toLocaleString("en-NG", {
-                    style: "currency",
-                    currency: "NGN",
-                    minimumFractionDigits: 0,
-                  })}
-                  <span className=" font-light text-[15px] ml-1">
-                    per month
-                  </span>
+        {subscriptionId ? (
+          <div className=" w-full flex flex-col bg-white rounded px-8 py-6 mt-3 border border-gray-100 mb-4">
+            <div className=" flex justify-between ">
+              <div className=" flex gap-x-[120px] items-center">
+                <div className=" flex flex-col">
+                  <div className=" font-light text-sm">Plan</div>
+                  <div className=" text-[22px] font-medium">{planName}</div>
+                </div>
+                <div className=" flex flex-col">
+                  <div className=" font-light text-sm">Payment</div>
+                  <div className=" text-[22px] font-medium">
+                    {planPrice?.toLocaleString("en-NG", {
+                      style: "currency",
+                      currency: "NGN",
+                      minimumFractionDigits: 0,
+                    })}
+                    <span className=" font-light text-[15px] ml-1">
+                      per month
+                    </span>
+                  </div>
+                </div>
+                <div className=" flex flex-col">
+                  <div className=" font-light text-sm">Validity</div>
+                  <div className=" text-[22px] font-medium">
+                    {subscriptionDaysLeft}
+                    <span className=" font-light text-[15px] ml-1">
+                      {subscriptionDaysLeft > 1
+                        ? "days remaining"
+                        : "day remaining"}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className=" flex flex-col">
-                <div className=" font-light text-sm">Validity</div>
-                <div className=" text-[22px] font-medium">
-                  {subscriptionDaysLeft}
-                  <span className=" font-light text-[15px] ml-1">
-                    {subscriptionDaysLeft > 1
-                      ? "days remaining"
-                      : "day remaining"}
-                  </span>
-                </div>
+              <div className=" flex text-[15px] items-center gap-x-5">
+                <button onClick={() => openEndSubscriptionModal()}>
+                  Cancel subscription
+                </button>
+                <button
+                  onClick={() => setOpenPlanSheet(true)}
+                  className=" text-primary-blue"
+                >
+                  Upgrade
+                </button>
               </div>
             </div>
-            <div className=" flex text-[15px] items-center gap-x-5">
-              <button onClick={() => openEndSubscriptionModal()}>
-                Cancel subscription
-              </button>
-              <button
-                onClick={() => setOpenPlanSheet(true)}
-                className=" text-primary-blue"
-              >
-                Upgrade
-              </button>
-            </div>
-          </div>
-          <div className=" flex flex-col mt-5">
-            <div className=" flex gap-x-8 items-center">
-              <p className=" text-lg text-gray-800">Enable auto renew</p>
-              <Switch
-                checked={enabled}
-                onChange={setEnabled}
-                className={classNames(
-                  enabled ? "bg-primary-blue" : "bg-gray-200",
-                  "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2"
-                )}
-              >
-                <span
-                  aria-hidden="true"
+            <div className=" flex flex-col mt-5">
+              <div className=" flex gap-x-8 items-center">
+                <p className=" text-lg text-gray-800">Enable auto renew</p>
+                <Switch
+                  checked={enabled}
+                  onChange={handleToggle}
                   className={classNames(
-                    enabled ? "translate-x-5" : "translate-x-0",
-                    "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                    enabled ? "bg-primary-blue" : "bg-gray-200",
+                    "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2"
                   )}
-                />
-              </Switch>
+                >
+                  <span
+                    aria-hidden="true"
+                    className={classNames(
+                      enabled ? "translate-x-5" : "translate-x-0",
+                      "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                    )}
+                  />
+                </Switch>
+              </div>
+              <p></p>
             </div>
-            <p></p>
           </div>
-        </div>
+        ) : (
+          <div className=" flex flex-row bg-white justify-between mt-3 p-6 items-center border-b border-b-gray-100">
+            <div className=" flex flex-col gap-y-[8px]">
+              <p className=" text-primary-black gap-x-3 flex items-center">
+                Plan
+                {planName && (
+                  <span className="inline-flex items-center mt-[2px] rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                    {planName}
+                  </span>
+                )}
+              </p>
+              <p className=" text-sm text-primary-greytext">
+                Update your Verzo plan
+              </p>
+            </div>
+            <button
+              onClick={() => setOpenPlanSheet(true)}
+              className=" px-6 py-3 rounded-[10px] flex text-sm text-primary-black gap-x-2 items-center justify-center border border-primary-border"
+            >
+              Update
+            </button>
+          </div>
+        )}
       </div>
-      <div className=" flex w-full pt-[20px]">
+      <div className=" flex w-full">
         <div className=" bg-white flex flex-col w-full">
           <div className=" flex flex-row justify-between p-6 items-center">
             <div className=" flex flex-col gap-y-[6px]">

@@ -116,6 +116,16 @@
   box-shadow: 0px 12.13549px 24.27099px 0px rgba(0, 0, 0, 0.08);
 }
 
+#cardNumber {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.css-111ywvc {
+  color: #ffffff;
+  font-size: 26px;
+}
+
 .custom-popover {
   max-height: 400px;
   overflow-y: auto;

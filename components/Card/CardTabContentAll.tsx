@@ -18,10 +18,7 @@ import {
 import { Eye, Lock } from "lucide-react";
 import localStorage from "local-storage-fallback";
 import TableEmptyState from "../emptystates/TableEmptyState";
-import {
-  useGetCardsByBusinessQuery,
-  useGetCustomerByBusinessQuery,
-} from "@/src/generated/graphql";
+import { useGetCardsByBusinessQuery } from "@/src/generated/graphql";
 import CreatedAtIcon from "../ui/icons/CreatedAtIcon";
 import { FaRegCreditCard } from "react-icons/fa6";
 import CardTableEmptyIcon from "../ui/icons/CardTableEmptyIcon";
@@ -138,10 +135,7 @@ const CardTabContentAll = () => {
                     More
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className=" bg-white mt-1 text-primary-greytext shadow1 w-[130px]">
-                    <DropdownMenuItem
-                      //   onClick={() => openEditModal(customer?.id!)}
-                      className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2"
-                    >
+                    <DropdownMenuItem className=" hover:cursor-pointer hover:bg-gray-100 gap-x-2 py-2">
                       <Link
                         className=" flex flex-row gap-x-2 items-center"
                         href={`/card/viewcard?cardId=${card?.id}`}

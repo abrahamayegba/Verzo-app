@@ -160,7 +160,9 @@ const SubscriptionExpiredModal: React.FC<Props> = ({
                   <div className="flex flex-col items-center justify-center p-5 pb-14 gap-y-6">
                     <div className="relative w-[60%] border-b border-b-gray-400 border-opacity-50 pt-2 pb-5">
                       <div className="flex justify-center">
-                        <p className="text-xl text-gray-800">{businessName}</p>
+                        <p className="text-xl text-gray-800 capitalize">
+                          {businessName}
+                        </p>
                       </div>
                     </div>
                     <div className="absolute right-8 top-12 transform -translate-y-1/2">

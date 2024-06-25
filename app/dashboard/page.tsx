@@ -225,6 +225,10 @@ const Dashboard = () => {
     getBusinessesByUserId.data?.getBusinessesByUserId?.businesses?.[0]
       ?.bankAccount?.id;
 
+  const shouldBannerShow =
+    getBusinessesByUserId.data?.getBusinessesByUserId?.user?.role?.roleName ===
+      "Owner" && !userHasSudoAccount;
+
   if (getBusinessesByUserId.loading) {
     return <MainLoader />;
   }
@@ -255,7 +259,7 @@ const Dashboard = () => {
         <Loader2 />
       ) : (
         <>
-          {!userHasSudoAccount && (
+          {shouldBannerShow && (
             <CompleteAccountBanner
               open={isVisible}
               onClose={handleCloseBanner}

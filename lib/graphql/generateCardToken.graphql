@@ -1,0 +1,3 @@
+mutation GenerateCardToken($businessId: String!, $cardId: String!) {
+  generateCardToken(input: { businessId: $businessId, cardId: $cardId })
+}

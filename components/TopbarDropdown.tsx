@@ -50,7 +50,9 @@ const TopbarDropdown = () => {
               </span>
               <div className=" flex flex-row items-center gap-x-1">
                 <span className="rounded-full bg-primary-blue flex w-[30px] h-[30px] items-center justify-center">
-                  <span className="text-white">{businessFirstLetter}</span>
+                  <span className="text-white uppercase">
+                    {businessFirstLetter}
+                  </span>
                 </span>
                 <ChevronDown
                   className=" hidden h-[18px] w-[18px] flex-shrink-0 text-gray-400 lg:block"
