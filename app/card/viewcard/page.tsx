@@ -120,7 +120,6 @@ const ViewCard = () => {
       );
     }
   };
-  // const waitForVGSShow = (cardToken: string) => {
   //   if (typeof window.VGSShow === "undefined") {
   //     // window.location.reload();
   //     console.log("vgs show not available");
@@ -485,7 +484,7 @@ const ViewCard = () => {
                 </div>
               </div>
               <div className=" min-h-[80px] gap-x-8 flex flex-row py-2 items-center px-1 mt-7 ">
-                <button
+                {/* <button
                   disabled={isGenerated || loadingDetails}
                   onClick={handleGenerateToken}
                   className="  gap-y-[6px] disabled:opacity-50 disabled:cursor-not-allowed justify-center items-center flex flex-col"
@@ -496,7 +495,31 @@ const ViewCard = () => {
                   <p className="text-sm">
                     {loadingDetails ? "loading" : !isGenerated ? "Show" : ""}
                   </p>
-                </button>
+                </button> */}
+                {!isGenerated ? (
+                  <button
+                    disabled={loadingDetails}
+                    onClick={handleGenerateToken}
+                    className="gap-y-[6px] disabled:opacity-50 disabled:cursor-not-allowed justify-center items-center flex flex-col"
+                  >
+                    <span className="px-4 py-3 rounded-lg border border-gray-200">
+                      <Eye className="w-5 h-5 text-primary-blue" />
+                    </span>
+                    <p className="text-sm">
+                      {loadingDetails ? "loading" : "Show"}
+                    </p>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="gap-y-[6px] justify-center items-center flex flex-col"
+                  >
+                    <span className="px-4 py-3 rounded-lg border border-gray-200">
+                      <Eye className="w-5 h-5 text-primary-blue" />
+                    </span>
+                    <p className="text-sm">Hide</p>
+                  </button>
+                )}
                 {loadingDetails && (
                   <Loader className=" animate-spin w-6 h-6 mt-[-20px] ml-[-20px]" />
                 )}

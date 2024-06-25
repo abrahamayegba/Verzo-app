@@ -665,7 +665,12 @@ const CreateInvoice = () => {
         <div className=" flex flex-col">
           <p className=" text-lg text-primary-black">Note</p>
           <p className=" text-primary-greytext">Add notes / payment details</p>
-          <Textarea {...register("note")} id="notes" className=" mt-3" />
+          <Textarea
+            required
+            {...register("note")}
+            id="notes"
+            className=" mt-3"
+          />
         </div>
         <div className=" flex flex-row items-center gap-x-5 mt-2">
           <button

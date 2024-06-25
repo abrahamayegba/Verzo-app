@@ -72,7 +72,6 @@ const ViewInvoice = () => {
     (sales?.saleExpenses?.length ?? 0) > 0 ||
     (sales?.saleServiceExpenses?.length ?? 0) > 0;
 
-  console.log(saleExpense);
   const businessName = sales?.business?.businessName;
   const businessEmail = sales?.business?.businessEmail;
   const businessLogo = sales?.business?.logo;
@@ -189,7 +188,9 @@ const ViewInvoice = () => {
                 <p className=" text-primary-black font-normal">
                   {businessName}
                 </p>
-                <p className=" text-[16px]">{businessEmail}</p>
+                <p className="text-[16px] max-w-[223px] break-words">
+                  {businessEmail}
+                </p>
               </div>
               <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
                 <p>For</p>

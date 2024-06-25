@@ -95,10 +95,12 @@ const Pdf = () => {
             </div>
           </div>
           <div className=" grid grid-cols-3 gap-4 w-full pt-8 px-[44px]">
-            <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
+            <div className="text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>From</p>
-              <p className=" text-primary-black font-normal">{businessName}</p>
-              <p className=" text-[16px]">{businessEmail}</p>
+              <p className="text-primary-black font-normal">{businessName}</p>
+              <p className="text-[16px] max-w-[223px] break-words">
+                {businessEmail}
+              </p>
             </div>
             <div className=" text-primary-greytext col-span-1 font-light flex flex-col gap-y-2">
               <p>For</p>
