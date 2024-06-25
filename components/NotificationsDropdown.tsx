@@ -53,9 +53,10 @@ const NotificationsDropdown = () => {
   const { data } = useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
     variables: { topic: userId },
   });
+
   const client = new ApolloClient({
-    // uri: "https://queue.api2.verzo.app/graphql",
-    uri: process.env.NOTIFICATION_URL,
+    // ALWAYS ADD NEXT_PUBLIC BEFORE ANY URL
+    uri: process.env.NEXT_PUBLIC_NOTIFICATION_URL,
     cache: new InMemoryCache(),
   });
 

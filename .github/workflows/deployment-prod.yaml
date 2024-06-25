@@ -36,7 +36,7 @@ jobs:
             sudo echo NEXT_GOOGLE_SECRET_ID="${{secrets.BETA_NEXT_GOOGLE_SECRET_ID}}" >> .env
             sudo echo NEXT_PUBLIC_TYPESENSE_HOST="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_HOST}}" >> .env
             sudo echo NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY="${{secrets.BETA_NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY}}" >> .env
-            sudo echo NOTIFICATION_URL="${{secrets.BETA_NOTIFICATION_URL}}" >> .env
+            sudo echo NOTIFICATION_URL="${{secrets.NEXT_PUBLIC_BETA_NOTIFICATION_URL}}" >> .env
             pm2 stop verzo-new-app
             git fetch
             git merge
