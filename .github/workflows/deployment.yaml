@@ -37,6 +37,7 @@ jobs:
             sudo echo NEXT_PUBLIC_TYPESENSE_HOST="${{secrets.NEXT_PUBLIC_TYPESENSE_HOST}}" >> .env
             sudo echo NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY="${{secrets.NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY}}" >> .env
             sudo echo NEXT_PUBLIC_NOTIFICATION_URL="${{secrets.NEXT_PUBLIC_NOTIFICATION_URL}}" >> .env
+            sudo echo NEXT_PUBLIC_WEBSOCKET_URL="${{secrets.NEXT_PUBLIC_WEBSOCKET_URL}}" >> .env
             pm2 stop verzo-new-app
             git fetch
             git merge

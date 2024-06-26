@@ -29,7 +29,7 @@ const authLink = setContext((_, { headers }) => {
 
 const wsLink = new WebSocketLink(
   new SubscriptionClient(
-    "wss://queue.api2.verzo.app/graphql",
+    process.env.NEXT_PUBLIC_WEBSOCKET_URL!,
     {
       reconnect: true,
     },
